@@ -1,0 +1,762 @@
+# Hungarian translation of MyAdmin
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin\n"
+"Language: hu_HU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#, fuzzy
+#: ./src/Controller/Admin/CitiesController.php:28
+#: ./src/Controller/Admin/CitiesController.php:29
+#: ./src/Controller/Admin/CitiesController.php:71
+#: ./src/Controller/Admin/CitiesController.php:95
+#: ./src/Controller/Admin/CitiesController.php:108
+#: ./templates/Admin/Cities/index.php:42
+#: ./templates/Admin/Dashboard/index.php:23
+#: ./templates/Admin/Samples/index.php:35
+#: ./templates/Admin/Samples/index.php:93
+#: ./templates/Admin/Samples/view.php:36
+#: ./templates/element/admin/sidebar.php:34
+msgid "Cities"
+msgstr "Városok"
+
+#: ./src/Controller/Admin/CitiesController.php:62
+#: ./src/Controller/Admin/CitiesController.php:86
+msgid "The city has been saved."
+msgstr "A város mentése sikeres."
+
+#: ./src/Controller/Admin/CitiesController.php:66
+#: ./src/Controller/Admin/CitiesController.php:90
+#: ./src/Controller/Admin/ParentsController.php:66
+#: ./src/Controller/Admin/ParentsController.php:90
+#: ./src/Controller/Admin/SamplesController.php:79
+#: ./src/Controller/Admin/SamplesController.php:108
+msgid "The record could not be saved. Please try again."
+msgstr "A mentés nem sikerült. Próbálja újra."
+
+#: ./src/Controller/Admin/CitiesController.php:70
+#: ./templates/Admin/Cities/form.php:14
+msgid "New city"
+msgstr "Új város"
+
+#: ./src/Controller/Admin/CitiesController.php:94
+#: ./templates/Admin/Cities/form.php:14
+msgid "Edit city"
+msgstr "Város szerkesztése"
+
+#: ./src/Controller/Admin/CitiesController.php:107
+#: ./templates/Admin/Cities/view.php:11
+msgid "City details"
+msgstr "Város részletei"
+
+#: ./src/Controller/Admin/CitiesController.php:121
+#: ./src/Controller/Admin/ParentsController.php:121
+#: ./src/Controller/Admin/SamplesController.php:140
+msgid "The record has been deleted."
+msgstr "A törlés sikeres."
+
+#: ./src/Controller/Admin/CitiesController.php:123
+#: ./src/Controller/Admin/ParentsController.php:123
+#: ./src/Controller/Admin/SamplesController.php:142
+msgid "The record could not be deleted. Please try again."
+msgstr "A törlés nem sikerült. Próbálja újra."
+
+#: ./src/Controller/Admin/CitiesController.php:147
+#: ./src/Controller/Admin/ParentsController.php:147
+#: ./src/Controller/Admin/SamplesController.php:167
+#: ./src/Controller/Admin/SamplesController.php:220
+msgid "Record not found."
+msgstr "A rekord nem található."
+
+#: ./src/Controller/Admin/DashboardController.php:16
+#: ./src/Controller/Admin/DashboardController.php:17
+#: ./templates/Admin/Dashboard/index.php:5
+#: ./templates/Admin/Dashboard/index.php:11
+#: ./templates/element/admin/sidebar.php:18
+msgid "Dashboard"
+msgstr "Vezérlőpult"
+
+#: ./src/Controller/Admin/ParentsController.php:28
+#: ./src/Controller/Admin/ParentsController.php:29
+#: ./src/Controller/Admin/ParentsController.php:71
+#: ./src/Controller/Admin/ParentsController.php:95
+#: ./src/Controller/Admin/ParentsController.php:108
+#: ./templates/Admin/Dashboard/index.php:20
+#: ./templates/Admin/Parents/index.php:42
+#: ./templates/element/admin/sidebar.php:31
+msgid "Parents"
+msgstr "Szülők"
+
+#: ./src/Controller/Admin/ParentsController.php:62
+#: ./src/Controller/Admin/ParentsController.php:86
+msgid "The parent has been saved."
+msgstr "A szülő mentése sikeres."
+
+#: ./src/Controller/Admin/ParentsController.php:70
+#: ./templates/Admin/Parents/form.php:14
+#: ./templates/Admin/Samples/form.php:255
+msgid "New parent"
+msgstr "Új szülő"
+
+#: ./src/Controller/Admin/ParentsController.php:94
+#: ./templates/Admin/Parents/form.php:14
+msgid "Edit parent"
+msgstr "Szülő szerkesztése"
+
+#: ./src/Controller/Admin/ParentsController.php:107
+#: ./templates/Admin/Parents/view.php:11
+#: ./templates/layout/admin.php:73
+msgid "Parent details"
+msgstr "Szülő részletei"
+
+#: ./src/Controller/Admin/SamplesController.php:28
+#: ./src/Controller/Admin/SamplesController.php:29
+#: ./src/Controller/Admin/SamplesController.php:85
+#: ./src/Controller/Admin/SamplesController.php:114
+#: ./src/Controller/Admin/SamplesController.php:127
+#: ./templates/Admin/Cities/index.php:22
+#: ./templates/Admin/Cities/index.php:61
+#: ./templates/Admin/Cities/view.php:19
+#: ./templates/Admin/Dashboard/index.php:17
+#: ./templates/Admin/Parents/index.php:22
+#: ./templates/Admin/Parents/index.php:61
+#: ./templates/Admin/Parents/view.php:19
+#: ./templates/Admin/Samples/index.php:45
+#: ./templates/Admin/Samples/index.php:66
+#: ./templates/element/admin/sidebar.php:28
+msgid "Samples"
+msgstr "Minták"
+
+#: ./src/Controller/Admin/SamplesController.php:75
+#: ./src/Controller/Admin/SamplesController.php:104
+msgid "The sample has been saved."
+msgstr "A minta mentése sikeres."
+
+#: ./src/Controller/Admin/SamplesController.php:84
+#: ./templates/Admin/Samples/form.php:44
+msgid "New sample"
+msgstr "Új minta"
+
+#: ./src/Controller/Admin/SamplesController.php:113
+#: ./templates/Admin/Samples/form.php:44
+msgid "Edit sample"
+msgstr "Minta szerkesztése"
+
+#: ./src/Controller/Admin/SamplesController.php:126
+#: ./templates/Admin/Samples/view.php:13
+msgid "Sample details"
+msgstr "Minta részletei"
+
+#: ./src/Controller/Admin/SamplesController.php:256
+#: ./templates/Admin/Samples/form.php:261
+msgid "Please enter a value."
+msgstr "Kérjük, adjon meg egy értéket."
+
+#: ./src/Controller/Admin/SamplesController.php:273
+#: ./templates/layout/admin.php:74
+msgid "Failed to save the new value."
+msgstr "Az új érték mentése sikertelen."
+
+#: ./templates/Admin/Cities/form.php:15
+#: ./templates/Admin/Cities/index.php:9
+#: ./templates/Admin/Parents/form.php:15
+#: ./templates/Admin/Parents/index.php:9
+#: ./templates/Admin/Samples/form.php:45
+#: ./templates/Admin/Samples/index.php:12
+#: ./templates/element/admin/breadcrumb.php:42
+msgid "Edit the selected record."
+msgstr "A kiválasztott rekord szerkesztése."
+
+#: ./templates/Admin/Cities/form.php:15
+#: ./templates/Admin/Parents/form.php:15
+#: ./templates/Admin/Samples/form.php:45
+#: ./templates/element/admin/breadcrumb.php:30
+msgid "Create a new record."
+msgstr "Új rekord létrehozása."
+
+#: ./templates/Admin/Cities/form.php:25
+#: ./templates/Admin/Parents/form.php:25
+#: ./templates/Admin/Samples/form.php:92
+msgid "Name:"
+msgstr "Név:"
+
+#: ./templates/Admin/Cities/form.php:31
+#: ./templates/Admin/Parents/form.php:31
+#: ./templates/Admin/Samples/form.php:219
+msgid "Position:"
+msgstr "Pozíció:"
+
+#: ./templates/Admin/Cities/form.php:41
+#: ./templates/Admin/Cities/index.php:21
+#: ./templates/Admin/Cities/index.php:60
+#: ./templates/Admin/Cities/view.php:18
+#: ./templates/Admin/Parents/form.php:41
+#: ./templates/Admin/Parents/index.php:21
+#: ./templates/Admin/Parents/index.php:60
+#: ./templates/Admin/Parents/view.php:18
+#: ./templates/Admin/Samples/form.php:213
+#: ./templates/Admin/Samples/index.php:34
+#: ./templates/Admin/Samples/index.php:44
+#: ./templates/Admin/Samples/index.php:92
+#: ./templates/Admin/Samples/view.php:35
+msgid "Visible"
+msgstr "Látható"
+
+#: ./templates/Admin/Cities/form.php:48
+#: ./templates/Admin/Parents/form.php:48
+#: ./templates/Admin/Samples/form.php:239
+#: ./templates/Admin/Samples/form.php:265
+#: ./templates/element/admin/breadcrumb.php:36
+#: ./templates/element/admin/breadcrumb.php:37
+msgid "Save"
+msgstr "Mentés"
+
+#: ./templates/Admin/Cities/form.php:49
+#: ./templates/Admin/Parents/form.php:49
+#: ./templates/Admin/Samples/form.php:242
+#: ./templates/Admin/Samples/form.php:264
+#: ./templates/layout/admin.php:65
+#: ./templates/layout/admin.php:78
+msgid "Cancel"
+msgstr "Mégsem"
+
+#: ./templates/Admin/Cities/index.php:8
+#: ./templates/Admin/Parents/index.php:8
+#: ./templates/Admin/Samples/index.php:11
+#: ./templates/element/admin/breadcrumb.php:48
+#: ./templates/element/admin/breadcrumb.php:49
+#: ./templates/element/admin/modal_linked_record_view.php:21
+#: ./templates/element/admin/modal_record_view.php:21
+msgid "Details"
+msgstr "Részletek"
+
+msgid "View details"
+msgstr "Részletek megtekintése"
+
+#: ./templates/Admin/Cities/index.php:8
+#: ./templates/Admin/Parents/index.php:8
+#: ./templates/Admin/Samples/index.php:11
+msgid "View the selected record details."
+msgstr "A kiválasztott rekord részleteinek megtekintése."
+
+#: ./templates/Admin/Cities/index.php:9
+#: ./templates/Admin/Cities/view.php:25
+#: ./templates/Admin/Parents/index.php:9
+#: ./templates/Admin/Parents/view.php:25
+#: ./templates/Admin/Samples/index.php:12
+#: ./templates/Admin/Samples/view.php:54
+#: ./templates/element/admin/breadcrumb.php:42
+#: ./templates/element/admin/breadcrumb.php:43
+#: ./templates/element/admin/modal_linked_record_view.php:24
+#: ./templates/element/admin/modal_record_view.php:24
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: ./templates/Admin/Cities/index.php:10
+#: ./templates/Admin/Parents/index.php:10
+#: ./templates/Admin/Samples/index.php:13
+#: ./templates/element/admin/breadcrumb.php:51
+#: ./templates/element/admin/breadcrumb.php:52
+#: ./templates/element/admin/modal_linked_record_view.php:28
+#: ./templates/element/admin/modal_record_view.php:28
+#: ./templates/layout/admin.php:62
+#: ./templates/layout/admin.php:64
+msgid "Delete"
+msgstr "Törlés"
+
+#: ./templates/Admin/Cities/index.php:10
+#: ./templates/Admin/Parents/index.php:10
+#: ./templates/Admin/Samples/index.php:13
+#: ./templates/element/admin/breadcrumb.php:51
+msgid "Permanently delete the selected record."
+msgstr "A kiválasztott rekord végleges törlése."
+
+#: ./templates/Admin/Cities/index.php:18
+#: ./templates/Admin/Cities/view.php:15
+#: ./templates/Admin/Parents/index.php:18
+#: ./templates/Admin/Parents/view.php:15
+#: ./templates/Admin/Samples/index.php:24
+#: ./templates/Admin/Samples/index.php:41
+#: ./templates/Admin/Samples/view.php:25
+msgid "ID"
+msgstr "ID"
+
+#: ./templates/Admin/Cities/index.php:19
+#: ./templates/Admin/Cities/index.php:58
+#: ./templates/Admin/Cities/view.php:16
+#: ./templates/Admin/Parents/index.php:19
+#: ./templates/Admin/Parents/index.php:58
+#: ./templates/Admin/Parents/view.php:16
+#: ./templates/Admin/Samples/form.php:97
+#: ./templates/Admin/Samples/form.php:259
+#: ./templates/Admin/Samples/index.php:26
+#: ./templates/Admin/Samples/index.php:42
+#: ./templates/Admin/Samples/index.php:84
+#: ./templates/Admin/Samples/view.php:27
+msgid "Name"
+msgstr "Név"
+
+#: ./templates/Admin/Cities/index.php:20
+#: ./templates/Admin/Cities/index.php:59
+#: ./templates/Admin/Cities/view.php:17
+#: ./templates/Admin/Parents/index.php:20
+#: ./templates/Admin/Parents/index.php:59
+#: ./templates/Admin/Parents/view.php:17
+#: ./templates/Admin/Samples/index.php:33
+#: ./templates/Admin/Samples/index.php:43
+#: ./templates/Admin/Samples/index.php:91
+#: ./templates/Admin/Samples/view.php:34
+msgid "Position"
+msgstr "Pozíció"
+
+#: ./templates/Admin/Cities/index.php:23
+#: ./templates/Admin/Cities/index.php:63
+#: ./templates/Admin/Cities/view.php:20
+#: ./templates/Admin/Parents/index.php:23
+#: ./templates/Admin/Parents/index.php:63
+#: ./templates/Admin/Parents/view.php:20
+#: ./templates/Admin/Samples/index.php:37
+#: ./templates/Admin/Samples/index.php:46
+#: ./templates/Admin/Samples/index.php:95
+#: ./templates/Admin/Samples/view.php:48
+msgid "Created"
+msgstr "Létrehozva"
+
+#: ./templates/Admin/Cities/index.php:24
+#: ./templates/Admin/Cities/index.php:64
+#: ./templates/Admin/Cities/view.php:21
+#: ./templates/Admin/Parents/index.php:24
+#: ./templates/Admin/Parents/index.php:64
+#: ./templates/Admin/Parents/view.php:21
+#: ./templates/Admin/Samples/index.php:38
+#: ./templates/Admin/Samples/index.php:47
+#: ./templates/Admin/Samples/index.php:96
+#: ./templates/Admin/Samples/view.php:49
+msgid "Modified"
+msgstr "Módosítva"
+
+#: ./templates/Admin/Cities/index.php:43
+#: ./templates/Admin/Parents/index.php:43
+#: ./templates/Admin/Samples/index.php:67
+msgid "Double-click a row to view the record details."
+msgstr "Dupla kattintással megtekintheti a rekord részleteit."
+
+msgid "Double-click a row to edit the record."
+msgstr "Dupla kattintással szerkesztheti a rekordot."
+
+#: ./templates/Admin/Cities/index.php:47
+#: ./templates/Admin/Parents/index.php:47
+#: ./templates/Admin/Samples/index.php:71
+#: ./templates/element/admin/header_search.php:3
+msgid "Search..."
+msgstr "Keresés..."
+
+#: ./templates/Admin/Cities/index.php:66
+#: ./templates/Admin/Parents/index.php:66
+#: ./templates/Admin/Samples/index.php:98
+msgid "Actions"
+msgstr "Műveletek"
+
+#: ./templates/Admin/Cities/index.php:129
+#: ./templates/Admin/Parents/index.php:129
+#: ./templates/Admin/Samples/index.php:181
+msgid "No records found."
+msgstr "Nincs megjeleníthető rekord."
+
+#: ./templates/Admin/Cities/index.php:138
+#: ./templates/Admin/Cities/index.php:142
+#: ./templates/Admin/Parents/index.php:138
+#: ./templates/Admin/Parents/index.php:142
+#: ./templates/Admin/Samples/index.php:192
+#: ./templates/Admin/Samples/index.php:196
+msgid "records"
+msgstr "rekord"
+
+#: ./templates/Admin/Cities/index.php:140
+#: ./templates/Admin/Parents/index.php:140
+#: ./templates/Admin/Samples/index.php:194
+msgid "page"
+msgstr "oldal"
+
+#: ./templates/Admin/Cities/view.php:18
+#: ./templates/Admin/Parents/view.php:18
+#: ./templates/Admin/Samples/view.php:33
+#: ./templates/Admin/Samples/view.php:35
+#: ./templates/layout/admin.php:70
+msgid "Yes"
+msgstr "Igen"
+
+#: ./templates/Admin/Cities/view.php:18
+#: ./templates/Admin/Parents/view.php:18
+#: ./templates/Admin/Samples/view.php:33
+#: ./templates/Admin/Samples/view.php:35
+#: ./templates/layout/admin.php:71
+msgid "No"
+msgstr "Nem"
+
+#: ./templates/Admin/Cities/view.php:26
+#: ./templates/Admin/Parents/view.php:26
+#: ./templates/Admin/Samples/view.php:59
+#: ./templates/element/admin/breadcrumb.php:25
+msgid "Back to list"
+msgstr "Vissza a listához"
+
+msgid "Related records"
+msgstr "Kapcsolódó rekordok"
+
+msgid "No related records."
+msgstr "Nincs adat."
+
+#: ./templates/Admin/Dashboard/index.php:14
+msgid "Welcome to MyAdmin. Use the sidebar to manage your data."
+msgstr "Üdvözöljük a MyAdminban. Az oldalsávval kezelheti az adatokat."
+
+#: ./templates/Admin/Samples/form.php:50
+msgid "Created:"
+msgstr "Létrehozva:"
+
+#: ./templates/Admin/Samples/form.php:51
+msgid "Modified:"
+msgstr "Módosítva:"
+
+#: ./templates/Admin/Samples/form.php:54
+msgid "Close window"
+msgstr "Ablak bezárása"
+
+#: ./templates/Admin/Samples/form.php:72
+msgid "Parent:"
+msgstr "Szülő:"
+
+#: ./templates/Admin/Samples/form.php:79
+msgid "Select parent..."
+msgstr "Szülő választása..."
+
+#: ./templates/Admin/Samples/form.php:84
+msgid "Add a new value to the list"
+msgstr "Új érték hozzáadása a listához"
+
+#: ./templates/Admin/Samples/form.php:104
+msgid "Number:"
+msgstr "Szám:"
+
+#: ./templates/Admin/Samples/form.php:110
+msgid "e.g. 123"
+msgstr "pl. 123"
+
+msgid "e.g. 1 234"
+msgstr "pl. 1 234"
+
+msgid "e.g. 1 234,56"
+msgstr "pl. 1 234,56"
+
+msgid "e.g. 1 000"
+msgstr "pl. 1 000"
+
+#: ./templates/Admin/Samples/form.php:118
+msgid "Net:"
+msgstr "Nettó:"
+
+#: ./templates/Admin/Samples/form.php:132
+msgid "Date:"
+msgstr "Dátum:"
+
+#: ./templates/Admin/Samples/form.php:146
+msgid "Time:"
+msgstr "Idő:"
+
+#: ./templates/Admin/Samples/form.php:160
+msgid "Date and time:"
+msgstr "Dátum és idő:"
+
+#: ./templates/Admin/Samples/form.php:174
+msgid "Cities:"
+msgstr "Városok:"
+
+#: ./templates/Admin/Samples/form.php:200
+#: ./templates/Admin/Samples/index.php:32
+#: ./templates/Admin/Samples/index.php:90
+#: ./templates/Admin/Samples/view.php:33
+msgid "Boolean"
+msgstr "Logikai"
+
+#: ./templates/Admin/Samples/form.php:225
+msgid "e.g. 1000"
+msgstr "pl. 1000"
+
+#: ./templates/Admin/Samples/form.php:256
+#: ./templates/element/admin/modal_linked_record_view.php:6
+#: ./templates/element/admin/modal_linked_record_view.php:18
+#: ./templates/element/admin/modal_record_view.php:6
+#: ./templates/element/admin/modal_record_view.php:18
+msgid "Close"
+msgstr "Bezárás"
+
+#: ./templates/Admin/Samples/form.php:260
+msgid "Enter a new value..."
+msgstr "Adjon meg egy új értéket..."
+
+#: ./templates/Admin/Samples/index.php:25
+#: ./templates/Admin/Samples/index.php:83
+#: ./templates/Admin/Samples/view.php:26
+msgid "Parent"
+msgstr "Szülő"
+
+#: ./templates/Admin/Samples/index.php:27
+#: ./templates/Admin/Samples/index.php:85
+#: ./templates/Admin/Samples/view.php:28
+msgid "Number"
+msgstr "Szám"
+
+#: ./templates/Admin/Samples/index.php:28
+#: ./templates/Admin/Samples/index.php:86
+#: ./templates/Admin/Samples/view.php:29
+msgid "Net"
+msgstr "Nettó"
+
+#: ./templates/Admin/Samples/index.php:29
+#: ./templates/Admin/Samples/index.php:87
+#: ./templates/Admin/Samples/view.php:30
+msgid "Date"
+msgstr "Dátum"
+
+#: ./templates/Admin/Samples/index.php:30
+#: ./templates/Admin/Samples/index.php:88
+#: ./templates/Admin/Samples/view.php:31
+msgid "Time"
+msgstr "Idő"
+
+#: ./templates/Admin/Samples/index.php:31
+#: ./templates/Admin/Samples/index.php:89
+#: ./templates/Admin/Samples/view.php:32
+msgid "Date and time"
+msgstr "Dátum és idő"
+
+#: ./templates/Admin/Samples/index.php:36
+#: ./templates/Admin/Samples/view.php:37
+msgid "City list"
+msgstr "Városok listája"
+
+#: ./templates/Admin/Samples/view.php:14
+msgid "View the selected record (read-only)."
+msgstr "A kiválasztott rekord megtekintése (csak olvasható)."
+
+#: ./templates/Member/Dashboard/index.php:9
+msgid "Member"
+msgstr "Tag"
+
+#: ./templates/Member/Dashboard/index.php:10
+msgid "Current language:"
+msgstr "Aktuális nyelv:"
+
+#: ./templates/element/admin/breadcrumb.php:30
+#: ./templates/element/admin/breadcrumb.php:31
+msgid "New"
+msgstr "Új"
+
+#: ./templates/element/admin/breadcrumb.php:36
+msgid "Save the form data."
+msgstr "Az űrlap adatainak mentése."
+
+#: ./templates/element/admin/breadcrumb.php:48
+msgid "View the selected record."
+msgstr "A kiválasztott rekord megtekintése."
+
+#: ./templates/element/admin/breadcrumb.php:58
+msgid "Home"
+msgstr "Kezdőlap"
+
+#: ./templates/element/admin/footer.php:3
+msgid "Copyright"
+msgstr "Copyright"
+
+#: ./templates/element/admin/footer.php:6
+msgid "Powered by"
+msgstr "Motor:"
+
+#: ./templates/element/admin/header.php:7
+#: ./templates/layout/admin.php:11
+#: ./templates/layout/admin.php:20
+msgid "Admin"
+msgstr "Admin"
+
+#: ./templates/element/admin/header_alerts.php:7
+msgid "Alerts"
+msgstr "Figyelmeztetések"
+
+#: ./templates/element/admin/header_alerts.php:9
+msgid "No alerts"
+msgstr "Nincs figyelmeztetés"
+
+#: ./templates/element/admin/header_help.php:7
+msgid "Help and support"
+msgstr "Súgó és támogatás"
+
+#: ./templates/element/admin/header_help.php:11
+msgid "Documentation"
+msgstr "Dokumentáció"
+
+#: ./templates/element/admin/header_help.php:12
+msgid "Coming soon"
+msgstr "Hamarosan"
+
+#: ./templates/element/admin/header_language.php:2
+#: ./templates/element/admin/header_language.php:7
+msgid "Language"
+msgstr "Nyelv"
+
+#: ./templates/element/admin/header_language.php:3
+#: ./templates/element/admin/header_language.php:13
+msgid "English"
+msgstr "Angol"
+
+#: ./templates/element/admin/header_language.php:10
+msgid "Hungarian"
+msgstr "Magyar"
+
+#: ./templates/element/admin/header_language.php:16
+msgid "German"
+msgstr "Német"
+
+#: ./templates/element/admin/header_language.php:19
+msgid "Slovak"
+msgstr "Szlovák"
+
+#: ./templates/element/admin/header_messages.php:7
+msgid "Messages"
+msgstr "Üzenetek"
+
+#: ./templates/element/admin/header_messages.php:9
+msgid "No messages"
+msgstr "Nincs üzenet"
+
+#: ./templates/element/admin/header_profile.php:3
+msgid "Profile picture"
+msgstr "Profilkép"
+
+#: ./templates/element/admin/header_profile.php:7
+msgid "Hello, admin"
+msgstr "Helló, admin"
+
+#: ./templates/element/admin/header_profile.php:10
+msgid "Profile"
+msgstr "Profil"
+
+#: ./templates/element/admin/header_profile.php:13
+msgid "Log out"
+msgstr "Kijelentkezés"
+
+#: ./templates/element/admin/index_pagination.php:2
+msgid "Pagination"
+msgstr "Lapozás"
+
+#: ./templates/element/admin/index_pagination.php:7
+msgid "Previous"
+msgstr "Előző"
+
+#: ./templates/element/admin/index_pagination.php:8
+msgid "Next"
+msgstr "Következő"
+
+#: ./templates/element/admin/modal_linked_record_view.php:5
+msgid "Linked record"
+msgstr "Kapcsolt rekord"
+
+#: ./templates/element/admin/modal_linked_record_view.php:11
+#: ./templates/element/admin/modal_record_view.php:11
+msgid "Loading…"
+msgstr "Betöltés…"
+
+#: ./templates/element/admin/modal_record_view.php:5
+#: ./templates/layout/admin.php:72
+msgid "Record details"
+msgstr "Rekord részletei"
+
+#: ./templates/element/admin/sidebar.php:24
+msgid "Data"
+msgstr "Adatok"
+
+#: ./templates/layout/admin.php:63
+msgid "Do you really want to delete the selected record?"
+msgstr "Biztosan törli a kiválasztott rekordot?"
+
+#: ./templates/layout/admin.php:66
+msgid "Delete functionality will be connected later."
+msgstr "A törlés később kerül bekötésre."
+
+#: ./templates/layout/admin.php:67
+msgid "Delete form not found for ID:"
+msgstr "A törlő űrlap nem található. ID:"
+
+#: ./templates/layout/admin.php:68
+msgid "Failed to load the record."
+msgstr "A rekord betöltése sikertelen."
+
+#: ./templates/layout/admin.php:69
+msgid "No response from the server."
+msgstr "Nincs válasz a szervertől."
+
+#: ./templates/layout/admin.php:75
+msgid "Add"
+msgstr "Hozzáadás"
+
+#: ./templates/layout/admin.php:76
+msgid "Add a new value to the list."
+msgstr "Új érték hozzáadása a listához."
+
+#: ./templates/layout/admin.php:77
+msgid "Apply"
+msgstr "Alkalmaz"
+
+#: ./templates/layout/admin.php:79
+msgid "From"
+msgstr "Kezdete"
+
+#: ./templates/layout/admin.php:80
+msgid "To"
+msgstr "Vége"
+
+#: ./templates/layout/admin.php:81
+msgid "Custom"
+msgstr "Egyedi"
+
+#: ./templates/layout/admin.php:82
+msgid "Select cities..."
+msgstr "Városok választása..."
+
+#: ./templates/layout/admin.php:83
+msgid "Delete the parent from the Parents list."
+msgstr "A szülőt a Szülők listából törölheti."
+
+#: ./templates/layout/error.php:36
+msgid "Back"
+msgstr "Vissza"
+
+#: ./templates/Error/error400.php:24
+#: ./templates/Error/error500.php:34
+msgid "Error"
+msgstr "Hiba"
+
+msgid "Success"
+msgstr "Siker"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "No response from the server. Failed to save the new value."
+msgstr "Nincs válasz a szervertől. Az új érték mentése sikertelen."
+
+#: ./templates/Error/error400.php:25
+msgid "The requested address {0} was not found on this server."
+msgstr "A kért cím ({0}) nem található a szerveren."
+
+#: ./templates/Error/error500.php:32
+msgid "An Internal Error Has Occurred."
+msgstr "Belső hiba történt."
+

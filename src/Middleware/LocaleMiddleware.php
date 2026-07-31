@@ -24,10 +24,15 @@ class LocaleMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($request instanceof ServerRequest) {
-            $lang = $request->getParam('lang');
             $languages = Configure::read('App.languages', []);
+            $lang = $request->getParam('lang');
+            $prefix = $request->getParam('prefix');
 
-            if (is_string($lang) && isset($languages[$lang])) {
+            // Admin has no URL language segment — always Hungarian.
+            if ($prefix === 'Admin') {
+                I18n::setLocale('hu_HU');
+                Configure::write('App.defaultLocale', 'hu_HU');
+            } elseif (is_string($lang) && isset($languages[$lang])) {
                 I18n::setLocale($languages[$lang]);
                 Configure::write('App.defaultLocale', $languages[$lang]);
             }

@@ -1,0 +1,20 @@
+/**
+ * cakephp-template: page-css:index
+ *
+ * List / index template styles.
+ * Shared table/modal rules currently live in assets/css/style.css
+ * (search for: .index-data-table, .record-view-, .custom-modal, .table-search).
+ * Move those blocks here when splitting CakePHP vendor vs plugin CSS.
+ */
+
+/* View: related child tabs */
+.view-related-tabs .nav-link {
+	font-weight: 600;
+}
+.view-related-tab-content {
+	background: #fff;
+	border-color: #dee2e6 !important;
+}
+.view-related-tab-content .index-data-table {
+	margin-bottom: 0;
+}

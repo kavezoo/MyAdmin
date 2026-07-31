@@ -6,5 +6,5 @@
 
 use Cake\I18n\I18n;
 ?>
-<h1>Member</h1>
-<p>Aktuális nyelv: <?= h($lang) ?> (<?= h(I18n::getLocale()) ?>)</p>
+<h1><?= __('Member') ?></h1>
+<p><?= __('Current language:') ?> <?= h($lang) ?> (<?= h(I18n::getLocale()) ?>)</p>

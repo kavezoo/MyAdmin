@@ -1,0 +1,737 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2026-07-31 11:53+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: ./src/Controller/Admin/CitiesController.php:28
+#: ./src/Controller/Admin/CitiesController.php:29
+#: ./src/Controller/Admin/CitiesController.php:71
+#: ./src/Controller/Admin/CitiesController.php:95
+#: ./src/Controller/Admin/CitiesController.php:108
+#: ./templates/Admin/Cities/index.php:42
+#: ./templates/Admin/Dashboard/index.php:23
+#: ./templates/Admin/Samples/index.php:35
+#: ./templates/Admin/Samples/index.php:93
+#: ./templates/Admin/Samples/view.php:36
+#: ./templates/element/admin/sidebar.php:34
+msgid "Cities"
+msgstr ""
+
+#: ./src/Controller/Admin/CitiesController.php:62
+#: ./src/Controller/Admin/CitiesController.php:86
+msgid "The city has been saved."
+msgstr ""
+
+#: ./src/Controller/Admin/CitiesController.php:66
+#: ./src/Controller/Admin/CitiesController.php:90
+#: ./src/Controller/Admin/ParentsController.php:66
+#: ./src/Controller/Admin/ParentsController.php:90
+#: ./src/Controller/Admin/SamplesController.php:79
+#: ./src/Controller/Admin/SamplesController.php:108
+msgid "The record could not be saved. Please try again."
+msgstr ""
+
+#: ./src/Controller/Admin/CitiesController.php:70
+#: ./templates/Admin/Cities/form.php:14
+msgid "New city"
+msgstr ""
+
+#: ./src/Controller/Admin/CitiesController.php:94
+#: ./templates/Admin/Cities/form.php:14
+msgid "Edit city"
+msgstr ""
+
+#: ./src/Controller/Admin/CitiesController.php:107
+#: ./templates/Admin/Cities/view.php:11
+msgid "City details"
+msgstr ""
+
+#: ./src/Controller/Admin/CitiesController.php:121
+#: ./src/Controller/Admin/ParentsController.php:121
+#: ./src/Controller/Admin/SamplesController.php:140
+msgid "The record has been deleted."
+msgstr ""
+
+#: ./src/Controller/Admin/CitiesController.php:123
+#: ./src/Controller/Admin/ParentsController.php:123
+#: ./src/Controller/Admin/SamplesController.php:142
+msgid "The record could not be deleted. Please try again."
+msgstr ""
+
+#: ./src/Controller/Admin/CitiesController.php:147
+#: ./src/Controller/Admin/ParentsController.php:147
+#: ./src/Controller/Admin/SamplesController.php:167
+#: ./src/Controller/Admin/SamplesController.php:220
+msgid "Record not found."
+msgstr ""
+
+#: ./src/Controller/Admin/DashboardController.php:16
+#: ./src/Controller/Admin/DashboardController.php:17
+#: ./templates/Admin/Dashboard/index.php:5
+#: ./templates/Admin/Dashboard/index.php:11
+#: ./templates/element/admin/sidebar.php:18
+msgid "Dashboard"
+msgstr ""
+
+#: ./src/Controller/Admin/ParentsController.php:28
+#: ./src/Controller/Admin/ParentsController.php:29
+#: ./src/Controller/Admin/ParentsController.php:71
+#: ./src/Controller/Admin/ParentsController.php:95
+#: ./src/Controller/Admin/ParentsController.php:108
+#: ./templates/Admin/Dashboard/index.php:20
+#: ./templates/Admin/Parents/index.php:42
+#: ./templates/element/admin/sidebar.php:31
+msgid "Parents"
+msgstr ""
+
+#: ./src/Controller/Admin/ParentsController.php:62
+#: ./src/Controller/Admin/ParentsController.php:86
+msgid "The parent has been saved."
+msgstr ""
+
+#: ./src/Controller/Admin/ParentsController.php:70
+#: ./templates/Admin/Parents/form.php:14
+#: ./templates/Admin/Samples/form.php:255
+msgid "New parent"
+msgstr ""
+
+#: ./src/Controller/Admin/ParentsController.php:94
+#: ./templates/Admin/Parents/form.php:14
+msgid "Edit parent"
+msgstr ""
+
+#: ./src/Controller/Admin/ParentsController.php:107
+#: ./templates/Admin/Parents/view.php:11
+#: ./templates/layout/admin.php:73
+msgid "Parent details"
+msgstr ""
+
+#: ./src/Controller/Admin/SamplesController.php:28
+#: ./src/Controller/Admin/SamplesController.php:29
+#: ./src/Controller/Admin/SamplesController.php:85
+#: ./src/Controller/Admin/SamplesController.php:114
+#: ./src/Controller/Admin/SamplesController.php:127
+#: ./templates/Admin/Cities/index.php:22
+#: ./templates/Admin/Cities/index.php:61
+#: ./templates/Admin/Cities/view.php:19
+#: ./templates/Admin/Dashboard/index.php:17
+#: ./templates/Admin/Parents/index.php:22
+#: ./templates/Admin/Parents/index.php:61
+#: ./templates/Admin/Parents/view.php:19
+#: ./templates/Admin/Samples/index.php:45
+#: ./templates/Admin/Samples/index.php:66
+#: ./templates/element/admin/sidebar.php:28
+msgid "Samples"
+msgstr ""
+
+#: ./src/Controller/Admin/SamplesController.php:75
+#: ./src/Controller/Admin/SamplesController.php:104
+msgid "The sample has been saved."
+msgstr ""
+
+#: ./src/Controller/Admin/SamplesController.php:84
+#: ./templates/Admin/Samples/form.php:44
+msgid "New sample"
+msgstr ""
+
+#: ./src/Controller/Admin/SamplesController.php:113
+#: ./templates/Admin/Samples/form.php:44
+msgid "Edit sample"
+msgstr ""
+
+#: ./src/Controller/Admin/SamplesController.php:126
+#: ./templates/Admin/Samples/view.php:13
+msgid "Sample details"
+msgstr ""
+
+#: ./src/Controller/Admin/SamplesController.php:256
+#: ./templates/Admin/Samples/form.php:261
+msgid "Please enter a value."
+msgstr ""
+
+#: ./src/Controller/Admin/SamplesController.php:273
+#: ./templates/layout/admin.php:74
+msgid "Failed to save the new value."
+msgstr ""
+
+#: ./templates/Admin/Cities/form.php:15
+#: ./templates/Admin/Cities/index.php:9
+#: ./templates/Admin/Parents/form.php:15
+#: ./templates/Admin/Parents/index.php:9
+#: ./templates/Admin/Samples/form.php:45
+#: ./templates/Admin/Samples/index.php:12
+#: ./templates/element/admin/breadcrumb.php:42
+msgid "Edit the selected record."
+msgstr ""
+
+#: ./templates/Admin/Cities/form.php:15
+#: ./templates/Admin/Parents/form.php:15
+#: ./templates/Admin/Samples/form.php:45
+#: ./templates/element/admin/breadcrumb.php:30
+msgid "Create a new record."
+msgstr ""
+
+#: ./templates/Admin/Cities/form.php:25
+#: ./templates/Admin/Parents/form.php:25
+#: ./templates/Admin/Samples/form.php:92
+msgid "Name:"
+msgstr ""
+
+#: ./templates/Admin/Cities/form.php:31
+#: ./templates/Admin/Parents/form.php:31
+#: ./templates/Admin/Samples/form.php:219
+msgid "Position:"
+msgstr ""
+
+#: ./templates/Admin/Cities/form.php:41
+#: ./templates/Admin/Cities/index.php:21
+#: ./templates/Admin/Cities/index.php:60
+#: ./templates/Admin/Cities/view.php:18
+#: ./templates/Admin/Parents/form.php:41
+#: ./templates/Admin/Parents/index.php:21
+#: ./templates/Admin/Parents/index.php:60
+#: ./templates/Admin/Parents/view.php:18
+#: ./templates/Admin/Samples/form.php:213
+#: ./templates/Admin/Samples/index.php:34
+#: ./templates/Admin/Samples/index.php:44
+#: ./templates/Admin/Samples/index.php:92
+#: ./templates/Admin/Samples/view.php:35
+msgid "Visible"
+msgstr ""
+
+#: ./templates/Admin/Cities/form.php:48
+#: ./templates/Admin/Parents/form.php:48
+#: ./templates/Admin/Samples/form.php:239
+#: ./templates/Admin/Samples/form.php:265
+#: ./templates/element/admin/breadcrumb.php:36
+#: ./templates/element/admin/breadcrumb.php:37
+msgid "Save"
+msgstr ""
+
+#: ./templates/Admin/Cities/form.php:49
+#: ./templates/Admin/Parents/form.php:49
+#: ./templates/Admin/Samples/form.php:242
+#: ./templates/Admin/Samples/form.php:264
+#: ./templates/layout/admin.php:65
+#: ./templates/layout/admin.php:78
+msgid "Cancel"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:8
+#: ./templates/Admin/Parents/index.php:8
+#: ./templates/Admin/Samples/index.php:11
+#: ./templates/element/admin/breadcrumb.php:48
+#: ./templates/element/admin/breadcrumb.php:49
+#: ./templates/element/admin/modal_linked_record_view.php:21
+#: ./templates/element/admin/modal_record_view.php:21
+msgid "Details"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:8
+#: ./templates/Admin/Parents/index.php:8
+#: ./templates/Admin/Samples/index.php:11
+msgid "View the selected record details."
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:9
+#: ./templates/Admin/Cities/view.php:25
+#: ./templates/Admin/Parents/index.php:9
+#: ./templates/Admin/Parents/view.php:25
+#: ./templates/Admin/Samples/index.php:12
+#: ./templates/Admin/Samples/view.php:54
+#: ./templates/element/admin/breadcrumb.php:42
+#: ./templates/element/admin/breadcrumb.php:43
+#: ./templates/element/admin/modal_linked_record_view.php:24
+#: ./templates/element/admin/modal_record_view.php:24
+msgid "Edit"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:10
+#: ./templates/Admin/Parents/index.php:10
+#: ./templates/Admin/Samples/index.php:13
+#: ./templates/element/admin/breadcrumb.php:51
+#: ./templates/element/admin/breadcrumb.php:52
+#: ./templates/element/admin/modal_linked_record_view.php:28
+#: ./templates/element/admin/modal_record_view.php:28
+#: ./templates/layout/admin.php:62
+#: ./templates/layout/admin.php:64
+msgid "Delete"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:10
+#: ./templates/Admin/Parents/index.php:10
+#: ./templates/Admin/Samples/index.php:13
+#: ./templates/element/admin/breadcrumb.php:51
+msgid "Permanently delete the selected record."
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:18
+#: ./templates/Admin/Cities/view.php:15
+#: ./templates/Admin/Parents/index.php:18
+#: ./templates/Admin/Parents/view.php:15
+#: ./templates/Admin/Samples/index.php:24
+#: ./templates/Admin/Samples/index.php:41
+#: ./templates/Admin/Samples/view.php:25
+msgid "ID"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:19
+#: ./templates/Admin/Cities/index.php:58
+#: ./templates/Admin/Cities/view.php:16
+#: ./templates/Admin/Parents/index.php:19
+#: ./templates/Admin/Parents/index.php:58
+#: ./templates/Admin/Parents/view.php:16
+#: ./templates/Admin/Samples/form.php:97
+#: ./templates/Admin/Samples/form.php:259
+#: ./templates/Admin/Samples/index.php:26
+#: ./templates/Admin/Samples/index.php:42
+#: ./templates/Admin/Samples/index.php:84
+#: ./templates/Admin/Samples/view.php:27
+msgid "Name"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:20
+#: ./templates/Admin/Cities/index.php:59
+#: ./templates/Admin/Cities/view.php:17
+#: ./templates/Admin/Parents/index.php:20
+#: ./templates/Admin/Parents/index.php:59
+#: ./templates/Admin/Parents/view.php:17
+#: ./templates/Admin/Samples/index.php:33
+#: ./templates/Admin/Samples/index.php:43
+#: ./templates/Admin/Samples/index.php:91
+#: ./templates/Admin/Samples/view.php:34
+msgid "Position"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:23
+#: ./templates/Admin/Cities/index.php:63
+#: ./templates/Admin/Cities/view.php:20
+#: ./templates/Admin/Parents/index.php:23
+#: ./templates/Admin/Parents/index.php:63
+#: ./templates/Admin/Parents/view.php:20
+#: ./templates/Admin/Samples/index.php:37
+#: ./templates/Admin/Samples/index.php:46
+#: ./templates/Admin/Samples/index.php:95
+#: ./templates/Admin/Samples/view.php:48
+msgid "Created"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:24
+#: ./templates/Admin/Cities/index.php:64
+#: ./templates/Admin/Cities/view.php:21
+#: ./templates/Admin/Parents/index.php:24
+#: ./templates/Admin/Parents/index.php:64
+#: ./templates/Admin/Parents/view.php:21
+#: ./templates/Admin/Samples/index.php:38
+#: ./templates/Admin/Samples/index.php:47
+#: ./templates/Admin/Samples/index.php:96
+#: ./templates/Admin/Samples/view.php:49
+msgid "Modified"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:43
+#: ./templates/Admin/Parents/index.php:43
+#: ./templates/Admin/Samples/index.php:67
+msgid "Double-click a row to view the record details."
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:47
+#: ./templates/Admin/Parents/index.php:47
+#: ./templates/Admin/Samples/index.php:71
+#: ./templates/element/admin/header_search.php:3
+msgid "Search..."
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:66
+#: ./templates/Admin/Parents/index.php:66
+#: ./templates/Admin/Samples/index.php:98
+msgid "Actions"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:129
+#: ./templates/Admin/Parents/index.php:129
+#: ./templates/Admin/Samples/index.php:181
+msgid "No records found."
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:138
+#: ./templates/Admin/Cities/index.php:142
+#: ./templates/Admin/Parents/index.php:138
+#: ./templates/Admin/Parents/index.php:142
+#: ./templates/Admin/Samples/index.php:192
+#: ./templates/Admin/Samples/index.php:196
+msgid "records"
+msgstr ""
+
+#: ./templates/Admin/Cities/index.php:140
+#: ./templates/Admin/Parents/index.php:140
+#: ./templates/Admin/Samples/index.php:194
+msgid "page"
+msgstr ""
+
+#: ./templates/Admin/Cities/view.php:18
+#: ./templates/Admin/Parents/view.php:18
+#: ./templates/Admin/Samples/view.php:33
+#: ./templates/Admin/Samples/view.php:35
+#: ./templates/layout/admin.php:70
+msgid "Yes"
+msgstr ""
+
+#: ./templates/Admin/Cities/view.php:18
+#: ./templates/Admin/Parents/view.php:18
+#: ./templates/Admin/Samples/view.php:33
+#: ./templates/Admin/Samples/view.php:35
+#: ./templates/layout/admin.php:71
+msgid "No"
+msgstr ""
+
+#: ./templates/Admin/Cities/view.php:26
+#: ./templates/Admin/Parents/view.php:26
+#: ./templates/Admin/Samples/view.php:59
+#: ./templates/element/admin/breadcrumb.php:25
+msgid "Back to list"
+msgstr ""
+
+#: ./templates/Admin/Dashboard/index.php:14
+msgid "Welcome to MyAdmin. Use the sidebar to manage your data."
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:50
+msgid "Created:"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:51
+msgid "Modified:"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:54
+msgid "Close window"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:72
+msgid "Parent:"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:79
+msgid "Select parent..."
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:84
+msgid "Add a new value to the list"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:104
+msgid "Number:"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:110
+msgid "e.g. 123"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:118
+msgid "Net:"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:124
+msgid "e.g. 1,234.56"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:132
+msgid "Date:"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:146
+msgid "Time:"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:160
+msgid "Date and time:"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:174
+msgid "Cities:"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:200
+#: ./templates/Admin/Samples/index.php:32
+#: ./templates/Admin/Samples/index.php:90
+#: ./templates/Admin/Samples/view.php:33
+msgid "Boolean"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:225
+msgid "e.g. 1000"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:256
+#: ./templates/element/admin/modal_linked_record_view.php:6
+#: ./templates/element/admin/modal_linked_record_view.php:18
+#: ./templates/element/admin/modal_record_view.php:6
+#: ./templates/element/admin/modal_record_view.php:18
+msgid "Close"
+msgstr ""
+
+#: ./templates/Admin/Samples/form.php:260
+msgid "Enter a new value..."
+msgstr ""
+
+#: ./templates/Admin/Samples/index.php:25
+#: ./templates/Admin/Samples/index.php:83
+#: ./templates/Admin/Samples/view.php:26
+msgid "Parent"
+msgstr ""
+
+#: ./templates/Admin/Samples/index.php:27
+#: ./templates/Admin/Samples/index.php:85
+#: ./templates/Admin/Samples/view.php:28
+msgid "Number"
+msgstr ""
+
+#: ./templates/Admin/Samples/index.php:28
+#: ./templates/Admin/Samples/index.php:86
+#: ./templates/Admin/Samples/view.php:29
+msgid "Net"
+msgstr ""
+
+#: ./templates/Admin/Samples/index.php:29
+#: ./templates/Admin/Samples/index.php:87
+#: ./templates/Admin/Samples/view.php:30
+msgid "Date"
+msgstr ""
+
+#: ./templates/Admin/Samples/index.php:30
+#: ./templates/Admin/Samples/index.php:88
+#: ./templates/Admin/Samples/view.php:31
+msgid "Time"
+msgstr ""
+
+#: ./templates/Admin/Samples/index.php:31
+#: ./templates/Admin/Samples/index.php:89
+#: ./templates/Admin/Samples/view.php:32
+msgid "Date and time"
+msgstr ""
+
+#: ./templates/Admin/Samples/index.php:36
+#: ./templates/Admin/Samples/view.php:37
+msgid "City list"
+msgstr ""
+
+#: ./templates/Admin/Samples/view.php:14
+msgid "View the selected record (read-only)."
+msgstr ""
+
+#: ./templates/Member/Dashboard/index.php:9
+msgid "Member"
+msgstr ""
+
+#: ./templates/Member/Dashboard/index.php:10
+msgid "Current language:"
+msgstr ""
+
+#: ./templates/element/admin/breadcrumb.php:30
+#: ./templates/element/admin/breadcrumb.php:31
+msgid "New"
+msgstr ""
+
+#: ./templates/element/admin/breadcrumb.php:36
+msgid "Save the form data."
+msgstr ""
+
+#: ./templates/element/admin/breadcrumb.php:48
+msgid "View the selected record."
+msgstr ""
+
+#: ./templates/element/admin/breadcrumb.php:58
+msgid "Home"
+msgstr ""
+
+#: ./templates/element/admin/footer.php:3
+msgid "Copyright"
+msgstr ""
+
+#: ./templates/element/admin/footer.php:6
+msgid "Powered by"
+msgstr ""
+
+#: ./templates/element/admin/header.php:7
+#: ./templates/layout/admin.php:11
+#: ./templates/layout/admin.php:20
+msgid "Admin"
+msgstr ""
+
+#: ./templates/element/admin/header_alerts.php:7
+msgid "Alerts"
+msgstr ""
+
+#: ./templates/element/admin/header_alerts.php:9
+msgid "No alerts"
+msgstr ""
+
+#: ./templates/element/admin/header_help.php:7
+msgid "Help and support"
+msgstr ""
+
+#: ./templates/element/admin/header_help.php:11
+msgid "Documentation"
+msgstr ""
+
+#: ./templates/element/admin/header_help.php:12
+msgid "Coming soon"
+msgstr ""
+
+#: ./templates/element/admin/header_language.php:2
+#: ./templates/element/admin/header_language.php:7
+msgid "Language"
+msgstr ""
+
+#: ./templates/element/admin/header_language.php:3
+#: ./templates/element/admin/header_language.php:13
+msgid "English"
+msgstr ""
+
+#: ./templates/element/admin/header_language.php:10
+msgid "Hungarian"
+msgstr ""
+
+#: ./templates/element/admin/header_language.php:16
+msgid "German"
+msgstr ""
+
+#: ./templates/element/admin/header_language.php:19
+msgid "Slovak"
+msgstr ""
+
+#: ./templates/element/admin/header_messages.php:7
+msgid "Messages"
+msgstr ""
+
+#: ./templates/element/admin/header_messages.php:9
+msgid "No messages"
+msgstr ""
+
+#: ./templates/element/admin/header_profile.php:3
+msgid "Profile picture"
+msgstr ""
+
+#: ./templates/element/admin/header_profile.php:7
+msgid "Hello, admin"
+msgstr ""
+
+#: ./templates/element/admin/header_profile.php:10
+msgid "Profile"
+msgstr ""
+
+#: ./templates/element/admin/header_profile.php:13
+msgid "Log out"
+msgstr ""
+
+#: ./templates/element/admin/index_pagination.php:2
+msgid "Pagination"
+msgstr ""
+
+#: ./templates/element/admin/index_pagination.php:7
+msgid "Previous"
+msgstr ""
+
+#: ./templates/element/admin/index_pagination.php:8
+msgid "Next"
+msgstr ""
+
+#: ./templates/element/admin/modal_linked_record_view.php:5
+msgid "Linked record"
+msgstr ""
+
+#: ./templates/element/admin/modal_linked_record_view.php:11
+#: ./templates/element/admin/modal_record_view.php:11
+msgid "Loading…"
+msgstr ""
+
+#: ./templates/element/admin/modal_record_view.php:5
+#: ./templates/layout/admin.php:72
+msgid "Record details"
+msgstr ""
+
+#: ./templates/element/admin/sidebar.php:24
+msgid "Data"
+msgstr ""
+
+#: ./templates/layout/admin.php:63
+msgid "Do you really want to delete the selected record?"
+msgstr ""
+
+#: ./templates/layout/admin.php:66
+msgid "Delete functionality will be connected later."
+msgstr ""
+
+#: ./templates/layout/admin.php:67
+msgid "Delete form not found for ID:"
+msgstr ""
+
+#: ./templates/layout/admin.php:68
+msgid "Failed to load the record."
+msgstr ""
+
+#: ./templates/layout/admin.php:69
+msgid "No response from the server."
+msgstr ""
+
+#: ./templates/layout/admin.php:75
+msgid "Add"
+msgstr ""
+
+#: ./templates/layout/admin.php:76
+msgid "Add a new value to the list."
+msgstr ""
+
+#: ./templates/layout/admin.php:77
+msgid "Apply"
+msgstr ""
+
+#: ./templates/layout/admin.php:79
+msgid "From"
+msgstr ""
+
+#: ./templates/layout/admin.php:80
+msgid "To"
+msgstr ""
+
+#: ./templates/layout/admin.php:81
+msgid "Custom"
+msgstr ""
+
+#: ./templates/layout/admin.php:82
+msgid "Select cities..."
+msgstr ""
+
+#: ./templates/layout/admin.php:83
+msgid "Delete the parent from the Parents list."
+msgstr ""
+
+#: ./templates/layout/error.php:36
+msgid "Back"
+msgstr ""
+
+#: ./templates/Error/error400.php:24
+#: ./templates/Error/error500.php:34
+msgid "Error"
+msgstr ""
+
+#: ./templates/Error/error400.php:25
+msgid "The requested address {0} was not found on this server."
+msgstr ""
+
+#: ./templates/Error/error500.php:32
+msgid "An Internal Error Has Occurred."
+msgstr ""
+

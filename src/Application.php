@@ -18,6 +18,8 @@ namespace App;
 
 use App\Middleware\HostHeaderMiddleware;
 use App\Middleware\LocaleMiddleware;
+use App\Middleware\NormalizeLocalizedDateMiddleware;
+use App\Middleware\NormalizeLocalizedNumberMiddleware;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Datasource\FactoryLocator;
@@ -94,6 +96,11 @@ class Application extends BaseApplication
             // available as array through $request->getData()
             // https://book.cakephp.org/5/en/controllers/middleware.html#body-parser-middleware
             ->add(new BodyParserMiddleware())
+
+            // Normalize localized dates then numbers in POST/PUT/PATCH body (form → DB).
+            // Date first so values like 12.03.2024 are not treated as numbers.
+            ->add(new NormalizeLocalizedDateMiddleware())
+            ->add(new NormalizeLocalizedNumberMiddleware())
 
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/5/en/security/csrf.html#cross-site-request-forgery-csrf-middleware

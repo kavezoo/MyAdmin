@@ -1,0 +1,8 @@
+/**
+ * cakephp-template: page-css:form
+ *
+ * Add / Edit form template styles.
+ * Form-specific rules currently live in assets/css/style.css
+ * (search for: #form-horizontal, .form-language-, .select2-with-add, .btn-select2-add, .trumbowyg-editor).
+ * Move those blocks here when splitting CakePHP vendor vs plugin CSS.
+ */

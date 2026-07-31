@@ -1,0 +1,388 @@
+/**
+ * Bootstrap 5 compatibility layer for Pike Admin template.
+ * Preserves Bootstrap 4 class names and visual appearance.
+ */
+
+/* --- Spacing utilities (BS4 ml/mr/pl/pr) --- */
+.ml-0 { margin-left: 0 !important; }
+.ml-1 { margin-left: 0.25rem !important; }
+.ml-2 { margin-left: 0.5rem !important; }
+.ml-3 { margin-left: 1rem !important; }
+.ml-4 { margin-left: 1.5rem !important; }
+.ml-5 { margin-left: 3rem !important; }
+.ml-auto { margin-left: auto !important; }
+.mr-0 { margin-right: 0 !important; }
+.mr-1 { margin-right: 0.25rem !important; }
+.mr-2 { margin-right: 0.5rem !important; }
+.mr-3 { margin-right: 1rem !important; }
+.mr-4 { margin-right: 1.5rem !important; }
+.mr-5 { margin-right: 3rem !important; }
+.mr-auto { margin-right: auto !important; }
+.mr-sm-0 { margin-right: 0 !important; }
+.mr-sm-2 { margin-right: 0.5rem !important; }
+.pl-0 { padding-left: 0 !important; }
+.pl-1 { padding-left: 0.25rem !important; }
+.pl-2 { padding-left: 0.5rem !important; }
+.pl-3 { padding-left: 1rem !important; }
+.pl-4 { padding-left: 1.5rem !important; }
+.pl-5 { padding-left: 3rem !important; }
+.pr-0 { padding-right: 0 !important; }
+.pr-1 { padding-right: 0.25rem !important; }
+.pr-2 { padding-right: 0.5rem !important; }
+.pr-3 { padding-right: 1rem !important; }
+.pr-4 { padding-right: 1.5rem !important; }
+.pr-5 { padding-right: 3rem !important; }
+
+/* Pike custom spacing */
+.m-b-5 { margin-bottom: 5px !important; }
+.m-b-10 { margin-bottom: 10px !important; }
+.m-b-20 { margin-bottom: 20px !important; }
+.m-t-10 { margin-top: 10px !important; }
+.m-t-20 { margin-top: 20px !important; }
+.m-r-5 { margin-right: 5px !important; }
+.m-r-10 { margin-right: 10px !important; }
+.m-l-5 { margin-left: 5px !important; }
+.m-l-10 { margin-left: 10px !important; }
+
+/* --- Float utilities --- */
+.float-left, .pull-left { float: left !important; }
+.float-right, .pull-right { float: right !important; }
+
+/* --- Text alignment --- */
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+
+/* --- Font weight --- */
+.font-weight-bold { font-weight: 700 !important; }
+.font-weight-normal { font-weight: 400 !important; }
+.font-weight-light { font-weight: 300 !important; }
+.font-600 { font-weight: 600 !important; }
+
+/* --- Form layout --- */
+.form-group { margin-bottom: 1rem; }
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+.form-row > .col,
+.form-row > [class*="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+/* Form control heights (match previous template) */
+.form-control,
+.form-select {
+  height: calc(2.25rem + 2px);
+}
+select.form-control[size],
+select.form-control[multiple],
+textarea.form-control {
+  height: auto;
+}
+.form-control-sm,
+.form-select-sm {
+  height: calc(1.8125rem + 2px);
+}
+.form-control-lg,
+.form-select-lg {
+  height: calc(2.875rem + 2px);
+}
+
+/* Legacy custom-select alias */
+.custom-select {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  height: calc(2.25rem + 2px);
+  appearance: none;
+}
+
+/* Input group addon (BS3 legacy) */
+.input-group-addon {
+  display: flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+.input-group > .input-group-addon {
+  display: flex;
+  align-items: center;
+}
+.input-group > .input-group-addon:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.input-group > .input-group-addon:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-left: -1px;
+}
+
+/* Custom controls (BS4) */
+.custom-control {
+  position: relative;
+  display: block;
+  min-height: 1.5rem;
+  padding-left: 1.5rem;
+}
+.custom-control-input {
+  position: absolute;
+  left: 0;
+  z-index: -1;
+  width: 1rem;
+  height: 1.25rem;
+  opacity: 0;
+}
+.custom-control-description {
+  position: relative;
+  margin-bottom: 0;
+  vertical-align: top;
+}
+.custom-control-indicator {
+  position: absolute;
+  top: 0.25rem;
+  left: 0;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+  content: "";
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 0.25rem;
+}
+.custom-radio .custom-control-indicator {
+  border-radius: 50%;
+}
+.custom-control-input:checked ~ .custom-control-indicator {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+.custom-checkbox .custom-control-input:checked ~ .custom-control-indicator {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50% 50%;
+}
+.custom-radio .custom-control-input:checked ~ .custom-control-indicator {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+}
+.custom-controls-stacked .custom-control {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.custom-controls-stacked .custom-control + .custom-control {
+  margin-left: 0;
+}
+
+/* Custom file input (BS4) */
+.custom-file {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: calc(2.25rem + 2px);
+  margin-bottom: 0;
+}
+.custom-file-input {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: calc(2.25rem + 2px);
+  margin: 0;
+  opacity: 0;
+}
+.custom-file-control,
+.custom-file-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: calc(2.25rem + 2px);
+  padding: 0.375rem 0.75rem;
+  overflow: hidden;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+.custom-file-control::before,
+.custom-file-label::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: block;
+  height: calc(2.25rem);
+  padding: 0.375rem 0.75rem;
+  line-height: 1.5;
+  color: #495057;
+  content: "Browse";
+  background-color: #e9ecef;
+  border-left: 1px solid #ced4da;
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+/* Badge color variants (BS4) */
+.badge-primary { background-color: #0f9df7; color: #fff; }
+.badge-secondary { background-color: #6c757d; color: #fff; }
+.badge-success { background-color: #1bb99a; color: #fff; }
+.badge-danger { background-color: #ff5d48; color: #fff; }
+.badge-warning { background-color: #f1b53d; color: #212529; }
+.badge-info { background-color: #3db9dc; color: #fff; }
+.badge-light { background-color: #f8f9fa; color: #212529; }
+.badge-dark { background-color: #2b3d51; color: #fff; }
+
+/* Close button (BS4 style) for any remaining .close elements */
+.close {
+  float: right;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.5;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.close:hover { opacity: 0.75; }
+
+/* Modal header close on dark backgrounds */
+.modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Card deck */
+.card-deck {
+  display: flex;
+  flex-flow: row wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+.card-deck .card {
+  flex: 1 0 0%;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  margin-left: 15px;
+}
+
+/* No gutters */
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+.no-gutters > .col,
+.no-gutters > [class*="col-"] {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+/* Media object (BS4) */
+.media { display: flex; align-items: flex-start; }
+.media-body { flex: 1; }
+
+/* Breadcrumb divider */
+.breadcrumb-item + .breadcrumb-item::before {
+  float: left;
+  padding-right: 0.5rem;
+  color: #6c757d;
+  content: "/";
+}
+
+/* Dropdown menu alignment fix */
+.dropdown-menu-right,
+.dropdown-menu-end {
+  right: 0;
+  left: auto;
+}
+
+/* Input group vertical alignment */
+.input-group > .input-group-prepend > .btn,
+.input-group > .input-group-append > .btn,
+.input-group > .input-group-text,
+.input-group > .input-group-addon,
+.input-group > .form-control,
+.input-group > .form-select {
+  display: flex;
+  align-items: center;
+}
+
+/* Legacy responsive class used directly on table (keep table layout intact) */
+table.table-responsive,
+table.table-responsive-sm,
+table.table-responsive-md,
+table.table-responsive-lg,
+table.table-responsive-xl,
+table.table-responsive-xxl {
+  width: 100%;
+}
+
+/* Horizontal scroll on card body when legacy responsive table overflows */
+.card-body:has(> table[class*="table-responsive"]) {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Accordion card headers */
+.card-header a[data-bs-toggle="collapse"] {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+.card-header a[data-bs-toggle="collapse"]:hover {
+  text-decoration: none;
+}
+
+/* Navbar list-inline dropdown alignment */
+.navbar-custom .list-inline {
+  margin-bottom: 0;
+}
+.navbar-custom .list-inline-item {
+  display: inline-block;
+}
+
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* IE9-11 form-control fix from original style.css */
+@media screen and (min-width: 0\0) {
+  .form-control,
+  .form-select {
+    padding: 0.55rem 0.75rem !important;
+  }
+  .input-group-addon {
+    line-height: inherit !important;
+    font-size: 1rem !important;
+  }
+}
