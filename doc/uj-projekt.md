@@ -178,6 +178,7 @@ Index template elején (minden CRUD `index.php`):
 ```php
 $rowDoubleClickAction = 'modal'; // modal | edit | none
 $numberDecimals = ['integer' => 0, 'decimal' => 2]; // tizedesjegyek a listában
+$showIdColumn = true;
 $showCountColumn = true;
 $showVisibleColumn = true;
 $showCreatedColumn = true;
@@ -185,7 +186,7 @@ $showModifiedColumn = true;
 ```
 
 Részletek: [admin-konvenciok.md](admin-konvenciok.md).  
-`pages/form.js`: daterangepicker + inputmask; **számmezők locale szerint** (`numberFormat`); Select2; `.btn-select2-add` …
+`pages/form.js`: `#name` autofókusz; daterangepicker + inputmask; **számmezők locale szerint** (`numberFormat`); Select2; `.btn-select2-add` + modal name-fókusz …
 
 ### 2.7 i18n
 
@@ -203,7 +204,7 @@ Kötelező checklist modulonként:
 - [ ] Model + asszociációk (reserved entity név kezelve)
 - [ ] Admin controller: index, add, edit→`form`, view (+ contain, kapcsolt lista **ASC**), delete, `recordGet` (modal lista is ASC)
 - [ ] `index.php` — teljes lista-minta ([admin-konvenciok.md](admin-konvenciok.md))
-- [ ] `form.php` — közös add/edit
+- [ ] `form.php` — közös add/edit; `#name` autofocus; mentés try/catch + Flash
 - [ ] `view.php` — `dl` + `view_related_tabs` gyerekekhez
 - [ ] Sidebar menüpont
 - [ ] Új stringek a `.po`-ban
@@ -234,7 +235,7 @@ Ha a keretrendszert próbálod ki üres domain mellett, ideiglenes táblákkal:
 | `parents` | hasMany samples; entity **nem** lehet `Parent` → `ParentRecord` |
 | `samples` | belongsTo parent; belongsToMany cities through |
 | `cities` | belongsToMany samples |
-| `cities_samples` | through + join mező defaultok (`pos`, `visible`) |
+| `cities_samples` | through; join `pos` / `visible` → **DB default** (PHP ne erőltessen 1000-et) |
 
 Ezek **eldobhatók** — a keretrendszer a fenti 1–3. szakasz. Teszt CRUD törlésekor ne töröld a layoutot, elementeket, middleware-t, `app.js` / `pages/*`, i18n szabályt.
 
@@ -247,15 +248,16 @@ Olvasd el és **kövesd** — a felhasználónak ne kelljen ezeket minden chatbe
 1. Először: [admin-oldal.md](admin-oldal.md) (célkép) + ez a fájl + [admin-konvenciok.md](admin-konvenciok.md) + [i18n.md](i18n.md) + [middleware.md](middleware.md).
 2. Üres projekt → **2. szakasz**. Új tábla → [crud-utmutato.md](crud-utmutato.md).
 3. Címkék: `__('English msgid')` + `hu_HU/default.po`. Admin locale mindig `hu_HU` (middleware + AppController). **Nincs** nyelvválasztó az admin headerben.
-4. Számok **kiírása** (index/view/modal): `LocaleNumberParser::format()`. Form: `numberFormat` + `.js-input-decimal`/`.js-input-integer`. Mentés: szám/dátum middleware.
+4. Számok **kiírása** (index/view/modal): `LocaleNumberParser::format()`; count: `formatCount()`; pénznem: `currencySymbol()` → **Ft**. Form: `numberFormat` + `.js-input-decimal`/`.js-input-integer`. Mentés: szám/dátum middleware.
 5. Index fix oszlopszélesség (`style.css`): minta (`MyPluginTemplate`) + MyAdmin kiegészítés — `count`/`visible`/`boolean`/`date`/`datetime`/`time` a mintából; `id`/`pos`/`number`/`currency` fix; **`string` rugalmas**.
 6. Modal/view kapcsolt listák: **ABC ASC** (`contain` + `orderBy` name).
 7. Dialógusok: csak SweetAlert (`MyAdmin.alert` / `alertError` / `confirmDelete`) — **tilos** `window.alert`.
-8. Select2 „+” single **és** multiple; `fetchTable()`, ne Association objektum.
-9. View: bake `dl` + `view_related_tabs` (üres tab is).
-10. Index: `$rowDoubleClickAction`, `$numberDecimals`, `$showCountColumn` / `$showVisibleColumn` / `$showCreatedColumn` / `$showModifiedColumn`.
-11. Layoutba csak közös asset; oldalspecifikus a templateben.
-12. Minden lényeges változás → `valtozasok.md` (+ érintett spec).
+8. Select2 „+” ahol egyszerű create; HABTM multiple **mindkét** formon; `fetchTable()`, ne Association. **belongsTo lista** (Parent): `visible = true`, order `pos` ASC + `name` ASC; editnél aktuális szülő akkor is.
+9. Form: `#name` autofocus + `form.js`; `newEntityWithSchemaDefaults()` (pos/visible/… = DB); mentés try/catch + Flash; `beforeMarshal` ArrayObject → `getArrayCopy()`.
+10. View: bake `dl` + `view_related_tabs` (üres tab is); kapcsolt nevek `.record-modal-link` + AJAX modal; `$rowDoubleClickAction` a kapcsolt táblára.
+11. Index: `$indexLimit` / `$indexMaxLimit` + `indexPaginateOptions()`; `setLastVisitedForIndex` + `.last-visited`; `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; `*_count` → `formatCount`; `pos` = DB default.
+12. Layoutba csak közös asset; oldalspecifikus a templateben.
+13. Minden lényeges változás → `valtozasok.md` (+ érintett spec, különösen `admin-oldal.md` / `admin-konvenciok.md`).
 
 ---
 
@@ -265,8 +267,8 @@ Olvasd el és **kövesd** — a felhasználónak ne kelljen ezeket minden chatbe
 - [ ] Nincs nyelvválasztó az admin headerben
 - [ ] `MyAdmin.alert` / `confirmDelete` működik; **nincs** `window.alert` az admin JS-ben
 - [ ] Legalább egy CRUD: lista dupla klikk modal működik
-- [ ] Form mentés locale szám/dátummal működik (middleware)
-- [ ] Index számok locale szerint; fix oszlopok: id/pos/number/currency/count/boolean/date/time ([admin-oldal.md](admin-oldal.md) §4.3); `string` rugalmas
-- [ ] View: fő mezők + (ha van gyerek) tab sheet ASC, üresen is
+- [ ] Form: `#name` fókusz; Parent/belongsTo lista visible + pos/name sorrend; szám/dátum middleware; Select2 „+”; mentés Flash (ne nyers PHP)
+- [ ] Index számok locale szerint; fix oszlopok: id/pos/number/currency/count/boolean/date/time ([admin-oldal.md](admin-oldal.md) §4.3); `string` rugalmas; count 0 üres
+- [ ] View: fő mezők + (ha van gyerek) tab sheet ASC, üresen is; modal linkek
 - [ ] Flash / gombok magyarul (`hu_HU` .po)
 - [ ] `doc/` naprakész (`admin-oldal.md` is tükrözi a célképet)

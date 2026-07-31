@@ -23,13 +23,17 @@ $numberDecimals = [
 /**
  * Optional index columns (true = show, false = hide).
  */
+$showIdColumn = true;
 $showCountColumn = true;
 $showVisibleColumn = true;
 $showCreatedColumn = true;
 $showModifiedColumn = true;
 
 $showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
-$indexColspan = 4; // id, name, pos, actions
+$indexColspan = 3; // name, pos, actions
+if ($showIdColumn) {
+	$indexColspan++;
+}
 if ($showVisibleColumn) {
 	$indexColspan++;
 }
@@ -43,6 +47,7 @@ if ($showTimestampColumn) {
 $tooltipDetails = '<b>' . __('View details') . '</b><br>' . __('View the selected record details.');
 $tooltipEdit = '<b>' . __('Edit') . '</b><br>' . __('Edit the selected record.');
 $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
+$tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete this record because it has related child records.');
 
 $rowDoubleClickHints = [
 	'modal' => __('Double-click a row to view the record details.'),
@@ -99,7 +104,9 @@ $paging = $this->Paginator->params();
 				<table class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table">
 					<thead>
 						<tr>
-							<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
+							<?php if ($showIdColumn): ?>
+								<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
+							<?php endif; ?>
 							<th scope="col" class="string name"><?= $this->Paginator->sort('name', __('Name')) ?></th>
 							<th scope="col" class="number pos"><?= $this->Paginator->sort('pos', __('Position')) ?></th>
 							<?php if ($showVisibleColumn): ?>
@@ -123,8 +130,14 @@ $paging = $this->Paginator->params();
 					</thead>
 					<tbody>
 						<?php foreach ($parents as $parent): ?>
-							<tr id="record-<?= (int)$parent->id ?>" data-id="<?= (int)$parent->id ?>">
-								<td class="number id"><?= h($parent->id) ?></td>
+							<?php
+							$canDeleteRow = (int)($parent->sample_count ?? 0) === 0;
+							$isLastVisited = isset($lastVisitedId) && (int)$lastVisitedId === (int)$parent->id;
+							?>
+							<tr id="record-<?= (int)$parent->id ?>" data-id="<?= (int)$parent->id ?>" data-can-delete="<?= $canDeleteRow ? '1' : '0' ?>"<?= $isLastVisited ? ' class="last-visited"' : '' ?>>
+								<?php if ($showIdColumn): ?>
+									<td class="number id"><?= h($parent->id) ?></td>
+								<?php endif; ?>
 								<td class="string name"><?= h($parent->name) ?></td>
 								<td class="number pos text-end"><?= h(\App\Utility\LocaleNumberParser::format($parent->pos, decimals: $numberDecimals['integer'])) ?></td>
 								<?php if ($showVisibleColumn): ?>
@@ -135,7 +148,7 @@ $paging = $this->Paginator->params();
 									</td>
 								<?php endif; ?>
 								<?php if ($showCountColumn): ?>
-									<td class="number count text-end"><?= h(\App\Utility\LocaleNumberParser::format($parent->sample_count, decimals: $numberDecimals['integer'])) ?></td>
+									<td class="number count text-end"><?= h(\App\Utility\LocaleNumberParser::formatCount($parent->sample_count, decimals: $numberDecimals['integer'])) ?></td>
 								<?php endif; ?>
 								<?php if ($showTimestampColumn): ?>
 									<td class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
@@ -177,17 +190,21 @@ $paging = $this->Paginator->params();
 											'title' => $tooltipEdit,
 										]
 									) ?>
-									<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$parent->id ?>">
-										<i class="fa fa-trash"></i>
-									</a>
-									<?= $this->Form->postLink(
-										'',
-										['action' => 'delete', $parent->id],
-										[
-											'class' => 'd-none js-row-delete-form',
+									<?php if ($canDeleteRow): ?>
+										<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$parent->id ?>">
+											<i class="fa fa-trash"></i>
+										</a>
+										<?= $this->Form->create(null, [
+											'url' => ['action' => 'delete', $parent->id],
 											'id' => 'delete-form-' . $parent->id,
-										]
-									) ?>
+											'class' => 'd-none js-row-delete-form',
+										]) ?>
+										<?= $this->Form->end() ?>
+									<?php else: ?>
+										<a role="button" href="#" class="btn btn-outline-danger disabled" aria-disabled="true" tabindex="-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+											<i class="fa fa-trash"></i>
+										</a>
+									<?php endif; ?>
 								</td>
 							</tr>
 						<?php endforeach; ?>

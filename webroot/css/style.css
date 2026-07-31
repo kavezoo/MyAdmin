@@ -1700,22 +1700,28 @@ a.btn:focus {
 
 /* ID + időbeli oszlopok fix szélessége: lásd lentebb (.table th.id / .date / .datetime / .time) */
 
-.table td.category-id .category-link {
+.table td.category-id .category-link,
+a.record-modal-link,
+.record-view-fields a.record-modal-link {
   font-weight: 700;
   color: #000;
   text-decoration: none;
 }
 
-.table td.category-id .category-link:hover {
+.table td.category-id .category-link:hover,
+a.record-modal-link:hover,
+.record-view-fields a.record-modal-link:hover {
   color: #000;
   text-decoration: underline;
 }
 
-.table td.category-id .category-link-icon {
+.table td.category-id .category-link-icon,
+.record-modal-link-icon {
   white-space: nowrap;
 }
 
-.table td.category-id .category-link-icon .fa {
+.table td.category-id .category-link-icon .fa,
+.record-modal-link-icon .fa {
   color: #ced4da;
   font-size: 0.8em;
   font-weight: 900;

@@ -30,13 +30,17 @@ $numberDecimals = [
  * Optional index columns (true = show, false = hide).
  * Created / Modified can be toggled independently; if either is on, one timestamp column is rendered.
  */
+$showIdColumn = true;
 $showCountColumn = true;
 $showVisibleColumn = true;
 $showCreatedColumn = true;
 $showModifiedColumn = true;
 
 $showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
-$indexColspan = 11; // id, parent, name, szam, netto, datum, ido, datumido, logikai, pos, actions
+$indexColspan = 10; // parent, name, szam, netto, datum, ido, datumido, logikai, pos, actions
+if ($showIdColumn) {
+	$indexColspan++;
+}
 if ($showVisibleColumn) {
 	$indexColspan++;
 }
@@ -50,6 +54,7 @@ if ($showTimestampColumn) {
 $tooltipDetails = '<b>' . __('View details') . '</b><br>' . __('View the selected record details.');
 $tooltipEdit = '<b>' . __('Edit') . '</b><br>' . __('Edit the selected record.');
 $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
+$tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete this record because it has related child records.');
 
 $rowDoubleClickHints = [
 	'modal' => __('Double-click a row to view the record details.'),
@@ -66,6 +71,7 @@ $config = [
 	'viewUrl' => $this->Url->build(['action' => 'view']),
 	'parentEditUrl' => $this->Url->build(['controller' => 'Parents', 'action' => 'edit']),
 	'parentViewUrl' => $this->Url->build(['controller' => 'Parents', 'action' => 'view']),
+	'parentDeleteUrl' => $this->Url->build(['controller' => 'Parents', 'action' => 'delete']),
 	'deleteUrl' => $this->Url->build(['action' => 'delete']),
 	'recordFieldLabels' => [
 		'id' => __('ID'),
@@ -84,6 +90,26 @@ $config = [
 		'created' => __('Created'),
 		'modified' => __('Modified'),
 	],
+	'relatedLinkFields' => [
+		'cities' => [
+			'getUrl' => $this->Url->build(['controller' => 'Cities', 'action' => 'recordGet']),
+			'editUrl' => $this->Url->build(['controller' => 'Cities', 'action' => 'edit']),
+			'viewUrl' => $this->Url->build(['controller' => 'Cities', 'action' => 'view']),
+			'deleteUrl' => $this->Url->build(['controller' => 'Cities', 'action' => 'delete']),
+			'deleteFormPrefix' => 'city',
+			'labels' => 'city',
+			'title' => __('City details'),
+		],
+		'samples' => [
+			'getUrl' => $this->Url->build(['controller' => 'Samples', 'action' => 'recordGet']),
+			'editUrl' => $this->Url->build(['controller' => 'Samples', 'action' => 'edit']),
+			'viewUrl' => $this->Url->build(['controller' => 'Samples', 'action' => 'view']),
+			'deleteUrl' => $this->Url->build(['controller' => 'Samples', 'action' => 'delete']),
+			'deleteFormPrefix' => 'sample',
+			'labels' => 'sample',
+			'title' => __('Sample details'),
+		],
+	],
 	'categoryFieldLabels' => [
 		'id' => __('ID'),
 		'name' => __('Name'),
@@ -92,6 +118,44 @@ $config = [
 		'sample_count' => __('Samples'),
 		'created' => __('Created'),
 		'modified' => __('Modified'),
+	],
+	'entityFieldLabels' => [
+		'parent' => [
+			'id' => __('ID'),
+			'name' => __('Name'),
+			'pos' => __('Position'),
+			'visible' => __('Visible'),
+			'sample_count' => __('Samples'),
+			'created' => __('Created'),
+			'modified' => __('Modified'),
+		],
+		'city' => [
+			'id' => __('ID'),
+			'name' => __('Name'),
+			'pos' => __('Position'),
+			'visible' => __('Visible'),
+			'sample_count' => __('Samples'),
+			'samples' => __('Sample list'),
+			'created' => __('Created'),
+			'modified' => __('Modified'),
+		],
+		'sample' => [
+			'id' => __('ID'),
+			'parent' => __('Parent'),
+			'name' => __('Name'),
+			'szam' => __('Number'),
+			'netto' => __('Net'),
+			'datum' => __('Date'),
+			'ido' => __('Time'),
+			'datumido' => __('Date and time'),
+			'logikai' => __('Boolean'),
+			'pos' => __('Position'),
+			'visible' => __('Visible'),
+			'city_count' => __('Cities'),
+			'cities' => __('City list'),
+			'created' => __('Created'),
+			'modified' => __('Modified'),
+		],
 	],
 ];
 $this->Html->scriptBlock(
@@ -128,7 +192,9 @@ $paging = $this->Paginator->params();
 				<table class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table">
 					<thead>
 						<tr>
-							<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
+							<?php if ($showIdColumn): ?>
+								<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
+							<?php endif; ?>
 							<th scope="col" class="string category-id"><?= $this->Paginator->sort('Parents.name', __('Parent')) ?></th>
 							<th scope="col" class="string name"><?= $this->Paginator->sort('name', __('Name')) ?></th>
 							<th scope="col" class="number szam"><?= $this->Paginator->sort('szam', __('Number')) ?></th>
@@ -159,19 +225,34 @@ $paging = $this->Paginator->params();
 					</thead>
 					<tbody>
 						<?php foreach ($samples as $sample): ?>
-							<tr id="record-<?= (int)$sample->id ?>" data-id="<?= (int)$sample->id ?>">
-								<td class="number id"><?= h($sample->id) ?></td>
+							<?php
+							$canDeleteRow = (int)($sample->city_count ?? 0) === 0;
+							$isLastVisited = isset($lastVisitedId) && (int)$lastVisitedId === (int)$sample->id;
+							?>
+							<tr id="record-<?= (int)$sample->id ?>" data-id="<?= (int)$sample->id ?>" data-can-delete="<?= $canDeleteRow ? '1' : '0' ?>"<?= $isLastVisited ? ' class="last-visited"' : '' ?>>
+								<?php if ($showIdColumn): ?>
+									<td class="number id"><?= h($sample->id) ?></td>
+								<?php endif; ?>
 								<td class="string category-id">
 									<?php if ($sample->parent): ?>
-										<a href="#" class="category-link" data-id="<?= (int)$sample->parent_id ?>">
-											<?= h($sample->parent->name) ?><span class="category-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span>
+										<a href="#"
+										class="category-link record-modal-link"
+										data-id="<?= (int)$sample->parent_id ?>"
+										data-get-url="<?= h($this->Url->build(['action' => 'parentGet'])) ?>"
+										data-edit-url="<?= h($this->Url->build(['controller' => 'Parents', 'action' => 'edit'])) ?>"
+										data-view-url="<?= h($this->Url->build(['controller' => 'Parents', 'action' => 'view'])) ?>"
+										data-delete-url="<?= h($this->Url->build(['controller' => 'Parents', 'action' => 'delete'])) ?>"
+										data-labels="parent"
+										data-title="<?= h(__('Parent details')) ?>"
+									>
+											<?= h($sample->parent->name) ?><span class="category-link-icon record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span>
 										</a>
 									<?php endif; ?>
 								</td>
 								<td class="string name"><?= h($sample->name) ?></td>
 								<td class="number szam text-end"><?= h(\App\Utility\LocaleNumberParser::format($sample->szam, decimals: $numberDecimals['integer'])) ?></td>
 								<td class="currency netto text-end">
-									<span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::format($sample->netto, decimals: $numberDecimals['decimal'])) ?></span> HUF
+									<span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::format($sample->netto, decimals: $numberDecimals['decimal'])) ?></span> <?= h(\App\Utility\LocaleNumberParser::currencySymbol()) ?>
 								</td>
 								<td class="date datum"><?= $sample->datum ? h($sample->datum->format('Y.m.d.')) : '' ?></td>
 								<td class="time ido"><?= $sample->ido ? h($sample->ido->format('H:i')) : '' ?></td>
@@ -190,7 +271,7 @@ $paging = $this->Paginator->params();
 									</td>
 								<?php endif; ?>
 								<?php if ($showCountColumn): ?>
-									<td class="number count text-end"><?= h(\App\Utility\LocaleNumberParser::format($sample->city_count, decimals: $numberDecimals['integer'])) ?></td>
+									<td class="number count text-end"><?= h(\App\Utility\LocaleNumberParser::formatCount($sample->city_count, decimals: $numberDecimals['integer'])) ?></td>
 								<?php endif; ?>
 								<?php if ($showTimestampColumn): ?>
 									<td class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
@@ -232,17 +313,21 @@ $paging = $this->Paginator->params();
 											'title' => $tooltipEdit,
 										]
 									) ?>
-									<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$sample->id ?>">
-										<i class="fa fa-trash"></i>
-									</a>
-									<?= $this->Form->postLink(
-										'',
-										['action' => 'delete', $sample->id],
-										[
-											'class' => 'd-none js-row-delete-form',
+									<?php if ($canDeleteRow): ?>
+										<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$sample->id ?>">
+											<i class="fa fa-trash"></i>
+										</a>
+										<?= $this->Form->create(null, [
+											'url' => ['action' => 'delete', $sample->id],
 											'id' => 'delete-form-' . $sample->id,
-										]
-									) ?>
+											'class' => 'd-none js-row-delete-form',
+										]) ?>
+										<?= $this->Form->end() ?>
+									<?php else: ?>
+										<a role="button" href="#" class="btn btn-outline-danger disabled" aria-disabled="true" tabindex="-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+											<i class="fa fa-trash"></i>
+										</a>
+									<?php endif; ?>
 								</td>
 							</tr>
 						<?php endforeach; ?>

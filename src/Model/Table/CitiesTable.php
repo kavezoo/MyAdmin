@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query\SelectQuery;
-use Cake\ORM\RulesChecker;
+use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
+use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -22,19 +23,16 @@ use Cake\Validation\Validator;
  * @method array<\App\Model\Entity\City> patchEntities(iterable $entities, array $data, array $options = [])
  * @method \App\Model\Entity\City|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
  * @method \App\Model\Entity\City saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method iterable<\App\Model\Entity\City>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\City>|false saveMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\City>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\City> saveManyOrFail(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\City>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\City>|false deleteMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\City>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\City> deleteManyOrFail(iterable $entities, array $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CitiesTable extends Table
 {
+    use PreventsDeleteWithChildrenTrait;
+    use UsesDatabaseColumnDefaultsTrait;
+
     /**
-     * Initialize method
-     *
-     * @param array<string, mixed> $config The configuration for the Table.
+     * @param array<string, mixed> $config
      * @return void
      */
     public function initialize(array $config): void
@@ -47,18 +45,36 @@ class CitiesTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        // dependent join cleanup only when delete is allowed (no linked samples).
         $this->belongsToMany('Samples', [
             'foreignKey' => 'city_id',
             'targetForeignKey' => 'sample_id',
             'joinTable' => 'cities_samples',
             'through' => 'CitiesSamples',
+            'dependent' => true,
         ]);
     }
 
     /**
-     * Default validation rules.
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @return int
+     */
+    public function countRelatedChildren(EntityInterface $entity): int
+    {
+        $id = $entity->get('id');
+        if ($id === null || $id === '') {
+            return (int)($entity->get('sample_count') ?? 0);
+        }
+
+        return $this->getAssociation('Samples')
+            ->junction()
+            ->find()
+            ->where(['city_id' => $id])
+            ->count();
+    }
+
+    /**
+     * @param \Cake\Validation\Validator $validator
      * @return \Cake\Validation\Validator
      */
     public function validationDefault(Validator $validator): Validator
@@ -69,14 +85,14 @@ class CitiesTable extends Table
             ->requirePresence('name', 'create')
             ->notEmptyString('name');
 
+        // pos / visible: DB DEFAULT — allow empty so INSERT can omit the column
         $validator
             ->integer('pos')
-            ->requirePresence('pos', 'create')
-            ->notEmptyString('pos');
+            ->allowEmptyString('pos');
 
         $validator
             ->boolean('visible')
-            ->notEmptyString('visible');
+            ->allowEmptyString('visible');
 
         $validator
             ->nonNegativeInteger('sample_count')

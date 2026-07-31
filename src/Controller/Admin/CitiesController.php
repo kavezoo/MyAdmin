@@ -12,6 +12,12 @@ use Cake\Http\Response;
  */
 class CitiesController extends AppController
 {
+    /** @var int Index rows per page */
+    protected int $indexLimit = 10;
+
+    /** @var int Cap for `?limit=` (abuse / oversized requests) */
+    protected int $indexMaxLimit = 100;
+
     /**
      * @return void
      */
@@ -28,8 +34,7 @@ class CitiesController extends AppController
         $this->set('title', __('Cities'));
         $this->viewBuilder()->setVar('breadcrumb', __('Cities'));
 
-        $cities = $this->paginate($this->Cities->find(), [
-            'limit' => 10,
+        $cities = $this->paginate($this->Cities->find(), $this->indexPaginateOptions([
             'sortableFields' => [
                 'id',
                 'name',
@@ -39,7 +44,8 @@ class CitiesController extends AppController
                 'created',
                 'modified',
             ],
-        ]);
+        ]));
+        $this->setLastVisitedForIndex('Cities');
         $this->set(compact('cities'));
     }
 
@@ -48,24 +54,35 @@ class CitiesController extends AppController
      */
     public function add()
     {
-        $city = $this->Cities->newEmptyEntity();
-        $city->pos = 1000;
-        $city->visible = true;
-        $city->sample_count = 0;
+        $city = $this->newEntityWithSchemaDefaults($this->Cities);
+        // sample_count: NOT NULL, no DB DEFAULT — must set until schema has DEFAULT 0
+        if ($city->get('sample_count') === null) {
+            $city->set('sample_count', 0);
+        }
 
         if ($this->request->is('post')) {
-            $city = $this->Cities->patchEntity($city, $this->request->getData());
-            if ($city->sample_count === null) {
-                $city->sample_count = 0;
-            }
-            if ($this->Cities->save($city)) {
-                $this->Flash->success(__('The city has been saved.'));
+            try {
+                $data = $this->request->getData();
+                if (!isset($data['samples']['_ids'])) {
+                    $data['samples']['_ids'] = [];
+                }
+                $city = $this->Cities->patchEntity($city, $data, [
+                    'associated' => ['Samples'],
+                ]);
+                $this->normalizeSampleCount($city);
+                if ($this->Cities->save($city)) {
+                    $this->rememberLastVisited('Cities', $city->id);
+                    $this->Flash->success(__('The city has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index']);
+                }
+            } catch (\Throwable $e) {
+                // Unexpected errors (e.g. type errors) → user-facing flash, not raw PHP
             }
             $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
 
+        $this->setFormOptions();
         $this->set(compact('city'));
         $this->set('title', __('New city'));
         $this->viewBuilder()->setVar('breadcrumb', __('Cities'));
@@ -78,19 +95,34 @@ class CitiesController extends AppController
      */
     public function edit(?string $id = null)
     {
-        $city = $this->Cities->get($id);
+        $city = $this->Cities->get($id, contain: ['Samples']);
+        $this->rememberLastVisited('Cities', $city->id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $city = $this->Cities->patchEntity($city, $this->request->getData());
-            if ($this->Cities->save($city)) {
-                $this->Flash->success(__('The city has been saved.'));
+            try {
+                $data = $this->request->getData();
+                if (!isset($data['samples']['_ids'])) {
+                    $data['samples']['_ids'] = [];
+                }
+                $city = $this->Cities->patchEntity($city, $data, [
+                    'associated' => ['Samples'],
+                ]);
+                $this->normalizeSampleCount($city);
+                if ($this->Cities->save($city)) {
+                    $this->rememberLastVisited('Cities', $city->id);
+                    $this->Flash->success(__('The city has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index']);
+                }
+            } catch (\Throwable $e) {
+                // Unexpected errors → user-facing flash, not raw PHP
             }
             $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
 
+        $this->setFormOptions();
         $this->set(compact('city'));
+        $this->setCanDeleteFlag($this->Cities, $city);
         $this->set('title', __('Edit city'));
         $this->viewBuilder()->setVar('breadcrumb', __('Cities'));
         $this->render('form');
@@ -102,8 +134,14 @@ class CitiesController extends AppController
      */
     public function view(?string $id = null)
     {
-        $city = $this->Cities->get($id, contain: ['Samples']);
+        $city = $this->Cities->get($id, contain: [
+            'Samples' => function ($q) {
+                return $q->orderBy(['Samples.name' => 'ASC']);
+            },
+        ]);
+        $this->rememberLastVisited('Cities', $city->id);
         $this->set(compact('city'));
+        $this->setCanDeleteFlag($this->Cities, $city);
         $this->set('title', __('City details'));
         $this->viewBuilder()->setVar('breadcrumb', __('Cities'));
     }
@@ -115,15 +153,8 @@ class CitiesController extends AppController
     public function delete(?string $id = null): ?Response
     {
         $this->request->allowMethod(['post', 'delete']);
-        $city = $this->Cities->get($id);
 
-        if ($this->Cities->delete($city)) {
-            $this->Flash->success(__('The record has been deleted.'));
-        } else {
-            $this->Flash->error(__('The record could not be deleted. Please try again.'));
-        }
-
-        return $this->redirect(['action' => 'index']);
+        return $this->deleteEntityOrFail($this->Cities, $this->Cities->get($id));
     }
 
     /**
@@ -137,7 +168,11 @@ class CitiesController extends AppController
         $this->request->allowMethod(['get']);
 
         try {
-            $city = $this->Cities->get($id);
+            $city = $this->Cities->get($id, contain: [
+                'Samples' => function ($q) {
+                    return $q->orderBy(['Samples.name' => 'ASC']);
+                },
+            ]);
         } catch (\Throwable $e) {
             return $this->response
                 ->withStatus(404)
@@ -146,6 +181,16 @@ class CitiesController extends AppController
                     'success' => false,
                     'message' => __('Record not found.'),
                 ], JSON_UNESCAPED_UNICODE));
+        }
+
+        $this->rememberLastVisited('Cities', $city->id);
+
+        $samples = [];
+        foreach ($city->samples ?? [] as $sample) {
+            $samples[] = [
+                'id' => $sample->id,
+                'name' => $sample->name,
+            ];
         }
 
         return $this->response
@@ -157,10 +202,39 @@ class CitiesController extends AppController
                     'name' => $city->name,
                     'pos' => \App\Utility\LocaleNumberParser::format($city->pos, decimals: 0),
                     'visible' => (bool)$city->visible,
-                    'sample_count' => \App\Utility\LocaleNumberParser::format($city->sample_count, decimals: 0),
+                    'sample_count' => \App\Utility\LocaleNumberParser::formatCount($city->sample_count, decimals: 0),
+                    'samples' => $samples,
                     'created' => $city->created ? $city->created->format('Y.m.d. H:i') : '',
                     'modified' => $city->modified ? $city->modified->format('Y.m.d. H:i') : '',
+                    'can_delete' => $this->Cities->canDelete($city),
                 ],
             ], JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * Sample list for City form (HABTM Select2 multiple).
+     *
+     * @return void
+     */
+    protected function setFormOptions(): void
+    {
+        $samples = $this->Cities->Samples
+            ->find('list', keyField: 'id', valueField: 'name')
+            ->orderBy(['Samples.name' => 'ASC'])
+            ->toArray();
+
+        $this->set(compact('samples'));
+    }
+
+    /**
+     * sample_count from selected samples._ids.
+     *
+     * @param \App\Model\Entity\City $city
+     * @return void
+     */
+    protected function normalizeSampleCount(\App\Model\Entity\City $city): void
+    {
+        $sampleIds = (array)$this->request->getData('samples._ids');
+        $city->sample_count = count(array_filter($sampleIds));
     }
 }

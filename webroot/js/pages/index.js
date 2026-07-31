@@ -1,16 +1,17 @@
 /**
- * Index / list page behaviour (record modal, linked modal, delete, last-visited).
- * cakephp-template: page-js:index
+ * Index / list + view related-table behaviour
+ * (record modal, linked/related modal, delete, last-visited, double-click).
  *
  * Expected config (set before this file loads):
  *   MyAdmin.config.rowDoubleClickAction  // 'modal' | 'edit' | 'none'
- *   MyAdmin.config.recordGetUrl
- *   MyAdmin.config.categoryGetUrl
- *   MyAdmin.config.editUrl
- *   MyAdmin.config.viewUrl
- *   MyAdmin.config.deleteUrl (optional base for delete)
- *   MyAdmin.config.recordFieldLabels
- *   MyAdmin.config.categoryFieldLabels
+ *     — index saját sorai + view kapcsolt tábla sorai
+ *   MyAdmin.config.recordGetUrl / editUrl / viewUrl  // index saját modul
+ *   MyAdmin.config.categoryGetUrl / parentEditUrl / parentViewUrl / parentDeleteUrl
+ *   MyAdmin.config.recordFieldLabels / categoryFieldLabels
+ *   MyAdmin.config.entityFieldLabels  // { city: {…}, sample: {…}, parent: {…} } — view
+ *
+ * View / linked link: a.record-modal-link (vagy a.category-link) data-* attribútumokkal.
+ * Kapcsolt tábla: table.related-records-table + data-get-url / edit / view / delete / labels / title
  */
 (function (window, $) {
 	'use strict';
@@ -26,9 +27,15 @@
 	var viewUrl = cfg.viewUrl || '';
 	var parentEditUrl = cfg.parentEditUrl || '/admin/parents/edit';
 	var parentViewUrl = cfg.parentViewUrl || '/admin/parents/view';
+	var parentDeleteUrl = cfg.parentDeleteUrl || '';
 
 	$(function () {
-		if (!$('.index-data-table').length) {
+		var hasTables = $('.index-data-table').length > 0;
+		var hasModalLinks = $('.record-modal-link, .category-link').length > 0;
+		var hasRecordModal = $('#modalRecordView').length > 0;
+		var hasLinkedModal = $('#modalLinkedRecordView').length > 0;
+
+		if (!hasTables && !hasModalLinks && !hasRecordModal && !hasLinkedModal) {
 			return;
 		}
 
@@ -73,23 +80,80 @@
 					: '<i class="fa fa-times text-danger"></i> <span class="text-dark">' + (msg.no || 'No') + '</span>';
 			}
 			if (value == null || value === '') {
+				// *_count: leave blank (do not show 0 / —)
+				if (key === 'city_count' || key === 'sample_count' || /_count$/.test(key)) {
+					return '';
+				}
 				return '—';
 			}
 			return $('<div>').text(String(value)).html();
 		};
 
-		var renderRecordFields = function (record) {
+		/**
+		 * HABTM / hasMany name list for modals: [{ id, name }, …]
+		 * Config: MyAdmin.config.relatedLinkFields[fieldKey] = { getUrl, editUrl, viewUrl, deleteUrl, labels, title, deleteFormPrefix }
+		 */
+		var isRelatedLinkList = function (value) {
+			return Array.isArray(value)
+				&& value.length > 0
+				&& value.every(function (item) {
+					return item
+						&& typeof item === 'object'
+						&& item.id != null
+						&& item.name != null;
+				});
+		};
+
+		var renderRelatedLinkList = function (key, items) {
+			var linkCfg = (cfg.relatedLinkFields || {})[key];
+			if (!linkCfg) {
+				return $('<div>').text(items.map(function (item) {
+					return String(item.name);
+				}).join(', ')).html();
+			}
+
+			return items.map(function (item) {
+				var $a = $('<a>', {
+					href: '#',
+					'class': 'record-modal-link',
+					'data-id': item.id,
+					'data-get-url': linkCfg.getUrl || '',
+					'data-edit-url': linkCfg.editUrl || '',
+					'data-view-url': linkCfg.viewUrl || '',
+					'data-delete-url': linkCfg.deleteUrl || '',
+					'data-delete-form-prefix': linkCfg.deleteFormPrefix || '',
+					'data-labels': linkCfg.labels || '',
+					'data-title': linkCfg.title || ''
+				});
+				$a.append(document.createTextNode(String(item.name)));
+				$a.append($('<span class="record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span>'));
+				return $('<div>').append($a).html();
+			}).join(', ');
+		};
+
+		var renderFieldsInto = function ($target, record, fieldLabels) {
 			var html = '';
-			Object.keys(recordFieldLabels).forEach(function (key) {
+			Object.keys(fieldLabels).forEach(function (key) {
 				if (!Object.prototype.hasOwnProperty.call(record, key)) {
 					return;
 				}
+				var raw = record[key];
+				var cell;
+				var ddClass = '';
+				if (isRelatedLinkList(raw)) {
+					cell = renderRelatedLinkList(key, raw);
+					ddClass = ' class="record-related-list"';
+				} else if (Array.isArray(raw) && raw.length === 0) {
+					cell = '—';
+				} else {
+					cell = formatRecordValue(key, raw);
+				}
 				html += '<div class="record-view-row">' +
-					'<dt>' + recordFieldLabels[key] + '</dt>' +
-					'<dd>' + formatRecordValue(key, record[key]) + '</dd>' +
+					'<dt>' + fieldLabels[key] + '</dt>' +
+					'<dd' + ddClass + '>' + cell + '</dd>' +
 					'</div>';
 			});
-			$modalRecordViewFields.html(html);
+			$target.html(html);
 		};
 
 		var entityUrl = function (base, id) {
@@ -99,13 +163,99 @@
 			return base.replace(/\/$/, '') + '/' + encodeURIComponent(id);
 		};
 
+		var csrfToken = function () {
+			return $('meta[name="csrfToken"]').attr('content') || '';
+		};
+
+		var submitPostDelete = function (deleteUrl, recordId) {
+			var url = entityUrl(deleteUrl, recordId);
+			if (!url || url === '#') {
+				App.alertError(msg.deleteFormNotFound
+					? msg.deleteFormNotFound.replace('{0}', recordId)
+					: 'Delete URL missing.');
+				return;
+			}
+			var $form = $('<form>', { method: 'POST', action: url, 'class': 'd-none' });
+			$form.append($('<input>', { type: 'hidden', name: '_method', value: 'POST' }));
+			$form.append($('<input>', { type: 'hidden', name: '_csrfToken', value: csrfToken() }));
+			$('body').append($form);
+			$form.trigger('submit');
+		};
+
+		var triggerDeleteForm = function (recordId, options) {
+			options = options || {};
+			var prefix = options.deleteFormPrefix || '';
+
+			if (options.deleteFormSelector) {
+				var $explicit = $(options.deleteFormSelector);
+				if ($explicit.length && $explicit.is('form')) {
+					$explicit.trigger('submit');
+					return;
+				}
+			}
+
+			if (prefix) {
+				var $prefixed = $('#delete-form-' + prefix + '-' + recordId);
+				if ($prefixed.length && $prefixed.is('form')) {
+					$prefixed.trigger('submit');
+					return;
+				}
+			}
+
+			// Kapcsolt entitás: ne a saját modul #delete-form-{id}-jét használd
+			if (options.deleteUrl) {
+				submitPostDelete(options.deleteUrl, recordId);
+				return;
+			}
+
+			var $form = $('#delete-form-' + recordId);
+			if ($form.length && $form.is('form')) {
+				$form.trigger('submit');
+				return;
+			}
+
+			App.alertError(
+				(msg.deleteFormNotFound || msg.deleteFormMissing || 'Delete form not found. ID: {0}').replace('{0}', recordId)
+			);
+		};
+
+		var setModalDeleteEnabled = function ($btn, canDelete) {
+			if (!$btn || !$btn.length) {
+				return;
+			}
+			if (canDelete) {
+				$btn.prop('disabled', false).removeClass('disabled').removeAttr('aria-disabled')
+					.attr('title', '');
+			} else {
+				$btn.prop('disabled', true).addClass('disabled').attr('aria-disabled', 'true')
+					.attr('title', msg.cannotDeleteHasChildren || 'Cannot delete this record because it has related child records.');
+			}
+		};
+
+		var resolveCanDelete = function (record, $row) {
+			if (record && typeof record.can_delete !== 'undefined') {
+				return !!record.can_delete;
+			}
+			if ($row && $row.length) {
+				var attr = $row.attr('data-can-delete');
+				if (typeof attr !== 'undefined') {
+					return attr === '1' || attr === 'true';
+				}
+			}
+			return true;
+		};
+
 		var openRecordModal = function (recordId, $row) {
+			if (!$modalRecordView.length) {
+				return;
+			}
 			currentRecordId = recordId;
 			$pendingLastVisitedRow = ($row && $row.length) ? $row : null;
 			$modalRecordViewLabel.text((msg.recordDetails || 'Record details') + ' #' + recordId);
 			$modalRecordViewLoading.removeClass('d-none');
 			$modalRecordViewError.addClass('d-none').text('');
 			$modalRecordViewFields.addClass('d-none').empty();
+			setModalDeleteEnabled($('#btn-record-delete'), resolveCanDelete(null, $row));
 
 			var modal = bootstrap.Modal.getOrCreateInstance($modalRecordView[0]);
 			modal.show();
@@ -121,8 +271,9 @@
 						.text((res && res.message) ? res.message : (msg.recordLoadFailed || 'Failed to load the record.'));
 					return;
 				}
-				renderRecordFields(res.record);
+				renderFieldsInto($modalRecordViewFields, res.record, recordFieldLabels);
 				$modalRecordViewFields.removeClass('d-none');
+				setModalDeleteEnabled($('#btn-record-delete'), resolveCanDelete(res.record, $row));
 			}).fail(function (xhr) {
 				var message = msg.recordLoadFailed || 'Failed to load the record.';
 				if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
@@ -133,19 +284,6 @@
 				$modalRecordViewError.removeClass('d-none').text(message);
 			}).always(function () {
 				$modalRecordViewLoading.addClass('d-none');
-			});
-		};
-
-		var triggerDeleteForm = function (recordId) {
-			var $form = $('#delete-form-' + recordId);
-			if ($form.length) {
-				$form.trigger('submit');
-				return;
-			}
-			Swal.fire({
-				icon: 'error',
-				title: msg.deleteTitle || 'Delete',
-				text: (msg.deleteFormNotFound || 'Delete form not found. ID: {0}').replace('{0}', recordId)
 			});
 		};
 
@@ -164,7 +302,7 @@
 		});
 
 		$('#btn-record-delete').on('click', function () {
-			if (!currentRecordId) {
+			if (!currentRecordId || $(this).prop('disabled') || $(this).hasClass('disabled')) {
 				return;
 			}
 			App.confirmDelete({
@@ -174,7 +312,7 @@
 			});
 		});
 
-		$('.index-data-table tbody').on('click', 'a.btn-row-delete', function (e) {
+		$(document).on('click', '.index-data-table tbody a.btn-row-delete', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 
@@ -189,19 +327,35 @@
 				return;
 			}
 
+			var $table = $btn.closest('table.related-records-table');
+			var deleteOpts = {};
+			if ($table.length) {
+				deleteOpts.deleteFormPrefix = $table.attr('data-delete-form-prefix') || '';
+				deleteOpts.deleteUrl = $table.attr('data-delete-url') || '';
+			}
+
 			App.confirmDelete({
 				onConfirm: function () {
-					triggerDeleteForm(recordId);
+					triggerDeleteForm(recordId, deleteOpts);
 				}
 			});
 		});
 
+		// —— Linked / related entity modal (belongsTo, HABTM name, related tab) ——
 		var $modalLinkedRecordView = $('#modalLinkedRecordView');
 		var $modalLinkedRecordViewLabel = $('#modalLinkedRecordViewLabel');
 		var $modalLinkedRecordViewLoading = $('#modalLinkedRecordViewLoading');
 		var $modalLinkedRecordViewError = $('#modalLinkedRecordViewError');
 		var $modalLinkedRecordViewFields = $('#modalLinkedRecordViewFields');
-		var currentLinkedRecordId = null;
+		var linkedContext = {
+			id: null,
+			getUrl: '',
+			editUrl: '',
+			viewUrl: '',
+			deleteUrl: '',
+			deleteFormPrefix: '',
+			fieldLabels: null
+		};
 
 		var categoryFieldLabels = cfg.categoryFieldLabels || {
 			id: 'ID',
@@ -213,35 +367,66 @@
 			modified: 'Modified'
 		};
 
-		var renderLinkedRecordFields = function (record, fieldLabels) {
-			var html = '';
-			Object.keys(fieldLabels).forEach(function (key) {
-				if (!Object.prototype.hasOwnProperty.call(record, key)) {
-					return;
-				}
-				html += '<div class="record-view-row">' +
-					'<dt>' + fieldLabels[key] + '</dt>' +
-					'<dd>' + formatRecordValue(key, record[key]) + '</dd>' +
-					'</div>';
-			});
-			$modalLinkedRecordViewFields.html(html);
+		var entityFieldLabels = cfg.entityFieldLabels || {};
+
+		var resolveLabels = function (key, fallback) {
+			if (key && entityFieldLabels[key]) {
+				return entityFieldLabels[key];
+			}
+			return fallback || categoryFieldLabels;
+		};
+
+		var resolveFromElement = function ($el) {
+			var $table = $el.closest('table.related-records-table');
+			var labelsKey = $el.attr('data-labels') || ($table.length ? $table.attr('data-labels') : '') || '';
+			var pick = function (attr, fallback) {
+				return $el.attr(attr)
+					|| ($table.length ? $table.attr(attr) : '')
+					|| fallback
+					|| '';
+			};
+
+			return {
+				getUrl: pick('data-get-url', categoryGetUrl),
+				editUrl: pick('data-edit-url', parentEditUrl),
+				viewUrl: pick('data-view-url', parentViewUrl),
+				deleteUrl: pick('data-delete-url', parentDeleteUrl),
+				deleteFormPrefix: pick('data-delete-form-prefix', ''),
+				title: pick('data-title', msg.parentDetails || 'Parent details'),
+				fieldLabels: resolveLabels(labelsKey, categoryFieldLabels),
+				labelsKey: labelsKey
+			};
 		};
 
 		var openLinkedRecordModal = function (recordId, options) {
 			options = options || {};
-			currentLinkedRecordId = recordId;
+			if (!$modalLinkedRecordView.length) {
+				return;
+			}
+
+			linkedContext = {
+				id: recordId,
+				getUrl: options.getUrl || options.url || categoryGetUrl,
+				editUrl: options.editUrl || parentEditUrl,
+				viewUrl: options.viewUrl || parentViewUrl,
+				deleteUrl: options.deleteUrl || parentDeleteUrl || '',
+				deleteFormPrefix: options.deleteFormPrefix || '',
+				fieldLabels: options.fieldLabels || categoryFieldLabels
+			};
+
 			$pendingLastVisitedRow = (options.$row && options.$row.length) ? options.$row : null;
 
 			$modalLinkedRecordViewLabel.text((options.title || msg.parentDetails || 'Parent details') + ' #' + recordId);
 			$modalLinkedRecordViewLoading.removeClass('d-none');
 			$modalLinkedRecordViewError.addClass('d-none').text('');
 			$modalLinkedRecordViewFields.addClass('d-none').empty();
+			setModalDeleteEnabled($('#btn-linked-delete'), resolveCanDelete(null, options.$row));
 
 			var modal = bootstrap.Modal.getOrCreateInstance($modalLinkedRecordView[0]);
 			modal.show();
 
 			$.ajax({
-				url: entityUrl(options.url || categoryGetUrl, recordId),
+				url: entityUrl(linkedContext.getUrl, recordId),
 				method: 'GET',
 				dataType: 'json'
 			}).done(function (res) {
@@ -251,8 +436,9 @@
 						.text((res && res.message) ? res.message : (msg.recordLoadFailed || 'Failed to load the record.'));
 					return;
 				}
-				renderLinkedRecordFields(res.record, options.fieldLabels || categoryFieldLabels);
+				renderFieldsInto($modalLinkedRecordViewFields, res.record, linkedContext.fieldLabels);
 				$modalLinkedRecordViewFields.removeClass('d-none');
+				setModalDeleteEnabled($('#btn-linked-delete'), resolveCanDelete(res.record, options.$row));
 			}).fail(function (xhr) {
 				var message = msg.recordLoadFailed || 'Failed to load the record.';
 				if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
@@ -266,54 +452,58 @@
 			});
 		};
 
-		$('.index-data-table tbody').on('click', 'a.category-link', function (e) {
+		$(document).on('click', 'a.record-modal-link, a.category-link', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 
 			var $link = $(this);
-			var categoryId = $link.attr('data-id');
-			if (!categoryId) {
+			var recordId = $link.attr('data-id');
+			if (!recordId) {
 				return;
 			}
 
-			openLinkedRecordModal(categoryId, {
-				title: msg.parentDetails || 'Parent details',
-				url: categoryGetUrl,
-				fieldLabels: categoryFieldLabels,
+			var resolved = resolveFromElement($link);
+			openLinkedRecordModal(recordId, {
+				title: resolved.title,
+				getUrl: resolved.getUrl,
+				editUrl: resolved.editUrl,
+				viewUrl: resolved.viewUrl,
+				deleteUrl: resolved.deleteUrl,
+				deleteFormPrefix: resolved.deleteFormPrefix,
+				fieldLabels: resolved.fieldLabels,
 				$row: $link.closest('tr')
 			});
 		});
 
 		$('#btn-linked-view').on('click', function () {
-			if (!currentLinkedRecordId) {
+			if (!linkedContext.id) {
 				return;
 			}
-			window.location.href = entityUrl(parentViewUrl, currentLinkedRecordId);
+			window.location.href = entityUrl(linkedContext.viewUrl, linkedContext.id);
 		});
 
 		$('#btn-linked-edit').on('click', function () {
-			if (!currentLinkedRecordId) {
+			if (!linkedContext.id) {
 				return;
 			}
-			window.location.href = entityUrl(parentEditUrl, currentLinkedRecordId);
+			window.location.href = entityUrl(linkedContext.editUrl, linkedContext.id);
 		});
 
 		$('#btn-linked-delete').on('click', function () {
-			if (!currentLinkedRecordId) {
+			if (!linkedContext.id || $(this).prop('disabled') || $(this).hasClass('disabled')) {
 				return;
 			}
 			App.confirmDelete({
 				onConfirm: function () {
-					Swal.fire({
-						icon: 'info',
-						title: msg.deleteTitle || 'Delete',
-						text: msg.deleteParentHint || 'You can delete the parent from the Parents list.'
+					triggerDeleteForm(linkedContext.id, {
+						deleteFormPrefix: linkedContext.deleteFormPrefix,
+						deleteUrl: linkedContext.deleteUrl
 					});
 				}
 			});
 		});
 
-		$('.index-data-table tbody').on('dblclick', 'tr', function (e) {
+		$(document).on('dblclick', '.index-data-table tbody tr', function (e) {
 			if ($(e.target).closest('a, button, .btn').length) {
 				return;
 			}
@@ -323,11 +513,38 @@
 			}
 
 			var $row = $(this);
-			var recordId = $row.attr('data-id') || String(this.id || '').replace(/^record-/, '');
+			var recordId = $row.attr('data-id') || String(this.id || '').replace(/^record-/, '').replace(/^related-[a-z]+-/, '');
 			if (!recordId) {
 				return;
 			}
 
+			var $table = $row.closest('table.related-records-table');
+
+			// View page related tab (or any related-records-table)
+			if ($table.length) {
+				var related = resolveFromElement($table);
+				if (rowDoubleClickAction === 'edit') {
+					if (!related.editUrl) {
+						return;
+					}
+					markLastVisitedRow($row);
+					window.location.href = entityUrl(related.editUrl, recordId);
+					return;
+				}
+				openLinkedRecordModal(recordId, {
+					title: related.title,
+					getUrl: related.getUrl,
+					editUrl: related.editUrl,
+					viewUrl: related.viewUrl,
+					deleteUrl: related.deleteUrl,
+					deleteFormPrefix: related.deleteFormPrefix,
+					fieldLabels: related.fieldLabels,
+					$row: $row
+				});
+				return;
+			}
+
+			// Index: own module rows
 			if (rowDoubleClickAction === 'edit') {
 				if (!editUrl) {
 					return;
@@ -337,22 +554,25 @@
 				return;
 			}
 
-			// Default: 'modal' — quick view
 			openRecordModal(recordId, $row);
 		});
 
-		$modalRecordView.on('hidden.bs.modal', function () {
-			if ($pendingLastVisitedRow && $pendingLastVisitedRow.length) {
-				markLastVisitedRow($pendingLastVisitedRow);
-				$pendingLastVisitedRow = null;
-			}
-		});
+		if ($modalRecordView.length) {
+			$modalRecordView.on('hidden.bs.modal', function () {
+				if ($pendingLastVisitedRow && $pendingLastVisitedRow.length) {
+					markLastVisitedRow($pendingLastVisitedRow);
+					$pendingLastVisitedRow = null;
+				}
+			});
+		}
 
-		$modalLinkedRecordView.on('hidden.bs.modal', function () {
-			if ($pendingLastVisitedRow && $pendingLastVisitedRow.length) {
-				markLastVisitedRow($pendingLastVisitedRow);
-				$pendingLastVisitedRow = null;
-			}
-		});
+		if ($modalLinkedRecordView.length) {
+			$modalLinkedRecordView.on('hidden.bs.modal', function () {
+				if ($pendingLastVisitedRow && $pendingLastVisitedRow.length) {
+					markLastVisitedRow($pendingLastVisitedRow);
+					$pendingLastVisitedRow = null;
+				}
+			});
+		}
 	});
 })(window, jQuery);

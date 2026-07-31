@@ -89,13 +89,21 @@
 
 		$('#btn-delete').on('click', function (e) {
 			e.preventDefault();
+			var $btn = $(this);
+			if ($btn.hasClass('disabled') || $btn.attr('aria-disabled') === 'true') {
+				return;
+			}
+			var formSel = $btn.attr('data-delete-form') || '#delete-form-current';
 			App.confirmDelete({
 				onConfirm: function () {
-					Swal.fire({
-						icon: 'info',
-						title: t('deleteTitle', 'Delete'),
-						text: t('deleteNotWired', 'Delete functionality will be connected later.')
-					});
+					var $form = $(formSel);
+					if ($form.length && $form.is('form')) {
+						$form.trigger('submit');
+						return;
+					}
+					App.alertError(
+						t('deleteFormMissing', 'Delete form not found for ID:') + ' ' + formSel
+					);
 				}
 			});
 		});

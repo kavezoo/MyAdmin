@@ -104,6 +104,7 @@ $isEdit = !$sample->isNew();
 								'class' => 'form-control',
 								'placeholder' => __('Name'),
 								'id' => 'name',
+								'autofocus' => true,
 							]) ?>
 						</div>
 					</div>
@@ -195,6 +196,7 @@ $isEdit = !$sample->isNew();
 										'multiple' => true,
 										'class' => 'js-example-basic-multiple form-select',
 										'id' => 'cities-ids',
+										'data-placeholder' => __('Select cities...'),
 									]) ?>
 								</div>
 								<button
@@ -298,7 +300,7 @@ $isEdit = !$sample->isNew();
 				<form class="select2-add-form" id="formSelect2AddParent" onsubmit="return false;">
 					<div class="mb-0">
 						<label for="inputSelect2ParentName" class="form-label"><?= __('Name') ?></label>
-						<input type="text" class="form-control" id="inputSelect2ParentName" name="name" data-select2-text="1" required placeholder="<?= h(__('Enter a new value...')) ?>" autocomplete="off">
+						<input type="text" class="form-control" id="inputSelect2ParentName" name="name" data-select2-text="1" required autofocus placeholder="<?= h(__('Enter a new value...')) ?>" autocomplete="off">
 						<div class="invalid-feedback"><?= __('Please enter a value.') ?></div>
 					</div>
 				</form>
@@ -322,7 +324,7 @@ $isEdit = !$sample->isNew();
 				<form class="select2-add-form" id="formSelect2AddCity" onsubmit="return false;">
 					<div class="mb-0">
 						<label for="inputSelect2CityName" class="form-label"><?= __('Name') ?></label>
-						<input type="text" class="form-control" id="inputSelect2CityName" name="name" data-select2-text="1" required placeholder="<?= h(__('Enter a new value...')) ?>" autocomplete="off">
+						<input type="text" class="form-control" id="inputSelect2CityName" name="name" data-select2-text="1" required autofocus placeholder="<?= h(__('Enter a new value...')) ?>" autocomplete="off">
 						<div class="invalid-feedback"><?= __('Please enter a value.') ?></div>
 					</div>
 				</form>

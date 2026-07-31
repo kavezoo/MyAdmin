@@ -14,6 +14,10 @@ $addUrl = $this->Url->build(['action' => 'add']);
 $editUrl = $id ? $this->Url->build(['action' => 'edit', $id]) : '#';
 $viewUrl = $id ? $this->Url->build(['action' => 'view', $id]) : '#';
 
+$canDelete = (bool)$this->get('canDelete', true);
+$tooltipDeleteOk = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
+$tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete this record because it has related child records.');
+
 $crumbTitle = $this->fetch('breadcrumb') ?: ($this->get('breadcrumb') ?? $controller);
 ?>
 <div class="row">
@@ -48,9 +52,21 @@ $crumbTitle = $this->fetch('breadcrumb') ?: ($this->get('breadcrumb') ?? $contro
 					<a role="button" href="<?= h($viewUrl) ?>" class="btn btn-info<?= $isView ? ' d-none' : '' ?>" id="btn-view" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h('<b>' . __('View details') . '</b><br>' . __('View the selected record.')) ?>">
 						<span class="btn-label"><i class="fa fa-eye"></i></span><?= __('View details') ?>
 					</a>
-					<a role="button" href="#" class="btn btn-danger" id="btn-delete" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h('<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.')) ?>">
-						<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
-					</a>
+					<?php if ($canDelete): ?>
+						<?= $this->Form->create(null, [
+							'url' => ['action' => 'delete', $id],
+							'id' => 'delete-form-current',
+							'class' => 'd-none js-row-delete-form',
+						]) ?>
+						<?= $this->Form->end() ?>
+						<a role="button" href="#" class="btn btn-danger" id="btn-delete" data-delete-form="#delete-form-current" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h($tooltipDeleteOk) ?>">
+							<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
+						</a>
+					<?php else: ?>
+						<a role="button" href="#" class="btn btn-danger disabled" id="btn-delete" aria-disabled="true" tabindex="-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+							<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
+						</a>
+					<?php endif; ?>
 				<?php endif; ?>
 			</div>
 			<ol class="breadcrumb float-right">

@@ -76,16 +76,21 @@ Member: a `{lang}` paraméter állítja a locale-ot (pl. `/en/member` → `en_GB
 - Form config: `MyAdmin.config.numberFormat` = `LocaleNumberParser::jsConfig()` (`decimal`, `thousand`, `locale`).
 - Mező osztályok: `.js-input-decimal`, `.js-input-integer`; value: `LocaleNumberParser::format(...)`.
 - A megjelenítés (index/view/modal): `LocaleNumberParser::format()` — Admin `hu_HU` pl. `1 234,56`.
+- Pénznem: `LocaleNumberParser::currencySymbol()` → **`Ft`** (ne hardkódolt `HUF`).
 - Form input: locale inputmask + `format()` value; mentés: middleware → `1234.56`.
 - Éles modulnál ne távolítsd el ezeket a middleware-eket a queue-ból.
 
-### Form példa
+### Form / lista példa
 
 ```php
 $config['numberFormat'] = \App\Utility\LocaleNumberParser::jsConfig();
 // …
 'class' => 'form-control js-input-decimal',
 'value' => LocaleNumberParser::format($entity->netto, decimals: 2),
+
+// index / view cella:
+echo h(LocaleNumberParser::format($row->netto, decimals: 2)) . ' ' . h(LocaleNumberParser::currencySymbol());
+// → 12 345,67 Ft
 ```
 
 ```js

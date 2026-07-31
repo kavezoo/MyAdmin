@@ -4,6 +4,7 @@
  * @var \App\Model\Entity\ParentRecord $parent
  */
 $this->Html->css(['pages/form'], ['block' => true]);
+$this->Html->script(['pages/form'], ['block' => 'scriptBottom']);
 $isEdit = !$parent->isNew();
 ?>
 <div class="row">
@@ -24,7 +25,7 @@ $isEdit = !$parent->isNew();
 					<div class="form-group row mb-3">
 						<label for="name" class="col-sm-3 col-md-2 col-form-label"><?= __('Name:') ?></label>
 						<div class="col-12 col-md-10 col-xl-5">
-							<?= $this->Form->control('name', ['label' => false, 'class' => 'form-control', 'id' => 'name']) ?>
+							<?= $this->Form->control('name', ['label' => false, 'class' => 'form-control', 'id' => 'name', 'autofocus' => true]) ?>
 						</div>
 					</div>
 					<div class="form-group row mb-3">

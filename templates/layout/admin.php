@@ -65,6 +65,8 @@ window.MyAdmin.messages = <?= json_encode([
 	'cancelButton' => __('Cancel'),
 	'deleteNotWired' => __('Delete functionality will be connected later.'),
 	'deleteFormMissing' => __('Delete form not found for ID:'),
+	'deleteFormNotFound' => __('Delete form not found. ID: {0}'),
+	'cannotDeleteHasChildren' => __('Cannot delete this record because it has related child records.'),
 	'failedToLoad' => __('Failed to load the record.'),
 	'noServerResponse' => __('No response from the server.'),
 	'yes' => __('Yes'),
@@ -87,6 +89,7 @@ window.MyAdmin.messages = <?= json_encode([
 	'to' => __('To'),
 	'custom' => __('Custom'),
 	'selectCities' => __('Select cities...'),
+	'selectSamples' => __('Select samples...'),
 	'deleteParentHint' => __('Delete the parent from the Parents list.'),
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 </script>

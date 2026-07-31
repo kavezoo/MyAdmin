@@ -9,16 +9,19 @@ Ez a fájl megkülönbözteti, mi **maradjon meg** minden projektben, és mi **c
 |---------|----------------------|
 | Admin layout | `templates/layout/admin.php` |
 | Admin elementek | `templates/element/admin/*` (header, sidebar, breadcrumb, footer, modalok, pagination, **view_related_tabs**) |
-| Admin AppController | `src/Controller/Admin/AppController.php` (layout + `hu_HU`) |
+| Admin AppController | `src/Controller/Admin/AppController.php` (layout + `hu_HU` + `$indexLimit` / `$indexMaxLimit` + `indexPaginateOptions()` + `rememberLastVisited` / `setLastVisitedForIndex`) |
 | Member AppController | `src/Controller/Member/AppController.php` (ha van Member) |
 | Routing prefixek | `config/routes.php` — Admin; opcionálisan Member+`{lang}` |
 | Locale middleware | `src/Middleware/LocaleMiddleware.php` |
-| Szám normalizálás | `NormalizeLocalizedNumberMiddleware` + `LocaleNumberParser` |
+| Szám normalizálás | `NormalizeLocalizedNumberMiddleware` + `LocaleNumberParser` (`format`, `formatCount`, `currencySymbol` → Ft) |
 | Dátum normalizálás | `NormalizeLocalizedDateMiddleware` + `LocaleDateParser` |
 | Host header | `HostHeaderMiddleware` (ha kell) |
 | i18n szabály + .po | [i18n.md](i18n.md), `resources/locales/hu_HU/default.po` |
 | Webroot UI assetek | `webroot/css`, `js`, `plugins`, `fontawesome`, `img` |
 | Admin JS API | `webroot/js/app.js` (`confirmDelete`, `alert` / `alertError` — **tilos** `window.alert`), `js/pages/index.js`, `js/pages/form.js` |
+| Gyerekvédelem törléskor | `src/Model/Table/Concerns/PreventsDeleteWithChildrenTrait.php` (+ Table `countRelatedChildren`) |
+| `pos` DB default | `UsesDatabaseColumnDefaultsTrait` — séma DEFAULT; üres mező unset; ArrayObject → `getArrayCopy()` |
+| Form UX / hibák | `#name` autofocus + `form.js`; `newEntityWithSchemaDefaults()`; try/catch → Flash; Select2 → JSON `message` |
 | Page CSS | `webroot/css/pages/index.css`, `form.css` |
 | Dokumentáció | `doc/*` (ezt a specifikációt) |
 

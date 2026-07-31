@@ -32,10 +32,11 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - Layout = csak közös CSS/JS; index/form/view oldalspecifikus asseteket a template tölti
 - Admin dialógusok: **SweetAlert2** (`MyAdmin.alert` / `alertError` / `confirmDelete`) — soha `window.alert`
 - **Index oszlopok:** `string` rugalmas; fix: `id` 4.75 / `pos` 5.5 / `number` 6.5 / `currency` 12 / `count` 5.5 / `boolean|visible` 7.5 / `date` 8.5 / `datetime` 10.5 / `time` 5 rem ([admin-oldal.md](admin-oldal.md) §4.3)
-- Index config: `$rowDoubleClickAction`, `$numberDecimals`, `$showCountColumn` / `$showVisibleColumn` / `$showCreatedColumn` / `$showModifiedColumn`
-- Számok megjelenítése: `LocaleNumberParser::format()`; form: `numberFormat` + locale inputmask; mentés: middleware
-- View: bake-szerű `dl` + gyerek asszociációk **tab sheet**-ben (`view_related_tabs`); üres tab is látszik
-- Form: Select2 „+” single és multiple; `fetchTable()`, ne Association
+- Index config: `$rowDoubleClickAction`, `$numberDecimals`, `$showIdColumn` / `$showCountColumn` / `$showVisibleColumn` / `$showCreatedColumn` / `$showModifiedColumn`; **`$indexLimit` / `$indexMaxLimit`**; utolsó rekord: session + **`.last-visited`**
+- Számok megjelenítése: `LocaleNumberParser::format()` / `formatCount()`; pénznem: **`currencySymbol()` → Ft** (ne HUF); form: `numberFormat` + locale inputmask; mentés: middleware
+- View: bake-szerű `dl` + gyerek **tab sheet**; belongsTo/HABTM/name **félkövér link** → AJAX modal (Close/Edit/View/Delete+Swal); `$rowDoubleClickAction` a kapcsolt táblán
+- Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon (`samples._ids` / `cities._ids`); **belongsTo lista**: `visible` + `pos`/`name` sorrend; `fetchTable()`, ne Association
+- Oszlop DEFAULT (`pos`, `visible`, …): **DB séma** + `UsesDatabaseColumnDefaultsTrait` — ne PHP hardcode
 - Modal / view kapcsolt listák: **ABC (ASC)** név szerint
 - Member (opcionális): `/{lang}/member/...`
 

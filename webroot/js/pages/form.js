@@ -1,6 +1,8 @@
 /**
- * Add / Edit form behaviour (Select2, dates, inputmask).
+ * Add / Edit form behaviour (Select2, dates, inputmask, primary-field focus).
  * cakephp-template: page-js:form
+ *
+ * Load on every Admin form.php (even without Select2) so #name gets focus.
  *
  * Select2 „+” (single + multiple):
  *   Button: .btn-select2-add
@@ -45,6 +47,25 @@
 		if (!$('#form-horizontal').length) {
 			return;
 		}
+
+		/**
+		 * Primary field focus on every Admin form (#form-horizontal).
+		 * Prefer #name; otherwise first visible text-like .form-control.
+		 * Call after Select2/inputmask init — plugins can steal early focus.
+		 */
+		var focusPrimaryFormField = function () {
+			var $form = $('#form-horizontal');
+			var $field = $form.find('#name').first();
+			if (!$field.length) {
+				$field = $form.find('input.form-control, textarea.form-control')
+					.not('[type="hidden"], [type="checkbox"], [type="radio"], [type="file"]')
+					.filter(':visible')
+					.first();
+			}
+			if ($field.length) {
+				$field.trigger('focus');
+			}
+		};
 
 		if (window.moment) {
 			moment.locale('hu');
@@ -125,6 +146,7 @@
 		}
 
 		if (!$.fn.select2) {
+			focusPrimaryFormField();
 			return;
 		}
 
@@ -140,25 +162,39 @@
 			};
 		};
 
+		var resolveCreateUrlForSelect = function ($el) {
+			var id = $el.attr('id');
+			if (!id) {
+				return '';
+			}
+			var $btn = $('.btn-select2-add[data-select2-target="#' + id + '"]').first();
+			return $btn.length ? String($btn.data('create-url') || '') : '';
+		};
+
 		var $singleSelect = $('#parent-id');
 		var $multipleSelects = $('.js-example-basic-multiple');
 
 		if ($singleSelect.length) {
+			var singleHasCreate = !!resolveCreateUrlForSelect($singleSelect);
 			$singleSelect.select2({
 				theme: 'bootstrap-5',
 				width: '100%',
-				tags: true,
-				createTag: select2CreateTag
+				tags: singleHasCreate,
+				createTag: singleHasCreate ? select2CreateTag : undefined
 			});
 		}
 
-		$multipleSelects.select2({
-			theme: 'bootstrap-5',
-			width: '100%',
-			placeholder: msg.selectCities || 'Select cities...',
-			closeOnSelect: false,
-			tags: true,
-			createTag: select2CreateTag
+		$multipleSelects.each(function () {
+			var $el = $(this);
+			var hasCreate = !!resolveCreateUrlForSelect($el);
+			$el.select2({
+				theme: 'bootstrap-5',
+				width: '100%',
+				placeholder: $el.data('placeholder') || msg.selectCities || msg.selectSamples || 'Select…',
+				closeOnSelect: false,
+				tags: hasCreate,
+				createTag: hasCreate ? select2CreateTag : undefined
+			});
 		});
 
 		/**
@@ -278,15 +314,6 @@
 					options.onAlways();
 				}
 			});
-		};
-
-		var resolveCreateUrlForSelect = function ($el) {
-			var id = $el.attr('id');
-			if (!id) {
-				return '';
-			}
-			var $btn = $('.btn-select2-add[data-select2-target="#' + id + '"]').first();
-			return $btn.length ? String($btn.data('create-url') || '') : '';
 		};
 
 		var onSelect2NewTag = function (e) {
@@ -412,5 +439,9 @@
 				window.location.href = indexUrl;
 			}
 		});
+
+		// After Select2 (and other plugins) — every form starts ready to type
+		focusPrimaryFormField();
+		window.setTimeout(focusPrimaryFormField, 0);
 	});
 })(window, jQuery);

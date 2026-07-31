@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
+use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -25,6 +28,9 @@ use Cake\Validation\Validator;
  */
 class ParentsTable extends Table
 {
+    use PreventsDeleteWithChildrenTrait;
+    use UsesDatabaseColumnDefaultsTrait;
+
     /**
      * @param array<string, mixed> $config
      * @return void
@@ -40,9 +46,27 @@ class ParentsTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        // No dependent cascade: delete is refused while Samples exist (beforeDelete).
         $this->hasMany('Samples', [
             'foreignKey' => 'parent_id',
+            'dependent' => false,
         ]);
+    }
+
+    /**
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @return int
+     */
+    public function countRelatedChildren(EntityInterface $entity): int
+    {
+        $id = $entity->get('id');
+        if ($id === null || $id === '') {
+            return (int)($entity->get('sample_count') ?? 0);
+        }
+
+        return $this->Samples->find()
+            ->where(['Samples.parent_id' => $id])
+            ->count();
     }
 
     /**
@@ -59,11 +83,11 @@ class ParentsTable extends Table
 
         $validator
             ->integer('pos')
-            ->notEmptyString('pos');
+            ->allowEmptyString('pos');
 
         $validator
             ->boolean('visible')
-            ->notEmptyString('visible');
+            ->allowEmptyString('visible');
 
         $validator
             ->nonNegativeInteger('sample_count')

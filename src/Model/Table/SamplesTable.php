@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
+use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -27,6 +30,9 @@ use Cake\Validation\Validator;
  */
 class SamplesTable extends Table
 {
+    use PreventsDeleteWithChildrenTrait;
+    use UsesDatabaseColumnDefaultsTrait;
+
     /**
      * @param array<string, mixed> $config
      * @return void
@@ -45,12 +51,32 @@ class SamplesTable extends Table
             'foreignKey' => 'parent_id',
             'joinType' => 'INNER',
         ]);
+        // dependent: when Sample is deleted (only if no city links), clean join rows.
         $this->belongsToMany('Cities', [
             'foreignKey' => 'sample_id',
             'targetForeignKey' => 'city_id',
             'joinTable' => 'cities_samples',
             'through' => 'CitiesSamples',
+            'dependent' => true,
         ]);
+    }
+
+    /**
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @return int
+     */
+    public function countRelatedChildren(EntityInterface $entity): int
+    {
+        $id = $entity->get('id');
+        if ($id === null || $id === '') {
+            return (int)($entity->get('city_count') ?? 0);
+        }
+
+        return $this->getAssociation('Cities')
+            ->junction()
+            ->find()
+            ->where(['sample_id' => $id])
+            ->count();
     }
 
     /**
@@ -94,17 +120,18 @@ class SamplesTable extends Table
             ->requirePresence('datumido', 'create')
             ->notEmptyDateTime('datumido');
 
+        // logikai / pos / visible: DB DEFAULT
         $validator
             ->boolean('logikai')
-            ->notEmptyString('logikai');
+            ->allowEmptyString('logikai');
 
         $validator
             ->integer('pos')
-            ->notEmptyString('pos');
+            ->allowEmptyString('pos');
 
         $validator
             ->boolean('visible')
-            ->notEmptyString('visible');
+            ->allowEmptyString('visible');
 
         $validator
             ->nonNegativeInteger('city_count')

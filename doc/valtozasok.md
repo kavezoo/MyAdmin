@@ -5,6 +5,275 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-07-31 — Cities form: Samples HABTM Select2 multiple
+
+### Mi változott
+- Cities add/edit: `samples._ids` multiple Select2 (mint Samples → Cities fordítva).
+- `setFormOptions()` + `patchEntity` `associated => ['Samples']` + `sample_count` a kiválasztottakból.
+- Nincs Select2 „+” Sample-hez (sok kötelező mező); tags csak ha van create gomb.
+- Placeholder: `data-placeholder` / `Select samples...`.
+
+### Érintett fájlok
+- `templates/Admin/Cities/form.php`, `Samples/form.php` (placeholder)
+- `CitiesController.php`, `webroot/js/pages/form.js`, `layout/admin.php`
+- `resources/locales/hu_HU/default.po`
+- Doc: `admin-konvenciok.md` (HABTM multiple Select2), `admin-oldal.md`, `crud-utmutato.md`, `struktura.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — Modal: HABTM lista linkekkel (Cities ↔ Samples)
+
+### Mi változott
+- Cities `recordGet`: `samples` = `[{id, name}, …]` ASC; index modal „Sample list” + linked modal (Sample details).
+- Samples `recordGet`: `cities` ugyanez a formátum (nem implode string) + linkek.
+- JS: `relatedLinkFields` config → `.record-modal-link` a modal mezőkben.
+- Cities view fő `dl`: Sample list linkek (mint Samples City list).
+
+### Érintett fájlok
+- `webroot/js/pages/index.js`
+- `CitiesController` / `SamplesController` `recordGet`
+- `templates/Admin/Cities/{index,view}.php`, `Samples/index.php`
+- `resources/locales/hu_HU/default.po` (`Sample list`)
+- Doc: `admin-konvenciok.md`, `admin-oldal.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — Napi zárás (péntek) → folytatás hétfőn
+
+### Mai nap összefoglalója (rögzítve a specekben is)
+1. **Form `#name` autofókusz** — minden Admin form + Select2 „+” modal (`pages/form.js` kötelező).
+2. **Séma DEFAULT-ok** — `UsesDatabaseColumnDefaultsTrait`; `pos`/`visible`/`logikai` DB-ből; `cities_samples.pos` DEFAULT 1000; `*_count` még PHP `0`.
+3. **Mentés hibák** — try/catch + Flash; `beforeMarshal` ArrayObject → `getArrayCopy()`.
+4. **Index lapozás** — `$indexLimit` (10) / `$indexMaxLimit` (100) + `indexPaginateOptions()`.
+5. **Utolsó rekord** — session `Admin.lastVisited` + index `.last-visited` (zöld); később bővíthető.
+
+### Hol a tudás
+- Célkép: [admin-oldal.md](admin-oldal.md)
+- Részletek: [admin-konvenciok.md](admin-konvenciok.md) (`.last-visited`, limit, form fókusz, DB default)
+- Új modul: [crud-utmutato.md](crud-utmutato.md)
+- Agent checklist: [uj-projekt.md](uj-projekt.md) §5
+
+### Hétfői nyitott / lehetséges folytatás
+- `.last-visited` bővítés (pl. scroll a sorhoz, linked-modal finomítás)
+- `*_count` oszlopokra DB `DEFAULT 0` → PHP `0` eltávolítása
+- Index keresés bekötése (UI megvan)
+- Egyéb UI/CRUD finomítások a felhasználó szerint
+
+---
+
+## 2026-07-31 — Index: utolsó rekord (`.last-visited` + session)
+
+### Mi változott
+- Session `Admin.lastVisited`: model alias + id (és `_last`); mentés view / edit betöltés / sikeres save / `recordGet`.
+- Index: `$lastVisitedId` → sor `class="last-visited"` (meglévő zöld CSS a `style.css`-ben).
+- Helper: `rememberLastVisited()`, `setLastVisitedForIndex()` — később bővíthető.
+
+### Érintett fájlok
+- `src/Controller/Admin/AppController.php`
+- Samples / Parents / CitiesController
+- `templates/Admin/{Samples,Parents,Cities}/index.php`
+- Doc: `admin-oldal.md`, `admin-konvenciok.md`, `crud-utmutato.md`, `keretrendszer.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — Index: `$indexLimit` / `$indexMaxLimit`
+
+### Mi változott
+- Minden Admin CRUD controller tetején: `$indexLimit` (alap sor/oldal, default **10**) és `$indexMaxLimit` (felső korlát, default **100**) — URL `?limit=` hack ellen.
+- `AppController::indexPaginateOptions()` adja a Cake Paginator `limit` + `maxLimit` értékeit.
+
+### Érintett fájlok
+- `src/Controller/Admin/AppController.php`
+- `Samples` / `Parents` / `Cities`Controller
+- Doc: `admin-konvenciok.md`, `admin-oldal.md`, `crud-utmutato.md`, `keretrendszer.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — Oszlop DEFAULT-ok a sémából (`pos`, `visible`, …)
+
+### Mi változott
+- Élő DB: `pos` DEFAULT 1000 (cities, parents, samples); `cities_samples.pos` is DEFAULT 1000 (korábban hiányzott); `visible` / `logikai` DEFAULT 1.
+- Új trait: `UsesDatabaseColumnDefaultsTrait` (régi `OmitsEmptyPos…` helyett) — üres mező unset + `applySchemaDefaults()` a séma alapján.
+- Controller: `newEntityWithSchemaDefaults()`; nincs hardkodolt `visible=true` / `logikai=true`; Select2 create nem küld `visible`-t.
+- `*_count` továbbra is `0` a PHP-ban (NOT NULL, nincs DB DEFAULT).
+
+### Érintett fájlok
+- `src/Model/Table/Concerns/UsesDatabaseColumnDefaultsTrait.php`
+- `CitiesTable`, `ParentsTable`, `SamplesTable`, `CitiesSamplesTable`
+- `Admin/AppController`, Cities/Parents/SamplesController
+- Doc: `admin-konvenciok.md`, `admin-oldal.md`, `crud-utmutato.md`, `keretrendszer.md`, `struktura.md`, `uj-projekt.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — Form: `name` mező autofókusz + doksi szinkron
+
+### Mi változott
+- **Minden** Admin `form.php`: `#name` `autofocus` + kötelező `pages/form` JS; `focusPrimaryFormField()` a Select2/inputmask **után** (ne lopja el a fókuszt).
+- Cities / Parents is betölti a `form.js`-t (korábban csak CSS).
+- Select2 „+” modal name input: `autofocus`.
+- Spec: célkép + konvenciók + CRUD / új projekt / keretrendszer.
+
+### Érintett fájlok
+- `templates/Admin/{Cities,Parents,Samples}/form.php`
+- `webroot/js/pages/form.js`
+- Doc: `admin-oldal.md`, `admin-konvenciok.md`, `crud-utmutato.md`, `uj-projekt.md`, `keretrendszer.md`, `struktura.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — Fix: `beforeDelete` CakePHP 5.2 deprecation
+
+### Mi változott
+- `PreventsDeleteWithChildrenTrait::beforeDelete`: ne `return false` — `$event->stopPropagation()` + `$event->setResult(false)` (CakePHP ≥5.2).
+
+### Érintett fájlok
+- `src/Model/Table/Concerns/PreventsDeleteWithChildrenTrait.php`
+- Doc: `admin-konvenciok.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — Index: `$showIdColumn`
+
+### Mi változott
+- Minden Admin CRUD `index.php` elején: `$showIdColumn = true|false` — az `id` (`#`) oszlop ki/be.
+- `$indexColspan` számítás figyelembe veszi.
+
+### Érintett fájlok
+- `templates/Admin/{Samples,Parents,Cities}/index.php`
+- Doc: `admin-konvenciok.md`, `admin-oldal.md`, `uj-projekt.md`, `README.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — Pénznem megjelenítés: `Ft` (nem HUF)
+
+### Mi változott
+- `LocaleNumberParser::currencySymbol()` — Admin `hu_HU` → **`Ft`** (magyar szokás; nem ISO `HUF`).
+- Index / view / `recordGet`: minden `HUF` hardkód cseréje a helperre.
+- Későbbi EUR: a helper `match` ágát bővíteni — ne template hardkód.
+
+### Érintett fájlok
+- `src/Utility/LocaleNumberParser.php` (`currencySymbol`)
+- `templates/Admin/Samples/index.php`, `Samples/view.php`, `Parents/view.php`, `Cities/view.php`
+- `SamplesController::recordGet`
+- Doc: **`admin-konvenciok.md`**, **`admin-oldal.md`**, **`i18n.md`**, **`middleware.md`**, `README.md`, `struktura.md`, `crud-utmutato.md`, `uj-projekt.md`, `valtozasok.md`
+
+### Példa
+```php
+<?= h(LocaleNumberParser::format($row->netto, decimals: 2)) ?>
+<?= h(LocaleNumberParser::currencySymbol()) ?>
+// → 12 345,67 Ft
+```
+
+---
+
+## 2026-07-31 — Fix: Table-en nincs `getTableLocator`
+
+### Mi változott
+- `CitiesTable` / `SamplesTable` `countRelatedChildren`: join számlálás `getAssociation(…)->junction()`-nel (CakePHP 5 Table-en nincs `getTableLocator()`).
+
+### Érintett fájlok
+- `src/Model/Table/CitiesTable.php`, `SamplesTable.php`, `doc/valtozasok.md`
+
+---
+
+## 2026-07-31 — Form Parent lista: visible + pos, name sorrend
+
+### Mi változott
+- Sample form Parent Select2/list: csak `visible = true`; rendezés `pos` ASC, `name` ASC.
+- Edit: a jelenlegi `parent_id` akkor is megjelenik, ha a szülő nem visible.
+- **Általános konvenció** belongsTo listákra dokumentálva.
+
+### Érintett fájlok
+- `src/Controller/Admin/SamplesController.php` (`setFormOptions`)
+- Doc: **`admin-oldal.md`** §6, **`admin-konvenciok.md`** (Form → Kapcsolt lista), `crud-utmutato.md`, `uj-projekt.md` §5–6, `README.md`, `valtozasok.md`
+
+### Példa (rövid)
+```php
+->where(['OR' => [['Parents.visible' => true], ['Parents.id' => $sample->parent_id]]])
+->orderBy(['Parents.pos' => 'ASC', 'Parents.name' => 'ASC'])
+```
+
+---
+
+## 2026-07-31 — `beforeMarshal` ArrayObject + mentés hibakezelés
+
+### Mi változott
+- Bugfix: `array_key_exists('pos', $data)` TypeError PHP 8+-on, mert Cake `ArrayObject`-et ad (`OmitsEmptyPosForDbDefaultTrait`, `CitiesSamplesTable`). Megoldás: `$data->getArrayCopy()`.
+- Cities / Parents / Samples `add`/`edit`: váratlan kivétel → Flash („The record could not be saved…”), nem nyers PHP hiba.
+- Select2 inline create: validációs első hibaüzenet JSON-ban; Throwable → udvarias üzenet.
+
+### Érintett fájlok
+- `src/Model/Table/Concerns/OmitsEmptyPosForDbDefaultTrait.php`
+- `src/Model/Table/CitiesSamplesTable.php`
+- `src/Controller/Admin/{Cities,Parents,Samples}Controller.php`
+- Doc: `admin-oldal.md`, `admin-konvenciok.md`, `crud-utmutato.md`, `keretrendszer.md`, `struktura.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — `pos`: csak DB default, ne PHP 1000
+
+### Mi változott
+- Eltávolítva minden programozott `pos = 1000` (controller add, Select2 create, `normalizeCounters`, CitiesSamples beforeSave/Marshal force).
+- `OmitsEmptyPosForDbDefaultTrait`: üres `pos` → unset → INSERT-nél a séma DEFAULT érvényesül.
+- Validáció: `pos` `allowEmptyString`.
+
+### Érintett fájlok
+- `src/Model/Table/Concerns/OmitsEmptyPosForDbDefaultTrait.php`
+- `ParentsTable`, `SamplesTable`, `CitiesTable`, `CitiesSamplesTable`
+- `Samples`/`Parents`/`Cities`Controller
+- Doc: `struktura.md`, `crud-utmutato.md`, `keretrendszer.md`, `uj-projekt.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — `*_count` oszlop: 0/null ne jelenjen meg
+
+### Mi változott
+- `LocaleNumberParser::formatCount()` — null vagy 0 → üres string.
+- Index / view / `recordGet` / modal: count mezők nem írnak ki `0`-t.
+
+### Érintett fájlok
+- `src/Utility/LocaleNumberParser.php`
+- `templates/Admin/{Samples,Parents,Cities}/index.php`, `view.php`
+- `*Controller` recordGet / parentGet
+- `webroot/js/pages/index.js`
+- Doc: `admin-konvenciok.md`, `admin-oldal.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — Törlés: gyerekvédelem + működő delete form
+
+### Mi változott
+- Model: `PreventsDeleteWithChildrenTrait` — gyerek/join van → `beforeDelete` false + `_delete` hibaüzenet; gyerek nélkül törölhető (HABTM `dependent => true` a joinra).
+- **Bugfix:** `Form->postLink` `id` az `<a>`-n volt → JS nem submitolt. Most `Form->create` `#delete-form-{id}`.
+- UI: `*_count > 0` → Delete gomb disabled + tooltip; modal `can_delete`; breadcrumb Swal + `#delete-form-current`.
+- Controller: `deleteEntityOrFail`, `setCanDeleteFlag`; Flash a model üzenettel.
+
+### Érintett fájlok
+- `src/Model/Table/Concerns/PreventsDeleteWithChildrenTrait.php`
+- `ParentsTable` / `SamplesTable` / `CitiesTable`
+- `Admin/AppController`, `*Controller` delete/view/edit/recordGet
+- Index/view templatek, `breadcrumb.php`, `app.js`, `pages/index.js`, `hu_HU/default.po`
+- Doc: `admin-konvenciok.md`, `admin-oldal.md`, `crud-utmutato.md`, `valtozasok.md`
+
+---
+
+## 2026-07-31 — View: kapcsolt rekordok modal link + dupla klikk
+
+### Mi változott
+- View: belongsTo / HABTM / kapcsolt tab **name** → félkövér `.record-modal-link` → `#modalLinkedRecordView` (AJAX `recordGet`).
+- Modal gombok: Close, Edit, View details, Delete; Delete → SweetAlert `confirmDelete`.
+- View elején `$rowDoubleClickAction` (`modal`/`edit`/`none`) a `.related-records-table` soraira.
+- `pages/index.js`: generikus linked context (`data-*` URL-ek, `entityFieldLabels`); delete form prefix / CSRF POST.
+- Delete actionök: redirect `referer`-re (view-ról törlés után vissza).
+- Samples view: Parent link + City list + Cities tab name linkek.
+
+### Érintett fájlok
+- `webroot/js/pages/index.js`, `webroot/css/style.css`
+- `templates/Admin/{Samples,Parents,Cities}/view.php`, `Samples/index.php` (`parentDeleteUrl`)
+- `src/Controller/Admin/{Samples,Parents,Cities}Controller.php` (delete referer)
+- Doc: `admin-oldal.md`, `admin-konvenciok.md`, `crud-utmutato.md`, `uj-projekt.md`, `README.md`, `valtozasok.md`
+
+---
+
 ## 2026-07-31 — Currency oszlop szélesebb (`12rem`)
 
 ### Mi változott

@@ -102,6 +102,37 @@ class LocaleNumberParser
     }
 
     /**
+     * Display helper for `*_count` columns: empty cell when null or zero.
+     */
+    public static function formatCount(mixed $value, ?string $locale = null, int $decimals = 0): string
+    {
+        if ($value === null || $value === '') {
+            return '';
+        }
+        if (is_numeric($value) && (float)$value == 0.0) {
+            return '';
+        }
+
+        return static::format($value, $locale, $decimals);
+    }
+
+    /**
+     * Currency suffix for display (Admin hu → „Ft”, not ISO „HUF”).
+     * Future: map other locales / EUR when needed.
+     */
+    public static function currencySymbol(?string $locale = null): string
+    {
+        $locale = $locale ?: I18n::getLocale();
+        $lang = strtolower(substr($locale, 0, 2));
+
+        return match ($lang) {
+            'hu' => 'Ft',
+            // 'de', 'sk', 'fr', 'en' => '€', // when EUR is introduced
+            default => 'Ft',
+        };
+    }
+
+    /**
      * Whether the string looks like a localized number (not a date/time/id token).
      */
     public static function looksLikeNumber(string $value): bool

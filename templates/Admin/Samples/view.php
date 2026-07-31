@@ -7,13 +7,71 @@
  */
 $this->Html->css(['pages/index'], ['block' => true]);
 
+/**
+ * Related-tab row double-click:
+ * - 'modal' → AJAX linked modal (recordGet of related entity)
+ * - 'edit'  → related entity edit form
+ * - 'none'  → no action
+ */
+$rowDoubleClickAction = 'modal';
+
+$citiesGetUrl = $this->Url->build(['controller' => 'Cities', 'action' => 'recordGet']);
+$citiesEditUrl = $this->Url->build(['controller' => 'Cities', 'action' => 'edit']);
+$citiesViewUrl = $this->Url->build(['controller' => 'Cities', 'action' => 'view']);
+$citiesDeleteUrl = $this->Url->build(['controller' => 'Cities', 'action' => 'delete']);
+
+$parentsGetUrl = $this->Url->build(['controller' => 'Parents', 'action' => 'recordGet']);
+$parentsEditUrl = $this->Url->build(['controller' => 'Parents', 'action' => 'edit']);
+$parentsViewUrl = $this->Url->build(['controller' => 'Parents', 'action' => 'view']);
+$parentsDeleteUrl = $this->Url->build(['controller' => 'Parents', 'action' => 'delete']);
+
+$config = [
+	'rowDoubleClickAction' => $rowDoubleClickAction,
+	'entityFieldLabels' => [
+		'city' => [
+			'id' => __('ID'),
+			'name' => __('Name'),
+			'pos' => __('Position'),
+			'visible' => __('Visible'),
+			'sample_count' => __('Samples'),
+			'created' => __('Created'),
+			'modified' => __('Modified'),
+		],
+		'parent' => [
+			'id' => __('ID'),
+			'name' => __('Name'),
+			'pos' => __('Position'),
+			'visible' => __('Visible'),
+			'sample_count' => __('Samples'),
+			'created' => __('Created'),
+			'modified' => __('Modified'),
+		],
+	],
+];
+$this->Html->scriptBlock(
+	'window.MyAdmin = window.MyAdmin || {}; window.MyAdmin.config = Object.assign(window.MyAdmin.config || {}, '
+	. json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+	. ');',
+	['block' => 'script']
+);
+$this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
+
 $cities = $sample->cities ?? [];
 $citiesCount = is_countable($cities) ? count($cities) : 0;
 
 ob_start();
 if ($citiesCount > 0):
 ?>
-<table class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table">
+<table
+	class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table related-records-table"
+	data-get-url="<?= h($citiesGetUrl) ?>"
+	data-edit-url="<?= h($citiesEditUrl) ?>"
+	data-view-url="<?= h($citiesViewUrl) ?>"
+	data-delete-url="<?= h($citiesDeleteUrl) ?>"
+	data-delete-form-prefix="city"
+	data-labels="city"
+	data-title="<?= h(__('City details')) ?>"
+>
 	<thead>
 		<tr>
 			<th scope="col" class="number id">#</th>
@@ -26,9 +84,21 @@ if ($citiesCount > 0):
 	</thead>
 	<tbody>
 		<?php foreach ($cities as $city): ?>
-			<tr id="related-city-<?= (int)$city->id ?>" data-id="<?= (int)$city->id ?>">
+			<tr id="related-city-<?= (int)$city->id ?>" data-id="<?= (int)$city->id ?>" data-can-delete="<?= ((int)($city->sample_count ?? 0) === 0) ? '1' : '0' ?>">
 				<td class="number id"><?= h($city->id) ?></td>
-				<td class="string name"><?= h($city->name) ?></td>
+				<td class="string name">
+					<a href="#"
+						class="record-modal-link"
+						data-id="<?= (int)$city->id ?>"
+						data-get-url="<?= h($citiesGetUrl) ?>"
+						data-edit-url="<?= h($citiesEditUrl) ?>"
+						data-view-url="<?= h($citiesViewUrl) ?>"
+						data-delete-url="<?= h($citiesDeleteUrl) ?>"
+						data-delete-form-prefix="city"
+						data-labels="city"
+						data-title="<?= h(__('City details')) ?>"
+					><?= h($city->name) ?><span class="record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span></a>
+				</td>
 				<td class="number pos text-end"><?= h(\App\Utility\LocaleNumberParser::format($city->pos, decimals: 0)) ?></td>
 				<td class="boolean visible">
 					<?= $city->visible
@@ -62,6 +132,12 @@ if ($citiesCount > 0):
 							'title' => __('Edit'),
 						]
 					) ?>
+					<?= $this->Form->create(null, [
+						'url' => ['controller' => 'Cities', 'action' => 'delete', $city->id],
+						'id' => 'delete-form-city-' . $city->id,
+						'class' => 'd-none js-row-delete-form',
+					]) ?>
+					<?= $this->Form->end() ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -89,17 +165,66 @@ $citiesTable = ob_get_clean();
 			<div class="card-body">
 				<dl class="record-view-fields mb-0">
 					<div class="record-view-row"><dt><?= __('ID') ?></dt><dd><?= h($sample->id) ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Parent') ?></dt><dd><?= h($sample->parent->name ?? '') ?></dd></div>
+					<div class="record-view-row">
+						<dt><?= __('Parent') ?></dt>
+						<dd>
+							<?php if (!empty($sample->parent_id) && !empty($sample->parent->name)): ?>
+								<a href="#"
+									class="record-modal-link"
+									data-id="<?= (int)$sample->parent_id ?>"
+									data-get-url="<?= h($parentsGetUrl) ?>"
+									data-edit-url="<?= h($parentsEditUrl) ?>"
+									data-view-url="<?= h($parentsViewUrl) ?>"
+									data-delete-url="<?= h($parentsDeleteUrl) ?>"
+									data-delete-form-prefix="parent"
+									data-labels="parent"
+									data-title="<?= h(__('Parent details')) ?>"
+								><?= h($sample->parent->name) ?><span class="record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span></a>
+								<?= $this->Form->create(null, [
+									'url' => ['controller' => 'Parents', 'action' => 'delete', $sample->parent_id],
+									'id' => 'delete-form-parent-' . (int)$sample->parent_id,
+									'class' => 'd-none js-row-delete-form',
+								]) ?>
+								<?= $this->Form->end() ?>
+							<?php else: ?>
+								—
+							<?php endif; ?>
+						</dd>
+					</div>
 					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h($sample->name) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Number') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($sample->szam, decimals: 0)) ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Net') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($sample->netto, decimals: 2)) ?> HUF</dd></div>
+					<div class="record-view-row"><dt><?= __('Net') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($sample->netto, decimals: 2)) ?> <?= h(\App\Utility\LocaleNumberParser::currencySymbol()) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Date') ?></dt><dd><?= $sample->datum ? h($sample->datum->format('Y.m.d.')) : '—' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Time') ?></dt><dd><?= $sample->ido ? h($sample->ido->format('H:i')) : '—' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Date and time') ?></dt><dd><?= $sample->datumido ? h($sample->datumido->format('Y.m.d. H:i')) : '—' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Boolean') ?></dt><dd><?= $sample->logikai ? __('Yes') : __('No') ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Position') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($sample->pos, decimals: 0)) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Visible') ?></dt><dd><?= $sample->visible ? __('Yes') : __('No') ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Cities') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($sample->city_count, decimals: 0)) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Cities') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::formatCount($sample->city_count, decimals: 0)) ?></dd></div>
+					<?php if ($citiesCount > 0): ?>
+						<div class="record-view-row">
+							<dt><?= __('City list') ?></dt>
+							<dd class="record-related-list">
+								<?php
+								$cityLinks = [];
+								foreach ($cities as $city) {
+									$cityLinks[] = '<a href="#" class="record-modal-link"'
+										. ' data-id="' . (int)$city->id . '"'
+										. ' data-get-url="' . h($citiesGetUrl) . '"'
+										. ' data-edit-url="' . h($citiesEditUrl) . '"'
+										. ' data-view-url="' . h($citiesViewUrl) . '"'
+										. ' data-delete-url="' . h($citiesDeleteUrl) . '"'
+										. ' data-delete-form-prefix="city"'
+										. ' data-labels="city"'
+										. ' data-title="' . h(__('City details')) . '"'
+										. '>' . h($city->name)
+										. '<span class="record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span></a>';
+								}
+								echo implode(', ', $cityLinks);
+								?>
+							</dd>
+						</div>
+					<?php endif; ?>
 					<div class="record-view-row"><dt><?= __('Created') ?></dt><dd><?= $sample->created ? h($sample->created->format('Y.m.d. H:i')) : '—' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Modified') ?></dt><dd><?= $sample->modified ? h($sample->modified->format('Y.m.d. H:i')) : '—' ?></dd></div>
 				</dl>
@@ -130,3 +255,5 @@ $citiesTable = ob_get_clean();
 		]) ?>
 	</div>
 </div>
+
+<?= $this->element('admin/modal_linked_record_view') ?>

@@ -7,13 +7,62 @@
  */
 $this->Html->css(['pages/index'], ['block' => true]);
 
+/**
+ * Related-tab row double-click: 'modal' | 'edit' | 'none'
+ */
+$rowDoubleClickAction = 'modal';
+
+$samplesGetUrl = $this->Url->build(['controller' => 'Samples', 'action' => 'recordGet']);
+$samplesEditUrl = $this->Url->build(['controller' => 'Samples', 'action' => 'edit']);
+$samplesViewUrl = $this->Url->build(['controller' => 'Samples', 'action' => 'view']);
+$samplesDeleteUrl = $this->Url->build(['controller' => 'Samples', 'action' => 'delete']);
+
+$config = [
+	'rowDoubleClickAction' => $rowDoubleClickAction,
+	'entityFieldLabels' => [
+		'sample' => [
+			'id' => __('ID'),
+			'parent' => __('Parent'),
+			'name' => __('Name'),
+			'szam' => __('Number'),
+			'netto' => __('Net'),
+			'datum' => __('Date'),
+			'ido' => __('Time'),
+			'datumido' => __('Date and time'),
+			'logikai' => __('Boolean'),
+			'pos' => __('Position'),
+			'visible' => __('Visible'),
+			'city_count' => __('Cities'),
+			'cities' => __('City list'),
+			'created' => __('Created'),
+			'modified' => __('Modified'),
+		],
+	],
+];
+$this->Html->scriptBlock(
+	'window.MyAdmin = window.MyAdmin || {}; window.MyAdmin.config = Object.assign(window.MyAdmin.config || {}, '
+	. json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+	. ');',
+	['block' => 'script']
+);
+$this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
+
 $samples = $city->samples ?? [];
 $samplesCount = is_countable($samples) ? count($samples) : 0;
 
 ob_start();
 if ($samplesCount > 0):
 ?>
-<table class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table">
+<table
+	class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table related-records-table"
+	data-get-url="<?= h($samplesGetUrl) ?>"
+	data-edit-url="<?= h($samplesEditUrl) ?>"
+	data-view-url="<?= h($samplesViewUrl) ?>"
+	data-delete-url="<?= h($samplesDeleteUrl) ?>"
+	data-delete-form-prefix="sample"
+	data-labels="sample"
+	data-title="<?= h(__('Sample details')) ?>"
+>
 	<thead>
 		<tr>
 			<th scope="col" class="number id">#</th>
@@ -27,12 +76,19 @@ if ($samplesCount > 0):
 	</thead>
 	<tbody>
 		<?php foreach ($samples as $sample): ?>
-			<tr id="related-sample-<?= (int)$sample->id ?>" data-id="<?= (int)$sample->id ?>">
+			<tr id="related-sample-<?= (int)$sample->id ?>" data-id="<?= (int)$sample->id ?>" data-can-delete="<?= ((int)($sample->city_count ?? 0) === 0) ? '1' : '0' ?>">
 				<td class="number id"><?= h($sample->id) ?></td>
-				<td class="string name"><?= h($sample->name) ?></td>
+				<td class="string name">
+					<a href="#"
+						class="record-modal-link"
+						data-id="<?= (int)$sample->id ?>"
+						data-labels="sample"
+						data-title="<?= h(__('Sample details')) ?>"
+					><?= h($sample->name) ?><span class="record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span></a>
+				</td>
 				<td class="number szam text-end"><?= h(\App\Utility\LocaleNumberParser::format($sample->szam, decimals: 0)) ?></td>
 				<td class="currency netto text-end">
-					<span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::format($sample->netto, decimals: 2)) ?></span> HUF
+					<span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::format($sample->netto, decimals: 2)) ?></span> <?= h(\App\Utility\LocaleNumberParser::currencySymbol()) ?>
 				</td>
 				<td class="boolean visible">
 					<?= $sample->visible
@@ -56,6 +112,12 @@ if ($samplesCount > 0):
 						['controller' => 'Samples', 'action' => 'edit', $sample->id],
 						['escape' => false, 'class' => 'btn btn-outline-primary', 'role' => 'button', 'title' => __('Edit')]
 					) ?>
+					<?= $this->Form->create(null, [
+						'url' => ['controller' => 'Samples', 'action' => 'delete', $sample->id],
+						'id' => 'delete-form-sample-' . $sample->id,
+						'class' => 'd-none js-row-delete-form',
+					]) ?>
+					<?= $this->Form->end() ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -86,7 +148,31 @@ $samplesTable = ob_get_clean();
 					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h($city->name) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Position') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($city->pos, decimals: 0)) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Visible') ?></dt><dd><?= $city->visible ? __('Yes') : __('No') ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Samples') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($city->sample_count, decimals: 0)) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Samples') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::formatCount($city->sample_count, decimals: 0)) ?></dd></div>
+					<?php if ($samplesCount > 0): ?>
+						<div class="record-view-row">
+							<dt><?= __('Sample list') ?></dt>
+							<dd class="record-related-list">
+								<?php
+								$sampleLinks = [];
+								foreach ($samples as $sample) {
+									$sampleLinks[] = '<a href="#" class="record-modal-link"'
+										. ' data-id="' . (int)$sample->id . '"'
+										. ' data-get-url="' . h($samplesGetUrl) . '"'
+										. ' data-edit-url="' . h($samplesEditUrl) . '"'
+										. ' data-view-url="' . h($samplesViewUrl) . '"'
+										. ' data-delete-url="' . h($samplesDeleteUrl) . '"'
+										. ' data-delete-form-prefix="sample"'
+										. ' data-labels="sample"'
+										. ' data-title="' . h(__('Sample details')) . '"'
+										. '>' . h($sample->name)
+										. '<span class="record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span></a>';
+								}
+								echo implode(', ', $sampleLinks);
+								?>
+							</dd>
+						</div>
+					<?php endif; ?>
 					<div class="record-view-row"><dt><?= __('Created') ?></dt><dd><?= $city->created ? h($city->created->format('Y.m.d. H:i')) : '—' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Modified') ?></dt><dd><?= $city->modified ? h($city->modified->format('Y.m.d. H:i')) : '—' ?></dd></div>
 				</dl>
@@ -117,3 +203,5 @@ $samplesTable = ob_get_clean();
 		]) ?>
 	</div>
 </div>
+
+<?= $this->element('admin/modal_linked_record_view') ?>

@@ -48,8 +48,9 @@ $this->viewBuilder()->setLayout('admin');
 
 | Controller | Tanulság |
 |------------|----------|
-| `SamplesController` | Teljes CRUD + `recordGet` (Cities lista ASC) + `select2Create` / `select2CreateCity` (+ opcionális `parentGet`) |
-| `ParentsController` / `CitiesController` | Ugyanaz a lista-viselkedés + `recordGet` |
+| `CitiesController` | Teljes CRUD + `recordGet` (Samples ASC + link lista) + `setFormOptions` (Samples list) + HABTM `samples._ids` mentés + `sample_count` |
+| `SamplesController` | Teljes CRUD + `recordGet` (Cities ASC) + `select2Create` / `select2CreateCity` + `setFormOptions` (Parent: visible + pos/name; Cities list) + `parentGet` |
+| `ParentsController` | CRUD + `recordGet` + gyerekvédelem |
 
 Új modulnál a **viselkedést** másold (nem a mezőlistát) — [crud-utmutato.md](crud-utmutato.md).
 
@@ -59,7 +60,9 @@ $this->viewBuilder()->setLayout('admin');
 |---------|----------|
 | Reserved entity (`Parent`) | Átnevezés pl. `ParentRecord` + `Table::setEntityClass` |
 | HABTM through kötelező join mező | `beforeSave` / `beforeMarshal` default |
-| Számláló mező (`*_count`) | `allowEmptyString` + create default 0 |
+| Számláló mező (`*_count`) | `allowEmptyString` + create default 0; megjelenítés: `formatCount` (0/null → üres) |
+| `pos` / `visible` / `logikai` | **DB DEFAULT** — PHP-ban **ne** hardkódolj; `UsesDatabaseColumnDefaultsTrait` + `newEntityWithSchemaDefaults()`. Üres form → unset. `beforeMarshal` `$data` = `ArrayObject` → `getArrayCopy()` |
+| Pénznem UI | `LocaleNumberParser::currencySymbol()` — hu → **`Ft`** (ne `HUF`) |
 
 ## Template típusok
 

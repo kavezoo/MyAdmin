@@ -12,6 +12,12 @@ use Cake\Http\Response;
  */
 class ParentsController extends AppController
 {
+    /** @var int Index rows per page */
+    protected int $indexLimit = 10;
+
+    /** @var int Cap for `?limit=` (abuse / oversized requests) */
+    protected int $indexMaxLimit = 100;
+
     /**
      * @return void
      */
@@ -28,8 +34,7 @@ class ParentsController extends AppController
         $this->set('title', __('Parents'));
         $this->viewBuilder()->setVar('breadcrumb', __('Parents'));
 
-        $parents = $this->paginate($this->Parents->find(), [
-            'limit' => 10,
+        $parents = $this->paginate($this->Parents->find(), $this->indexPaginateOptions([
             'sortableFields' => [
                 'id',
                 'name',
@@ -39,7 +44,8 @@ class ParentsController extends AppController
                 'created',
                 'modified',
             ],
-        ]);
+        ]));
+        $this->setLastVisitedForIndex('Parents');
         $this->set(compact('parents'));
     }
 
@@ -48,20 +54,25 @@ class ParentsController extends AppController
      */
     public function add()
     {
-        $parent = $this->Parents->newEmptyEntity();
-        $parent->pos = 1000;
-        $parent->visible = true;
-        $parent->sample_count = 0;
+        $parent = $this->newEntityWithSchemaDefaults($this->Parents);
+        if ($parent->get('sample_count') === null) {
+            $parent->set('sample_count', 0);
+        }
 
         if ($this->request->is('post')) {
-            $parent = $this->Parents->patchEntity($parent, $this->request->getData());
-            if ($parent->sample_count === null) {
-                $parent->sample_count = 0;
-            }
-            if ($this->Parents->save($parent)) {
-                $this->Flash->success(__('The parent has been saved.'));
+            try {
+                $parent = $this->Parents->patchEntity($parent, $this->request->getData());
+                if ($parent->sample_count === null) {
+                    $parent->sample_count = 0;
+                }
+                if ($this->Parents->save($parent)) {
+                    $this->rememberLastVisited('Parents', $parent->id);
+                    $this->Flash->success(__('The parent has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index']);
+                }
+            } catch (\Throwable $e) {
+                // Unexpected errors → user-facing flash, not raw PHP
             }
             $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
@@ -79,18 +90,25 @@ class ParentsController extends AppController
     public function edit(?string $id = null)
     {
         $parent = $this->Parents->get($id);
+        $this->rememberLastVisited('Parents', $parent->id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $parent = $this->Parents->patchEntity($parent, $this->request->getData());
-            if ($this->Parents->save($parent)) {
-                $this->Flash->success(__('The parent has been saved.'));
+            try {
+                $parent = $this->Parents->patchEntity($parent, $this->request->getData());
+                if ($this->Parents->save($parent)) {
+                    $this->rememberLastVisited('Parents', $parent->id);
+                    $this->Flash->success(__('The parent has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index']);
+                }
+            } catch (\Throwable $e) {
+                // Unexpected errors → user-facing flash, not raw PHP
             }
             $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
 
         $this->set(compact('parent'));
+        $this->setCanDeleteFlag($this->Parents, $parent);
         $this->set('title', __('Edit parent'));
         $this->viewBuilder()->setVar('breadcrumb', __('Parents'));
         $this->render('form');
@@ -103,7 +121,9 @@ class ParentsController extends AppController
     public function view(?string $id = null)
     {
         $parent = $this->Parents->get($id, contain: ['Samples']);
+        $this->rememberLastVisited('Parents', $parent->id);
         $this->set(compact('parent'));
+        $this->setCanDeleteFlag($this->Parents, $parent);
         $this->set('title', __('Parent details'));
         $this->viewBuilder()->setVar('breadcrumb', __('Parents'));
     }
@@ -115,15 +135,8 @@ class ParentsController extends AppController
     public function delete(?string $id = null): ?Response
     {
         $this->request->allowMethod(['post', 'delete']);
-        $parent = $this->Parents->get($id);
 
-        if ($this->Parents->delete($parent)) {
-            $this->Flash->success(__('The record has been deleted.'));
-        } else {
-            $this->Flash->error(__('The record could not be deleted. Please try again.'));
-        }
-
-        return $this->redirect(['action' => 'index']);
+        return $this->deleteEntityOrFail($this->Parents, $this->Parents->get($id));
     }
 
     /**
@@ -148,6 +161,8 @@ class ParentsController extends AppController
                 ], JSON_UNESCAPED_UNICODE));
         }
 
+        $this->rememberLastVisited('Parents', $parent->id);
+
         return $this->response
             ->withType('application/json')
             ->withStringBody(json_encode([
@@ -157,9 +172,10 @@ class ParentsController extends AppController
                     'name' => $parent->name,
                     'pos' => \App\Utility\LocaleNumberParser::format($parent->pos, decimals: 0),
                     'visible' => (bool)$parent->visible,
-                    'sample_count' => \App\Utility\LocaleNumberParser::format($parent->sample_count, decimals: 0),
+                    'sample_count' => \App\Utility\LocaleNumberParser::formatCount($parent->sample_count, decimals: 0),
                     'created' => $parent->created ? $parent->created->format('Y.m.d. H:i') : '',
                     'modified' => $parent->modified ? $parent->modified->format('Y.m.d. H:i') : '',
+                    'can_delete' => $this->Parents->canDelete($parent),
                 ],
             ], JSON_UNESCAPED_UNICODE));
     }

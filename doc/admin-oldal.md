@@ -59,7 +59,7 @@ Select2 / daterangepicker / inputmask / `pages/*` → **template** `block`.
 |-------|------|-----|----------------|
 | **Lista** | `index.php` | kereshető/rendezhető tábla, gyorsnézet, CRUD akciók | `pages/index` CSS+JS + `MyAdmin.config` |
 | **Űrlap** | `form.php` (add=edit) | mentés locale szám/dátummal; Select2 „+” | `pages/form` + select2/date/inputmask |
-| **Adatlap** | `view.php` | bake-szerű `dl` + gyerek **tabok** | `pages/index` CSS |
+| **Adatlap** | `view.php` | bake `dl` + gyerek tabok; kapcsolt nevek félkövér modal-link; `$rowDoubleClickAction` | `pages/index` CSS+JS + linked modal |
 
 Controller: `add`/`edit` → `render('form')`; `recordGet` JSON a lista modalhoz; opcionális `select2Create…`.
 
@@ -91,6 +91,7 @@ Külső wrapper (a tartalom tetején):
 ```php
 $rowDoubleClickAction = 'modal'; // modal | edit | none
 $numberDecimals = ['integer' => 0, 'decimal' => 2];
+$showIdColumn = true;
 $showCountColumn = true;
 $showVisibleColumn = true;
 $showCreatedColumn = true;
@@ -110,8 +111,8 @@ Ezeket tedd a `MyAdmin.config`-ba is (`rowDoubleClickAction`, URL-ek, `recordFie
 | `number id` | ID | `4.75rem` | ~7–8 jegy |
 | `number pos` | pozíció | `5.5rem` | max ~5 jegy + locale ezres |
 | `number` (+ pl. `.szam`) | általános szám | `6.5rem` | ne `id`/`pos`/`count` |
-| `number count` | `*_count` | `5.5rem` | minta |
-| `currency` (+ pl. `.netto`) | összeg + pénznem | `12rem` | összeg: `.currency-amount` (félkövér); bőven elfér nagyobb összeg is |
+| `number count` | `*_count` | `5.5rem` | minta; **0/null → üres** (`formatCount`) |
+| `currency` (+ pl. `.netto`) | összeg + pénznem | `12rem` | `.currency-amount` + `currencySymbol()` → **Ft** (hu) |
 | `boolean` (+ `.logikai` / `.visible` / `.valid`) | FA pipa / X | `7.5rem` | minta `.visible`/`.valid` |
 | `date` | dátum | `8.5rem` | |
 | `datetime` | dátum+idő | `10.5rem` | created/modified közös oszlop is |
@@ -125,9 +126,13 @@ CSS: `webroot/css/style.css`. Sort link `id`/`pos`/`number`/`currency`/`count`/`
 
 ```php
 LocaleNumberParser::format($value, decimals: $numberDecimals['integer']); // vagy 'decimal'
+LocaleNumberParser::formatCount($row->city_count); // 0/null → üres
+LocaleNumberParser::currencySymbol(); // hu → „Ft” (ne „HUF”)
 ```
 
-Admin `hu_HU` → pl. `1 234` / `1 234,56`. Címkék továbbra is `__('English')`.
+Admin `hu_HU` → pl. `1 234` / `1 234,56` / `12 345,67 Ft`. Címkék továbbra is `__('English')`.
+
+Részletek: [admin-konvenciok.md](admin-konvenciok.md) (oszlopok + pénznem).
 
 ### 4.4 Created + Modified
 
@@ -136,11 +141,12 @@ Admin `hu_HU` → pl. `1 234` / `1 234,56`. Címkék továbbra is `__('English')
 - Egyik sem: nincs timestamp oszlop  
 `th`-n **tilos** `display:flex` (maradjon `table-cell`).
 
-### 4.5 Rendezés
+### 4.5 Rendezés és lapozás
 
 - URL: `?sort=mezo&direction=asc|desc`
 - Index query-n **ne** legyen előre `orderBy`
-- `paginate(..., ['sortableFields' => [...]])` — associált mezők is (pl. `Parents.name`)
+- `paginate(..., $this->indexPaginateOptions(['sortableFields' => [...]]))` — associált mezők is (pl. `Parents.name`)
+- Controller tetején: `$indexLimit = 10` (alap), `$indexMaxLimit = 100` (`?limit=` felső korlát / hack ellen)
 
 ---
 
@@ -149,12 +155,13 @@ Admin `hu_HU` → pl. `1 234` / `1 234,56`. Címkék továbbra is `__('English')
 | Interakció | Viselkedés |
 |------------|------------|
 | Sor **dupla katt** | `$rowDoubleClickAction`: `modal` → AJAX `recordGet` + `#modalRecordView`; `edit` → edit URL; `none` → semmi |
+| **Utolsó rekord** | Session `Admin.lastVisited` (model + id); index sor: `.last-visited` (zöld kiemelés) |
 | View details gomb | Ugyanaz a modal (vagy view URL — a mintában modal/gyorsnézet + külön view oldal) |
 | Edit gomb | `/admin/.../edit/{id}` |
 | Delete gomb | `MyAdmin.confirmDelete` → `#delete-form-{id}` submit |
 | `.category-link` | Kapcsolt rekord linked modal (`categoryGetUrl`) |
 | Fejléc sort | Paginator link → újratöltés új sorrenddel |
-| Modal kapcsolt nevek (HABTM/hasMany) | **ABC ASC** (`contain` + `orderBy` name) |
+| Modal kapcsolt nevek (HABTM/hasMany) | **ABC ASC** + **`.record-modal-link`** → linked modal (`relatedLinkFields` + `[{id,name}]` JSON) |
 | Üres lista | Egy sor `colspan="$indexColspan"` + „nincs találat” szöveg |
 
 Modal mezősorrend / címkék: `MyAdmin.config.recordFieldLabels`.  
@@ -170,13 +177,39 @@ Edit gomb a modalban a View details **előtt** (UX konvenció).
 - Bootstrap rács: label `col-md-2` **félkövér**, mező jobbra
 - Boolean: switch
 - Lábléc: Save + Cancel; Save a breadcrumbben is (`form="form-horizontal"`)
-- Select2 mező mellett **„+”** gomb (single **és** multiple), ha új kapcsolt rekord felvehető
+- Select2 mező mellett **„+”** gomb (single **és** multiple), ha új kapcsolt rekord **egyszerűen** felvehető; HABTM multiple Select2 **mindkét** CRUD formon
+- **Fókusz:** **minden** Admin formon a `#name` (vagy első szöveges mező) azonnal fókuszt kap — `pages/form.js` kötelező asset + `autofocus`
+
+### Mentés hibakezelés
+
+| Eset | Viselkedés |
+|------|------------|
+| Validáció / `save` false | Flash: `__('The record could not be saved. Please try again.')` |
+| Váratlan kivétel (`Throwable`) | Ugyanaz a Flash — **ne** nyers PHP TypeError / stack trace a felhasználónak |
+| Select2 „+” validáció | JSON `{ success: false, message }` — első entity hibaüzenet, ha van |
+| Select2 „+” kivétel | JSON udvarias üzenet (ugyanaz a „could not be saved” szöveg) |
+
+`add` / `edit`: `patchEntity` + `save` **try/catch**-ben.  
+Add: `newEntityWithSchemaDefaults()` — `pos` / `visible` / `logikai` a sémából.  
+Model `beforeMarshal`: `$data` = **`ArrayObject`** — `array_key_exists($k, $data)` **tilos**; `UsesDatabaseColumnDefaultsTrait` + `getArrayCopy()`.
+
+### Kapcsolt szülő lista (belongsTo Select2)
+
+| Szabály | Érték |
+|---------|--------|
+| Szűrés | csak `visible = true` |
+| Sorrend | `pos` ASC → `name` ASC |
+| Edit | aktuális szülő a listában marad, ha nem visible is |
+| Feltöltés | controller `setFormOptions($entity)` |
+
+Részletek + példa: [admin-konvenciok.md](admin-konvenciok.md) → „Kapcsolt lista (belongsTo)”.
 
 ### Számok és dátumok
 
 | Réteg | Szabály |
 |-------|---------|
 | Megjelenítés | `LocaleNumberParser::format()`; hu: `1 234,56` |
+| Pénznem szuffixum | `LocaleNumberParser::currencySymbol()` → **`Ft`** (ne `HUF`; később EUR a helperben) |
 | Input | `.js-input-decimal` / `.js-input-integer` + `MyAdmin.config.numberFormat` (= `LocaleNumberParser::jsConfig()`) |
 | Dátum UI | daterangepicker + inputmask (`yyyy-mm-dd`, `hh:mm`) |
 | Mentés előtt | Middleware: locale szám → `1234.56`; dátum → SQL formátum ([middleware.md](middleware.md)) |
@@ -186,11 +219,19 @@ Edit gomb a modalban a View details **előtt** (UX konvenció).
 ### Select2 „+”
 
 1. Gomb: `data-select2-target`, `data-create-url`, saját modal
-2. Mentés → AJAX POST → `{ success, id, text }`
-3. Új option + azonnali kiválasztás (multiple: **hozzáad** a meglévőkhöz)
-4. Controller: `fetchTable('Alias')` — **ne** Association objektumot adj Table helyett
+2. Modal megnyitás → fókusz a `[data-select2-text="1"]` mezőn (`shown.bs.modal`)
+3. Mentés → AJAX POST → `{ success, id, text }` (hiba: `{ success: false, message }`)
+4. Új option + azonnali kiválasztás (multiple: **hozzáad** a meglévőkhöz)
+5. Controller: `fetchTable('Alias')` — **ne** Association objektumot adj Table helyett
+6. **Ne** tedd ki „+”-t, ha az új entitás sok kötelező mezőt igényel (pl. Sample) — akkor csak existing választás
 
-Részletek: [admin-konvenciok.md](admin-konvenciok.md) → Select2.
+### HABTM multiple Select2 (form)
+
+- Samples form: `cities._ids`; Cities form: `samples._ids` (szimmetrikus)
+- Mentés: `associated` + üres `_ids` → `[]`; frissítsd a `*_count` mezőt
+- Részletek: [admin-konvenciok.md](admin-konvenciok.md) → „HABTM — multiple Select2”
+
+Részletek Select2 „+”: [admin-konvenciok.md](admin-konvenciok.md) → Select2.
 
 ---
 
@@ -199,25 +240,31 @@ Részletek: [admin-konvenciok.md](admin-konvenciok.md) → Select2.
 ```
 ┌─ Card: „… details” ─────────────────────────┐
 │ dl.record-view-fields                       │
-│   dt / dd sorok (bake-szerű)                │
-│   belongsTo név a fő listában (NEM tab)     │
+│   belongsTo / HABTM nevek = félkövér LINK   │
+│     → AJAX modal (Close/Edit/View/Delete)   │
 │ Edit + Back                                 │
 └─────────────────────────────────────────────┘
 ┌─ Card: tab sheet (ha van gyerek) ───────────┐
-│ [Cities (n)] [Más hasMany…]                 │
-│ index-szerű tábla VAGY „No related records.”│
-│ Üres asszociációnál a TAB IS LÁTSZIK        │
+│ [Cities (n)] …                              │
+│ name oszlop = félkövér LINK → ugyanaz modal │
+│ sor dupla klikk = $rowDoubleClickAction     │
+│   modal | edit | none                       │
 └─────────────────────────────────────────────┘
 ```
 
-| Asszociáció | Hol |
-|-------------|-----|
-| belongsTo | Fő `dl` |
-| hasMany / belongsToMany | Saját tab (`admin/view_related_tabs`) |
-| hasOne | Általában fő `dl` |
+| Asszociáció | Hol | Link / modal |
+|-------------|-----|--------------|
+| belongsTo | Fő `dl` | `.record-modal-link` → `#modalLinkedRecordView` |
+| hasMany / belongsToMany (tab) | Tab tábla | `name` link + dupla klikk; tábla: `.related-records-table` |
+| belongsToMany nevek (fő dl) | Opcionális „list” sor | Városonként / elemenként külön link |
 
-Gyerek tab tábla: típusoszlop osztályok + legalább View + Edit a gyerek modulra.  
-Kapcsolt lista sorrend: **ASC** név szerint (ugyanaz, mint a modal).
+**View elején:** `$rowDoubleClickAction = 'modal'|'edit'|'none'` + `entityFieldLabels` a `MyAdmin.config`-ban.  
+Asset: `pages/index` CSS+JS + `admin/modal_linked_record_view`.  
+Modal Delete: SweetAlert (`confirmDelete`) → rejtett **`Form`** (`#delete-form-…`); gyerek rekordnál gomb disabled.  
+Model: gyerek van → törlés tiltva (Flash hiba); gyerek nélkül törölhető (+ HABTM join cascade).  
+Részletek: [admin-konvenciok.md](admin-konvenciok.md) → „Törlés — gyerekvédelem”.
+
+Kapcsolt lista sorrend: **ASC** név szerint.
 
 ---
 
@@ -240,7 +287,7 @@ Szövegek: `MyAdmin.messages` a layoutból (`__()` → hu).
 1. Minden UI string: `__('English msgid')`
 2. Fordítás: `resources/locales/hu_HU/default.po`
 3. Admin: `LocaleMiddleware` + `Admin\AppController` → mindig `hu_HU`
-4. Számok megjelenítése ≠ fordítás: `LocaleNumberParser::format()`, nem `__()` a számra
+4. Számok megjelenítése ≠ fordítás: `LocaleNumberParser::format()` / `formatCount()`; pénznem: `currencySymbol()` → **Ft**; nem `__()` a számra / Ft-re
 
 Részletek: [i18n.md](i18n.md).
 
@@ -249,10 +296,10 @@ Részletek: [i18n.md](i18n.md).
 ## 10. Kötelező checklist egy „kész” Admin modulhoz
 
 - [ ] Sidebar menüpont
-- [ ] `index`: config változók, típusoszlopok + fix szélesség osztályok, sort URL, modal, SweetAlert delete, `pages/index`
-- [ ] `form`: közös add/edit, locale szám/dátum, Select2 „+” ahol kell, `pages/form`
-- [ ] `view`: `dl` + `view_related_tabs` (üres tab is), `pages/index` CSS
-- [ ] `recordGet` (+ kapcsolt listák ASC); DashedRoute (`record-get`)
+- [ ] `index`: config változók, `$indexLimit`/`$indexMaxLimit`, `setLastVisitedForIndex` + `.last-visited`, típusoszlopok, sort URL, modal, SweetAlert delete, `pages/index`
+- [ ] `form`: közös add/edit, `#name` autofocus + `pages/form.js`, locale szám/dátum, Select2 „+” ahol kell; `newEntityWithSchemaDefaults()`
+- [ ] `view`: `dl` + `view_related_tabs`; kapcsolt nevek `.record-modal-link` + modal; `$rowDoubleClickAction`; `pages/index` JS/CSS
+- [ ] `recordGet` (+ kapcsolt listák ASC) + `rememberLastVisited`; DashedRoute (`record-get`)
 - [ ] Új stringek a `.po`-ban
 - [ ] Nincs `window.alert` az admin JS-ben
 - [ ] `doc/valtozasok.md` bejegyzés, ha a keret/szabály változott

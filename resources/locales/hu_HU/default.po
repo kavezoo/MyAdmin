@@ -65,6 +65,12 @@ msgstr "A törlés sikeres."
 msgid "The record could not be deleted. Please try again."
 msgstr "A törlés nem sikerült. Próbálja újra."
 
+msgid "Cannot delete this record because it has related child records."
+msgstr "A rekord nem törölhető, mert kapcsolódó gyermek rekordok tartoznak hozzá."
+
+msgid "Delete form not found. ID: {0}"
+msgstr "A törlő űrlap nem található. ID: {0}"
+
 #: ./src/Controller/Admin/CitiesController.php:147
 #: ./src/Controller/Admin/ParentsController.php:147
 #: ./src/Controller/Admin/SamplesController.php:167
@@ -476,6 +482,9 @@ msgstr "Dátum és idő:"
 msgid "Cities:"
 msgstr "Városok:"
 
+msgid "Samples:"
+msgstr "Minták:"
+
 #: ./templates/Admin/Samples/form.php:200
 #: ./templates/Admin/Samples/index.php:32
 #: ./templates/Admin/Samples/index.php:90
@@ -539,6 +548,9 @@ msgstr "Dátum és idő"
 #: ./templates/Admin/Samples/view.php:37
 msgid "City list"
 msgstr "Városok listája"
+
+msgid "Sample list"
+msgstr "Minták listája"
 
 #: ./templates/Admin/Samples/view.php:14
 msgid "View the selected record (read-only)."
@@ -726,6 +738,9 @@ msgstr "Egyedi"
 #: ./templates/layout/admin.php:82
 msgid "Select cities..."
 msgstr "Városok választása..."
+
+msgid "Select samples..."
+msgstr "Minták választása..."
 
 #: ./templates/layout/admin.php:83
 msgid "Delete the parent from the Parents list."
