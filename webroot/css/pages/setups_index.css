@@ -1,0 +1,13 @@
+/* Setups index — working country Select2 */
+.working-country-select {
+	min-width: 14rem;
+	max-width: 22rem;
+}
+
+.working-country-select__input {
+	min-width: 12rem;
+}
+
+.working-country-select .select2-container {
+	min-width: 12rem;
+}
