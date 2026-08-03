@@ -127,6 +127,11 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 Configure::load('languages');
 
 /*
+ * Admin index + global (header) text search field map.
+ */
+Configure::load('admin_search');
+
+/*
  * Register application error and exception handlers.
  */
 (new ErrorTrap(Configure::read('Error')))->register();

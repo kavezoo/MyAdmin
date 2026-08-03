@@ -1,11 +1,19 @@
 <?php
 /**
+ * Default flash: Admin → Simple Notify toast; egyébként HTML.
+ *
  * @var \App\View\AppView $this
  * @var array $params
  * @var string $message
  */
 if (!isset($params['escape']) || $params['escape'] !== false) {
-    $message = h($message);
+	$message = h($message);
 }
+$useJs = strcasecmp((string)$this->request->getParam('prefix'), 'Admin') === 0;
+if ($useJs):
+	$jsFlags = JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 ?>
-<div class="message warning" onclick="this.classList.add('hidden');"><?= $message ?></div>
+flashMessage(<?= json_encode(__('Warning'), $jsFlags) ?>, <?= json_encode($message, $jsFlags) ?>, 'warning');
+<?php else: ?>
+<div class="message warning" onclick="this.classList.add('hidden')"><?= $message ?></div>
+<?php endif; ?>

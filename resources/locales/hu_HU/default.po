@@ -361,6 +361,42 @@ msgstr "Dupla kattintással szerkesztheti a rekordot."
 msgid "Search..."
 msgstr "Keresés..."
 
+msgid "Start search"
+msgstr "Keresés indítása"
+
+msgid "Clear search"
+msgstr "Keresés törlése"
+
+msgid "Search in the text fields of this list."
+msgstr "A lista szöveges mezőiben keres."
+
+msgid "Search in the text fields of all configured tables."
+msgstr "Az összes konfigurált tábla szöveges mezőiben keres."
+
+msgid "Clear the saved search and show all records."
+msgstr "Törli a mentett keresést, és megjeleníti az összes rekordot."
+
+msgid "Clear the saved search and return to the last visited record."
+msgstr "Törli a mentett keresést, és visszatér az utoljára megjelölt rekordhoz."
+
+msgid "Clear the search and reset the results."
+msgstr "Törli a keresést, és alaphelyzetbe állítja a találatokat."
+
+msgid "Search"
+msgstr "Keresés"
+
+msgid "Enter a search term to find records in all configured tables."
+msgstr "Írj be egy keresőkifejezést a konfigurált táblákban való kereséshez."
+
+msgid "No results found."
+msgstr "Nincs találat."
+
+msgid "About {0} results"
+msgstr "Kb. {0} találat"
+
+msgid "Table"
+msgstr "Tábla"
+
 #: ./templates/Admin/Cities/index.php:66
 #: ./templates/Admin/Parents/index.php:66
 #: ./templates/Admin/Samples/index.php:98
@@ -387,6 +423,9 @@ msgstr "rekord"
 #: ./templates/Admin/Samples/index.php:194
 msgid "page"
 msgstr "oldal"
+
+msgid "Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total"
+msgstr "{{page}}. oldal / {{pages}}, megjelenítve: {{current}} rekord, összesen: {{count}}"
 
 #: ./templates/Admin/Cities/view.php:18
 #: ./templates/Admin/Parents/view.php:18
@@ -665,13 +704,20 @@ msgstr "Kijelentkezés"
 msgid "Pagination"
 msgstr "Lapozás"
 
-#: ./templates/element/admin/index_pagination.php:7
+msgid "Back to top"
+msgstr "Vissza a tetejére"
+
+msgid "First"
+msgstr "Első"
+
 msgid "Previous"
 msgstr "Előző"
 
-#: ./templates/element/admin/index_pagination.php:8
 msgid "Next"
 msgstr "Következő"
+
+msgid "Last"
+msgstr "Utolsó"
 
 #: ./templates/element/admin/modal_linked_record_view.php:5
 msgid "Linked record"
@@ -774,4 +820,55 @@ msgstr "A kért cím ({0}) nem található a szerveren."
 #: ./templates/Error/error500.php:32
 msgid "An Internal Error Has Occurred."
 msgstr "Belső hiba történt."
+
+msgid "Countries"
+msgstr "Országok"
+
+msgid "Country details"
+msgstr "Ország részletei"
+
+msgid "New country"
+msgstr "Új ország"
+
+msgid "Edit country"
+msgstr "Ország szerkesztése"
+
+msgid "The country has been saved."
+msgstr "Az ország mentése sikeres."
+
+msgid "ISO"
+msgstr "ISO"
+
+msgid "ISO:"
+msgstr "ISO:"
+
+msgid "Name (English):"
+msgstr "Név (angol):"
+
+msgid "Primary locale"
+msgstr "Elsődleges locale"
+
+msgid "Primary locale:"
+msgstr "Elsődleges locale:"
+
+msgid "Continent"
+msgstr "Földrész"
+
+msgid "Continent:"
+msgstr "Földrész:"
+
+msgid "Translations"
+msgstr "Fordítások"
+
+msgid "Set the country name per language and whether that language is visible."
+msgstr "Állítsa be az ország nevét nyelvenként, és hogy az adott nyelv látható-e."
+
+msgid "Only visibility and position can be changed."
+msgstr "Csak a láthatóság és a pozíció módosítható."
+
+msgid "Users"
+msgstr "Felhasználók"
+
+msgid "Language"
+msgstr "Nyelv"
 

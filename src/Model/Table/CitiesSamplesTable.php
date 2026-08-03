@@ -11,6 +11,9 @@ use Cake\Validation\Validator;
 /**
  * CitiesSamples Model (HABTM through)
  *
+ * CounterCache: Samples.city_count + Cities.sample_count.
+ * Requires belongsToMany cascadeCallbacks => true on Samples ↔ Cities.
+ *
  * pos / visible defaults come from the DB schema — no PHP fallbacks.
  *
  * @property \App\Model\Table\CitiesTable&\Cake\ORM\Association\BelongsTo $Cities
@@ -27,6 +30,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\CitiesSample saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \Cake\ORM\Behavior\CounterCacheBehavior
  */
 class CitiesSamplesTable extends Table
 {
@@ -46,6 +50,7 @@ class CitiesSamplesTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        // Associations first — CounterCache resolves them by name
         $this->belongsTo('Cities', [
             'foreignKey' => 'city_id',
             'joinType' => 'INNER',
@@ -53,6 +58,12 @@ class CitiesSamplesTable extends Table
         $this->belongsTo('Samples', [
             'foreignKey' => 'sample_id',
             'joinType' => 'INNER',
+        ]);
+
+        // HABTM counters on both sides
+        $this->addBehavior('CounterCache', [
+            'Samples' => ['city_count'],
+            'Cities' => ['sample_count'],
         ]);
     }
 

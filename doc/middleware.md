@@ -1,104 +1,109 @@
 # Middleware — szám- és dátumnormalizálás
 
 Keretrendszer-rész (minden projektben): a formról érkező **locale szerinti** számok és dátumok egységes DB-formátumra hozása.  
-Greenfield: [uj-projekt.md](uj-projekt.md) → middleware lépés. UI együttműködés: [admin-oldal.md](admin-oldal.md) §6 + [admin-konvenciok.md](admin-konvenciok.md).
+Greenfield: [uj-projekt.md](uj-projekt.md) → middleware lépés. UI: [minta-tanulsagok.md](minta-tanulsagok.md) §5–6.
 
 ## Cél
 
 | Middleware | Bemenet (példa) | Kimenet a controller / ORM felé |
 |------------|-----------------|----------------------------------|
-| `NormalizeLocalizedDateMiddleware` | `12.03.2024`, `03/12/2024`, `2024-03-12 09:15`, `08:00` | `2024-03-12`, `2024-03-12 09:15:00`, `08:00:00` |
+| `NormalizeLocalizedDateMiddleware` | `2024.03.12.`, `2024. 03. 12.`, `12.03.2024`, `2024. 03. 12. 09:15:00`, `08:00` | `2024-03-12`, `2024-03-12 09:15:00`, `08:00:00` |
 | `NormalizeLocalizedNumberMiddleware` | `1 234,56` (hu), `1,234.56` (en) | `1234.56` |
 
-Így az inputmask / daterangepicker / kézi locale formátumok menthetők MySQL `DECIMAL` / `DATE` / `DATETIME` / `TIME` mezőkbe.
+Mentéshez **mindig** SQL kanonikus formátum kell (`Y-m-d` / `Y-m-d H:i:s` / `H:i:s`).  
+A megjelenítés locale szerinti lehet (`LocaleDateParser::format()` + Tempus `dateFormat`).
 
 ## Fájlok
 
 | Fájl | Szerep |
 |------|--------|
-| `src/Middleware/NormalizeLocalizedDateMiddleware.php` | Request body bejárás, dátum mezők |
-| `src/Middleware/NormalizeLocalizedNumberMiddleware.php` | Request body bejárás, szám mezők |
-| `src/Utility/LocaleDateParser.php` | Locale → dátum sorrend, parse |
-| `src/Utility/LocaleNumberParser.php` | Locale → ezres/tizedes, parse |
-| `src/Middleware/LocaleMiddleware.php` | Locale beállítás **előbb** (Admin → mindig `hu_HU`) |
-| `src/Application.php` | Middleware queue bekötés |
+| `src/Middleware/NormalizeLocalizedDateMiddleware.php` | Request body → dátum normalizálás |
+| `src/Middleware/NormalizeLocalizedNumberMiddleware.php` | Request body → szám normalizálás |
+| `src/Utility/LocaleDateParser.php` | Parse + `format()` + `jsConfig()` |
+| `src/Utility/LocaleNumberParser.php` | Parse + `format()` / `jsConfig()` |
+| `src/Middleware/LocaleMiddleware.php` | Locale **előbb** (Admin → `hu_HU`) |
+| `src/Application.php` | Queue: Locale → BodyParser → **Date** → Number → CSRF |
 
 ## Mikor fut?
 
 - Csak `POST` / `PUT` / `PATCH` / `DELETE`
 - Rekurzívan a `getData()` tömbön
-- Kihagyott kulcsok: `_csrfToken`, `_Token`, `_method`, jelszó mezők, és minden `_` prefixű kulcs
+- Kihagyott kulcsok: `_csrfToken`, `_Token`, `_method`, jelszó mezők, `_` prefix
 
-## Locale szabályok (parser)
+## Dátum (`LocaleDateParser`)
 
-### Szám (`LocaleNumberParser`)
+| Locale | Elsődleges sorrend | Megjelenítés (példa) |
+|--------|-------------------|----------------------|
+| `hu_HU` | YMD (+ DMY / MDY fallback) | `2024.03.15.` / `2024.03.15. 14:30:00` |
+| `de_DE`, `sk_SK` | DMY | `15.03.2024` |
+| `fr_FR`, `en_GB` | DMY | `15/03/2024` |
+| `en_US` | MDY | `03/15/2024` |
 
-| Locale | Tizedes | Ezres (eltávolítandó) |
-|--------|---------|------------------------|
-| `hu_HU`, `sk_SK`, `fr_FR` | `,` | szóköz (alt: NBSP, `.`) |
-| `de_DE` | `,` | `.` (alt: szóköz, NBSP) |
-| `en_US`, `en_GB` | `.` | `,` (alt: szóköz, NBSP) |
+Elfogadott bemenetek (nem teljes lista):
 
-- Kimenet: kanonikus string (`1234.56`), előjel megmarad.
-- **Nem** nyúl dátum-/idő-szerű stringekhez (pl. `12.03.2024`, `08:00`, `2024-03-12`).
+- `2024-03-15`, `2024-03-15T14:30:00`
+- `2024.03.15.` / `2024.03.15 14:30:00` (JeffAdmin5 / moment)
+- `2024. 03. 15.` / `2024. 03. 15. 14:30:00` (**Tempus 6.0 Intl hu** — szóközös!)
+- `15.03.2024`, `15. 03. 2024`, `03/15/2024`
+- `14:30` / `14:30:00`
 
-### Dátum (`LocaleDateParser`)
-
-| Locale | Elsődleges sorrend | Megjegyzés |
-|--------|-------------------|------------|
-| `hu_HU` | YMD (UI: `yyyy-mm-dd`) | Emellett elfogad DMY-t is (`12.03.2024`) |
-| `de_DE`, `sk_SK`, `fr_FR`, `en_GB` | DMY | |
-| `en_US` | MDY | |
-
-Elválasztók: `/` `.` `-` szóköz.  
-Kimenet:
-
-- dátum → `Y-m-d`
-- dátum+idő → `Y-m-d H:i:s`
-- csak idő → `H:i:s`
-
-## LocaleMiddleware + Admin
-
-Az Admin URL-ben nincs `{lang}` szegmens. A `LocaleMiddleware` az `Admin` prefixnél **mindig** `hu_HU`-t állít, még a normalizáló middleware-ek előtt — így a hu ezres/tizedes és dátum szabályok érvényesülnek mentéskor.
-
-Member: a `{lang}` paraméter állítja a locale-ot (pl. `/en/member` → `en_GB`).
-
-## Új locale hozzáadása
-
-1. Bővítsd a `$formats` tömböt a két parser osztályban.
-2. (Opcionális) írj assertet a `tmp/test_locale_parsers.php`-be.
-3. Dokumentáld itt.
-
-## Form / UI együttműködés
-
-- A form **locale szerinti** számformátumot használ (inputmask + megjelenített value).
-- Admin `hu_HU`: tizedes **`,`**, ezres **szóköz** (alt: `.`) — pl. `1 234,56`.
-- Form config: `MyAdmin.config.numberFormat` = `LocaleNumberParser::jsConfig()` (`decimal`, `thousand`, `locale`).
-- Mező osztályok: `.js-input-decimal`, `.js-input-integer`; value: `LocaleNumberParser::format(...)`.
-- A megjelenítés (index/view/modal): `LocaleNumberParser::format()` — Admin `hu_HU` pl. `1 234,56`.
-- Pénznem: `LocaleNumberParser::currencySymbol()` → **`Ft`** (ne hardkódolt `HUF`).
-- Form input: locale inputmask + `format()` value; mentés: middleware → `1234.56`.
-- Éles modulnál ne távolítsd el ezeket a middleware-eket a queue-ból.
-
-### Form / lista példa
+Kimenet mentéshez: `Y-m-d` | `Y-m-d H:i:s` | `H:i:s`.
 
 ```php
-$config['numberFormat'] = \App\Utility\LocaleNumberParser::jsConfig();
-// …
-'class' => 'form-control js-input-decimal',
-'value' => LocaleNumberParser::format($entity->netto, decimals: 2),
+// megjelenítés (form value)
+LocaleDateParser::format($entity->datum, 'date');
+LocaleDateParser::format($entity->datumido, 'datetime');
+LocaleDateParser::format($entity->ido, 'time');
 
-// index / view cella:
-echo h(LocaleNumberParser::format($row->netto, decimals: 2)) . ' ' . h(LocaleNumberParser::currencySymbol());
-// → 12 345,67 Ft
+// index / view / modal (mp nélkül)
+LocaleDateParser::format($entity->created, 'datetime_short');
+LocaleDateParser::format($entity->ido, 'time_short');
+
+// form JS
+$config['dateFormat'] = LocaleDateParser::jsConfig();
+// → {
+//   locale: 'hu_HU', intl: 'hu-HU', moment: 'hu', startOfTheWeek: 1,
+//   date: 'YYYY.MM.DD.', datetime: 'YYYY.MM.DD. HH:mm:ss', time: 'HH:mm:ss'
+// }
+// en_US: intl en-US, startOfTheWeek 0, date MM/DD/YYYY
 ```
 
-```js
-// pages/form.js — radixPoint / groupSeparator a numberFormat-ból
-```
+**Ne** hardkódolj `->format('Y.m.d.')` / `H:i` templateben vagy `recordGet`-ben.
+
+**Tempus Dominus 6.0.0:** a beépített `formatInput` Intl-t használ (hu → szóközös dátum). A `pages/form.js` **felülírja** moment formátummal (`MyAdmin.config.dateFormat`). A naptár hónap/napnevei: `localization.locale` = `dateFormat.intl`. A hét első napja: `Intl.Locale.weekInfo` (ha van), különben `dateFormat.startOfTheWeek` (`en_US`→vasárnap, egyéb→hétfő). Idő: `useTwentyFourHour` — `en_US` 12h **AM/PM**, hu/EU **24h** (ne DE/DU az angol UI-n). A middleware a locale szerinti és a szóközös Intl / AM-PM formátumot is menti.
+
+A szám middleware **nem** nyúl dátumszerű stringekhez (szóközös hu dátum sem).
+
+## Szám (`LocaleNumberParser`)
+
+| Locale | Tizedes | Ezres |
+|--------|---------|-------|
+| `hu_HU`, `sk_SK`, `fr_FR` | `,` | szóköz (alt: NBSP, `.`) |
+| `de_DE` | `,` | `.` |
+| `en_US`, `en_GB` | `.` | `,` |
+
+**Feladat:** POST body minden „számnak kinéző” stringjét kanonikusra (`1234` / `1234.56`), locale szerint (ezres + tizedes). Egész mezőknél nincs tizedes; decimal/numeric mezőknél a tört rész megmarad.
+
+Példák (`hu_HU`):
+
+| Bemenet | Kimenet |
+|---------|---------|
+| `1 234` / `1 234 567` | `1234` / `1234567` |
+| `1 234,56` / `1.234,56` | `1234.56` |
+| `12,5` | `12.5` |
+
+Dátum/idő stringeket **nem** nyúl (Date middleware után ISO; a parser a `.`/`/`/`-` dátumokat kihagyja — a tiszta szóközös ezres csoport **nem** dátum).
+
+Kimenet: `1234.56`. Form: `numberFormat` + `.js-input-decimal` / `.js-input-integer` — **ne** `inputmode=decimal|numeric`; inputmask `autoUnmask` + middleware fallback.
+
+## Új locale
+
+1. Bővítsd a `$formats` tömböt mindkét parserben (`dateOrder` + `display*`).
+2. `php tmp/test_dates.php` (és szám teszt, ha van).
+3. Frissítsd ezt a fájlt.
 
 ## Teszt
 
 ```bash
-php tmp/test_locale_parsers.php
+php tmp/test_dates.php
 ```

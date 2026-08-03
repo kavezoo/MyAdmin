@@ -29,6 +29,7 @@ if ($pageTitle === '' || $pageTitle === null) {
 		'/fontawesome/css/v4-shims.min',
 		'/fontawesome/css/v4-font-face.min',
 		'style',
+		'/plugins/simple-notify/simple-notify',
 		'/plugins/sweetalert2/sweetalert2.min',
 	]) ?>
 
@@ -46,13 +47,20 @@ if ($pageTitle === '' || $pageTitle === null) {
 		<div class="content">
 			<div class="container-fluid">
 				<?= $this->element('admin/breadcrumb') ?>
-				<?= $this->Flash->render() ?>
 				<?= $this->fetch('content') ?>
 			</div>
 		</div>
 	</div>
 
 	<?= $this->element('admin/footer') ?>
+
+	<button type="button"
+		id="btn-scroll-top"
+		class="btn-scroll-top"
+		aria-label="<?= h(__('Back to top')) ?>"
+		title="<?= h(__('Back to top')) ?>">
+		<i class="fa fa-angle-up" aria-hidden="true"></i>
+	</button>
 
 </div>
 
@@ -91,6 +99,7 @@ window.MyAdmin.messages = <?= json_encode([
 	'selectCities' => __('Select cities...'),
 	'selectSamples' => __('Select samples...'),
 	'deleteParentHint' => __('Delete the parent from the Parents list.'),
+	'table' => __('Table'),
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 </script>
 
@@ -105,12 +114,20 @@ window.MyAdmin.messages = <?= json_encode([
 	'jquery.blockUI',
 	'jquery.nicescroll',
 	'pikeadmin',
+	'/plugins/simple-notify/simple-notify.min',
 	'/plugins/sweetalert2/sweetalert2.min',
 	'app',
 ]) ?>
 
 <?= $this->fetch('script') ?>
 <?= $this->fetch('scriptBottom') ?>
+
+<?php if (!empty($this->getRequest()->getSession()->read('Flash'))): ?>
+<script>
+<?= $this->element('admin/script_flash') ?>
+<?= $this->Flash->render() ?>
+</script>
+<?php endif; ?>
 
 </body>
 </html>

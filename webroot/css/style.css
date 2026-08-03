@@ -216,6 +216,7 @@ img {
 .header-search {
   display: inline-flex;
   align-items: center;
+  gap: 0.35rem;
   height: 50px;
 }
 
@@ -238,6 +239,45 @@ img {
   border-color: rgba(255, 255, 255, 0.55);
   color: #fff;
   box-shadow: none;
+}
+
+.header-search-btn {
+  height: 28px;
+  width: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #8a9096;
+  background-color: transparent;
+  color: #fff;
+  line-height: 1;
+}
+
+.header-search-btn i,
+.header-search-btn .fa {
+  color: #fff;
+}
+
+.header-search-btn:hover,
+.header-search-btn:focus {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: #6c757d;
+  color: #fff;
+}
+
+.header-search-btn:hover i,
+.header-search-btn:focus i,
+.header-search-btn:hover .fa,
+.header-search-btn:focus .fa {
+  color: #fff;
+}
+
+.header-search-btn.disabled,
+.header-search-btn.disabled:hover,
+.header-search-clear.disabled {
+  opacity: 0.45;
+  pointer-events: none;
 }
 
 .card-box {
@@ -297,6 +337,7 @@ img {
 .table-search {
   display: inline-flex;
   align-items: center;
+  gap: 0.35rem;
 }
 
 .table-search-input {
@@ -317,6 +358,22 @@ img {
   border-color: #86b7fe;
   color: #212529;
   box-shadow: none;
+}
+
+.table-search-btn {
+  height: 28px;
+  width: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.table-search-btn.disabled,
+.table-search-clear.disabled {
+  opacity: 0.45;
+  pointer-events: none;
 }
   
 .header-title {
@@ -998,7 +1055,9 @@ a.btn:focus {
   padding: 7px 15px;
   border-radius: 3px 0 0 3px;
   margin: -7px -14px;
-  margin-right: 12px; }
+  margin-right: 12px;
+  pointer-events: none;
+}
 
 .btn-rounded .btn-label {
   padding: 7px 15px 7px 20px;
@@ -1424,6 +1483,29 @@ a.btn:focus {
     padding: 10px !important;
     border-radius: 0;
     background-color: #f3f3f3;
+    position: relative;
+    z-index: 2;
+}
+
+/* Tiltott Delete: secondary + disabled (Bootstrap .disabled = pointer-events:none) */
+.btn.btn-secondary.disabled,
+.btn.btn-outline-secondary.disabled {
+	cursor: not-allowed;
+	opacity: 0.65;
+}
+
+.custom-modal .modal-footer .btn {
+	position: relative;
+	z-index: 1;
+}
+
+/* SweetAlert2 mindig a Bootstrap modal (1055) fölött + látható árnyék */
+.swal2-container {
+	z-index: 20000 !important;
+}
+
+.swal2-popup {
+	box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.28), 0 0.25rem 0.75rem rgba(0, 0, 0, 0.18) !important;
 }
 
 .custom-modal .close {
@@ -1484,11 +1566,133 @@ a.btn:focus {
   font-size: 1rem;
 }
 
-/* Date/time picker popups */
-.daterangepicker .calendar,
-.daterangepicker .ranges {
-  border: 2px solid var(--bs-border-color, #dee2e6) !important;
-  box-shadow: var(--bs-box-shadow, 0 0.5rem 1rem rgba(0, 0, 0, 0.15)) !important;
+/* Date/time picker popups (Tempus Dominus 6) — always light panel */
+.tempus-dominus-widget.show,
+.tempus-dominus-widget.light.show,
+.tempus-dominus-widget.timepicker-sbs.show,
+.tempus-dominus-widget.timepicker-sbs.light.show {
+	background-color: #fff;
+	background-image: none;
+	color: #212529;
+	border: 1px solid #ced4da;
+	border-radius: 0.375rem;
+	box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.18), 0 0.125rem 0.375rem rgba(0, 0, 0, 0.12);
+	padding: 0.5rem;
+}
+
+.tempus-dominus-widget.show .toolbar,
+.tempus-dominus-widget.light.show .toolbar,
+.tempus-dominus-widget.timepicker-sbs.show .toolbar,
+.tempus-dominus-widget.timepicker-sbs.light.show .toolbar {
+	background-color: #f8f9fa;
+	border-top: 1px solid #dee2e6;
+}
+
+.tempus-dominus-widget.show .toolbar div[data-action=today]:hover,
+.tempus-dominus-widget.timepicker-sbs.show .toolbar div[data-action=today]:hover,
+.tempus-dominus-widget.show .toolbar div[data-action=clear]:hover,
+.tempus-dominus-widget.timepicker-sbs.show .toolbar div[data-action=clear]:hover,
+.tempus-dominus-widget.show .toolbar div[data-action=close]:hover,
+.tempus-dominus-widget.timepicker-sbs.show .toolbar div[data-action=close]:hover,
+.tempus-dominus-widget.light.show .toolbar div[data-action=today]:hover,
+.tempus-dominus-widget.timepicker-sbs.light.show .toolbar div[data-action=today]:hover,
+.tempus-dominus-widget.light.show .toolbar div[data-action=clear]:hover,
+.tempus-dominus-widget.timepicker-sbs.light.show .toolbar div[data-action=clear]:hover,
+.tempus-dominus-widget.light.show .toolbar div[data-action=close]:hover,
+.tempus-dominus-widget.timepicker-sbs.light.show .toolbar div[data-action=close]:hover {
+	background-color: #e9ecef;
+}
+
+.tempus-dominus-widget.show .dow.no-highlight,
+.tempus-dominus-widget.light.show .dow.no-highlight,
+.tempus-dominus-widget.timepicker-sbs.show .dow.no-highlight,
+.tempus-dominus-widget.timepicker-sbs.light.show .dow.no-highlight {
+	font-weight: bold;
+	color: #212529;
+}
+
+.tempus-dominus-widget.show .calendar-header,
+.tempus-dominus-widget.light.show .calendar-header {
+	color: #212529;
+}
+
+.tempus-dominus-widget.show .date-container-days div:not(.no-highlight):hover,
+.tempus-dominus-widget.light.show .date-container-days div:not(.no-highlight):hover,
+.tempus-dominus-widget.show .time-container-clock div:hover,
+.tempus-dominus-widget.light.show .time-container-clock div:hover {
+	background-color: #e9ecef;
+}
+
+/*
+ * Clock family — time-only and datetime (side-by-side) share the same clock look.
+ * .timepicker-sbs = datetime; plain widget = time-only (and date).
+ */
+.tempus-dominus-widget .time-container,
+.tempus-dominus-widget.timepicker-sbs .time-container {
+	min-width: 12rem;
+	padding: 0.35rem 0.5rem 0.5rem;
+}
+
+.tempus-dominus-widget .time-container-clock,
+.tempus-dominus-widget.timepicker-sbs .time-container-clock {
+	font-variant-numeric: tabular-nums;
+	font-weight: 600;
+	color: #212529;
+}
+
+.tempus-dominus-widget .time-container-clock [data-time-component],
+.tempus-dominus-widget.timepicker-sbs .time-container-clock [data-time-component] {
+	font-size: 1.35rem;
+	line-height: 1.4;
+	min-width: 2.25rem;
+	text-align: center;
+}
+
+/*
+ * AM/PM = <button class="toggleMeridiem">.
+ * Plugin light theme: blue bg + white text. Our earlier color:#0d6efd
+ * alone made blue-on-blue (invisible until hover gray bg). Override both.
+ */
+.tempus-dominus-widget .time-container-clock button[data-action=toggleMeridiem],
+.tempus-dominus-widget.timepicker-sbs .time-container-clock button[data-action=toggleMeridiem],
+.tempus-dominus-widget.light .time-container-clock button[data-action=toggleMeridiem],
+.tempus-dominus-widget.light.timepicker-sbs .time-container-clock button[data-action=toggleMeridiem] {
+	font-size: 0.95rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	min-width: 2.5rem;
+	height: auto;
+	line-height: 1.4;
+	padding: 0.25rem 0.45rem;
+	border-radius: 0.25rem;
+	color: #0d6efd;
+	background-color: #e7f1ff;
+	border: 1px solid #0d6efd;
+}
+
+.tempus-dominus-widget .time-container-clock button[data-action=toggleMeridiem]:hover,
+.tempus-dominus-widget.timepicker-sbs .time-container-clock button[data-action=toggleMeridiem]:hover,
+.tempus-dominus-widget.light .time-container-clock button[data-action=toggleMeridiem]:hover,
+.tempus-dominus-widget.light.timepicker-sbs .time-container-clock button[data-action=toggleMeridiem]:hover {
+	color: #0a58ca;
+	background-color: #d0e3ff;
+	border-color: #0a58ca;
+}
+
+.tempus-dominus-widget .time-container-clock .separator,
+.tempus-dominus-widget.timepicker-sbs .time-container-clock .separator {
+	font-weight: 700;
+	opacity: 0.65;
+}
+
+.tempus-dominus-widget.timepicker-sbs .time-container {
+	border-left: 1px solid #dee2e6;
+	margin-left: 0.25rem;
+	padding-left: 0.75rem;
+}
+
+#form-horizontal .js-tempus-picker .input-group-text {
+	cursor: pointer;
 }
 
 #form-horizontal .col-form-label,
@@ -1514,6 +1718,59 @@ a.btn:focus {
 
 #form-horizontal .col-form-field-editor {
   margin-top: -0.65rem;
+}
+
+/* Field validation errors — always under the related control, red + bold */
+#form-horizontal .error-message,
+.card-body form .error-message,
+#form-horizontal .error-message-list,
+.card-body form .error-message-list {
+  display: block !important;
+  width: 100%;
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+  color: #dc3545 !important;
+  font-weight: 700 !important;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#form-horizontal .error-message-list {
+  padding-left: 1.1rem;
+}
+
+#form-horizontal .form-group > [class*="col-"] > .error-message,
+#form-horizontal .select2-with-add + .error-message,
+#form-horizontal .js-tempus-picker + .error-message,
+#form-horizontal .form-check + .error-message,
+#form-horizontal .form-group.date > .error-message,
+#form-horizontal .form-group.time > .error-message,
+#form-horizontal .form-group.datetime > .error-message {
+  display: block !important;
+  margin-top: 0.35rem;
+}
+
+/* Keep errors out of the input-group / select2 flex row */
+#form-horizontal .input-group {
+  flex-wrap: nowrap;
+}
+
+#form-horizontal .select2-with-add {
+  flex-wrap: nowrap;
+}
+
+#form-horizontal .form-control.is-invalid,
+#form-horizontal .form-select.is-invalid,
+#form-horizontal .form-check-input.is-invalid {
+  border-color: #dc3545;
+}
+
+#form-horizontal .is-invalid + .select2-container .select2-selection,
+#form-horizontal select.is-invalid ~ .select2-container .select2-selection,
+#form-horizontal .select2-with-add-field:has(.is-invalid) .select2-selection {
+  border-color: #dc3545 !important;
 }
 
 .form-language-tabs .nav-link {
@@ -1611,6 +1868,11 @@ a.btn:focus {
 .record-view-fields dd {
   margin: 0;
   color: #212529;
+}
+
+/* View footer Edit — align under dd (label column 9rem + gap 1rem) */
+.card-footer .record-view-footer-actions {
+  padding-left: calc(9rem + 1rem);
 }
 
 #modalRecordView .modal-dialog,
@@ -1919,4 +2181,48 @@ a.record-modal-link:hover,
 .table th.boolean > a.desc::after {
   color: red;
   content: "\f0dd";
+}
+
+/* Back to top — fixed bottom-right, only when scrolled */
+.btn-scroll-top {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 1040;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  background-color: #4980b5;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(0.5rem);
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease, background-color 0.15s ease;
+}
+
+.btn-scroll-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.btn-scroll-top:hover,
+.btn-scroll-top:focus {
+  color: #fff;
+  background-color: #3a6a99;
+}
+
+.btn-scroll-top:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(73, 128, 181, 0.35), 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+}
+
+.btn-scroll-top .fa {
+  font-size: 1.25rem;
+  line-height: 1;
 }

@@ -68,8 +68,39 @@ $config = [
 		'pos' => __('Position'),
 		'visible' => __('Visible'),
 		'sample_count' => __('Samples'),
+		'samples' => __('Sample list'),
 		'created' => __('Created'),
 		'modified' => __('Modified'),
+	],
+	'relatedLinkFields' => [
+		'samples' => [
+			'getUrl' => $this->Url->build(['controller' => 'Samples', 'action' => 'recordGet']),
+			'editUrl' => $this->Url->build(['controller' => 'Samples', 'action' => 'edit']),
+			'viewUrl' => $this->Url->build(['controller' => 'Samples', 'action' => 'view']),
+			'deleteUrl' => $this->Url->build(['controller' => 'Samples', 'action' => 'delete']),
+			'deleteFormPrefix' => 'sample',
+			'labels' => 'sample',
+			'title' => __('Sample details'),
+		],
+	],
+	'entityFieldLabels' => [
+		'sample' => [
+			'id' => __('ID'),
+			'parent' => __('Parent'),
+			'name' => __('Name'),
+			'szam' => __('Number'),
+			'netto' => __('Net'),
+			'datum' => __('Date'),
+			'ido' => __('Time'),
+			'datumido' => __('Date and time'),
+			'logikai' => __('Boolean'),
+			'pos' => __('Position'),
+			'visible' => __('Visible'),
+			'city_count' => __('Cities'),
+			'cities' => __('City list'),
+			'created' => __('Created'),
+			'modified' => __('Modified'),
+		],
 	],
 ];
 $this->Html->scriptBlock(
@@ -79,8 +110,6 @@ $this->Html->scriptBlock(
 	['block' => 'script']
 );
 $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
-
-$paging = $this->Paginator->params();
 ?>
 <div class="row mt-3">
 	<div class="col-12 p-2 pt-0">
@@ -93,9 +122,7 @@ $paging = $this->Paginator->params();
 					<?php endif; ?>
 				</div>
 				<div class="float-right d-flex align-items-center gap-2">
-					<div class="table-search">
-						<input type="search" class="form-control form-control-sm table-search-input" id="table-search-input" name="table_search" placeholder="<?= h(__('Search...')) ?>" autocomplete="off">
-					</div>
+					<?= $this->element('admin/table_search') ?>
 					<?= $this->element('admin/index_pagination') ?>
 				</div>
 				<div class="clearfix"></div>
@@ -153,13 +180,13 @@ $paging = $this->Paginator->params();
 								<?php if ($showTimestampColumn): ?>
 									<td class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
 										<?php if ($showCreatedColumn): ?>
-											<?= $parent->created ? h($parent->created->format('Y.m.d. H:i')) : '' ?>
+											<?= $parent->created ? h(\App\Utility\LocaleDateParser::format($parent->created, 'datetime_short')) : '' ?>
 										<?php endif; ?>
 										<?php if ($showCreatedColumn && $showModifiedColumn && $parent->modified): ?>
 											<br>
 										<?php endif; ?>
 										<?php if ($showModifiedColumn): ?>
-											<?= $parent->modified ? h($parent->modified->format('Y.m.d. H:i')) : '' ?>
+											<?= $parent->modified ? h(\App\Utility\LocaleDateParser::format($parent->modified, 'datetime_short')) : '' ?>
 										<?php endif; ?>
 									</td>
 								<?php endif; ?>
@@ -201,9 +228,11 @@ $paging = $this->Paginator->params();
 										]) ?>
 										<?= $this->Form->end() ?>
 									<?php else: ?>
-										<a role="button" href="#" class="btn btn-outline-danger disabled" aria-disabled="true" tabindex="-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
-											<i class="fa fa-trash"></i>
-										</a>
+										<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+											<a role="button" href="#" class="btn btn-outline-secondary disabled" tabindex="-1" aria-disabled="true">
+												<i class="fa fa-trash"></i>
+											</a>
+										</span>
 									<?php endif; ?>
 								</td>
 							</tr>
@@ -215,21 +244,11 @@ $paging = $this->Paginator->params();
 				</table>
 			</div>
 			<div class="card-footer">
-				<div class="float-left text-muted">
-					<?php if (!empty($paging['count'])): ?>
-						<strong><?= (int)($paging['start'] ?? 0) ?>–<?= (int)($paging['end'] ?? 0) ?></strong>
-						/ <strong><?= (int)$paging['count'] ?></strong> <?= __('records') ?>
-						&nbsp;|&nbsp;
-						<strong><?= (int)($paging['page'] ?? 1) ?></strong>. <?= __('page') ?> / <strong><?= (int)($paging['pageCount'] ?? 1) ?></strong>
-					<?php else: ?>
-						<strong>0</strong> <?= __('records') ?>
-					<?php endif; ?>
-				</div>
-				<div class="float-right"><?= $this->element('admin/index_pagination') ?></div>
-				<div class="clearfix"></div>
+				<?= $this->element('admin/index_footer') ?>
 			</div>
 		</div>
 	</div>
 </div>
 
 <?= $this->element('admin/modal_record_view') ?>
+<?= $this->element('admin/modal_linked_record_view') ?>

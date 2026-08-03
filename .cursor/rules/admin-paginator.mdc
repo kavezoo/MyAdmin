@@ -1,0 +1,38 @@
+---
+description: Admin lapozó — FA ikonok («‹ ›»), CakePHP 5 enabled/disabled; index_counter + index_footer.
+alwaysApply: true
+---
+
+# Admin paginator (kötelező)
+
+Index és `/admin/search` lapozója **mindig** az shared elementeken keresztül — ne írj inline Bootstrap pagination-t.
+
+## Elementek
+
+| Element | Hol | Tartalom |
+|---------|-----|----------|
+| `admin/index_pagination` | card fejléc (index), search fent/lent | **« ‹ számok › »** (FA: `angle-double-left` / `angle-left` / `angle-right` / `angle-double-right`) |
+| `admin/index_counter` | csak footer bal | bake `Paginator::counter` + `__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')` |
+| `admin/index_footer` | card lábléc | bal: counter, jobb: pagination |
+
+## Gombállapotok (CakePHP 5)
+
+- Ikonok a link törzsében; `title` / `aria-label` = `__('First')` / `Previous` / `Next` / `Last`.
+- `prev()` / `next()` — `prevActive` / `prevDisabled` / `nextActive` / `nextDisabled`.
+- `first()` / `last()` — manuális disabled LI, ha `!$this->Paginator->hasPrev()` / `!$this->Paginator->hasNext()`.
+- Egy oldalon: mind a négy irány gomb disabled; középen aktív „1”.
+- Számsor: `numbers(['modulus' => 3])`.
+
+## Lapozás + last-visited + URL
+
+- `page` **mindig** a queryben (1 is) — `App\View\Helper\PaginatorHelper` (Cake alapból elhagyná → session visszanyúlna a régi oldalra).
+- Oldalváltáskor (`page` sessionben változik) → `clearLastVisited($model)`.
+- Listaállapot könyvjelzőzhető; üres index URL → redirect a mentett kanonikus URL-re.
+
+## Tilos
+
+- Szöveges First/Previous/Next/Last a gombokon (csak aria/title)
+- Csak Previous/Next (First/Last ikonok nélkül)
+- Footer összesítő inline másolása
+
+Spec: `doc/admin-konvenciok.md` (Lapozó), `doc/admin-oldal.md` §4.5.

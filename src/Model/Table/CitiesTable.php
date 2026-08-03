@@ -5,7 +5,6 @@ namespace App\Model\Table;
 
 use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -45,32 +44,27 @@ class CitiesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        // dependent join cleanup only when delete is allowed (no linked samples).
+        // dependent + cascadeCallbacks: join cleanup → CitiesSamples CounterCache
+        // sample_count: CounterCache on CitiesSamplesTable
         $this->belongsToMany('Samples', [
             'foreignKey' => 'city_id',
             'targetForeignKey' => 'sample_id',
             'joinTable' => 'cities_samples',
             'through' => 'CitiesSamples',
             'dependent' => true,
+            'cascadeCallbacks' => true,
+            'saveStrategy' => 'replace',
         ]);
     }
 
     /**
-     * @param \Cake\Datasource\EntityInterface $entity
-     * @return int
+     * CounterCache column used for delete protection (maintained by CitiesSamplesTable).
+     *
+     * @return string
      */
-    public function countRelatedChildren(EntityInterface $entity): int
+    protected function relatedChildrenCountField(): string
     {
-        $id = $entity->get('id');
-        if ($id === null || $id === '') {
-            return (int)($entity->get('sample_count') ?? 0);
-        }
-
-        return $this->getAssociation('Samples')
-            ->junction()
-            ->find()
-            ->where(['city_id' => $id])
-            ->count();
+        return 'sample_count';
     }
 
     /**

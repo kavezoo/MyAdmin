@@ -1,0 +1,172 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Utility;
+
+use Cake\Core\Configure;
+use Cake\I18n\I18n;
+use Cake\ORM\Query\SelectQuery;
+use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
+
+/**
+ * Admin text search helpers (index + global header).
+ * Field map: config/admin_search.php → Configure key AdminSearch.
+ */
+class AdminSearch
+{
+    /**
+     * @return array<string, mixed>
+     */
+    public static function config(): array
+    {
+        $cfg = Configure::read('AdminSearch');
+
+        return is_array($cfg) ? $cfg : [];
+    }
+
+    public static function queryParam(): string
+    {
+        $param = static::config()['queryParam'] ?? 'q';
+
+        return is_string($param) && $param !== '' ? $param : 'q';
+    }
+
+    /**
+     * @return array<string, array{label: string, controller: string, titleField: string, fields: list<string>}>
+     */
+    public static function models(): array
+    {
+        $models = static::config()['models'] ?? [];
+
+        return is_array($models) ? $models : [];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function fieldsFor(string $modelAlias): array
+    {
+        $models = static::models();
+        $fields = $models[$modelAlias]['fields'] ?? [];
+        if (!is_array($fields)) {
+            return [];
+        }
+
+        return array_values(array_filter($fields, static fn ($f) => is_string($f) && $f !== ''));
+    }
+
+    /**
+     * Apply OR LIKE filters on the model's configured text fields.
+     *
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
+     */
+    public static function applyToQuery(SelectQuery $query, Table $table, string $term): SelectQuery
+    {
+        $term = trim($term);
+        if ($term === '') {
+            return $query;
+        }
+
+        $alias = $table->getAlias();
+        $fields = static::fieldsFor($alias);
+        if ($fields === []) {
+            return $query;
+        }
+
+        $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $term) . '%';
+        $or = [];
+        foreach ($fields as $field) {
+            if (str_contains($field, '.')) {
+                $or[$field . ' LIKE'] = $like;
+            } else {
+                $or[$alias . '.' . $field . ' LIKE'] = $like;
+            }
+        }
+
+        return $query->where(['OR' => $or]);
+    }
+
+    /**
+     * Global search across configured models (combined list for pagination).
+     *
+     * @return list<array{model: string, label: string, controller: string, labelsKey: string, id: int, title: string}>
+     */
+    public static function searchAll(string $term, ?int $limitPerModel = null): array
+    {
+        $term = trim($term);
+        if ($term === '') {
+            return [];
+        }
+
+        $cfg = static::config();
+        $limit = $limitPerModel ?? (int)($cfg['globalLimitPerModel'] ?? 200);
+        if ($limit < 1) {
+            $limit = 200;
+        }
+        $maxTotal = (int)($cfg['globalMaxResults'] ?? 1000);
+        if ($maxTotal < 1) {
+            $maxTotal = 1000;
+        }
+
+        $results = [];
+        $locator = TableRegistry::getTableLocator();
+
+        foreach (static::models() as $alias => $meta) {
+            if (!is_array($meta)) {
+                continue;
+            }
+            try {
+                $table = $locator->get($alias);
+            } catch (\Throwable $e) {
+                continue;
+            }
+
+            if ($table->hasBehavior('Translate')) {
+                $table->getBehavior('Translate')->setLocale(I18n::getLocale());
+            }
+
+            $query = static::applyToQuery($table->find(), $table, $term);
+            $titleField = (string)($meta['titleField'] ?? 'name');
+            $controller = (string)($meta['controller'] ?? $alias);
+            $label = (string)($meta['label'] ?? $alias);
+            $labelsKey = (string)($meta['labelsKey'] ?? '');
+            $pk = $table->getPrimaryKey();
+            if (!is_string($pk) || $pk === '') {
+                continue;
+            }
+
+            foreach ($query->limit($limit)->all() as $entity) {
+                $id = (int)$entity->get($pk);
+                if ($id < 1) {
+                    continue;
+                }
+                $title = (string)$entity->get($titleField);
+                if ($title === '') {
+                    $title = '#' . $id;
+                }
+                $results[] = [
+                    'model' => $alias,
+                    'label' => $label,
+                    'controller' => $controller,
+                    'labelsKey' => $labelsKey,
+                    'id' => $id,
+                    'title' => $title,
+                ];
+                if (count($results) >= $maxTotal) {
+                    return $results;
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    public static function globalPageLimit(): int
+    {
+        $limit = (int)(static::config()['globalPageLimit'] ?? 20);
+
+        return $limit > 0 ? $limit : 20;
+    }
+}

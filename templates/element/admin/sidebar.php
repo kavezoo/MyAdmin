@@ -6,6 +6,7 @@ $controller = (string)$this->request->getParam('controller');
 $isSamples = $controller === 'Samples';
 $isParents = $controller === 'Parents';
 $isCities = $controller === 'Cities';
+$isCountries = $controller === 'Countries';
 $isDashboard = $controller === 'Dashboard';
 ?>
 <!-- Left Sidebar -->
@@ -20,7 +21,7 @@ $isDashboard = $controller === 'Dashboard';
 				</li>
 
 				<li class="submenu">
-					<a href="#"<?= ($isSamples || $isParents || $isCities) ? ' class="active"' : '' ?>>
+					<a href="#"<?= ($isSamples || $isParents || $isCities || $isCountries) ? ' class="active"' : '' ?>>
 						<i class="fa fa-fw fa-table"></i> <span> <?= __('Data') ?> </span> <span class="menu-arrow"></span>
 					</a>
 					<ul class="list-unstyled">
@@ -32,6 +33,9 @@ $isDashboard = $controller === 'Dashboard';
 						</li>
 						<li<?= $isCities ? ' class="active"' : '' ?>>
 							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'index']) ?>"><?= __('Cities') ?></a>
+						</li>
+						<li<?= $isCountries ? ' class="active"' : '' ?>>
+							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Countries', 'action' => 'index']) ?>"><?= __('Countries') ?></a>
 						</li>
 					</ul>
 				</li>

@@ -25,6 +25,9 @@ $parentsEditUrl = $this->Url->build(['controller' => 'Parents', 'action' => 'edi
 $parentsViewUrl = $this->Url->build(['controller' => 'Parents', 'action' => 'view']);
 $parentsDeleteUrl = $this->Url->build(['controller' => 'Parents', 'action' => 'delete']);
 
+$tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
+$tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete this record because it has related child records.');
+
 $config = [
 	'rowDoubleClickAction' => $rowDoubleClickAction,
 	'entityFieldLabels' => [
@@ -106,12 +109,13 @@ if ($citiesCount > 0):
 						: '<i class="fa fa-times text-danger"></i>' ?>
 				</td>
 				<td class="datetime created modified">
-					<?= $city->created ? h($city->created->format('Y.m.d. H:i')) : '' ?>
+					<?= $city->created ? h(\App\Utility\LocaleDateParser::format($city->created, 'datetime_short')) : '' ?>
 					<?php if ($city->modified): ?>
-						<br><?= h($city->modified->format('Y.m.d. H:i')) ?>
+						<br><?= h(\App\Utility\LocaleDateParser::format($city->modified, 'datetime_short')) ?>
 					<?php endif; ?>
 				</td>
 				<td class="actions">
+					<?php $canDeleteRelated = ((int)($city->sample_count ?? 0) === 0); ?>
 					<?= $this->Html->link(
 						'<i class="fa fa-eye"></i>',
 						['controller' => 'Cities', 'action' => 'view', $city->id],
@@ -132,12 +136,23 @@ if ($citiesCount > 0):
 							'title' => __('Edit'),
 						]
 					) ?>
-					<?= $this->Form->create(null, [
-						'url' => ['controller' => 'Cities', 'action' => 'delete', $city->id],
-						'id' => 'delete-form-city-' . $city->id,
-						'class' => 'd-none js-row-delete-form',
-					]) ?>
-					<?= $this->Form->end() ?>
+					<?php if ($canDeleteRelated): ?>
+						<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$city->id ?>">
+							<i class="fa fa-trash"></i>
+						</a>
+						<?= $this->Form->create(null, [
+							'url' => ['controller' => 'Cities', 'action' => 'delete', $city->id],
+							'id' => 'delete-form-city-' . $city->id,
+							'class' => 'd-none js-row-delete-form',
+						]) ?>
+						<?= $this->Form->end() ?>
+					<?php else: ?>
+						<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+							<a role="button" href="#" class="btn btn-outline-secondary disabled" tabindex="-1" aria-disabled="true">
+								<i class="fa fa-trash"></i>
+							</a>
+						</span>
+					<?php endif; ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -193,10 +208,10 @@ $citiesTable = ob_get_clean();
 					</div>
 					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h($sample->name) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Number') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($sample->szam, decimals: 0)) ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Net') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($sample->netto, decimals: 2)) ?> <?= h(\App\Utility\LocaleNumberParser::currencySymbol()) ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Date') ?></dt><dd><?= $sample->datum ? h($sample->datum->format('Y.m.d.')) : '—' ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Time') ?></dt><dd><?= $sample->ido ? h($sample->ido->format('H:i')) : '—' ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Date and time') ?></dt><dd><?= $sample->datumido ? h($sample->datumido->format('Y.m.d. H:i')) : '—' ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Net') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::formatCurrency($sample->netto, decimals: 2)) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Date') ?></dt><dd><?= $sample->datum ? h(\App\Utility\LocaleDateParser::format($sample->datum, 'date')) : '—' ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Time') ?></dt><dd><?= $sample->ido ? h(\App\Utility\LocaleDateParser::format($sample->ido, 'time_short')) : '—' ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Date and time') ?></dt><dd><?= $sample->datumido ? h(\App\Utility\LocaleDateParser::format($sample->datumido, 'datetime_short')) : '—' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Boolean') ?></dt><dd><?= $sample->logikai ? __('Yes') : __('No') ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Position') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($sample->pos, decimals: 0)) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Visible') ?></dt><dd><?= $sample->visible ? __('Yes') : __('No') ?></dd></div>
@@ -225,21 +240,18 @@ $citiesTable = ob_get_clean();
 							</dd>
 						</div>
 					<?php endif; ?>
-					<div class="record-view-row"><dt><?= __('Created') ?></dt><dd><?= $sample->created ? h($sample->created->format('Y.m.d. H:i')) : '—' ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Modified') ?></dt><dd><?= $sample->modified ? h($sample->modified->format('Y.m.d. H:i')) : '—' ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Created') ?></dt><dd><?= $sample->created ? h(\App\Utility\LocaleDateParser::format($sample->created, 'datetime_short')) : '—' ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Modified') ?></dt><dd><?= $sample->modified ? h(\App\Utility\LocaleDateParser::format($sample->modified, 'datetime_short')) : '—' ?></dd></div>
 				</dl>
 			</div>
 			<div class="card-footer">
-				<?= $this->Html->link(
-					'<span class="btn-label"><i class="fa fa-pencil"></i></span>' . __('Edit'),
-					['action' => 'edit', $sample->id],
-					['escape' => false, 'class' => 'btn btn-primary']
-				) ?>
-				<?= $this->Html->link(
-					'<span class="btn-label"><i class="fa fa-arrow-left"></i></span>' . __('Back to list'),
-					['action' => 'index'],
-					['escape' => false, 'class' => 'btn btn-outline-secondary ms-2']
-				) ?>
+				<div class="record-view-footer-actions">
+					<?= $this->Html->link(
+						'<span class="btn-label"><i class="fa fa-pencil"></i></span>' . __('Edit'),
+						['action' => 'edit', $sample->id],
+						['escape' => false, 'class' => 'btn btn-primary']
+					) ?>
+				</div>
 			</div>
 		</div>
 

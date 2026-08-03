@@ -13,10 +13,10 @@ use Cake\Http\Response;
 class CitiesController extends AppController
 {
     /** @var int Index rows per page */
-    protected int $indexLimit = 10;
+    protected int $indexLimit = 100;
 
     /** @var int Cap for `?limit=` (abuse / oversized requests) */
-    protected int $indexMaxLimit = 100;
+    protected int $indexMaxLimit = 1000;
 
     /**
      * @return void
@@ -34,7 +34,12 @@ class CitiesController extends AppController
         $this->set('title', __('Cities'));
         $this->viewBuilder()->setVar('breadcrumb', __('Cities'));
 
-        $cities = $this->paginate($this->Cities->find(), $this->indexPaginateOptions([
+        $redirect = $this->applyIndexListState('Cities');
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $paginateOptions = $this->indexPaginateOptions([
             'sortableFields' => [
                 'id',
                 'name',
@@ -44,7 +49,13 @@ class CitiesController extends AppController
                 'created',
                 'modified',
             ],
-        ]));
+        ]);
+        $query = $this->applyIndexSearch($this->Cities->find(), $this->Cities);
+        $redirect = $this->resolveIndexPageForLastVisited('Cities', $query, $paginateOptions);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+        $cities = $this->paginate($query, $paginateOptions);
         $this->setLastVisitedForIndex('Cities');
         $this->set(compact('cities'));
     }
@@ -69,12 +80,11 @@ class CitiesController extends AppController
                 $city = $this->Cities->patchEntity($city, $data, [
                     'associated' => ['Samples'],
                 ]);
-                $this->normalizeSampleCount($city);
                 if ($this->Cities->save($city)) {
                     $this->rememberLastVisited('Cities', $city->id);
                     $this->Flash->success(__('The city has been saved.'));
 
-                    return $this->redirect(['action' => 'index']);
+                    return $this->redirectToIndexList('Cities');
                 }
             } catch (\Throwable $e) {
                 // Unexpected errors (e.g. type errors) → user-facing flash, not raw PHP
@@ -107,12 +117,11 @@ class CitiesController extends AppController
                 $city = $this->Cities->patchEntity($city, $data, [
                     'associated' => ['Samples'],
                 ]);
-                $this->normalizeSampleCount($city);
                 if ($this->Cities->save($city)) {
                     $this->rememberLastVisited('Cities', $city->id);
                     $this->Flash->success(__('The city has been saved.'));
 
-                    return $this->redirect(['action' => 'index']);
+                    return $this->redirectToIndexList('Cities');
                 }
             } catch (\Throwable $e) {
                 // Unexpected errors → user-facing flash, not raw PHP
@@ -169,9 +178,7 @@ class CitiesController extends AppController
 
         try {
             $city = $this->Cities->get($id, contain: [
-                'Samples' => function ($q) {
-                    return $q->orderBy(['Samples.name' => 'ASC']);
-                },
+                'Samples' => $this->containRelatedForModal('Samples'),
             ]);
         } catch (\Throwable $e) {
             return $this->response
@@ -185,14 +192,6 @@ class CitiesController extends AppController
 
         $this->rememberLastVisited('Cities', $city->id);
 
-        $samples = [];
-        foreach ($city->samples ?? [] as $sample) {
-            $samples[] = [
-                'id' => $sample->id,
-                'name' => $sample->name,
-            ];
-        }
-
         return $this->response
             ->withType('application/json')
             ->withStringBody(json_encode([
@@ -203,9 +202,9 @@ class CitiesController extends AppController
                     'pos' => \App\Utility\LocaleNumberParser::format($city->pos, decimals: 0),
                     'visible' => (bool)$city->visible,
                     'sample_count' => \App\Utility\LocaleNumberParser::formatCount($city->sample_count, decimals: 0),
-                    'samples' => $samples,
-                    'created' => $city->created ? $city->created->format('Y.m.d. H:i') : '',
-                    'modified' => $city->modified ? $city->modified->format('Y.m.d. H:i') : '',
+                    'samples' => $this->relatedNameLinksForModal($city->samples ?? []),
+                    'created' => $city->created ? \App\Utility\LocaleDateParser::format($city->created, 'datetime_short') : '',
+                    'modified' => $city->modified ? \App\Utility\LocaleDateParser::format($city->modified, 'datetime_short') : '',
                     'can_delete' => $this->Cities->canDelete($city),
                 ],
             ], JSON_UNESCAPED_UNICODE));
@@ -224,17 +223,5 @@ class CitiesController extends AppController
             ->toArray();
 
         $this->set(compact('samples'));
-    }
-
-    /**
-     * sample_count from selected samples._ids.
-     *
-     * @param \App\Model\Entity\City $city
-     * @return void
-     */
-    protected function normalizeSampleCount(\App\Model\Entity\City $city): void
-    {
-        $sampleIds = (array)$this->request->getData('samples._ids');
-        $city->sample_count = count(array_filter($sampleIds));
     }
 }

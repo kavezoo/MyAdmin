@@ -51,7 +51,15 @@ class LocaleNumberParser
     /**
      * Config payload for JS inputmask (Admin form).
      *
-     * @return array{locale: string, decimal: string, thousand: string}
+     * @return array{
+     *   locale: string,
+     *   decimal: string,
+     *   thousand: string,
+     *   groupSize: int,
+     *   decimalDigits: int,
+     *   placeholderInteger: string,
+     *   placeholderDecimal: string
+     * }
      */
     public static function jsConfig(?string $locale = null): array
     {
@@ -62,7 +70,59 @@ class LocaleNumberParser
             'locale' => $locale,
             'decimal' => $fmt['decimal'],
             'thousand' => $fmt['thousand'],
+            'groupSize' => 3,
+            'decimalDigits' => 2,
+            'placeholderInteger' => static::format(1234, $locale, 0),
+            'placeholderDecimal' => static::format(1234.56, $locale, 2),
         ];
+    }
+
+    /**
+     * FormHelper options for an integer field (pos, szam, …).
+     *
+     * @param array<string, mixed> $options Extra Form->control options (id, class merge, …)
+     * @return array<string, mixed>
+     */
+    public static function formIntegerOptions(mixed $value, array $options = [], ?string $locale = null): array
+    {
+        $locale = $locale ?: I18n::getLocale();
+        $class = trim('form-control js-input-integer ' . (string)($options['class'] ?? ''));
+        unset($options['class']);
+
+        return array_merge([
+            'label' => false,
+            'type' => 'text',
+            'class' => $class,
+            'autocomplete' => 'off',
+            'placeholder' => static::format(1234, $locale, 0),
+            'value' => ($value !== null && $value !== '')
+                ? static::format($value, $locale, 0)
+                : '',
+        ], $options);
+    }
+
+    /**
+     * FormHelper options for a decimal field (netto, …).
+     *
+     * @param array<string, mixed> $options Extra Form->control options
+     * @return array<string, mixed>
+     */
+    public static function formDecimalOptions(mixed $value, int $decimals = 2, array $options = [], ?string $locale = null): array
+    {
+        $locale = $locale ?: I18n::getLocale();
+        $class = trim('form-control js-input-decimal ' . (string)($options['class'] ?? ''));
+        unset($options['class']);
+
+        return array_merge([
+            'label' => false,
+            'type' => 'text',
+            'class' => $class,
+            'autocomplete' => 'off',
+            'placeholder' => static::format(1234.56, $locale, $decimals),
+            'value' => ($value !== null && $value !== '')
+                ? static::format($value, $locale, $decimals)
+                : '',
+        ], $options);
     }
 
     /**
@@ -117,18 +177,67 @@ class LocaleNumberParser
     }
 
     /**
-     * Currency suffix for display (Admin hu → „Ft”, not ISO „HUF”).
-     * Future: map other locales / EUR when needed.
+     * Full money string for display (amount + currency, ICU position/spacing).
+     *
+     * Currency is always HUF; symbol and placement follow the UI locale
+     * (e.g. hu → „12 345,67 Ft”, en → „HUF 12,345.67”, de → „12.345,67 HUF”).
      */
-    public static function currencySymbol(?string $locale = null): string
+    public static function formatCurrency(
+        mixed $value,
+        ?string $locale = null,
+        string $currency = 'HUF',
+        ?int $decimals = 2,
+    ): string {
+        if ($value === null || $value === '') {
+            return '';
+        }
+        if (!is_numeric($value)) {
+            return (string)$value;
+        }
+
+        $locale = $locale ?: I18n::getLocale();
+        $float = (float)$value;
+
+        if (class_exists(NumberFormatter::class)) {
+            $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+            if ($decimals !== null) {
+                $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, $decimals);
+                $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimals);
+                $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimals);
+            }
+            $formatted = $formatter->formatCurrency($float, $currency);
+            if ($formatted !== false) {
+                return str_replace(["\u{00A0}", "\u{202F}"], ' ', $formatted);
+            }
+        }
+
+        $amount = static::format($float, $locale, $decimals ?? 2);
+        $symbol = static::currencySymbol($locale, $currency);
+
+        return $amount . ' ' . $symbol;
+    }
+
+    /**
+     * Currency symbol/code for the given locale (HUF → „Ft” in hu, „HUF” in en, …).
+     * Prefer {@see formatCurrency()} for full amount display (correct prefix/suffix).
+     */
+    public static function currencySymbol(?string $locale = null, string $currency = 'HUF'): string
     {
         $locale = $locale ?: I18n::getLocale();
+
+        if (class_exists(NumberFormatter::class)) {
+            $formatter = new NumberFormatter($locale . '@currency=' . $currency, NumberFormatter::CURRENCY);
+            $symbol = $formatter->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
+            if (is_string($symbol) && $symbol !== '') {
+                return $symbol;
+            }
+        }
+
         $lang = strtolower(substr($locale, 0, 2));
 
         return match ($lang) {
-            'hu' => 'Ft',
-            // 'de', 'sk', 'fr', 'en' => '€', // when EUR is introduced
-            default => 'Ft',
+            'hu' => $currency === 'HUF' ? 'Ft' : $currency,
+            default => $currency,
         };
     }
 
@@ -141,13 +250,17 @@ class LocaleNumberParser
         if ($value === '' || $value === '-' || $value === '.' || $value === ',') {
             return false;
         }
+        // ISO date / datetime
         if (preg_match('/^\d{4}-\d{2}-\d{2}/', $value)) {
             return false;
         }
+        // Time only
         if (preg_match('/^\d{1,2}:\d{2}(:\d{2})?$/', $value)) {
             return false;
         }
-        if (preg_match('/^\d{1,4}([.\/\-]\d{1,4}){2}/', $value)) {
+        // Dot / slash / dash dates (optional spaces around separators): 12.03.2024 / 2024. 03. 15.
+        // Do NOT treat pure space-grouped thousands (1 234 567) as dates.
+        if (preg_match('/^\d{1,4}([.\/\-]\s*\d{1,4}){2}\.?(?:\s+\d{1,2}:\d{2}(?::\d{2})?)?$/u', $value)) {
             return false;
         }
 

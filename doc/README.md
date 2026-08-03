@@ -5,6 +5,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | Ha… | Olvasd először |
 |-----|----------------|
 | **Hogyan nézzen ki / működjön egy Admin oldal?** | **[admin-oldal.md](admin-oldal.md)** (teljes kép) |
+| **Demó mintából éles projekt / éles DB** | **[minta-tanulsagok.md](minta-tanulsagok.md)** (§0 playbook + §0.1 fájlok + §6–6c form + §11 checklist + §14 agent) |
 | Üres / új CakePHP app | [uj-projekt.md](uj-projekt.md) |
 | Keretrendszer megvan, új tábla/modul | [crud-utmutato.md](crud-utmutato.md) |
 | UI / asset / view részletszabály | [admin-konvenciok.md](admin-konvenciok.md) |
@@ -16,6 +17,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | Fájl | Tartalom |
 |------|----------|
 | **[admin-oldal.md](admin-oldal.md)** | **Teljes kép**: kinézet + működés (index / form / view / dialógus / oszlopok) |
+| **[minta-tanulsagok.md](minta-tanulsagok.md)** | Demó → éles DB: playbook, konfig (`adminLocale`), CounterCache, Delete, Flash, Tempus/szám/mezőhiba, view footer, checklist |
 | [uj-projekt.md](uj-projekt.md) | Greenfield: lépésről lépésre Admin keretrendszer nulláról |
 | [keretrendszer.md](keretrendszer.md) | Tartós vs. törölhető részek; éles checklist |
 | [struktura.md](struktura.md) | Könyvtárak, routing, element inventory |
@@ -25,19 +27,41 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | [crud-utmutato.md](crud-utmutato.md) | Új Admin CRUD modul lépései |
 | [valtozasok.md](valtozasok.md) | Változásnapló (projekt-specifikus; új projektben nullázható) |
 
+## Cursor rules (`.cursor/rules/`) — agent playbook
+
+| Rule | Tartalom |
+|------|----------|
+| `auto-dokumentalas.mdc` | Minden változás után `doc/` (+ tartós mintánál rule) frissítés |
+| `admin-kereses-index-allapot.mdc` | Keresés, session index, last-visited, Search UI |
+| `admin-paginator.mdc` | First…Last lapozó + counter/footer |
+| `penznem-formatcurrency.mdc` | Pénz = `formatCurrency()` (HUF, ICU) |
+| `pos-db-default.mdc` | `pos` mindig DB DEFAULT |
+
+Új projektbe másold a `doc/` **és** a `.cursor/rules/` mappát.
+
 ## Rögzített döntések (minden projektben)
 
 - Framework: **CakePHP 5.4+**, Admin URL: `/admin/...`
-- UI szövegek: `__('English msgid')`; Admin locale mindig **`hu_HU`**; admin headerben **nincs** nyelvválasztó
+- UI szövegek: `__('English msgid')`; Admin locale: **`App.adminLocale`** (éles **`hu_HU`**; teszt: `en_US`); admin headerben **nincs** nyelvválasztó
+- Országnevek: DB `countries` + Translate `i18n`; földrész: `continents` + `countries.continent_id` + Continents i18n (CLDR); Adminban csak `visible`/`pos` — seed: `php tmp/seed_continents.php` ([i18n.md](i18n.md))
 - Layout = csak közös CSS/JS; index/form/view oldalspecifikus asseteket a template tölti
-- Admin dialógusok: **SweetAlert2** (`MyAdmin.alert` / `alertError` / `confirmDelete`) — soha `window.alert`
+- **Vissza a tetejére:** `#btn-scroll-top` jobb alsó; csak lejjebb görgetve (`MyAdmin.initScrollTop`)
+- **Index card footer:** mindig `admin/index_footer` (= `index_counter` + `index_pagination`); lapozó: **First | Previous | számok | Next | Last** (disabled a széleken) — [admin-konvenciok.md](admin-konvenciok.md) Lapozó; rule: `admin-paginator.mdc`
+- Admin dialógusok: **SweetAlert2** (`MyAdmin.swal` / `alert` / `alertError` / `confirmDelete` / `flashSwal`) — soha `window.alert`; Bootstrap modal FocusTrap pause; popup **árnyék** + z-index 20000 (`style.css`)
+- Admin Flash: alap **Simple Notify** toast; modal Flash: `$this->flashSwal()` / `flash/*_swal.php`
+- Form dátum/idő: **Tempus Dominus 6** — formátum + naptárnyelv + hétkezdet a `dateFormat` / `App.adminLocale` szerint; mentés: dátum middleware
+- Form számok: `numberFormat` + inputmask; mentés: szám middleware (`1 234,56` → `1234.56`); mezőhiba a control **alatt** (piros félkövér; összetett widget: `admin/field_error`)
+- Törlés UI: törölhető = danger + Swal **question**; **nem törölhető** = secondary / outline-secondary + **disabled** + tooltip
 - **Index oszlopok:** `string` rugalmas; fix: `id` 4.75 / `pos` 5.5 / `number` 6.5 / `currency` 12 / `count` 5.5 / `boolean|visible` 7.5 / `date` 8.5 / `datetime` 10.5 / `time` 5 rem ([admin-oldal.md](admin-oldal.md) §4.3)
-- Index config: `$rowDoubleClickAction`, `$numberDecimals`, `$showIdColumn` / `$showCountColumn` / `$showVisibleColumn` / `$showCreatedColumn` / `$showModifiedColumn`; **`$indexLimit` / `$indexMaxLimit`**; utolsó rekord: session + **`.last-visited`**
-- Számok megjelenítése: `LocaleNumberParser::format()` / `formatCount()`; pénznem: **`currencySymbol()` → Ft** (ne HUF); form: `numberFormat` + locale inputmask; mentés: middleware
-- View: bake-szerű `dl` + gyerek **tab sheet**; belongsTo/HABTM/name **félkövér link** → AJAX modal (Close/Edit/View/Delete+Swal); `$rowDoubleClickAction` a kapcsolt táblán
-- Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon (`samples._ids` / `cities._ids`); **belongsTo lista**: `visible` + `pos`/`name` sorrend; `fetchTable()`, ne Association
+- Index config: `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; **`$indexLimit = 100` / `$indexMaxLimit = 1000`**; session **`Admin.indexState`** (sort/page/`q`); utolsó rekord: **`Admin.lastVisited`** + **`.last-visited`** + scroll
+- **Keresés (minden projekt):** `config/admin_search.php` (`fields` + `labelsKey`; `globalPageLimit` / `globalLimitPerModel` / `globalMaxResults`); index + header; `/admin/search` Google UI + lapozás; clear → szűretlen + **last-visited oldal**; `redirectToIndexList` — [uj-projekt.md](uj-projekt.md) §2.8; rule: `admin-kereses-index-allapot.mdc`
+- Számok megjelenítése: `LocaleNumberParser::format()` / `formatCount()`; pénz: **`formatCurrency()`** (HUF, locale pozíció: hu `… Ft`, en `HUF …`) — rule: `penznem-formatcurrency.mdc`
+- View: bake-szerű `dl` + gyerek **tab sheet**; belongsTo/HABTM/name **félkövér link** → AJAX modal; Edit lábléc: **`.record-view-footer-actions`** (adatoszlop alatt); `$rowDoubleClickAction` a kapcsolt táblán
+- Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon; **belongsTo lista**: `visible` + `pos`/`name` sorrend; form végén **`visible` → `pos`** + `visible` fölött mezőszélességű `<hr>`; `fetchTable()`, ne Association
 - Oszlop DEFAULT (`pos`, `visible`, …): **DB séma** + `UsesDatabaseColumnDefaultsTrait` — ne PHP hardcode
-- Modal / view kapcsolt listák: **ABC (ASC)** név szerint
+- **`pos`:** mindig DB DEFAULT — az agent **soha** ne állítsa / ne növelgesse; a felhasználó írja át ha kell (rule: `.cursor/rules/pos-db-default.mdc`)
+- **`*_count`:** **CounterCache** (hasMany → gyerek Table; HABTM → through + `cascadeCallbacks`); törlésvédelem: `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()`; **ne** élő COUNT / controller `count(_ids)`
+- Modal kapcsolt névlisták: utolsó **20** (`modified DESC`), megjelenítés **ABC ASC**; view tab lehet teljes ABC lista
 - Member (opcionális): `/{lang}/member/...`
 
 ## UI forrás
@@ -47,9 +71,9 @@ Konkrét mappaút **nem** kötelező a doksihoz — új projektben másold be a 
 
 ## Agent szabályok
 
-1. Módosítás előtt: **[admin-oldal.md](admin-oldal.md)** (célkép), majd a releváns részlet-doksik.
+1. Módosítás előtt: **[admin-oldal.md](admin-oldal.md)** (célkép); **éles DB / demó→éles**: **[minta-tanulsagok.md](minta-tanulsagok.md)** (§0 playbook); majd a releváns részlet-doksik.
 2. Új projekt / hiányzó layout → [uj-projekt.md](uj-projekt.md) 2. szakasz.
-3. Kód kövesse a konvenciókat (`__()`, asset szabály, middleware, view tabs, oszlopszélességek).
-4. Lényeges változás után frissítsd a `valtozasok.md`-t **és** az érintett spec fájlokat (különösen `admin-oldal.md` / `admin-konvenciok.md`, ha a kinézet vagy működés változik).
-5. Domain DB sémát ne keverd a keretrendszer-doksi közé (teszt táblák eldobhatók).
+3. Kód kövesse a konvenciókat (`__()`, asset szabály, middleware, CounterCache, view tabs, oszlopszélességek).
+4. **Automatikus dokumentálás (kötelező):** minden lényeges kód/viselkedés-változás **ugyanabban a körben** frissítse a `valtozasok.md`-t **és** az érintett speceket (`admin-oldal.md` / `admin-konvenciok.md` / `minta-tanulsagok.md` / `middleware.md` / `i18n.md` / …). Tartós playbook → `.cursor/rules/*.mdc` is. A felhasználónak **ne kelljen** külön „dokumentáld” üzenetet írnia. Cursor rule: `.cursor/rules/auto-dokumentalas.mdc`.
+5. Domain DB sémát ne keverd a keretrendszer-doksi közé (teszt táblák eldobhatók — a tanulságok a `minta-tanulsagok.md`-ben maradnak).
 6. A felhasználónak ne kelljen újra elmondania a fenti döntéseket — a `doc/` a forrás.

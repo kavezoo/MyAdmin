@@ -1,8 +1,14 @@
 /**
- * Add / Edit form behaviour (Select2, dates, inputmask, primary-field focus).
+ * Add / Edit form behaviour (Select2, Tempus Dominus date/time, inputmask, primary-field focus).
  * cakephp-template: page-js:form
  *
  * Load on every Admin form.php (even without Select2) so #name gets focus.
+ *
+ * Date / time / datetime (JeffAdmin5 Tempus Dominus 6):
+ *   .input-group.js-tempus-picker#picker-{field}
+ *     data-picker-type="date|time|datetime"
+ *     data-picker-value="Y-m-d|H:i:s|Y-m-d H:i:s" (ISO for setValue; optional)
+ *   Formats: yyyy.MM.dd. | HH:mm:ss | yyyy.MM.dd HH:mm:ss
  *
  * Select2 „+” (single + multiple):
  *   Button: .btn-select2-add
@@ -16,7 +22,8 @@
  *
  * Expected config:
  *   MyAdmin.config.indexUrl
- *   MyAdmin.config.numberFormat = { locale, decimal, thousand }
+	 *   MyAdmin.config.numberFormat = { locale, decimal, thousand, groupSize, decimalDigits, placeholderInteger, placeholderDecimal }
+ *   MyAdmin.config.dateFormat = { locale, intl, moment, startOfTheWeek, useTwentyFourHour, date, datetime, time }
  */
 (function (window, $) {
 	'use strict';
@@ -29,10 +36,47 @@
 	var numberFormat = cfg.numberFormat || {};
 	var numberDecimal = numberFormat.decimal || ',';
 	var numberThousand = numberFormat.thousand || ' ';
+	var numberGroupSize = parseInt(numberFormat.groupSize, 10) || 3;
+	var numberDecimalDigits = parseInt(numberFormat.decimalDigits, 10);
+	if (isNaN(numberDecimalDigits)) {
+		numberDecimalDigits = 2;
+	}
 	// inputmask: empty groupSeparator disables grouping; keep at least a space for hu
 	if (numberThousand === '') {
 		numberThousand = ' ';
 	}
+
+	var dateFormat = cfg.dateFormat || {};
+	var displayDateFormat = dateFormat.date || 'YYYY.MM.DD.';
+	var displayDateTimeFormat = dateFormat.datetime || 'YYYY.MM.DD. HH:mm:ss';
+	var displayTimeFormat = dateFormat.time || 'HH:mm:ss';
+	var pickerIntlLocale = dateFormat.intl || (dateFormat.locale
+		? String(dateFormat.locale).replace('_', '-')
+		: 'hu-HU');
+	var pickerMomentLocale = dateFormat.moment || String(pickerIntlLocale).split('-')[0] || 'hu';
+
+	/**
+	 * Tempus: 0=Sunday … 6=Saturday.
+	 * Prefer Intl.Locale.weekInfo (1=Monday … 7=Sunday); fallback PHP dateFormat.startOfTheWeek.
+	 */
+	var resolveStartOfWeek = function (intlLocale, fallback) {
+		try {
+			if (typeof Intl !== 'undefined' && Intl.Locale) {
+				var loc = new Intl.Locale(intlLocale);
+				var info = loc.weekInfo || (typeof loc.getWeekInfo === 'function' ? loc.getWeekInfo() : null);
+				if (info && typeof info.firstDay === 'number') {
+					return info.firstDay === 7 ? 0 : info.firstDay;
+				}
+			}
+		} catch (err) { /* ignore */ }
+		var n = Number(fallback);
+		return (n >= 0 && n <= 6) ? n : 1;
+	};
+	var pickerStartOfWeek = resolveStartOfWeek(pickerIntlLocale, dateFormat.startOfTheWeek);
+	// en_US → 12h AM/PM; hu/de/… → 24h (no DE/DU meridiem)
+	var useTwentyFourHour = dateFormat.useTwentyFourHour !== false
+		&& dateFormat.useTwentyFourHour !== 0
+		&& dateFormat.useTwentyFourHour !== '0';
 
 	var csrfToken = function () {
 		var meta = document.querySelector('meta[name="csrfToken"]');
@@ -68,81 +112,276 @@
 		};
 
 		if (window.moment) {
-			moment.locale('hu');
+			moment.locale(pickerMomentLocale);
 		}
 
-		var datePickerLocale = {
-			format: 'YYYY-MM-DD',
-			separator: ' - ',
-			applyLabel: msg.dateApply || 'Apply',
-			cancelLabel: msg.cancelButton || 'Cancel',
-			fromLabel: msg.dateFrom || 'From',
-			toLabel: msg.dateTo || 'To',
-			customRangeLabel: msg.dateCustomRange || 'Custom',
-			weekLabel: msg.dateWeek || 'W',
-			daysOfWeek: moment.weekdaysMin(),
-			monthNames: moment.monthsShort(),
-			firstDay: 1
+		/**
+		 * Tempus Dominus pickers — same options as JeffAdmin5 (zsfoto/jeffadmin5).
+		 * Markup: .input-group.js-tempus-picker[data-picker-type=date|time|datetime][data-picker-value]
+		 * Locale / format from MyAdmin.config.dateFormat (App.adminLocale).
+		 */
+		var tempusIcons = {
+			type: 'icons',
+			time: 'fa fa-clock-o',
+			date: 'fa fa-calendar',
+			up: 'fa fa-arrow-up',
+			down: 'fa fa-arrow-down',
+			previous: 'fa fa-chevron-left',
+			next: 'fa fa-chevron-right',
+			today: 'fa fa-calendar-check-o',
+			clear: 'fa fa-times',
+			close: 'fa fa-check'
 		};
 
-		if ($.fn.inputmask && $.fn.daterangepicker) {
-			$('#datum').inputmask({
-				alias: 'datetime',
-				inputFormat: 'yyyy-mm-dd',
-				placeholder: 'yyyy-mm-dd',
-				clearIncomplete: true
-			}).daterangepicker({
-				singleDatePicker: true,
-				showDropdowns: true,
-				autoApply: true,
-				locale: datePickerLocale
-			});
+		var tempusLocalizationBase = {
+			locale: pickerIntlLocale,
+			startOfTheWeek: pickerStartOfWeek,
+			dayViewHeaderFormat: { month: 'long', year: 'numeric' }
+		};
 
-			$('#datumido').inputmask({
-				alias: 'datetime',
-				inputFormat: 'yyyy-mm-dd HH:MM',
-				placeholder: 'yyyy-mm-dd hh:mm',
-				clearIncomplete: true
-			}).daterangepicker({
-				singleDatePicker: true,
-				timePicker: true,
-				timePicker24Hour: true,
-				timePickerIncrement: 15,
-				autoApply: true,
-				locale: $.extend({}, datePickerLocale, {
-					format: 'YYYY-MM-DD HH:mm'
-				})
-			});
+		var tempusDisplayButtons = { today: true, clear: true, close: true };
 
-			$('#ido').inputmask({
-				alias: 'datetime',
-				inputFormat: 'HH:MM',
-				placeholder: 'hh:mm',
-				clearIncomplete: true
-			});
+		/** Shared clock block — time-only and datetime side-by-side use the same options. */
+		var tempusClockComponents = {
+			clock: true,
+			hours: true,
+			minutes: true,
+			seconds: true,
+			useTwentyfourHour: useTwentyFourHour
+		};
 
-			$('.js-input-decimal, #netto').inputmask({
+		/**
+		 * Tempus Dominus 6 ignores localization.format (uses Intl).
+		 * Override formatInput + parseInput with moment (JeffAdmin5-compatible).
+		 */
+		var bindTempusFormat = function (picker, momentFormat) {
+			if (!picker || !picker.dates) {
+				return;
+			}
+			picker.dates.formatInput = function (date) {
+				if (!date) {
+					return '';
+				}
+				if (window.moment) {
+					return moment(date).format(momentFormat);
+				}
+				var y = date.getFullYear();
+				var m = String(date.getMonth() + 1).padStart(2, '0');
+				var d = String(date.getDate()).padStart(2, '0');
+				var H = String(date.getHours()).padStart(2, '0');
+				var i = String(date.getMinutes()).padStart(2, '0');
+				var s = String(date.getSeconds()).padStart(2, '0');
+				if (momentFormat.indexOf('YYYY') !== -1 && (momentFormat.indexOf('HH') !== -1 || momentFormat.indexOf('h') !== -1)) {
+					return y + '-' + m + '-' + d + ' ' + H + ':' + i + ':' + s;
+				}
+				if (momentFormat.indexOf('HH') !== -1 || momentFormat.indexOf('h') !== -1) {
+					return H + ':' + i + ':' + s;
+				}
+				return y + '-' + m + '-' + d;
+			};
+			picker.dates.parseInput = function (value) {
+				if (value === undefined || value === null || value === '') {
+					return undefined;
+				}
+				if (value instanceof Date && !isNaN(value.getTime())) {
+					return tempusDominus.DateTime.convert(value, pickerIntlLocale);
+				}
+				if (window.moment) {
+					var parsed = moment(
+						value,
+						[
+							momentFormat,
+							'YYYY-MM-DD HH:mm:ss',
+							'YYYY-MM-DD',
+							'HH:mm:ss',
+							moment.ISO_8601
+						],
+						true
+					);
+					if (!parsed.isValid()) {
+						parsed = moment(value);
+					}
+					if (parsed.isValid()) {
+						return tempusDominus.DateTime.convert(parsed.toDate(), pickerIntlLocale);
+					}
+				}
+				try {
+					return tempusDominus.DateTime.convert(new Date(value), pickerIntlLocale);
+				} catch (err) {
+					return undefined;
+				}
+			};
+		};
+
+		/**
+		 * Set stored value — JeffAdmin5 (zsfoto/jeffadmin5):
+		 *   picker.dates.setValue(picker.dates.parseInput(moment(...).toDate()), …)
+		 */
+		var setTempusValue = function (picker, value, momentParse) {
+			if (!picker || value === undefined || value === null || value === '') {
+				return;
+			}
+			try {
+				if (!window.moment) {
+					return;
+				}
+				var m = moment(value, momentParse, true);
+				if (!m.isValid()) {
+					m = moment(value);
+				}
+				if (!m.isValid()) {
+					return;
+				}
+				picker.dates.setValue(
+					picker.dates.parseInput(m.toDate()),
+					picker.dates.lastPickedIndex
+				);
+			} catch (err) { /* ignore invalid initial value */ }
+		};
+
+		/**
+		 * Init Tempus on wrapper. data-picker-value (ISO) is source of truth on edit.
+		 * Clear locale-formatted input before construct so TD 6 native parse does not
+		 * mis-read the display string; then setValue like JeffAdmin5.
+		 */
+		var initTempusPicker = function (field, value, options, momentFormat, momentParse, valueForSet) {
+			var el = document.getElementById(field);
+			if (!el || typeof tempusDominus === 'undefined') {
+				return;
+			}
+			var input = el.querySelector('input');
+			var hasValue = value !== undefined && value !== null && value !== '';
+			if (input && hasValue) {
+				input.value = '';
+			}
+			var picker = new tempusDominus.TempusDominus(el, $.extend(true, {
+				localization: $.extend({}, tempusLocalizationBase),
+				useCurrent: !hasValue,
+				display: {
+					icons: tempusIcons,
+					buttons: tempusDisplayButtons,
+					theme: 'light'
+				}
+			}, options));
+			bindTempusFormat(picker, momentFormat);
+			if (picker.viewDate && typeof picker.viewDate.setLocale === 'function') {
+				picker.viewDate.setLocale(pickerIntlLocale);
+			}
+			setTempusValue(picker, valueForSet !== undefined ? valueForSet : value, momentParse);
+		};
+
+		var initDatePicker = function (field, value) {
+			initTempusPicker(field, value, {
+				localization: { format: displayDateFormat },
+				display: {
+					components: {
+						calendar: true,
+						date: true,
+						month: true,
+						year: true,
+						decades: true,
+						clock: false,
+						hours: false,
+						minutes: false,
+						seconds: false,
+						useTwentyfourHour: undefined
+					}
+				}
+			}, displayDateFormat, 'YYYY-MM-DD');
+		};
+
+		var initDateTimePicker = function (field, value) {
+			initTempusPicker(field, value, {
+				localization: { format: displayDateTimeFormat },
+				display: {
+					sideBySide: true,
+					components: $.extend({
+						calendar: true,
+						date: true,
+						month: true,
+						year: true,
+						decades: true
+					}, tempusClockComponents)
+				}
+			}, displayDateTimeFormat, 'YYYY-MM-DD HH:mm:ss');
+		};
+
+		var initTimePicker = function (field, value) {
+			initTempusPicker(field, value, {
+				localization: { format: displayTimeFormat },
+				display: {
+					components: $.extend({
+						calendar: false,
+						date: false,
+						month: false,
+						year: false,
+						decades: false
+					}, tempusClockComponents)
+				}
+			}, displayTimeFormat, 'YYYY-MM-DD HH:mm:ss', value ? ('2000-01-01 ' + value) : value);
+		};
+
+		$('.js-tempus-picker').each(function () {
+			var id = this.id;
+			if (!id) {
+				return;
+			}
+			var type = String($(this).attr('data-picker-type') || 'date');
+			var value = $(this).attr('data-picker-value');
+			if (value === '') {
+				value = undefined;
+			}
+			if (type === 'datetime') {
+				initDateTimePicker(id, value);
+			} else if (type === 'time') {
+				initTimePicker(id, value);
+			} else {
+				initDatePicker(id, value);
+			}
+		});
+
+		if ($.fn.inputmask) {
+			/**
+			 * Inputmask 5 + groupSeparator: `inputmode=decimal|numeric` breaks after ~3 digits
+			 * (grouping). Force text inputmode. Disable k/m shortcuts. Space thousand OK for hu.
+			 */
+			var numericCommon = {
+				groupSeparator: numberThousand,
+				autoGroup: true,
+				groupSize: numberGroupSize,
+				allowMinus: true,
+				rightAlign: false,
+				placeholder: '',
+				// Unmasked on submit; server middleware still normalizes locale strings as fallback
+				autoUnmask: true,
+				removeMaskOnSubmit: true,
+				inputType: 'text',
+				inputmode: 'text',
+				shortcuts: null,
+				positionCaretOnClick: 'lvp',
+				clearIncomplete: false
+			};
+
+			$('.js-input-decimal').inputmask($.extend({}, numericCommon, {
 				alias: 'decimal',
 				radixPoint: numberDecimal,
-				groupSeparator: numberThousand,
-				digits: 2,
+				digits: numberDecimalDigits,
 				digitsOptional: true,
-				allowMinus: true,
-				rightAlign: false,
-				placeholder: '',
-				autoGroup: true,
-				removeMaskOnSubmit: false
-			});
+				substituteRadixPoint: true
+			}));
 
-			$('.js-input-integer, #szam, #pos').inputmask({
+			// Integer: .js-input-integer + #pos / name=pos (every Admin form with Position)
+			var $integerInputs = $('.js-input-integer, #pos, input[name="pos"], input[name$="[pos]"]')
+				.filter(function () {
+					return !$(this).hasClass('js-input-decimal');
+				});
+			$integerInputs.inputmask($.extend({}, numericCommon, {
 				alias: 'integer',
-				groupSeparator: numberThousand,
-				autoGroup: true,
-				allowMinus: true,
-				rightAlign: false,
-				placeholder: '',
-				removeMaskOnSubmit: false
-			});
+				digits: 0
+			}));
+
+			// HTML attr (template / alias default) can override — keep text for reliable typing
+			$('.js-input-decimal').add($integerInputs).attr('inputmode', 'text');
 		}
 
 		if (!$.fn.select2) {

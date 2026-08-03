@@ -5,7 +5,6 @@ namespace App\Model\Table;
 
 use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -27,6 +26,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Sample saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \Cake\ORM\Behavior\CounterCacheBehavior
  */
 class SamplesTable extends Table
 {
@@ -51,32 +51,30 @@ class SamplesTable extends Table
             'foreignKey' => 'parent_id',
             'joinType' => 'INNER',
         ]);
-        // dependent: when Sample is deleted (only if no city links), clean join rows.
+        // Parents.sample_count — CounterCache on the child (belongsTo) side
+        $this->addBehavior('CounterCache', [
+            'Parents' => ['sample_count'],
+        ]);
+        // HABTM: city_count updated by CitiesSamples CounterCache (cascadeCallbacks required)
         $this->belongsToMany('Cities', [
             'foreignKey' => 'sample_id',
             'targetForeignKey' => 'city_id',
             'joinTable' => 'cities_samples',
             'through' => 'CitiesSamples',
             'dependent' => true,
+            'cascadeCallbacks' => true,
+            'saveStrategy' => 'replace',
         ]);
     }
 
     /**
-     * @param \Cake\Datasource\EntityInterface $entity
-     * @return int
+     * CounterCache column used for delete protection (maintained by CitiesSamplesTable).
+     *
+     * @return string
      */
-    public function countRelatedChildren(EntityInterface $entity): int
+    protected function relatedChildrenCountField(): string
     {
-        $id = $entity->get('id');
-        if ($id === null || $id === '') {
-            return (int)($entity->get('city_count') ?? 0);
-        }
-
-        return $this->getAssociation('Cities')
-            ->junction()
-            ->find()
-            ->where(['sample_id' => $id])
-            ->count();
+        return 'city_count';
     }
 
     /**

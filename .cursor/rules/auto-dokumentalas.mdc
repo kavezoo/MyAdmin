@@ -1,0 +1,31 @@
+---
+description: Minden lényeges módosítás után automatikusan frissítsd a doc/ speceket — a felhasználónak ne kelljen kérnie.
+alwaysApply: true
+---
+
+# Automatikus dokumentálás (kötelező)
+
+A felhasználónak **soha ne kelljen külön kérnie** a dokumentálást. Minden feladat részeként, ha a kód/viselkedés változik, frissítsd a `doc/`-ot **ugyanabban a körben** (ne külön „majd dokumentálom” lépés).
+
+## Mit frissíts
+
+| Változás típusa | Fájl(ok) |
+|-----------------|----------|
+| Bármilyen lényeges módosítás | `doc/valtozasok.md` (dátumos bejegyzés: mi / miért / érintett fájlok) |
+| Admin UI / CRUD / Delete / form / view / modal / oszlop | `doc/admin-konvenciok.md` és/vagy `doc/admin-oldal.md` |
+| Demó→éles / tartós minta-viselkedés | `doc/minta-tanulsagok.md` (checklist, gyakori hibák, §0 playbook) |
+| Locale / `__()` / Admin nyelv | `doc/i18n.md` |
+| Szám / dátum middleware, parser | `doc/middleware.md` |
+| Keretrendszer fájlok, middleware sorrend | `doc/keretrendszer.md` |
+| Új element / könyvtár | `doc/struktura.md` |
+| Greenfield lépés | `doc/uj-projekt.md` |
+| Rögzített döntés változott | `doc/README.md` „Rögzített döntések” |
+| Tartós agent-viselkedés (playbook) | `.cursor/rules/*.mdc` is — ha új kötelező minta, **rule + doc** együtt |
+
+## Szabályok
+
+- Kódkész → doksi kész: ne zárd a választ anélkül, hogy a releváns specek frissülnének.
+- Ne várj „dokumentáld” üzenetre.
+- Triviális typo / tisztán belső refaktor doksi nélkül OK; minden **viselkedés- vagy konvencióváltozás** doksival jár.
+- Ha a változás **minden jövőbeli CRUD / greenfield** része: frissítsd / hozd létre a megfelelő `.cursor/rules/*.mdc`-t is (`alwaysApply` a keret playbookokra).
+- Magyar válaszban röviden jelezd, mely `doc/` / rule fájlok frissültek (1 sor elég).

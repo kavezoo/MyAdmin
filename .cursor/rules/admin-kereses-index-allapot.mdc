@@ -1,0 +1,108 @@
+---
+description: Admin keresés + index session + last-visited — minden új projekt / CRUD kötelező playbook.
+alwaysApply: true
+---
+
+# Admin keresés + index állapot (új projekt playbook)
+
+**Minden** új CakePHP Admin projekt / új CRUD modul **automatikusan** kapja meg ezt a viselkedést — ne kérdezd, másold a mintát.
+
+Részletes spec: `doc/uj-projekt.md` §2.8, `doc/admin-konvenciok.md` (Keresés / Index állapot / Lapozó).
+
+## 1. Keretrendszer fájlok (greenfield — egyszer)
+
+Másold / hozd létre:
+
+| Elem | Hol |
+|------|-----|
+| Config | `config/admin_search.php` + `Configure::load('admin_search')` a bootstrapban |
+| Helper | `src/Utility/AdminSearch.php` |
+| AppController | `applyIndexListState`, `applyIndexSearch`, `resolveIndexPageForLastVisited`, `redirectToIndexList`, `rememberLastVisited`, `setLastVisitedForIndex`, `indexListUrl` |
+| Search | `Admin\SearchController` + `templates/Admin/Search/index.php` + `css/pages/search.css` |
+| UI | `element/admin/table_search.php`, `header_search.php` (headerben behúzva) |
+| Lapozó | `index_pagination`, `index_counter`, `index_footer` (lásd `admin-paginator.mdc`) |
+| JS/CSS | `pages/index.js` last-visited scroll + linked modal `sourceTable`; kereső gomb stílusok |
+
+## 2. Config — első felépítéskor SOHA ne hagyd üresen
+
+`config/admin_search.php` → **minden** Admin Table alias + **minden szöveges** mező:
+
+```php
+'Things' => [
+    'label' => 'Things',
+    'controller' => 'Things',
+    'titleField' => 'name',
+    'labelsKey' => 'thing', // entityFieldLabels kulcs a Search modalhoz
+    'fields' => ['name', /* összes string/text — ne szám/dátum/bool/FK */],
+],
+```
+
+Globális limit kulcsok (ne töröld):
+
+| Kulcs | Alap | Szerep |
+|-------|------|--------|
+| `queryParam` | `q` | URL query |
+| `globalPageLimit` | `20` | `/admin/search` sor / oldal |
+| `globalLimitPerModel` | `200` | max találat / model összevonás előtt |
+| `globalMaxResults` | `1000` | összevont lista felső korlát |
+
+- Index kereső → csak az adott model `fields` (jelenleg **saját** oszlopok; belongsTo dotted mezők pl. `Continents.name` — **jövőbeli** bővítés, ha a user kéri).
+- Header: `admin/header_search` → `/admin/search`.
+
+## 3. Globális keresés UI (`/admin/search`) — kötelező kinézet
+
+Google-szerű találatsor:
+
+| Elem | Viselkedés |
+|------|------------|
+| Cite | tábla · `#id` |
+| Kék cím | AJAX linked/record modal — **összes mező** + **Table** sor (`data-source-table` / `sourceTable`) |
+| Szem ikon | view oldal |
+| Ceruza | edit |
+| Lapozás | `PaginatedResultSet` + `admin/index_pagination` (fent) + `admin/index_footer` (lent) |
+| CSS | `pages/search.css` (ne örökölje a hatalmas `.card-box i` méretet) |
+
+`labelsKey` → `MyAdmin.config.entityFieldLabels` a modal mezőcímkékhez.
+
+## 4. Minden index()
+
+```php
+$redirect = $this->applyIndexListState('Things');
+if ($redirect !== null) {
+    return $redirect;
+}
+$paginateOptions = $this->indexPaginateOptions(['sortableFields' => [/* … */]]);
+$query = $this->applyIndexSearch($this->Things->find(), $this->Things);
+$redirect = $this->resolveIndexPageForLastVisited('Things', $query, $paginateOptions);
+if ($redirect !== null) {
+    return $redirect;
+}
+$things = $this->paginate($query, $paginateOptions);
+$this->setLastVisitedForIndex('Things');
+```
+
+Save / delete után: `return $this->redirectToIndexList('Things');`  
+Template: `<?= $this->element('admin/table_search') ?>` + fejlécben `admin/index_pagination` + láblécben `admin/index_footer`.
+
+**URL:** sort / direction / **page** (1 is!) / q / limit a queryben — könyvjelzőzhető. `App\View\Helper\PaginatorHelper` nem hagyja el a `page=1`-et. Üres index → redirect a mentett URL-re. Oldalváltáskor → `clearLastVisited`.
+
+## 5. Elvárt viselkedés (ne térj el)
+
+| Esemény | Viselkedés |
+|---------|------------|
+| Index `q` | Szűrés az adott tábla szöveges mezőin; session `Admin.indexState` |
+| Header kereső | Összes model szöveges mezői |
+| Sort / page / `q` | URL-ben (+ session tükör); üres index → redirect kanonikus URL-re |
+| Clear search (`?clear_search=1`) | `q` törölve; last-visited oldal + redirect; scroll `.last-visited`. **Üres `q` → törlés gomb nincs** |
+| Keresés submit (csak `q`) | Mindig **page=1** (+ URL) |
+| Lapozás (page változik) | `clearLastVisited` — nincs last-visited kiemelés |
+| Tooltipek | HTML: Start/Clear search + hol keres (EN msgid + hu `.po`) |
+| Keresés után | Fókusz a keresőmezőn, kurzor a szöveg végén (`MyAdmin.focusActiveSearchField`) |
+
+## 6. Tilos
+
+- Bare `redirect(['action' => 'index'])` save után
+- Clear után merev `page=1` (last-visited helyett)
+- Törlés gomb disabled-ként üres keresésnél (rejtse el)
+- `admin_search.php` kihagyása új Table-nél
+- Globális keresés lapozás nélkül / saját pagination markup

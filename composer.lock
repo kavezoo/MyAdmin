@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "343b934ab0e60206ea2fb7aa51c9cc42",
+    "content-hash": "4bf2cf83ab92e9051f643be671877889",
     "packages": [
         {
             "name": "cakephp/cakephp",
@@ -1255,6 +1255,44 @@
                 "source": "https://github.com/php-fig/simple-cache/tree/3.0.0"
             },
             "time": "2021-10-29T13:26:27+00:00"
+        },
+        {
+            "name": "zsfoto/jeffadmin5",
+            "version": "1.1.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zsfoto/JeffAdmin5.git",
+                "reference": "4ad82145ab476ccb9a9138210a6a92746934fdf1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zsfoto/JeffAdmin5/zipball/4ad82145ab476ccb9a9138210a6a92746934fdf1",
+                "reference": "4ad82145ab476ccb9a9138210a6a92746934fdf1",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^5.0.0",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.1"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "JeffAdmin5\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "JeffAdmin5 plugin for CakePHP",
+            "support": {
+                "issues": "https://github.com/zsfoto/JeffAdmin5/issues",
+                "source": "https://github.com/zsfoto/JeffAdmin5/tree/1.1.9"
+            },
+            "time": "2026-05-06T13:02:42+00:00"
         }
     ],
     "packages-dev": [

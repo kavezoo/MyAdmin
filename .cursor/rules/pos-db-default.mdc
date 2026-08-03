@@ -1,0 +1,25 @@
+---
+description: A pos mező mindig az adatbázis DEFAULT értéke — az agent soha ne állítsa / ne írja felül.
+alwaysApply: true
+---
+
+# `pos` mező = csak DB DEFAULT
+
+A **`pos`** (pozíció) oszlop értéke **mindig** az adatbázis séma **DEFAULT**-jából jön (tipikusan `1000`).
+
+## Kötelező
+
+- Új rekordnál **ne** állíts `pos`-t PHP-ban / controllerben / `beforeSave`-ben / seed scriptben „kézzel” (pl. `1000`, `10`, `$pos += 10`).
+- Üres formmező → hagyd üresen / unseteld → INSERT-nél a DB DEFAULT érvényesül (`UsesDatabaseColumnDefaultsTrait` + `newEntityWithSchemaDefaults()`).
+- A felhasználó majd átírja a formon, ha akarja.
+
+## Tilos
+
+- ` $entity->pos = 1000 `
+- ` 'pos' => 1000 ` create/save adatban
+- Seed / migráció közben országonként / soronként növekvő `pos` kiosztása „szép sorrendhez”
+- Bármilyen „okos” alapértelmezés a DB DEFAULT helyett
+
+## Kivétel
+
+Csak ha a felhasználó **explicit** kéri, hogy a `pos` értéket módosítsd vagy számold.

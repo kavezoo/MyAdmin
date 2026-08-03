@@ -22,7 +22,7 @@ Ez a fájl a **részletes viselkedési specifikáció**: layout, asset, index/fo
 - JS (body végén): modernizr, jquery, moment, bootstrap.bundle, bridge, detect, fastclick, blockUI, nicescroll, pikeadmin, sweetalert2, **`app.js`**
 - CSRF: `<meta name="csrfToken">`
 
-**Nem** kerül a layoutba: Select2, Trumbowyg, daterangepicker, inputmask, page CSS/JS.
+**Nem** kerül a layoutba: Select2, Trumbowyg, Tempus Dominus, inputmask, page CSS/JS.
 
 ### Template — oldalspecifikus
 
@@ -42,7 +42,7 @@ $this->Html->script([...], ['block' => 'scriptBottom']);
 | Oldaltípus | CSS | JS / plugin |
 |------------|-----|-------------|
 | **index** (lista) | `pages/index` | `pages/index` + `MyAdmin.config` (URL-ek, field label-ek) |
-| **form** (add/edit) | daterangepicker, select2, select2-bootstrap5, `pages/form` | daterangepicker, inputmask, select2, `pages/form` |
+| **form** (add/edit) | tempus-dominus, select2, select2-bootstrap5, `pages/form` | popper, tempus-dominus, inputmask, select2, `pages/form` |
 | **view** | `pages/index` (record-view + related tabs) | `pages/index` JS + `MyAdmin.config` (`rowDoubleClickAction`, `entityFieldLabels`) + `modal_linked_record_view` |
 | WYSIWYG / Prism | **csak** ha van `.editor` mező a formon | trumbowyg + pluginek |
 
@@ -55,21 +55,43 @@ Layout: `webroot/js/app.js`
 ```js
 MyAdmin.config = { /* oldal tölti fel */ };
 MyAdmin.initTooltips();
+MyAdmin.initScrollTop(); // layout: #btn-scroll-top (görgetés után látszik)
 MyAdmin.confirmDelete({ onConfirm: fn });
 MyAdmin.alert({ icon: 'error', text: '…' });
 MyAdmin.alertError('…');
+MyAdmin.flashSwal({ icon, title, html }); // Flash SWAL sorban
 ```
+
+### Flash üzenetek (JeffAdmin5 mintájára)
+
+| Típus | Element / API | Viselkedés |
+|-------|---------------|------------|
+| **Notify** (alap) | `$this->Flash->success($msg)` → `flash/success.php` | Simple Notify toast; **több** üzenet egyszerre (bottom left) |
+| **SWAL** | `$this->flashSwal('success', $msg)` vagy `['element' => 'flash/success_swal']` | SweetAlert2 modal; egyszerre **egy** (több Flash sorban) |
+| Legacy | `['element' => 'flash_/success']` | jquery-toastmessage (asset: `plugins/jquery-toastmessage/`) |
+
+Assetek: `simple-notify` 1.0.6, `sweetalert2` 11.x (legújabb), layout végén `<script>` + `admin/script_flash`.
 
 ### SweetAlert — kötelező (tilos a `window.alert`)
 
-Az Admin UI-n **minden** felhasználói dialógus / hiba / info üzenet **SweetAlert2** legyen.  
+Az Admin UI-n **minden** felhasználói dialógus / megerősítés **SweetAlert2** legyen.  
+Server-side flash alapból **Notify** toast; modal flashhez `flashSwal()`.  
 **Ne** használd: `window.alert()`, `window.confirm()`, `window.prompt()`.
 
 | API (`webroot/js/app.js`) | Mikor |
 |---------------------------|--------|
-| `MyAdmin.confirmDelete({ onConfirm })` | Törlés megerősítés (index sor, breadcrumb, …) |
+| `MyAdmin.swal({…})` | Alacsony szintű Swal; Bootstrap modal FocusTrap pause + z-index 20000 |
+| `MyAdmin.confirmDelete({ onConfirm })` | Törlés megerősítés (index sor, breadcrumb, record/linked modal, …) |
 | `MyAdmin.alert({ icon, title, text })` | Általános üzenet (`icon`: `error` / `success` / `info` / `warning`) |
-| `MyAdmin.alertError(text)` | Rövid hiba (Select2 mentés sikertelen, hiányzó URL, …) |
+| `MyAdmin.alertError(text)` | Rövid hiba (Select2 mentés sikertelen, hiányzó URL, tiltott törlés, …) |
+| `MyAdmin.flashSwal({ icon, title, html })` | Flash SWAL (queue) |
+
+**Kinézet (kötelező CSS — `webroot/css/style.css`):**
+
+| Szabály | Érték |
+|---------|--------|
+| Z-index | `.swal2-container` → `20000` (Bootstrap modal / FocusTrap fölött) |
+| Árnyék | `.swal2-popup` → látható `box-shadow` (mint a linked modal / Tempus panel): `0 0.75rem 2rem rgba(0,0,0,.28), 0 0.25rem 0.75rem rgba(0,0,0,.18)` |
 
 Layout `MyAdmin.messages` kötelező kulcsok (mind `__()`-zel):
 
@@ -109,6 +131,11 @@ Delete: SweetAlert → `#delete-form-{id}` **form** submit (`Form->create`). Gye
 Form root: `#form-horizontal`. Mező ID-k: Cake FormHelper alapértelmezés (`#` + underscored field name).
 **Minden** Admin form: `pages/form` JS + `#name` `autofocus` → `focusPrimaryFormField()` (pluginok után). Select2 „+” modal: `shown.bs.modal` → `[data-select2-text]` fókusz.
 
+### Vissza a tetejére (kötelező)
+
+Layout (`admin.php`): `#btn-scroll-top` — jobb alsó sarok, `fa-angle-up`.  
+Csak akkor látszik (`is-visible`), ha a scroll > ~200px; kattintásra sima görgetés az oldal tetejére (`MyAdmin.initScrollTop`).
+
 ## Lista (index) UI — kötelező minden Admin CRUD-nál
 
 Minden index lista **ugyanazt** a mintát kövesse ([uj-projekt.md](uj-projekt.md) + ez a szakasz).  
@@ -117,14 +144,42 @@ Referencia-implementáció (ha van a projektben): bármely teljes CRUD `index.ph
 ### Kötelező elemek
 
 1. Külső wrapper: `<div class="row mt-3"><div class="col-12 p-2 pt-0">` (térköz a breadcrumb alatt)
-2. Card fejléc: cím, súgó („Dupla kattintással…”), Search (opcionális bekötés később), lapozás
+2. Card fejléc: cím, súgó („Dupla kattintással…”), `admin/table_search`, `admin/index_pagination`
 3. Tábla: `.table.index-data-table`
 4. Sor: `id="record-{id}"` `data-id="{id}"`; ha `$lastVisitedId` egyezik → `class="last-visited"`
 5. Actions: View / Edit / Delete (outline + HTML tooltip). Ha `*_count > 0`: Delete **disabled** + tooltip a tilalom okáról. Egyébként rejtett `#delete-form-{id}` (**`Form->create`**, nem `postLink`)
-6. Lábléc: Showing X–Y of Z + pagination element
+6. Lábléc: **`admin/index_footer`** (bal: `1–100 / 266 records | 1. page / 3`; jobb: lapozó) — **ne** másold be inline a summary-t
 7. Modal: `#modalRecordView` (+ linked modal, ha van kapcsolt entitás link) — Delete gomb `can_delete` szerint enable/disable
 8. Page asset: `pages/index` CSS + `pages/index` JS + `MyAdmin.config` (legalább `recordGetUrl`, `editUrl`, `viewUrl`, `recordFieldLabels`)
-9. Controller: `recordGet` JSON (`can_delete` flag is) a modalhoz (kapcsolt névlisták **ASC** ABC-sorrendben); `setLastVisitedForIndex('Alias')`
+9. Controller: `recordGet` JSON (`can_delete` flag is) a modalhoz (kapcsolt névlisták: utolsó 20 modified → ABC); `setLastVisitedForIndex('Alias')`
+
+### Index card footer (kötelező)
+
+```php
+<div class="card-footer">
+    <?= $this->element('admin/index_footer') ?>
+</div>
+```
+
+Az element balra az **`admin/index_counter`**-t írja (bake `Paginator::counter` + `__()`), jobbra az `admin/index_pagination`-t.  
+Lapozó részletek: lásd **Lapozó (paginator)** alább. Fejlécben / keresőnél: csak `admin/index_pagination`.
+
+### Lapozó (paginator) — kötelező
+
+Agent rule: `.cursor/rules/admin-paginator.mdc`.
+
+**Sorrend:** « → ‹ → oldalszámok → › → » (FA: `fa-angle-double-left` / `fa-angle-left` / `fa-angle-right` / `fa-angle-double-right`).
+
+| Gomb | Cake API | Disabled mikor |
+|------|----------|----------------|
+| First («) | `Paginator->first(__('First'))` — ikon a sablonban; label = `title`/`aria-label` | `!$this->Paginator->hasPrev()` (manuális disabled LI) |
+| Previous (‹) | `Paginator->prev(__('Previous'))` | `prevDisabled` sablon |
+| Numbers | `Paginator->numbers(['modulus' => 3])` | aktuális = `active` |
+| Next (›) | `Paginator->next(__('Next'))` | `nextDisabled` sablon |
+| Last (») | `Paginator->last(__('Last'))` | `!$this->Paginator->hasNext()` (manuális disabled LI) |
+
+Msgid (csak accessibility / tooltip): `First` / `Previous` / `Next` / `Last` / `Pagination`.  
+**Lapozáskor** (`?page=` a queryben): `clearLastVisited($model)` — az utoljára megtekintett kiemelés törlődik.
 
 ### Utolsó rekord (`.last-visited`) — session
 
@@ -141,66 +196,108 @@ Az utoljára megtekintett / szerkesztésre megnyitott / sikeresen mentett (új v
 | `recordGet` / linked get | modal megtekintés is |
 
 Index: `$this->setLastVisitedForIndex('Alias')` → template `$lastVisitedId` → sor `class="last-visited"`.  
-CSS már a `style.css`-ben (MyPluginTemplate zöld kiemelés). A `index.js` modalnál is állítja a class-t (azonnali UI); a session a következő index betöltéshez kell. **Később bővül** (scroll, stb.).
+CSS: `style.css` (zöld kiemelés). A `index.js` modalnál is állítja a class-t; **betöltéskor** a last-visited sorhoz **görget** (viewport teteje ≈ header + breadcrumb + ~mt-3).
+
+### Index lista állapot (sort / page / keresés) — session + URL
+
+| Kulcs | Tartalom |
+|-------|----------|
+| `Admin.indexState[Alias]` | `sort`, `direction`, `page`, `q`, opcionális `limit` |
+
+- **URL a forrás** (könyvjelzőzhető): sort / direction / **page** (1 is!) / q / limit — `App\View\Helper\PaginatorHelper` (Cake alapból elhagyná a `page=1`-et).
+- Üres index URL → redirect a mentett kanonikus URL-re (`applyIndexListState` Response).
+- Mentés / „Back to list”: `redirectToIndexList('Alias')` / `$indexListUrl`.
+- Kereső param: `q` (`AdminSearch::queryParam()`).
+- **Keresés indítás** (form: csak `q`): mindig **1. oldal** + kanonikus redirect.
+- **Lapozás / sort** (ha a `page` változik): `clearLastVisited`.
+- **Keresés törlése** (`?clear_search=1`): last-visited oldal kiszámítása + **redirect** kanonikus URL-re; scroll a `.last-visited` sorra.
+
+### Keresés (index + globális)
+
+**Kötelező minden új projektben / CRUD-nál** — greenfield playbook: [uj-projekt.md](uj-projekt.md) §2.8; agent rule: `.cursor/rules/admin-kereses-index-allapot.mdc`.
+
+Config: **`config/admin_search.php`** → `Configure::read('AdminSearch')` (bootstrap betölti).
+
+| Kulcs | Szerep |
+|-------|--------|
+| `queryParam` | URL param (alap: `q`) |
+| `globalPageLimit` | `/admin/search` oldalméret (alap: 20) |
+| `globalLimitPerModel` | max találat / model összevonás előtt (200) |
+| `globalMaxResults` | összevont lista felső korlát (1000) |
+| `models[Alias].label` | msgid a tábla névhez |
+| `models[Alias].controller` | Admin controller |
+| `models[Alias].titleField` | találat címsora |
+| `models[Alias].labelsKey` | `entityFieldLabels` kulcs (Search modal) |
+| `models[Alias].fields` | szöveges oszlopok (index + global) |
+
+| Hol | Mit keres |
+|-----|-----------|
+| Index card (`admin/table_search`) | Csak az adott Table alias `fields` listája (saját oszlopok) |
+| Header (`admin/header_search`) | Összes model összes `fields` → `Admin\SearchController` |
+
+**`/admin/search` UI:** Google-szerű sor — cite (tábla · #id); kék cím → AJAX modal (összes mező + **Table** sor `data-source-table`); szem → view; ceruza → edit; lapozás fent (`index_pagination`) + lent (`index_footer`). CSS: `pages/search.css`.
+
+Új CRUD / új projekt: sorold fel a modelt + **minden szöveges** mezőt a configban (lásd [uj-projekt.md](uj-projekt.md)).  
+Helper: `App\Utility\AdminSearch`; controller: `applyIndexSearch($query, $table)`.
+
+UI: mindkét kereső mellett nagyító (`__('Start search')` + hol keres) és **törlés** gomb (`__('Clear search')`) — HTML tooltip; indexen `?clear_search=1`; **üres keresésnél a törlés gomb nem jelenik meg**.
+
+**Keresés után:** ha a mezőben van szöveg, a fókusz a keresőmezőn marad, kurzor a **szöveg végén** (`MyAdmin.focusActiveSearchField` — index: `#table-search-input`; globális oldal: `.search-page-input`).
+
+**Jövőbeli (nem kötelező még):** belongsTo szöveges mezők az index keresőben (pl. `Continents.name` dotted `fields`) — csak ha a felhasználó kéri.
 
 ### Modal — kapcsolt (HABTM / hasMany) listák sorrendje
 
-A `#modalRecordView` / linked modal mezőiben megjelenő kapcsolt nevek (pl. „City list” / „Sample list”) **mindig ABC (ASC)** sorrendben, és **linkként** nyithatók (második modal):
+A `#modalRecordView` / linked modal mezőiben megjelenő kapcsolt nevek (pl. „City list” / „Sample list”):
+
+1. **Kiválasztás:** az utoljára módosított max. **20** gyerek (`modified DESC` + `limit 20`)
+2. **Megjelenítés:** ABC **name ASC**
+3. **Link:** `.record-modal-link` → második modal
+
+Helper (`Admin\AppController`): `$modalRelatedLimit`, `containRelatedForModal($alias)`, `relatedNameLinksForModal($entities)`.
 
 ```php
-// recordGet JSON
-'cities' => [ ['id' => 1, 'name' => 'A'], … ],  // nem implode string
-'samples' => [ ['id' => 2, 'name' => 'B'], … ],
-```
-
-Index config:
-
-```php
-'relatedLinkFields' => [
-    'samples' => [
-        'getUrl' => …, 'editUrl' => …, 'viewUrl' => …, 'deleteUrl' => …,
-        'labels' => 'sample', 'title' => __('Sample details'), 'deleteFormPrefix' => 'sample',
-    ],
-    // cities ugyanígy
-],
-'entityFieldLabels' => [ 'sample' => [ … ], 'city' => [ … ] ],
-```
-
-JS (`pages/index.js`): tömb `{id,name}` + `relatedLinkFields` → `.record-modal-link` → `#modalLinkedRecordView`.  
-Indexen kötelező: `admin/modal_linked_record_view` element, ha van ilyen lista.
-
-```php
+// recordGet / parentGet
 contain: [
-    'Cities' => fn ($q) => $q->orderBy(['Cities.name' => 'ASC']),
-    // vagy Samples ASC a Cities recordGet-nél
+    'Cities' => $this->containRelatedForModal('Cities'),
+    // vagy 'Samples' => $this->containRelatedForModal('Samples'),
 ]
+// …
+'cities' => $this->relatedNameLinksForModal($sample->cities ?? []),
 ```
 
-Ugyanez a `view()` contain-nél / fő `dl` „list” sorában.  
+Index config: `relatedLinkFields` + `entityFieldLabels` + `admin/modal_linked_record_view`.
+
+A **view** oldal kapcsolt tab / fő `dl` továbbra is lehet teljes lista (ABC ASC) — a 20-as limit a **modal JSON**-ra vonatkozik.
+
 Részletek: [crud-utmutato.md](crud-utmutato.md) → `recordGet`.
 
-### Rendezés (sort) — URL-ből, ne hardcoded order
+### Rendezés (sort) — URL-ből + session
 
-- Az `index()` **ne** állítson be előre `orderBy([...])`-t a query-n.
-- A rendezés a Paginator URL paraméterekből jön: `?sort=field&direction=asc|desc`.
+- Az `index()` **ne** állítson be előre `orderBy([...])`-t a query-n (kivéve ritka default `paginate` `order`, pl. Countries).
+- A rendezés a Paginator URL paraméterekből jön: `?sort=field&direction=asc|desc` — és sessionben megmarad.
 - A `th`-okban `$this->Paginator->sort('mezo', 'Címke')`.
 - A `paginate()` hívásban add meg a `sortableFields` listát (különösen associált mezőknél, pl. `Parents.name`).
-- Az `index()` később még finomodik (session, default sort, search) — addig is tartsd URL-alapúnak.
 
 ```php
 class ThingsController extends AppController
 {
     /** Index: sor / oldal */
-    protected int $indexLimit = 10;
+    protected int $indexLimit = 100;
 
     /** Index: max sor / oldal (`?limit=` hack ellen) */
-    protected int $indexMaxLimit = 100;
+    protected int $indexMaxLimit = 1000;
 
     public function index()
     {
-        $items = $this->paginate($this->Things->find(), $this->indexPaginateOptions([
+        $this->applyIndexListState('Things');
+        $paginateOptions = $this->indexPaginateOptions([
             'sortableFields' => ['id', 'name', 'created', 'modified', /* … */],
-        ]));
+        ]);
+        $query = $this->applyIndexSearch($this->Things->find(), $this->Things);
+        $this->resolveIndexPageForLastVisited('Things', $query, $paginateOptions);
+        $items = $this->paginate($query, $paginateOptions);
+        $this->setLastVisitedForIndex('Things');
         $this->set(compact('items'));
     }
 }
@@ -208,11 +305,11 @@ class ThingsController extends AppController
 
 | Tulajdonság | Alap | Szerep |
 |-------------|------|--------|
-| `$indexLimit` | `10` | Alapértelmezett sorok száma oldalanként |
-| `$indexMaxLimit` | `100` | Felső korlát — URL `?limit=9999` sem mehet e fölé |
+| `$indexLimit` | `100` | Alapértelmezett sorok száma oldalanként |
+| `$indexMaxLimit` | `1000` | Felső korlát — URL `?limit=9999` sem mehet e fölé |
 
 Helper: `AppController::indexPaginateOptions()` → `limit` + `maxLimit` a Cake Paginatornak.  
-**Ne** hardkódolj `'limit' => 10`-et a `paginate()` hívásban.
+**Ne** hardkódolj `'limit' => 100`-et a `paginate()` hívásban.
 
 ```php
 // Kerülendő
@@ -227,7 +324,7 @@ $query->orderBy(['Model.id' => 'ASC']);
 | `id` | ID (~7–8 jegy) | `4.75rem` | MyAdmin (minta: nincs fix) |
 | `pos` | pozíció (max ~5 jegy + locale ezres) | `5.5rem` | MyAdmin; érték = **DB DEFAULT** (`UsesDatabaseColumnDefaultsTrait`) |
 | `number` (pl. `.szam`, nem id/pos/count) | általános szám | `6.5rem` | MyAdmin (minta: csak `nowrap`) |
-| `currency` / `netto` | pénz (összeg + pénznem) | `12rem` | MyAdmin; szuffixum: `currencySymbol()` → **Ft** |
+| `currency` / `netto` | pénz (összeg + pénznem) | `12rem` | MyAdmin; **`formatCurrency()`** (HUF, ICU pozíció) |
 | `count` | `*_count` | `5.5rem` | **MyPluginTemplate**; **0 / null → üres cella** (`LocaleNumberParser::formatCount`) |
 | `boolean` / `logikai` / `visible` / `valid` | logikai | `7.5rem` | **MyPluginTemplate** (`.visible`/`.valid`) |
 | `date` | dátum | `8.5rem` | **MyPluginTemplate** |
@@ -245,23 +342,23 @@ Számok **megjelenítése**: `LocaleNumberParser::format(..., decimals: $numberD
 ```php
 <td class="number pos text-end"><?= h(\App\Utility\LocaleNumberParser::format($row->pos, decimals: $numberDecimals['integer'])) ?></td>
 <td class="number count text-end"><?= h(\App\Utility\LocaleNumberParser::formatCount($row->city_count, decimals: $numberDecimals['integer'])) ?></td>
-<td class="currency netto text-end"><span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::format($row->netto, decimals: $numberDecimals['decimal'])) ?></span> <?= h(\App\Utility\LocaleNumberParser::currencySymbol()) ?></td>
+<td class="currency netto text-end"><span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::formatCurrency($row->netto, decimals: $numberDecimals['decimal'])) ?></span></td>
 ```
 
-Pénznem megjelenítés — **`LocaleNumberParser::currencySymbol()`** (kötelező):
+Pénz megjelenítés — **`LocaleNumberParser::formatCurrency()`** (kötelező; mindig **HUF**):
 
-| Locale | Megjelenő szuffixum | Megjegyzés |
-|--------|---------------------|------------|
-| `hu_HU` (Admin) | **`Ft`** | Magyar szokás; **ne** ISO `HUF` |
-| később EUR | pl. `€` | A helper `match` ágát bővítsd — ne hardkódolj templateben |
+| Locale | Példa | Megjegyzés |
+|--------|-------|------------|
+| `hu_HU` | `12 345,67 Ft` | Magyar szokás (`Ft`, utótag) |
+| `en_*` | `HUF 12,345.67` | ISO kód, **előtag** |
+| `de_DE` / `fr_FR` / `sk_SK` | `12.345,67 HUF` / … | ISO kód, utótag (+ szóköz) |
 
 ```php
-<?= h(LocaleNumberParser::format($row->netto, decimals: 2)) ?>
-<?= h(LocaleNumberParser::currencySymbol()) ?>
-// → „12 345,67 Ft”
+<?= h(LocaleNumberParser::formatCurrency($row->netto, decimals: 2)) ?>
+// hu → „12 345,67 Ft”; en → „HUF 12,345.67”
 ```
 
-A pénznem **nem** `__()` string — locale-függő formázás, mint a számok. Címke továbbra is `__('Net')`.
+Ne rakd össze kézzel `format()` + `currencySymbol()` — a pozíció locale-függő. A pénznem **nem** `__()` string. Címke: `__('Net')`. Más valuta: `$currency` param (később).
 
 ### Created + Modified közös oszlop
 
@@ -297,15 +394,61 @@ $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the 
 
 | Réteg | Szabály |
 |-------|---------|
-| Model | `PreventsDeleteWithChildrenTrait` + `countRelatedChildren()`; `beforeDelete` → `$event->setResult(false)` + `_delete` error, ha van gyerek (CakePHP 5.2+: ne `return false`) |
-| HABTM | `dependent => true` a join tisztításához (csak ha a törlés lefut) |
-| hasMany szülő | `dependent => false` — gyerek meglétekor **tilos** a törlés |
-| Controller | `deleteEntityOrFail()` / Flash a `_delete` üzenettel; `setCanDeleteFlag()` view/edit breadcrumbhez |
-| Index UI | `*_count > 0` → disabled Delete + tooltip; különben `Form->create` `#delete-form-{id}` |
-| Modal | `record.can_delete` / `data-can-delete` → `#btn-record-delete` / `#btn-linked-delete` |
-| Breadcrumb | `#btn-delete` → `#delete-form-current` + Swal; disabled ha `!$canDelete` |
+| Model | `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()` (CounterCache `*_count`); `beforeDelete` → `$event->setResult(false)` + `_delete` error (CakePHP 5.2+: ne `return false`) |
+| Számláló | **`CounterCache` behavior** tartja a `*_count` mezőt — **ne** írj manuális `COUNT()` / controller `*_count = count(_ids)` kódot |
+| HABTM | through Table-en CounterCache; `belongsToMany`: `dependent => true` + **`cascadeCallbacks => true`** |
+| hasMany szülő | gyerek Table-en CounterCache (`belongsTo` szülő); szülőn `dependent => false` — gyerek meglétekor **tilos** a törlés |
+| Controller | `deleteEntityOrFail()` / Flash; `setCanDeleteFlag()`; új rekordnál `*_count = 0` csak ha NOT NULL + nincs DB DEFAULT |
+| Index UI | `*_count > 0` → `btn-outline-secondary disabled` + tooltip; különben danger + `Form->create` `#delete-form-{id}` |
+| Modal | `record.can_delete` → `#btn-record-delete` / `#btn-linked-delete`: törölhető = `btn-danger`; nem = `btn-secondary disabled` + tooltip |
+| Breadcrumb | `#btn-delete` → `#delete-form-current` + Swal; nem törölhető = `btn-secondary disabled` |
 
 **Fontos:** a Cake `Form->postLink()` `id`/`class` opciói az **`<a>`** elemre mennek, nem a formra — ezért a JS `$('#delete-form-…').submit()` nem működött. Mindig valódi **`<form id="delete-form-…">`**.
+
+### CounterCache — `*_count` mezők (kötelező)
+
+A megjelenített / törléshez használt `city_count`, `sample_count` stb. **CounterCache**-ből jön. Manuális `find()->count()` a `countRelatedChildren`-ben **tilos** (duplikált logika, elcsúszhat).
+
+| Kapcsolat | Hol a CounterCache? | Frissülő mező |
+|-----------|---------------------|---------------|
+| hasMany / belongsTo (pl. Sample → Parent) | **Gyerek** Table (`SamplesTable`) | `Parents.sample_count` |
+| belongsToMany / HABTM | **Through** Table (`CitiesSamplesTable`) | mindkét oldal: `Samples.city_count`, `Cities.sample_count` |
+
+```php
+// SamplesTable — hasMany számláló a szülőn
+$this->belongsTo('Parents', […]);
+$this->addBehavior('CounterCache', [
+    'Parents' => ['sample_count'],
+]);
+$this->belongsToMany('Cities', [
+    'through' => 'CitiesSamples',
+    'dependent' => true,
+    'cascadeCallbacks' => true, // kötelező: join törlés → CounterCache
+]);
+
+// CitiesSamplesTable — HABTM számlálók
+$this->addBehavior('CounterCache', [
+    'Samples' => ['city_count'],
+    'Cities' => ['sample_count'],
+]);
+
+// PreventsDeleteWithChildrenTrait
+protected function relatedChildrenCountField(): string
+{
+    return 'city_count'; // vagy sample_count
+}
+```
+
+`countRelatedChildren()` a traitben a CounterCache oszlopot olvassa (lehetőleg friss DB értékkel, ha van PK).  
+UI / `can_delete` / index Delete: ugyanez a mező (`*_count > 0`).
+
+Újraszámolás (import / elcsúszás után):
+
+```bash
+bin/cake rebuild_counter_caches
+```
+
+Ha a számláló elcsúszik: futtasd a fenti parancsot — ne írj vissza élő JOIN `COUNT()`-ot a modelbe.
 
 ### Sor dupla kattintás (`$rowDoubleClickAction`)
 
@@ -357,7 +500,7 @@ $showModifiedColumn = true; // modified — külön kapcsolható
 Használat:
 
 ```php
-LocaleNumberParser::format($row->netto, decimals: $numberDecimals['decimal']);
+LocaleNumberParser::formatCurrency($row->netto, decimals: $numberDecimals['decimal']);
 LocaleNumberParser::format($row->pos, decimals: $numberDecimals['integer']);
 ```
 
@@ -374,8 +517,9 @@ LocaleNumberParser::format($row->pos, decimals: $numberDecimals['integer']);
 - Ha csak az egyik: egy oszlop, csak az a mező + sort.
 - Ha egyik sem: nincs timestamp oszlop.
 - A `thead` / `tbody` cellákat `if ($show…)`-vel rendereld; az üres lista `colspan` = `$indexColspan`.
+- Dátum megjelenítés: `LocaleDateParser::format($row->created, 'datetime_short')` (és `date` / `time_short` a mezőtípus szerint) — **ne** `->format('Y.m.d. H:i')`.
 
-Ez **csak** az index táblára vonatkozik; a view / modal továbbra is mutathatja ezeket a mezőket.
+Ez **csak** az index táblára vonatkozik; a view / modal ugyanazokat a locale formázókat használja.
 
 ## View (megnézés) UI — kötelező minta
 
@@ -410,7 +554,8 @@ Asset: CSS `pages/index`; JS `pages/index`; element: `admin/modal_linked_record_
 2. Mezők: `<dl class="record-view-fields">` + `.record-view-row` / `dt` / `dd`
 3. **belongsTo** szülő a fő `dl`-ben — **nem** külön tab; a név **félkövér link** (`.record-modal-link`) → AJAX modal
 4. **belongsToMany** nevek a fő `dl`-ben (opcionális „City list” sor): **városonként** ugyanez a link
-5. Lábléc: Edit + Back to list
+5. Lábléc: csak **Edit**, az **adatoszlop** (`dd`) alatt: `.record-view-footer-actions` (`padding-left: calc(9rem + 1rem)` — ugyanaz, mint a `dt` + gap); Back to list a breadcrumbben
+   - Form Save továbbra is `offset-md-2` (form label `col-md-2`)
 6. Controller `view()`: `contain` + gyerekek **ASC** név szerint
 
 ### Kapcsolt rekord modal (AJAX)
@@ -422,7 +567,7 @@ Link / dupla klikk → `#modalLinkedRecordView` (`admin/modal_linked_record_view
 | **Close** | Modal bezárás |
 | **Edit** | Kapcsolt entitás `edit` URL |
 | **View details** | Kapcsolt entitás `view` URL |
-| Delete gomb | `MyAdmin.confirmDelete` → rejtett form submit; ha van gyerek (`*_count` / `can_delete=false`) → gomb **disabled** + tooltip |
+| Delete gomb | `MyAdmin.confirmDelete` → rejtett form submit; ha van gyerek → **`btn-secondary` / outline-secondary + disabled** + tooltip; Swal z-index > Bootstrap modal |
 
 Link attribútumok (`.record-modal-link`):
 
@@ -482,15 +627,24 @@ Delete után a controller **referer**-re irányít (`referer(['action' => 'index
 - Add és edit **ugyanaz** a `form.php`; controller `render('form')`
 - Card: cím, Created/Modified (edit), bezáró gomb
 - Bootstrap rács: label `col-md-2`, mező jobbra; címkék félkövérek (`style.css`)
-- Lábléc: Save + Cancel; Save a breadcrumbben is (`form="form-horizontal"`)
+- Lábléc: Save + Cancel; Save a breadcrumbben is (`form="form-horizontal"`); gombok: `col-12 col-md-10 col-xxl-9 offset-md-2` (mezősorral egy vonalban)
+- **Mezőhiba:** a beviteli mező **alatt**, piros félkövér (`.error-message`); Admin Form: `errorClass=is-invalid`, `inputContainerError={{content}}{{error}}` — `AppView` + `style.css`
+  - Egyszerű `Form->control`: a hiba automatikusan a mező alatt
+  - **input-group** (Tempus), **select2-with-add**, **checkbox**: `'error' => false` a controlon, majd a wrapper **után** `<?= $this->element('admin/field_error', ['field' => '…']) ?>` — így nem a naptár ikon / „+” gomb mellé kerül
 - Kapcsolók: Visible / boolean switch-ek
-- Dátumok: daterangepicker + inputmask, formátum `yyyy-mm-dd` / `hh:mm`
+- **`visible` + `pos` blokk (kötelező, ha mindkettő van):** a többi mező **után** (pl. `logikai` után is), elválasztó csak a `visible` fölött — markup:
+  ```html
+  <div class="row"><div class="col-12 col-xxl-11"><hr class="my-4"></div></div>
+  ```
+  (mezősor szélessége: label `col-md-2` + mező `col-xxl-9` ≈ `col-xxl-11`; **ne** teljes szélességű bare `<hr>`). Sorrend: **visible → pos**.
+- Dátumok: **Tempus Dominus 6** (JeffAdmin5), formátum `yyyy.MM.dd.` / `HH:mm:ss` / `yyyy.MM.dd HH:mm:ss`; mentés: `LocaleDateParser`
 - **Számok (i18n):** inputmask a locale szerint — lásd alább
 - **belongsTo Select2 / list** (pl. Parent): visible + pos/name sorrend — lásd alább
 - **HABTM multiple Select2** (pl. Samples↔Cities mindkét irány): lásd alább
 - Select2 „+”: lásd alább (csak ha az új rekord egyszerűen felvehető)
 - **Name fókusz (kötelező):** lásd alább
-- **Mentés hibakezelés:** lásd alább
+- Mentés hibakezelés: lásd alább
+- **Mező validációs hiba:** a mező **alatt**, `.error-message` — piros félkövér (`AppView` Admin Form + `style.css`)
 
 ### Name mező — azonnali fókusz (kötelező, **minden** Admin form)
 
@@ -582,7 +736,7 @@ Ha belongsToMany van A↔B között, **mindkét** formon legyen multiple Select2
 | Lista | `setFormOptions()` → `find('list')` + `orderBy` name ASC |
 | Mentés | `patchEntity(..., ['associated' => ['Related']])` |
 | Üres kijelölés | ha nincs `_ids` a POST-ban → `['_ids' => []]` (összes join törlése) |
-| Számláló | `*_count` = `count(array_filter($ids))` mentés előtt |
+| Számláló | CounterCache tartja; **ne** `*_count = count(_ids)` a controllerben |
 | Edit | `get($id, contain: ['Related'])` — előválasztás |
 | Select2 „+” | csak ha az új kapcsolt entitás **kevés kötelező mezővel** felvihető (pl. City = név). Sample-szerűen sok kötelező mező → **nincs** „+” / tags |
 
@@ -603,18 +757,21 @@ if (!isset($data['samples']['_ids'])) {
     $data['samples']['_ids'] = [];
 }
 $city = $this->Cities->patchEntity($city, $data, ['associated' => ['Samples']]);
-$city->sample_count = count(array_filter((array)($data['samples']['_ids'] ?? [])));
+// sample_count / city_count → CounterCache (CitiesSamplesTable), ne állítsd kézzel
 ```
 
-Demó: Samples form → Cities (+ create); Cities form → Samples (csak választás).
+Demó: Samples form → Cities (+ create); Cities form → Samples (csak választás).  
+Parent (hasMany) modal / `parentGet` / Parents `recordGet`: ugyanez a **Sample list** `[{id,name}]` + `relatedLinkFields.samples` minta.
 
 ### Számmezők — locale / i18n (kötelező)
 
-Admin locale `hu_HU` → tizedes **`,`**, ezres **szóköz** (pl. `1 234,56`).  
-**Ne** hardkódold az angol inputmaskot (`radixPoint: '.'`, `groupSeparator: ','`) — abból mentéskor számjegyvesztés lesz (`1,234.56` → ORM `1`).
+Admin locale: `App.adminLocale` (éles `hu_HU` → tizedes **`,`**, ezres **szóköz**, pl. `1 234,56`).  
+**Ne** hardkódold az angol inputmaskot (`radixPoint: '.'`, `groupSeparator: ','`) — abból mentéskor számjegyvesztés lesz.
 
 1. Form config: `'numberFormat' => LocaleNumberParser::jsConfig()`
-2. Mezők: `.js-input-decimal` / `.js-input-integer`
+2. Mezők: **`LocaleNumberParser::formIntegerOptions($entity->field)`** / **`formDecimalOptions($entity->field, 2)`** — class, locale value, placeholder, `type=text`. (Legacy: `.js-input-integer` / `.js-input-decimal` + kézi `format()`.)
+3. **Ne** állíts `inputmode="decimal"|"numeric"` a templateben. A `form.js` `inputmode: 'text'`-et kényszerít; inputmask: ezres csoport (`groupSize: 3`), tizedes a `numberFormat.decimal` szerint.
+4. **Minden** Admin form, ahol van számmező: `/plugins/inputmask/jquery.inputmask.min` + `'numberFormat' => LocaleNumberParser::jsConfig()`.
 3. Value megjelenítés: `LocaleNumberParser::format($value, decimals: 2|0)`
 4. Mentés: `NormalizeLocalizedNumberMiddleware` → kanonikus `1234.56`
 

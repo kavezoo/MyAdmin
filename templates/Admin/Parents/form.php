@@ -4,7 +4,22 @@
  * @var \App\Model\Entity\ParentRecord $parent
  */
 $this->Html->css(['pages/form'], ['block' => true]);
-$this->Html->script(['pages/form'], ['block' => 'scriptBottom']);
+
+$config = [
+	'indexUrl' => $this->Url->build(['action' => 'index']),
+	'numberFormat' => \App\Utility\LocaleNumberParser::jsConfig(),
+];
+$this->Html->scriptBlock(
+	'window.MyAdmin = window.MyAdmin || {}; window.MyAdmin.config = Object.assign(window.MyAdmin.config || {}, '
+	. json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+	. ');',
+	['block' => 'script']
+);
+$this->Html->script([
+	'/plugins/inputmask/jquery.inputmask.min',
+	'pages/form',
+], ['block' => 'scriptBottom']);
+
 $isEdit = !$parent->isNew();
 ?>
 <div class="row">
@@ -28,10 +43,9 @@ $isEdit = !$parent->isNew();
 							<?= $this->Form->control('name', ['label' => false, 'class' => 'form-control', 'id' => 'name', 'autofocus' => true]) ?>
 						</div>
 					</div>
-					<div class="form-group row mb-3">
-						<label for="pos" class="col-sm-3 col-md-2 col-form-label"><?= __('Position:') ?></label>
-						<div class="col-12 col-md-10 col-xl-3">
-							<?= $this->Form->control('pos', ['label' => false, 'class' => 'form-control', 'id' => 'pos']) ?>
+					<div class="row">
+						<div class="col-12 col-xxl-11">
+							<hr class="my-4">
 						</div>
 					</div>
 					<div class="form-group row mb-3">
@@ -41,13 +55,27 @@ $isEdit = !$parent->isNew();
 								<?= $this->Form->checkbox('visible', ['class' => 'form-check-input', 'id' => 'visible']) ?>
 								<label class="form-check-label" for="visible"><?= __('Visible') ?></label>
 							</div>
+							<?= $this->element('admin/field_error', ['field' => 'visible']) ?>
+						</div>
+					</div>
+					<div class="form-group row mb-3">
+						<label for="pos" class="col-sm-3 col-md-2 col-form-label"><?= __('Position:') ?></label>
+						<div class="col-12 col-md-10 col-xl-3">
+							<?= $this->Form->control('pos', \App\Utility\LocaleNumberParser::formIntegerOptions(
+								$parent->pos,
+								['id' => 'pos']
+							)) ?>
 						</div>
 					</div>
 				<?= $this->Form->end() ?>
 			</div>
 			<div class="card-footer">
-				<button type="submit" form="form-horizontal" class="btn btn-success"><span class="btn-label"><i class="fa fa-save"></i></span><?= __('Save') ?></button>
-				<a href="<?= $this->Url->build(['action' => 'index']) ?>" class="btn btn-outline-secondary ms-3"><span class="btn-label"><i class="fa fa-times"></i></span><?= __('Cancel') ?></a>
+				<div class="row">
+					<div class="col-12 col-md-10 col-xxl-9 offset-md-2">
+						<button type="submit" form="form-horizontal" class="btn btn-success"><span class="btn-label"><i class="fa fa-save"></i></span><?= __('Save') ?></button>
+						<a href="<?= $this->Url->build(['action' => 'index']) ?>" class="btn btn-outline-secondary ms-3"><span class="btn-label"><i class="fa fa-times"></i></span><?= __('Cancel') ?></a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

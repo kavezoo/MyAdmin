@@ -129,8 +129,6 @@ $this->Html->scriptBlock(
 	['block' => 'script']
 );
 $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
-
-$paging = $this->Paginator->params();
 ?>
 <div class="row mt-3">
 	<div class="col-12 p-2 pt-0">
@@ -143,9 +141,7 @@ $paging = $this->Paginator->params();
 					<?php endif; ?>
 				</div>
 				<div class="float-right d-flex align-items-center gap-2">
-					<div class="table-search">
-						<input type="search" class="form-control form-control-sm table-search-input" id="table-search-input" name="table_search" placeholder="<?= h(__('Search...')) ?>" autocomplete="off">
-					</div>
+					<?= $this->element('admin/table_search') ?>
 					<?= $this->element('admin/index_pagination') ?>
 				</div>
 				<div class="clearfix"></div>
@@ -203,13 +199,13 @@ $paging = $this->Paginator->params();
 								<?php if ($showTimestampColumn): ?>
 									<td class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
 										<?php if ($showCreatedColumn): ?>
-											<?= $city->created ? h($city->created->format('Y.m.d. H:i')) : '' ?>
+											<?= $city->created ? h(\App\Utility\LocaleDateParser::format($city->created, 'datetime_short')) : '' ?>
 										<?php endif; ?>
 										<?php if ($showCreatedColumn && $showModifiedColumn && $city->modified): ?>
 											<br>
 										<?php endif; ?>
 										<?php if ($showModifiedColumn): ?>
-											<?= $city->modified ? h($city->modified->format('Y.m.d. H:i')) : '' ?>
+											<?= $city->modified ? h(\App\Utility\LocaleDateParser::format($city->modified, 'datetime_short')) : '' ?>
 										<?php endif; ?>
 									</td>
 								<?php endif; ?>
@@ -251,9 +247,11 @@ $paging = $this->Paginator->params();
 										]) ?>
 										<?= $this->Form->end() ?>
 									<?php else: ?>
-										<a role="button" href="#" class="btn btn-outline-danger disabled" aria-disabled="true" tabindex="-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
-											<i class="fa fa-trash"></i>
-										</a>
+										<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+											<a role="button" href="#" class="btn btn-outline-secondary disabled" tabindex="-1" aria-disabled="true">
+												<i class="fa fa-trash"></i>
+											</a>
+										</span>
 									<?php endif; ?>
 								</td>
 							</tr>
@@ -265,18 +263,7 @@ $paging = $this->Paginator->params();
 				</table>
 			</div>
 			<div class="card-footer">
-				<div class="float-left text-muted">
-					<?php if (!empty($paging['count'])): ?>
-						<strong><?= (int)($paging['start'] ?? 0) ?>–<?= (int)($paging['end'] ?? 0) ?></strong>
-						/ <strong><?= (int)$paging['count'] ?></strong> <?= __('records') ?>
-						&nbsp;|&nbsp;
-						<strong><?= (int)($paging['page'] ?? 1) ?></strong>. <?= __('page') ?> / <strong><?= (int)($paging['pageCount'] ?? 1) ?></strong>
-					<?php else: ?>
-						<strong>0</strong> <?= __('records') ?>
-					<?php endif; ?>
-				</div>
-				<div class="float-right"><?= $this->element('admin/index_pagination') ?></div>
-				<div class="clearfix"></div>
+				<?= $this->element('admin/index_footer') ?>
 			</div>
 		</div>
 	</div>

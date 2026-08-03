@@ -53,6 +53,8 @@ return [
         'namespace' => 'App',
         'encoding' => env('APP_ENCODING', 'UTF-8'),
         'defaultLocale' => env('APP_DEFAULT_LOCALE', 'hu_HU'),
+        // Admin prefix locale (no URL lang segment). Éles: 'hu_HU'. Ideiglenes EN teszt: 'en_US'.
+        'adminLocale' => env('APP_ADMIN_LOCALE', 'en_UK'),
         'defaultTimezone' => env('APP_DEFAULT_TIMEZONE', 'UTC'),
         'base' => false,
         'dir' => 'src',

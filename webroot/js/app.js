@@ -27,12 +27,84 @@
 	};
 
 	/**
-	 * SweetAlert2 delete confirmation.
+	 * Bootstrap 5 Modal FocusTrap ütközik a SweetAlert2-vel (fókusz visszarántás).
+	 * Swal megnyitás előtt deaktiváljuk, bezáráskor vissza.
+	 *
+	 * @returns {Array<{activate: Function}>}
+	 */
+	App.pauseBootstrapModalFocusTraps = function () {
+		var paused = [];
+		document.querySelectorAll('.modal.show').forEach(function (el) {
+			var instance = typeof bootstrap !== 'undefined' && bootstrap.Modal
+				? bootstrap.Modal.getInstance(el)
+				: null;
+			if (instance && instance._focustrap && typeof instance._focustrap.deactivate === 'function') {
+				instance._focustrap.deactivate();
+				paused.push(instance._focustrap);
+			}
+		});
+		return paused;
+	};
+
+	App.resumeBootstrapModalFocusTraps = function (paused) {
+		(paused || []).forEach(function (trap) {
+			if (trap && typeof trap.activate === 'function') {
+				trap.activate();
+			}
+		});
+	};
+
+	/**
+	 * SweetAlert2 a Bootstrap modalok fölött (z-index + focus trap).
+	 *
+	 * @param {object} swalOptions Swal.fire options
+	 * @returns {Promise}
+	 */
+	App.swal = function (swalOptions) {
+		swalOptions = swalOptions || {};
+		var paused = App.pauseBootstrapModalFocusTraps();
+		var resumed = false;
+		var resumeOnce = function () {
+			if (resumed) {
+				return;
+			}
+			resumed = true;
+			App.resumeBootstrapModalFocusTraps(paused);
+		};
+		var userDidOpen = swalOptions.didOpen;
+		var userDidDestroy = swalOptions.didDestroy;
+
+		swalOptions.heightAuto = swalOptions.heightAuto === true ? true : false;
+		swalOptions.didOpen = function (popup) {
+			var container = typeof Swal.getContainer === 'function' ? Swal.getContainer() : null;
+			if (container) {
+				container.style.zIndex = '20000';
+			}
+			if (typeof userDidOpen === 'function') {
+				userDidOpen(popup);
+			}
+		};
+		swalOptions.didDestroy = function () {
+			resumeOnce();
+			if (typeof userDidDestroy === 'function') {
+				userDidDestroy();
+			}
+		};
+
+		return Swal.fire(swalOptions).finally(function () {
+			resumeOnce();
+		});
+	};
+
+	/**
+	 * SweetAlert2 delete confirmation (question icon).
 	 */
 	App.confirmDelete = function (options) {
 		options = options || {};
+		var paused = App.pauseBootstrapModalFocusTraps();
+
 		return Swal.fire({
-			icon: options.icon || 'warning',
+			icon: options.icon || 'question',
 			title: options.title || t('deleteTitle', 'Delete'),
 			text: options.text || t('deleteConfirm', 'Do you really want to delete the selected record?'),
 			showCancelButton: true,
@@ -41,12 +113,23 @@
 			cancelButtonText: options.cancelButtonText || t('cancelButton', 'Cancel'),
 			confirmButtonColor: options.confirmButtonColor || '#dc3545',
 			cancelButtonColor: options.cancelButtonColor || '#6c757d',
-			reverseButtons: true
+			reverseButtons: true,
+			heightAuto: false,
+			didOpen: function () {
+				var container = typeof Swal.getContainer === 'function' ? Swal.getContainer() : null;
+				if (container) {
+					container.style.zIndex = '20000';
+				}
+			}
 		}).then(function (result) {
+			App.resumeBootstrapModalFocusTraps(paused);
 			if (result.isConfirmed && typeof options.onConfirm === 'function') {
 				options.onConfirm();
 			}
 			return result;
+		}).catch(function (err) {
+			App.resumeBootstrapModalFocusTraps(paused);
+			throw err;
 		});
 	};
 
@@ -66,7 +149,7 @@
 			? t('errorTitle', 'Error')
 			: (icon === 'success' ? t('successTitle', 'Success') : t('infoTitle', 'Info'));
 
-		return Swal.fire({
+		return App.swal({
 			icon: icon,
 			title: options.title || defaultTitle,
 			text: options.text || options.message || '',
@@ -84,13 +167,115 @@
 		});
 	};
 
+	/**
+	 * Flash → SweetAlert2 (egyszerre egy modal; több Flash SWAL sorban jelenik meg).
+	 *
+	 * @param {object} options { icon, title, html|text, confirmButtonText }
+	 * @returns {Promise}
+	 */
+	App.flashSwal = function (options) {
+		options = options || {};
+		var payload = {
+			icon: options.icon || 'info',
+			title: options.title || '',
+			confirmButtonText: options.confirmButtonText || t('okButton', 'OK'),
+			confirmButtonColor: options.confirmButtonColor || '#0d6efd',
+			heightAuto: false
+		};
+		if (typeof options.html !== 'undefined' && options.html !== null && options.html !== '') {
+			payload.html = options.html;
+		} else {
+			payload.text = options.text || options.message || '';
+		}
+
+		App._flashSwalChain = (App._flashSwalChain || Promise.resolve()).catch(function () {
+			return undefined;
+		}).then(function () {
+			return App.swal(payload);
+		});
+
+		return App._flashSwalChain;
+	};
+
+	/**
+	 * Place caret at end of a text/search input and focus it.
+	 *
+	 * @param {HTMLInputElement|null} el
+	 * @returns {void}
+	 */
+	App.focusInputCaretEnd = function (el) {
+		if (!el || typeof el.value !== 'string' || el.value === '') {
+			return;
+		}
+		el.focus();
+		var len = el.value.length;
+		if (typeof el.setSelectionRange === 'function') {
+			try {
+				el.setSelectionRange(len, len);
+			} catch (err) {
+				/* ignore — some browsers restrict type=search */
+			}
+		}
+	};
+
+	/**
+	 * After a search submit: focus the active search field with caret at end of query.
+	 * Prefers page search, then index table search (not the header field alone).
+	 *
+	 * @returns {void}
+	 */
+	App.focusActiveSearchField = function () {
+		var page = document.querySelector('.search-page-input');
+		if (page && page.value) {
+			App.focusInputCaretEnd(page);
+			return;
+		}
+		var table = document.querySelector('#table-search-input');
+		if (table && table.value) {
+			App.focusInputCaretEnd(table);
+		}
+	};
+
+	/**
+	 * Fixed “back to top” control — visible only after scrolling down.
+	 *
+	 * @returns {void}
+	 */
+	App.initScrollTop = function () {
+		var btn = document.getElementById('btn-scroll-top');
+		if (!btn) {
+			return;
+		}
+		var threshold = 200;
+		var toggle = function () {
+			var y = window.scrollY || document.documentElement.scrollTop || 0;
+			if (y > threshold) {
+				btn.classList.add('is-visible');
+			} else {
+				btn.classList.remove('is-visible');
+			}
+		};
+		window.addEventListener('scroll', toggle, { passive: true });
+		toggle();
+		btn.addEventListener('click', function () {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		});
+	};
+
 	$(function () {
 		App.initTooltips();
 
-		$('#btn-delete').on('click', function (e) {
+		// Keresés után: kurzor a keresőmezőben, a szöveg végén (autofocus után)
+		window.setTimeout(function () {
+			App.focusActiveSearchField();
+		}, 0);
+
+		App.initScrollTop();
+
+		$(document).on('click', '#btn-delete', function (e) {
 			e.preventDefault();
 			var $btn = $(this);
-			if ($btn.hasClass('disabled') || $btn.attr('aria-disabled') === 'true') {
+			if ($btn.prop('disabled') || $btn.hasClass('disabled') || $btn.attr('aria-disabled') === 'true') {
 				return;
 			}
 			var formSel = $btn.attr('data-delete-form') || '#delete-form-current';

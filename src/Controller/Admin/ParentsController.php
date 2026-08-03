@@ -13,10 +13,10 @@ use Cake\Http\Response;
 class ParentsController extends AppController
 {
     /** @var int Index rows per page */
-    protected int $indexLimit = 10;
+    protected int $indexLimit = 100;
 
     /** @var int Cap for `?limit=` (abuse / oversized requests) */
-    protected int $indexMaxLimit = 100;
+    protected int $indexMaxLimit = 1000;
 
     /**
      * @return void
@@ -34,7 +34,12 @@ class ParentsController extends AppController
         $this->set('title', __('Parents'));
         $this->viewBuilder()->setVar('breadcrumb', __('Parents'));
 
-        $parents = $this->paginate($this->Parents->find(), $this->indexPaginateOptions([
+        $redirect = $this->applyIndexListState('Parents');
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $paginateOptions = $this->indexPaginateOptions([
             'sortableFields' => [
                 'id',
                 'name',
@@ -44,7 +49,13 @@ class ParentsController extends AppController
                 'created',
                 'modified',
             ],
-        ]));
+        ]);
+        $query = $this->applyIndexSearch($this->Parents->find(), $this->Parents);
+        $redirect = $this->resolveIndexPageForLastVisited('Parents', $query, $paginateOptions);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+        $parents = $this->paginate($query, $paginateOptions);
         $this->setLastVisitedForIndex('Parents');
         $this->set(compact('parents'));
     }
@@ -69,7 +80,7 @@ class ParentsController extends AppController
                     $this->rememberLastVisited('Parents', $parent->id);
                     $this->Flash->success(__('The parent has been saved.'));
 
-                    return $this->redirect(['action' => 'index']);
+                    return $this->redirectToIndexList('Parents');
                 }
             } catch (\Throwable $e) {
                 // Unexpected errors → user-facing flash, not raw PHP
@@ -99,7 +110,7 @@ class ParentsController extends AppController
                     $this->rememberLastVisited('Parents', $parent->id);
                     $this->Flash->success(__('The parent has been saved.'));
 
-                    return $this->redirect(['action' => 'index']);
+                    return $this->redirectToIndexList('Parents');
                 }
             } catch (\Throwable $e) {
                 // Unexpected errors → user-facing flash, not raw PHP
@@ -120,7 +131,11 @@ class ParentsController extends AppController
      */
     public function view(?string $id = null)
     {
-        $parent = $this->Parents->get($id, contain: ['Samples']);
+        $parent = $this->Parents->get($id, contain: [
+            'Samples' => function ($q) {
+                return $q->orderBy(['Samples.name' => 'ASC']);
+            },
+        ]);
         $this->rememberLastVisited('Parents', $parent->id);
         $this->set(compact('parent'));
         $this->setCanDeleteFlag($this->Parents, $parent);
@@ -150,7 +165,9 @@ class ParentsController extends AppController
         $this->request->allowMethod(['get']);
 
         try {
-            $parent = $this->Parents->get($id);
+            $parent = $this->Parents->get($id, contain: [
+                'Samples' => $this->containRelatedForModal('Samples'),
+            ]);
         } catch (\Throwable $e) {
             return $this->response
                 ->withStatus(404)
@@ -173,8 +190,9 @@ class ParentsController extends AppController
                     'pos' => \App\Utility\LocaleNumberParser::format($parent->pos, decimals: 0),
                     'visible' => (bool)$parent->visible,
                     'sample_count' => \App\Utility\LocaleNumberParser::formatCount($parent->sample_count, decimals: 0),
-                    'created' => $parent->created ? $parent->created->format('Y.m.d. H:i') : '',
-                    'modified' => $parent->modified ? $parent->modified->format('Y.m.d. H:i') : '',
+                    'samples' => $this->relatedNameLinksForModal($parent->samples ?? []),
+                    'created' => $parent->created ? \App\Utility\LocaleDateParser::format($parent->created, 'datetime_short') : '',
+                    'modified' => $parent->modified ? \App\Utility\LocaleDateParser::format($parent->modified, 'datetime_short') : '',
                     'can_delete' => $this->Parents->canDelete($parent),
                 ],
             ], JSON_UNESCAPED_UNICODE));

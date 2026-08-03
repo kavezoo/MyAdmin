@@ -86,6 +86,22 @@
 				}
 				return '—';
 			}
+			// Never coerce objects/arrays with String() → "[object Object],…"
+			if (Array.isArray(value)) {
+				return $('<div>').text(value.map(function (item) {
+					if (item == null) {
+						return '';
+					}
+					if (typeof item === 'object') {
+						return item.name != null ? String(item.name)
+							: (item.content != null ? String(item.content) : JSON.stringify(item));
+					}
+					return String(item);
+				}).filter(Boolean).join(', ')).html();
+			}
+			if (typeof value === 'object') {
+				return $('<div>').text(JSON.stringify(value)).html();
+			}
 			return $('<div>').text(String(value)).html();
 		};
 
@@ -102,6 +118,69 @@
 						&& item.id != null
 						&& item.name != null;
 				});
+		};
+
+		var translationLabel = function (item) {
+			if (!item || typeof item !== 'object') {
+				return '';
+			}
+			if (item.name != null && String(item.name) !== '') {
+				return String(item.name);
+			}
+			if (item.content != null && String(item.content) !== '') {
+				return String(item.content);
+			}
+			return '';
+		};
+
+		/**
+		 * Country i18n rows: [{ locale, name|content, visible? }, …]
+		 * Also accepts Cake `_translations` map: { hu_HU: { name, locale }, … }
+		 */
+		var normalizeTranslationList = function (value) {
+			var list = [];
+			if (Array.isArray(value)) {
+				list = value;
+			} else if (value && typeof value === 'object') {
+				Object.keys(value).forEach(function (localeKey) {
+					var item = value[localeKey];
+					if (!item || typeof item !== 'object') {
+						list.push({ locale: localeKey, name: String(item) });
+						return;
+					}
+					list.push({
+						locale: item.locale != null ? item.locale : localeKey,
+						name: translationLabel(item),
+						visible: item.visible
+					});
+				});
+			}
+			return list.filter(function (item) {
+				return item
+					&& typeof item === 'object'
+					&& item.locale != null
+					&& translationLabel(item) !== '';
+			});
+		};
+
+		var isTranslationList = function (value) {
+			return normalizeTranslationList(value).length > 0
+				&& (
+					Array.isArray(value)
+					|| (value && typeof value === 'object' && !Array.isArray(value))
+				)
+				&& !(Array.isArray(value) && isRelatedLinkList(value));
+		};
+
+		var renderTranslationList = function (value) {
+			return normalizeTranslationList(value).map(function (item) {
+				var visible = item.visible === undefined ? true : !!item.visible;
+				var icon = visible
+					? '<i class="fa fa-check text-success"></i>'
+					: '<i class="fa fa-times text-danger"></i>';
+				var line = $('<div>').text(String(item.locale) + ': ' + translationLabel(item)).html();
+				return icon + ' <span class="text-dark">' + line + '</span>';
+			}).join('<br>');
 		};
 
 		var renderRelatedLinkList = function (key, items) {
@@ -143,6 +222,8 @@
 				if (isRelatedLinkList(raw)) {
 					cell = renderRelatedLinkList(key, raw);
 					ddClass = ' class="record-related-list"';
+				} else if (key === 'translations' || isTranslationList(raw)) {
+					cell = renderTranslationList(raw) || '—';
 				} else if (Array.isArray(raw) && raw.length === 0) {
 					cell = '—';
 				} else {
@@ -185,6 +266,7 @@
 		var triggerDeleteForm = function (recordId, options) {
 			options = options || {};
 			var prefix = options.deleteFormPrefix || '';
+			var deleteUrl = options.deleteUrl || '';
 
 			if (options.deleteFormSelector) {
 				var $explicit = $(options.deleteFormSelector);
@@ -194,23 +276,31 @@
 				}
 			}
 
+			// Kapcsolt entitás (prefix): soha ne a saját modul #delete-form-{id}-jét
 			if (prefix) {
 				var $prefixed = $('#delete-form-' + prefix + '-' + recordId);
 				if ($prefixed.length && $prefixed.is('form')) {
 					$prefixed.trigger('submit');
 					return;
 				}
-			}
-
-			// Kapcsolt entitás: ne a saját modul #delete-form-{id}-jét használd
-			if (options.deleteUrl) {
-				submitPostDelete(options.deleteUrl, recordId);
+				if (deleteUrl) {
+					submitPostDelete(deleteUrl, recordId);
+					return;
+				}
+				App.alertError(
+					(msg.deleteFormNotFound || msg.deleteFormMissing || 'Delete form not found. ID: {0}').replace('{0}', recordId)
+				);
 				return;
 			}
 
+			// Saját modul: rejtett form, majd deleteUrl fallback
 			var $form = $('#delete-form-' + recordId);
 			if ($form.length && $form.is('form')) {
 				$form.trigger('submit');
+				return;
+			}
+			if (deleteUrl) {
+				submitPostDelete(deleteUrl, recordId);
 				return;
 			}
 
@@ -223,12 +313,42 @@
 			if (!$btn || !$btn.length) {
 				return;
 			}
+			// Törölhető: btn-danger. Nem törölhető: btn-secondary + disabled; tooltip a wrapperen.
+			var blockedTitle = msg.cannotDeleteHasChildren
+				|| 'Cannot delete this record because it has related child records.';
+
+			if (!$btn.parent().hasClass('js-delete-btn-wrap')) {
+				$btn.wrap('<span class="d-inline-block js-delete-btn-wrap"></span>');
+			}
+			var $wrap = $btn.parent('.js-delete-btn-wrap');
+			var tip = bootstrap.Tooltip.getInstance($wrap[0]);
+			if (tip) {
+				tip.dispose();
+			}
+			$wrap.removeAttr('title data-bs-original-title data-bs-toggle data-bs-placement');
+
 			if (canDelete) {
-				$btn.prop('disabled', false).removeClass('disabled').removeAttr('aria-disabled')
-					.attr('title', '');
+				$btn.prop('disabled', false)
+					.removeClass('disabled btn-secondary')
+					.addClass('btn-danger')
+					.removeAttr('aria-disabled')
+					.attr('title', '')
+					.removeAttr('data-bs-original-title');
 			} else {
-				$btn.prop('disabled', true).addClass('disabled').attr('aria-disabled', 'true')
-					.attr('title', msg.cannotDeleteHasChildren || 'Cannot delete this record because it has related child records.');
+				$btn.prop('disabled', true)
+					.removeClass('btn-danger')
+					.addClass('btn-secondary disabled')
+					.attr('aria-disabled', 'true')
+					.attr('title', '');
+				$wrap.attr({
+					'title': blockedTitle,
+					'data-bs-toggle': 'tooltip',
+					'data-bs-placement': 'top'
+				});
+				bootstrap.Tooltip.getOrCreateInstance($wrap[0], {
+					placement: 'top',
+					trigger: 'hover focus'
+				});
 			}
 		};
 
@@ -301,13 +421,45 @@
 			window.location.href = entityUrl(editUrl, currentRecordId);
 		});
 
-		$('#btn-record-delete').on('click', function () {
-			if (!currentRecordId || $(this).prop('disabled') || $(this).hasClass('disabled')) {
+		$(document).on('click', '#btn-record-delete', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			if (!currentRecordId) {
+				return;
+			}
+			var $btn = $(this);
+			if ($btn.prop('disabled') || $btn.hasClass('disabled') || $btn.attr('aria-disabled') === 'true') {
 				return;
 			}
 			App.confirmDelete({
 				onConfirm: function () {
-					triggerDeleteForm(currentRecordId);
+					triggerDeleteForm(currentRecordId, {
+						deleteUrl: cfg.deleteUrl || ''
+					});
+				}
+			});
+		});
+
+		$(document).on('click', '#btn-linked-delete', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			if (!linkedContext.id) {
+				return;
+			}
+			var $btn = $(this);
+			if ($btn.prop('disabled') || $btn.hasClass('disabled') || $btn.attr('aria-disabled') === 'true') {
+				return;
+			}
+			App.confirmDelete({
+				onConfirm: function () {
+					var prefix = linkedContext.deleteFormPrefix || '';
+					if (!prefix && linkedContext.deleteUrl) {
+						prefix = 'linked';
+					}
+					triggerDeleteForm(linkedContext.id, {
+						deleteFormPrefix: prefix,
+						deleteUrl: linkedContext.deleteUrl || ''
+					});
 				}
 			});
 		});
@@ -317,13 +469,21 @@
 			e.stopPropagation();
 
 			var $btn = $(this);
+			if ($btn.prop('disabled') || $btn.hasClass('disabled') || $btn.attr('aria-disabled') === 'true') {
+				return;
+			}
 			var tip = bootstrap.Tooltip.getInstance($btn[0]);
 			if (tip) {
 				tip.hide();
 			}
 
-			var recordId = $btn.attr('data-id') || $btn.closest('tr').attr('data-id');
+			var $row = $btn.closest('tr');
+			var recordId = $btn.attr('data-id') || $row.attr('data-id');
 			if (!recordId) {
+				return;
+			}
+
+			if ($row.attr('data-can-delete') === '0') {
 				return;
 			}
 
@@ -332,6 +492,8 @@
 			if ($table.length) {
 				deleteOpts.deleteFormPrefix = $table.attr('data-delete-form-prefix') || '';
 				deleteOpts.deleteUrl = $table.attr('data-delete-url') || '';
+			} else {
+				deleteOpts.deleteUrl = cfg.deleteUrl || '';
 			}
 
 			App.confirmDelete({
@@ -354,7 +516,8 @@
 			viewUrl: '',
 			deleteUrl: '',
 			deleteFormPrefix: '',
-			fieldLabels: null
+			fieldLabels: null,
+			sourceTable: ''
 		};
 
 		var categoryFieldLabels = cfg.categoryFieldLabels || {
@@ -394,7 +557,8 @@
 				deleteFormPrefix: pick('data-delete-form-prefix', ''),
 				title: pick('data-title', msg.parentDetails || 'Parent details'),
 				fieldLabels: resolveLabels(labelsKey, categoryFieldLabels),
-				labelsKey: labelsKey
+				labelsKey: labelsKey,
+				sourceTable: $el.attr('data-source-table') || ''
 			};
 		};
 
@@ -411,16 +575,24 @@
 				viewUrl: options.viewUrl || parentViewUrl,
 				deleteUrl: options.deleteUrl || parentDeleteUrl || '',
 				deleteFormPrefix: options.deleteFormPrefix || '',
-				fieldLabels: options.fieldLabels || categoryFieldLabels
+				fieldLabels: options.fieldLabels || categoryFieldLabels,
+				sourceTable: options.sourceTable || ''
 			};
 
 			$pendingLastVisitedRow = (options.$row && options.$row.length) ? options.$row : null;
 
-			$modalLinkedRecordViewLabel.text((options.title || msg.parentDetails || 'Parent details') + ' #' + recordId);
+			var modalTitleBase = options.title || msg.parentDetails || 'Parent details';
+			if (linkedContext.sourceTable) {
+				$modalLinkedRecordViewLabel.text(linkedContext.sourceTable + ' #' + recordId);
+			} else {
+				$modalLinkedRecordViewLabel.text(modalTitleBase + ' #' + recordId);
+			}
 			$modalLinkedRecordViewLoading.removeClass('d-none');
 			$modalLinkedRecordViewError.addClass('d-none').text('');
 			$modalLinkedRecordViewFields.addClass('d-none').empty();
-			setModalDeleteEnabled($('#btn-linked-delete'), resolveCanDelete(null, options.$row));
+			// Linked entitás ≠ a tábla sor entitása (pl. Sample sor → Parent modal):
+			// ne a sor data-can-delete-jét használd, csak a JSON can_delete-et.
+			setModalDeleteEnabled($('#btn-linked-delete'), true);
 
 			var modal = bootstrap.Modal.getOrCreateInstance($modalLinkedRecordView[0]);
 			modal.show();
@@ -436,9 +608,21 @@
 						.text((res && res.message) ? res.message : (msg.recordLoadFailed || 'Failed to load the record.'));
 					return;
 				}
-				renderFieldsInto($modalLinkedRecordViewFields, res.record, linkedContext.fieldLabels);
+				var record = res.record;
+				var labels = linkedContext.fieldLabels || {};
+				if (linkedContext.sourceTable) {
+					var withTable = { source_table: msg.table || 'Table' };
+					Object.keys(labels).forEach(function (key) {
+						withTable[key] = labels[key];
+					});
+					labels = withTable;
+					if (typeof record.source_table === 'undefined') {
+						record = Object.assign({ source_table: linkedContext.sourceTable }, record);
+					}
+				}
+				renderFieldsInto($modalLinkedRecordViewFields, record, labels);
 				$modalLinkedRecordViewFields.removeClass('d-none');
-				setModalDeleteEnabled($('#btn-linked-delete'), resolveCanDelete(res.record, options.$row));
+				setModalDeleteEnabled($('#btn-linked-delete'), resolveCanDelete(res.record, null));
 			}).fail(function (xhr) {
 				var message = msg.recordLoadFailed || 'Failed to load the record.';
 				if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
@@ -471,6 +655,7 @@
 				deleteUrl: resolved.deleteUrl,
 				deleteFormPrefix: resolved.deleteFormPrefix,
 				fieldLabels: resolved.fieldLabels,
+				sourceTable: resolved.sourceTable || '',
 				$row: $link.closest('tr')
 			});
 		});
@@ -487,20 +672,6 @@
 				return;
 			}
 			window.location.href = entityUrl(linkedContext.editUrl, linkedContext.id);
-		});
-
-		$('#btn-linked-delete').on('click', function () {
-			if (!linkedContext.id || $(this).prop('disabled') || $(this).hasClass('disabled')) {
-				return;
-			}
-			App.confirmDelete({
-				onConfirm: function () {
-					triggerDeleteForm(linkedContext.id, {
-						deleteFormPrefix: linkedContext.deleteFormPrefix,
-						deleteUrl: linkedContext.deleteUrl
-					});
-				}
-			});
 		});
 
 		$(document).on('dblclick', '.index-data-table tbody tr', function (e) {
@@ -574,5 +745,29 @@
 				}
 			});
 		}
+
+		// Scroll last-visited row just below breadcrumb (~ mt-3 gap)
+		// Skip when an active table search keeps focus in the search field (caret at end).
+		var scrollToLastVisited = function () {
+			var $search = $('#table-search-input');
+			if ($search.length && String($search.val() || '').trim() !== '') {
+				return;
+			}
+			var $row = $('.index-data-table:not(.related-records-table) tbody tr.last-visited').first();
+			if (!$row.length) {
+				return;
+			}
+			var headerH = $('.headerbar').outerHeight() || 0;
+			var crumbH = $('.breadcrumb-holder').outerHeight() || 0;
+			var gap = 16; // ~ Bootstrap mt-3 (1rem)
+			var top = $row.offset().top - headerH - crumbH - gap;
+			if (top < 0) {
+				top = 0;
+			}
+			window.scrollTo({ top: top, behavior: 'smooth' });
+		};
+
+		// After layout paint (fonts / table widths)
+		window.setTimeout(scrollToLastVisited, 50);
 	});
 })(window, jQuery);

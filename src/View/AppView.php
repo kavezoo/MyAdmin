@@ -20,22 +20,36 @@ use Cake\View\View;
 /**
  * Application View
  *
- * Your application's default view class
- *
  * @link https://book.cakephp.org/5/en/views.html#the-app-view
  */
 class AppView extends View
 {
     /**
-     * Initialization hook method.
-     *
-     * Use this method to add common initialization code like adding helpers.
-     *
-     * e.g. `$this->addHelper('Html');`
-     *
+     * @var array<string, mixed>
+     */
+    protected array $helpers = [
+        'Html',
+        'Flash',
+        'Form',
+        'Url',
+        'Paginator',
+    ];
+
+    /**
      * @return void
      */
     public function initialize(): void
     {
+        if ($this->getRequest()->getParam('prefix') === 'Admin') {
+            // Ensure field errors render under the input (red bold in style.css)
+            $this->Form->setTemplates([
+                'error' => '<div class="error-message" id="{{id}}">{{content}}</div>',
+                'errorList' => '<ul class="error-message-list mb-0 ps-3">{{content}}</ul>',
+                'errorItem' => '<li>{{text}}</li>',
+                'inputContainer' => '{{content}}',
+                'inputContainerError' => '{{content}}{{error}}',
+                'errorClass' => 'is-invalid',
+            ]);
+        }
     }
 }

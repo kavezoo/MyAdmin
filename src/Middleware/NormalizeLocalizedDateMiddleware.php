@@ -14,8 +14,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * Normalizes localized date / datetime / time strings in request body for DB save.
  *
- * Output formats: Y-m-d, Y-m-d H:i:s, H:i:s.
- * Order of day/month/year follows the current locale (with safe fallbacks).
+ * Accepts locale UI formats (Tempus / Intl / kézi), including Hungarian
+ * `2024. 03. 15.` (spaces). Output: Y-m-d, Y-m-d H:i:s, H:i:s.
+ *
+ * Order of day/month/year follows the current locale (with YMD/DMY/MDY fallbacks).
  */
 class NormalizeLocalizedDateMiddleware implements MiddlewareInterface
 {

@@ -9,7 +9,7 @@ $isForm = in_array($action, ['add', 'edit'], true);
 $isView = $action === 'view';
 $id = $this->request->getParam('pass.0');
 
-$indexUrl = $this->Url->build(['action' => 'index']);
+$indexUrl = $this->Url->build($this->get('indexListUrl') ?? ['action' => 'index']);
 $addUrl = $this->Url->build(['action' => 'add']);
 $editUrl = $id ? $this->Url->build(['action' => 'edit', $id]) : '#';
 $viewUrl = $id ? $this->Url->build(['action' => 'view', $id]) : '#';
@@ -63,9 +63,11 @@ $crumbTitle = $this->fetch('breadcrumb') ?: ($this->get('breadcrumb') ?? $contro
 							<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
 						</a>
 					<?php else: ?>
-						<a role="button" href="#" class="btn btn-danger disabled" id="btn-delete" aria-disabled="true" tabindex="-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
-							<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
-						</a>
+						<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+							<a role="button" href="#" class="btn btn-secondary disabled" id="btn-delete" tabindex="-1" aria-disabled="true">
+								<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
+							</a>
+						</span>
 					<?php endif; ?>
 				<?php endif; ?>
 			</div>

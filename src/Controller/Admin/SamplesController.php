@@ -13,10 +13,10 @@ use Cake\Http\Response;
 class SamplesController extends AppController
 {
     /** @var int Index rows per page */
-    protected int $indexLimit = 10;
+    protected int $indexLimit = 100;
 
     /** @var int Cap for `?limit=` (abuse / oversized requests) */
-    protected int $indexMaxLimit = 100;
+    protected int $indexMaxLimit = 1000;
 
     /**
      * @return void
@@ -34,10 +34,12 @@ class SamplesController extends AppController
         $this->set('title', __('Samples'));
         $this->viewBuilder()->setVar('breadcrumb', __('Samples'));
 
-        $query = $this->Samples->find()
-            ->contain(['Parents', 'Cities']);
+        $redirect = $this->applyIndexListState('Samples');
+        if ($redirect !== null) {
+            return $redirect;
+        }
 
-        $samples = $this->paginate($query, $this->indexPaginateOptions([
+        $paginateOptions = $this->indexPaginateOptions([
             'sortableFields' => [
                 'id',
                 'Parents.name',
@@ -54,7 +56,18 @@ class SamplesController extends AppController
                 'created',
                 'modified',
             ],
-        ]));
+        ]);
+
+        $query = $this->applyIndexSearch(
+            $this->Samples->find()->contain(['Parents', 'Cities']),
+            $this->Samples
+        );
+        $redirect = $this->resolveIndexPageForLastVisited('Samples', $query, $paginateOptions);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $samples = $this->paginate($query, $paginateOptions);
 
         $this->setLastVisitedForIndex('Samples');
         $this->set(compact('samples'));
@@ -72,16 +85,19 @@ class SamplesController extends AppController
 
         if ($this->request->is('post')) {
             try {
-                $sample = $this->Samples->patchEntity($sample, $this->request->getData(), [
+                $data = $this->request->getData();
+                if (!isset($data['cities']['_ids'])) {
+                    $data['cities']['_ids'] = [];
+                }
+                $sample = $this->Samples->patchEntity($sample, $data, [
                     'associated' => ['Cities'],
                 ]);
-                $this->normalizeCounters($sample);
 
                 if ($this->Samples->save($sample)) {
                     $this->rememberLastVisited('Samples', $sample->id);
                     $this->Flash->success(__('The sample has been saved.'));
 
-                    return $this->redirect(['action' => 'index']);
+                    return $this->redirectToIndexList('Samples');
                 }
             } catch (\Throwable $e) {
                 // Unexpected errors → user-facing flash, not raw PHP
@@ -107,16 +123,19 @@ class SamplesController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             try {
-                $sample = $this->Samples->patchEntity($sample, $this->request->getData(), [
+                $data = $this->request->getData();
+                if (!isset($data['cities']['_ids'])) {
+                    $data['cities']['_ids'] = [];
+                }
+                $sample = $this->Samples->patchEntity($sample, $data, [
                     'associated' => ['Cities'],
                 ]);
-                $this->normalizeCounters($sample);
 
                 if ($this->Samples->save($sample)) {
                     $this->rememberLastVisited('Samples', $sample->id);
                     $this->Flash->success(__('The sample has been saved.'));
 
-                    return $this->redirect(['action' => 'index']);
+                    return $this->redirectToIndexList('Samples');
                 }
             } catch (\Throwable $e) {
                 // Unexpected errors → user-facing flash, not raw PHP
@@ -176,9 +195,7 @@ class SamplesController extends AppController
         try {
             $sample = $this->Samples->get($id, contain: [
                 'Parents',
-                'Cities' => function ($q) {
-                    return $q->orderBy(['Cities.name' => 'ASC']);
-                },
+                'Cities' => $this->containRelatedForModal('Cities'),
             ]);
         } catch (\Throwable $e) {
             return $this->response
@@ -192,30 +209,22 @@ class SamplesController extends AppController
 
         $this->rememberLastVisited('Samples', $sample->id);
 
-        $cities = [];
-        foreach ($sample->cities ?? [] as $city) {
-            $cities[] = [
-                'id' => $city->id,
-                'name' => $city->name,
-            ];
-        }
-
         $record = [
             'id' => $sample->id,
             'parent' => $sample->parent->name ?? '',
             'name' => $sample->name,
             'szam' => \App\Utility\LocaleNumberParser::format($sample->szam, decimals: 0),
-            'netto' => \App\Utility\LocaleNumberParser::format($sample->netto, decimals: 2) . ' ' . \App\Utility\LocaleNumberParser::currencySymbol(),
-            'datum' => $sample->datum ? $sample->datum->format('Y.m.d.') : '',
-            'ido' => $sample->ido ? $sample->ido->format('H:i') : '',
-            'datumido' => $sample->datumido ? $sample->datumido->format('Y.m.d. H:i') : '',
+            'netto' => \App\Utility\LocaleNumberParser::formatCurrency($sample->netto, decimals: 2),
+            'datum' => $sample->datum ? \App\Utility\LocaleDateParser::format($sample->datum, 'date') : '',
+            'ido' => $sample->ido ? \App\Utility\LocaleDateParser::format($sample->ido, 'time_short') : '',
+            'datumido' => $sample->datumido ? \App\Utility\LocaleDateParser::format($sample->datumido, 'datetime_short') : '',
             'logikai' => (bool)$sample->logikai,
             'pos' => \App\Utility\LocaleNumberParser::format($sample->pos, decimals: 0),
             'visible' => (bool)$sample->visible,
             'city_count' => \App\Utility\LocaleNumberParser::formatCount($sample->city_count, decimals: 0),
-            'cities' => $cities,
-            'created' => $sample->created ? $sample->created->format('Y.m.d. H:i') : '',
-            'modified' => $sample->modified ? $sample->modified->format('Y.m.d. H:i') : '',
+            'cities' => $this->relatedNameLinksForModal($sample->cities ?? []),
+            'created' => $sample->created ? \App\Utility\LocaleDateParser::format($sample->created, 'datetime_short') : '',
+            'modified' => $sample->modified ? \App\Utility\LocaleDateParser::format($sample->modified, 'datetime_short') : '',
             'can_delete' => $this->Samples->canDelete($sample),
         ];
 
@@ -238,7 +247,9 @@ class SamplesController extends AppController
         $this->request->allowMethod(['get']);
 
         try {
-            $parent = $this->Samples->Parents->get($id);
+            $parent = $this->Samples->Parents->get($id, contain: [
+                'Samples' => $this->containRelatedForModal('Samples'),
+            ]);
         } catch (\Throwable $e) {
             return $this->response
                 ->withStatus(404)
@@ -261,8 +272,9 @@ class SamplesController extends AppController
                     'pos' => \App\Utility\LocaleNumberParser::format($parent->pos, decimals: 0),
                     'visible' => (bool)$parent->visible,
                     'sample_count' => \App\Utility\LocaleNumberParser::formatCount($parent->sample_count, decimals: 0),
-                    'created' => $parent->created ? $parent->created->format('Y.m.d. H:i') : '',
-                    'modified' => $parent->modified ? $parent->modified->format('Y.m.d. H:i') : '',
+                    'samples' => $this->relatedNameLinksForModal($parent->samples ?? []),
+                    'created' => $parent->created ? \App\Utility\LocaleDateParser::format($parent->created, 'datetime_short') : '',
+                    'modified' => $parent->modified ? \App\Utility\LocaleDateParser::format($parent->modified, 'datetime_short') : '',
                     'can_delete' => $this->fetchTable('Parents')->canDelete($parent),
                 ],
             ], JSON_UNESCAPED_UNICODE));
@@ -422,17 +434,5 @@ class SamplesController extends AppController
             ->toArray();
 
         $this->set(compact('parents', 'cities'));
-    }
-
-    /**
-     * city_count from selected cities. visible / logikai / pos: DB DEFAULT — do not invent PHP values.
-     *
-     * @param \App\Model\Entity\Sample $sample
-     * @return void
-     */
-    protected function normalizeCounters(\App\Model\Entity\Sample $sample): void
-    {
-        $cityIds = (array)$this->request->getData('cities._ids');
-        $sample->city_count = count(array_filter($cityIds));
     }
 }

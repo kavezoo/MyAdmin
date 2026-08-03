@@ -1,0 +1,36 @@
+---
+description: Pénzmezők (netto stb.) megjelenítése — mindig formatCurrency (HUF, ICU locale), soha kézi Ft/HUF.
+alwaysApply: true
+---
+
+# Pénz megjelenítés = `formatCurrency()`
+
+Admin listában / view-ban / modalban (`recordGet`) a pénzmezők (pl. **`netto`**) **mindig** HUF, locale szerinti ICU formázással.
+
+## Kötelező
+
+```php
+<?= h(\App\Utility\LocaleNumberParser::formatCurrency($row->netto, decimals: 2)) ?>
+// vagy decimals: $numberDecimals['decimal']
+```
+
+- Teljes string: összeg **és** pénznem (pozíció + szóköz ICU-ból).
+- Form input: továbbra is csak szám (`formDecimalOptions` / `.js-input-decimal`) — **nincs** Ft/HUF a mezőben.
+
+## Tilos
+
+- `format($x) . ' ' . currencySymbol()` (en-nél rossz: mindig utótag)
+- Hardcode `Ft`, `HUF`, `__('Ft')`
+- Feltételezni, hogy a szimbólum mindig a szám után van
+
+## Locale példák (HUF)
+
+| Locale | Példa |
+|--------|--------|
+| `hu_*` | `12 345,67 Ft` |
+| `en_*` | `HUF 12,345.67` |
+| `de` / `fr` / `sk` | összeg + `HUF` |
+
+## Megjegyzés
+
+`currencySymbol()` csak ritkán (önálló szimbólum). Megjelenítéshez **mindig** `formatCurrency()`. Spec: `doc/i18n.md`, `doc/admin-konvenciok.md`.

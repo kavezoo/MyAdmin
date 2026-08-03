@@ -28,10 +28,11 @@ class LocaleMiddleware implements MiddlewareInterface
             $lang = $request->getParam('lang');
             $prefix = $request->getParam('prefix');
 
-            // Admin has no URL language segment — always Hungarian.
+            // Admin has no URL language segment — locale from App.adminLocale.
             if ($prefix === 'Admin') {
-                I18n::setLocale('hu_HU');
-                Configure::write('App.defaultLocale', 'hu_HU');
+                $adminLocale = (string)Configure::read('App.adminLocale', 'hu_HU');
+                I18n::setLocale($adminLocale);
+                Configure::write('App.defaultLocale', $adminLocale);
             } elseif (is_string($lang) && isset($languages[$lang])) {
                 I18n::setLocale($languages[$lang]);
                 Configure::write('App.defaultLocale', $languages[$lang]);

@@ -353,6 +353,42 @@ msgstr ""
 msgid "Search..."
 msgstr ""
 
+msgid "Start search"
+msgstr ""
+
+msgid "Clear search"
+msgstr ""
+
+msgid "Search in the text fields of this list."
+msgstr ""
+
+msgid "Search in the text fields of all configured tables."
+msgstr ""
+
+msgid "Clear the saved search and show all records."
+msgstr ""
+
+msgid "Clear the saved search and return to the last visited record."
+msgstr ""
+
+msgid "Clear the search and reset the results."
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Enter a search term to find records in all configured tables."
+msgstr ""
+
+msgid "No results found."
+msgstr ""
+
+msgid "About {0} results"
+msgstr ""
+
+msgid "Table"
+msgstr ""
+
 #: ./templates/Admin/Cities/index.php:66
 #: ./templates/Admin/Parents/index.php:66
 #: ./templates/Admin/Samples/index.php:98
@@ -378,6 +414,9 @@ msgstr ""
 #: ./templates/Admin/Parents/index.php:140
 #: ./templates/Admin/Samples/index.php:194
 msgid "page"
+msgstr ""
+
+msgid "Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total"
 msgstr ""
 
 #: ./templates/Admin/Cities/view.php:18
@@ -640,12 +679,19 @@ msgstr ""
 msgid "Pagination"
 msgstr ""
 
-#: ./templates/element/admin/index_pagination.php:7
+msgid "Back to top"
+msgstr ""
+
+msgid "First"
+msgstr ""
+
 msgid "Previous"
 msgstr ""
 
-#: ./templates/element/admin/index_pagination.php:8
 msgid "Next"
+msgstr ""
+
+msgid "Last"
 msgstr ""
 
 #: ./templates/element/admin/modal_linked_record_view.php:5

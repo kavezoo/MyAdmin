@@ -116,6 +116,7 @@ $config = [
 		'pos' => __('Position'),
 		'visible' => __('Visible'),
 		'sample_count' => __('Samples'),
+		'samples' => __('Sample list'),
 		'created' => __('Created'),
 		'modified' => __('Modified'),
 	],
@@ -126,6 +127,7 @@ $config = [
 			'pos' => __('Position'),
 			'visible' => __('Visible'),
 			'sample_count' => __('Samples'),
+			'samples' => __('Sample list'),
 			'created' => __('Created'),
 			'modified' => __('Modified'),
 		],
@@ -165,8 +167,6 @@ $this->Html->scriptBlock(
 	['block' => 'script']
 );
 $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
-
-$paging = $this->Paginator->params();
 ?>
 
 <div class="row mt-3">
@@ -180,9 +180,7 @@ $paging = $this->Paginator->params();
 					<?php endif; ?>
 				</div>
 				<div class="float-right d-flex align-items-center gap-2">
-					<div class="table-search">
-						<input type="search" class="form-control form-control-sm table-search-input" id="table-search-input" name="table_search" placeholder="<?= h(__('Search...')) ?>" autocomplete="off">
-					</div>
+					<?= $this->element('admin/table_search') ?>
 					<?= $this->element('admin/index_pagination') ?>
 				</div>
 				<div class="clearfix"></div>
@@ -242,6 +240,7 @@ $paging = $this->Paginator->params();
 										data-edit-url="<?= h($this->Url->build(['controller' => 'Parents', 'action' => 'edit'])) ?>"
 										data-view-url="<?= h($this->Url->build(['controller' => 'Parents', 'action' => 'view'])) ?>"
 										data-delete-url="<?= h($this->Url->build(['controller' => 'Parents', 'action' => 'delete'])) ?>"
+										data-delete-form-prefix="parent"
 										data-labels="parent"
 										data-title="<?= h(__('Parent details')) ?>"
 									>
@@ -252,11 +251,11 @@ $paging = $this->Paginator->params();
 								<td class="string name"><?= h($sample->name) ?></td>
 								<td class="number szam text-end"><?= h(\App\Utility\LocaleNumberParser::format($sample->szam, decimals: $numberDecimals['integer'])) ?></td>
 								<td class="currency netto text-end">
-									<span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::format($sample->netto, decimals: $numberDecimals['decimal'])) ?></span> <?= h(\App\Utility\LocaleNumberParser::currencySymbol()) ?>
+									<span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::formatCurrency($sample->netto, decimals: $numberDecimals['decimal'])) ?></span>
 								</td>
-								<td class="date datum"><?= $sample->datum ? h($sample->datum->format('Y.m.d.')) : '' ?></td>
-								<td class="time ido"><?= $sample->ido ? h($sample->ido->format('H:i')) : '' ?></td>
-								<td class="datetime datumido"><?= $sample->datumido ? h($sample->datumido->format('Y.m.d. H:i')) : '' ?></td>
+								<td class="date datum"><?= $sample->datum ? h(\App\Utility\LocaleDateParser::format($sample->datum, 'date')) : '' ?></td>
+								<td class="time ido"><?= $sample->ido ? h(\App\Utility\LocaleDateParser::format($sample->ido, 'time_short')) : '' ?></td>
+								<td class="datetime datumido"><?= $sample->datumido ? h(\App\Utility\LocaleDateParser::format($sample->datumido, 'datetime_short')) : '' ?></td>
 								<td class="boolean logikai">
 									<?= $sample->logikai
 										? '<i class="fa fa-check text-success"></i>'
@@ -276,13 +275,13 @@ $paging = $this->Paginator->params();
 								<?php if ($showTimestampColumn): ?>
 									<td class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
 										<?php if ($showCreatedColumn): ?>
-											<?= $sample->created ? h($sample->created->format('Y.m.d. H:i')) : '' ?>
+											<?= $sample->created ? h(\App\Utility\LocaleDateParser::format($sample->created, 'datetime_short')) : '' ?>
 										<?php endif; ?>
 										<?php if ($showCreatedColumn && $showModifiedColumn && $sample->modified): ?>
 											<br>
 										<?php endif; ?>
 										<?php if ($showModifiedColumn): ?>
-											<?= $sample->modified ? h($sample->modified->format('Y.m.d. H:i')) : '' ?>
+											<?= $sample->modified ? h(\App\Utility\LocaleDateParser::format($sample->modified, 'datetime_short')) : '' ?>
 										<?php endif; ?>
 									</td>
 								<?php endif; ?>
@@ -324,9 +323,11 @@ $paging = $this->Paginator->params();
 										]) ?>
 										<?= $this->Form->end() ?>
 									<?php else: ?>
-										<a role="button" href="#" class="btn btn-outline-danger disabled" aria-disabled="true" tabindex="-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
-											<i class="fa fa-trash"></i>
-										</a>
+										<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+											<a role="button" href="#" class="btn btn-outline-secondary disabled" tabindex="-1" aria-disabled="true">
+												<i class="fa fa-trash"></i>
+											</a>
+										</span>
 									<?php endif; ?>
 								</td>
 							</tr>
@@ -341,20 +342,7 @@ $paging = $this->Paginator->params();
 			</div>
 
 			<div class="card-footer">
-				<div class="float-left text-muted">
-					<?php if (!empty($paging['count'])): ?>
-						<strong><?= (int)($paging['start'] ?? 0) ?>–<?= (int)($paging['end'] ?? 0) ?></strong>
-						/ <strong><?= (int)$paging['count'] ?></strong> <?= __('records') ?>
-						&nbsp;|&nbsp;
-						<strong><?= (int)($paging['page'] ?? 1) ?></strong>. <?= __('page') ?> / <strong><?= (int)($paging['pageCount'] ?? 1) ?></strong>
-					<?php else: ?>
-						<strong>0</strong> <?= __('records') ?>
-					<?php endif; ?>
-				</div>
-				<div class="float-right">
-					<?= $this->element('admin/index_pagination') ?>
-				</div>
-				<div class="clearfix"></div>
+				<?= $this->element('admin/index_footer') ?>
 			</div>
 		</div>
 	</div>

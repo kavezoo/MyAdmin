@@ -23,6 +23,7 @@ $this->Html->scriptBlock(
 
 $this->Html->script([
 	'/plugins/select2-4.1.0/js/select2.full.min',
+	'/plugins/inputmask/jquery.inputmask.min',
 	'pages/form',
 ], ['block' => 'scriptBottom']);
 
@@ -40,8 +41,8 @@ $samples = $samples ?? [];
 				<div class="float-right d-flex align-items-center gap-3">
 					<?php if ($isEdit): ?>
 						<div class="text-end text-muted small lh-sm">
-							<div><?= __('Created:') ?> <b><?= $city->created ? h($city->created->format('Y.m.d.')) : '—' ?></b></div>
-							<div><?= __('Modified:') ?> <b><?= $city->modified ? h($city->modified->format('Y.m.d.')) : '—' ?></b></div>
+							<div><?= __('Created:') ?> <b><?= $city->created ? h(\App\Utility\LocaleDateParser::format($city->created, 'date')) : '—' ?></b></div>
+							<div><?= __('Modified:') ?> <b><?= $city->modified ? h(\App\Utility\LocaleDateParser::format($city->modified, 'date')) : '—' ?></b></div>
 						</div>
 					<?php endif; ?>
 					<a role="button" href="<?= $this->Url->build(['action' => 'index']) ?>" class="btn btn-outline-secondary" id="btn-close-form" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h('<b>' . __('Close window') . '</b>') ?>">
@@ -54,10 +55,6 @@ $samples = $samples ?? [];
 				<?= $this->Form->create($city, [
 					'id' => 'form-horizontal',
 					'autocomplete' => 'off',
-					'templates' => [
-						'inputContainer' => '{{content}}',
-						'inputContainerError' => '{{content}}{{error}}',
-					],
 				]) ?>
 					<div class="form-group row mb-3">
 						<label for="name" class="col-sm-3 col-md-2 col-form-label"><?= __('Name:') ?></label>
@@ -85,21 +82,11 @@ $samples = $samples ?? [];
 						</div>
 					</div>
 
-					<div class="form-group row mb-3">
-						<label for="pos" class="col-sm-3 col-md-2 col-form-label"><?= __('Position:') ?></label>
-						<div class="col-12 col-md-10 col-xl-3">
-							<?= $this->Form->control('pos', [
-								'label' => false,
-								'type' => 'text',
-								'class' => 'form-control js-input-integer',
-								'id' => 'pos',
-								'value' => $city->pos !== null && $city->pos !== ''
-									? \App\Utility\LocaleNumberParser::format($city->pos, decimals: 0)
-									: '',
-							]) ?>
+					<div class="row">
+						<div class="col-12 col-xxl-11">
+							<hr class="my-4">
 						</div>
 					</div>
-
 					<div class="form-group row mb-3">
 						<div class="d-none d-md-block col-md-2"></div>
 						<div class="col-12 col-md-10">
@@ -107,17 +94,32 @@ $samples = $samples ?? [];
 								<?= $this->Form->checkbox('visible', ['class' => 'form-check-input', 'id' => 'visible']) ?>
 								<label class="form-check-label" for="visible"><?= __('Visible') ?></label>
 							</div>
+							<?= $this->element('admin/field_error', ['field' => 'visible']) ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<label for="pos" class="col-sm-3 col-md-2 col-form-label"><?= __('Position:') ?></label>
+						<div class="col-12 col-md-10 col-xl-3">
+							<?= $this->Form->control('pos', \App\Utility\LocaleNumberParser::formIntegerOptions(
+								$city->pos,
+								['id' => 'pos']
+							)) ?>
 						</div>
 					</div>
 				<?= $this->Form->end() ?>
 			</div>
 			<div class="card-footer">
-				<button type="submit" form="form-horizontal" class="btn btn-success">
-					<span class="btn-label"><i class="fa fa-save"></i></span><?= __('Save') ?>
-				</button>
-				<a href="<?= $this->Url->build(['action' => 'index']) ?>" class="btn btn-outline-secondary ms-3" id="btn-cancel">
-					<span class="btn-label"><i class="fa fa-times"></i></span><?= __('Cancel') ?>
-				</a>
+				<div class="row">
+					<div class="col-12 col-md-10 col-xxl-9 offset-md-2">
+						<button type="submit" form="form-horizontal" class="btn btn-success">
+							<span class="btn-label"><i class="fa fa-save"></i></span><?= __('Save') ?>
+						</button>
+						<a href="<?= $this->Url->build(['action' => 'index']) ?>" class="btn btn-outline-secondary ms-3" id="btn-cancel">
+							<span class="btn-label"><i class="fa fa-times"></i></span><?= __('Cancel') ?>
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

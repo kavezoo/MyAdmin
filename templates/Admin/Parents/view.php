@@ -17,6 +17,9 @@ $samplesEditUrl = $this->Url->build(['controller' => 'Samples', 'action' => 'edi
 $samplesViewUrl = $this->Url->build(['controller' => 'Samples', 'action' => 'view']);
 $samplesDeleteUrl = $this->Url->build(['controller' => 'Samples', 'action' => 'delete']);
 
+$tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
+$tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete this record because it has related child records.');
+
 $config = [
 	'rowDoubleClickAction' => $rowDoubleClickAction,
 	'entityFieldLabels' => [
@@ -88,7 +91,7 @@ if ($samplesCount > 0):
 				</td>
 				<td class="number szam text-end"><?= h(\App\Utility\LocaleNumberParser::format($sample->szam, decimals: 0)) ?></td>
 				<td class="currency netto text-end">
-					<span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::format($sample->netto, decimals: 2)) ?></span> <?= h(\App\Utility\LocaleNumberParser::currencySymbol()) ?>
+					<span class="currency-amount"><?= h(\App\Utility\LocaleNumberParser::formatCurrency($sample->netto, decimals: 2)) ?></span>
 				</td>
 				<td class="boolean visible">
 					<?= $sample->visible
@@ -96,12 +99,13 @@ if ($samplesCount > 0):
 						: '<i class="fa fa-times text-danger"></i>' ?>
 				</td>
 				<td class="datetime created modified">
-					<?= $sample->created ? h($sample->created->format('Y.m.d. H:i')) : '' ?>
+					<?= $sample->created ? h(\App\Utility\LocaleDateParser::format($sample->created, 'datetime_short')) : '' ?>
 					<?php if ($sample->modified): ?>
-						<br><?= h($sample->modified->format('Y.m.d. H:i')) ?>
+						<br><?= h(\App\Utility\LocaleDateParser::format($sample->modified, 'datetime_short')) ?>
 					<?php endif; ?>
 				</td>
 				<td class="actions">
+					<?php $canDeleteRelated = ((int)($sample->city_count ?? 0) === 0); ?>
 					<?= $this->Html->link(
 						'<i class="fa fa-eye"></i>',
 						['controller' => 'Samples', 'action' => 'view', $sample->id],
@@ -112,12 +116,23 @@ if ($samplesCount > 0):
 						['controller' => 'Samples', 'action' => 'edit', $sample->id],
 						['escape' => false, 'class' => 'btn btn-outline-primary', 'role' => 'button', 'title' => __('Edit')]
 					) ?>
-					<?= $this->Form->create(null, [
-						'url' => ['controller' => 'Samples', 'action' => 'delete', $sample->id],
-						'id' => 'delete-form-sample-' . $sample->id,
-						'class' => 'd-none js-row-delete-form',
-					]) ?>
-					<?= $this->Form->end() ?>
+					<?php if ($canDeleteRelated): ?>
+						<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$sample->id ?>">
+							<i class="fa fa-trash"></i>
+						</a>
+						<?= $this->Form->create(null, [
+							'url' => ['controller' => 'Samples', 'action' => 'delete', $sample->id],
+							'id' => 'delete-form-sample-' . $sample->id,
+							'class' => 'd-none js-row-delete-form',
+						]) ?>
+						<?= $this->Form->end() ?>
+					<?php else: ?>
+						<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+							<a role="button" href="#" class="btn btn-outline-secondary disabled" tabindex="-1" aria-disabled="true">
+								<i class="fa fa-trash"></i>
+							</a>
+						</span>
+					<?php endif; ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -149,21 +164,42 @@ $samplesTable = ob_get_clean();
 					<div class="record-view-row"><dt><?= __('Position') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($parent->pos, decimals: 0)) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Visible') ?></dt><dd><?= $parent->visible ? __('Yes') : __('No') ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Samples') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::formatCount($parent->sample_count, decimals: 0)) ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Created') ?></dt><dd><?= $parent->created ? h($parent->created->format('Y.m.d. H:i')) : '—' ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Modified') ?></dt><dd><?= $parent->modified ? h($parent->modified->format('Y.m.d. H:i')) : '—' ?></dd></div>
+					<?php if ($samplesCount > 0): ?>
+						<div class="record-view-row">
+							<dt><?= __('Sample list') ?></dt>
+							<dd class="record-related-list">
+								<?php
+								$sampleLinks = [];
+								foreach ($samples as $sample) {
+									$sampleLinks[] = '<a href="#" class="record-modal-link"'
+										. ' data-id="' . (int)$sample->id . '"'
+										. ' data-get-url="' . h($samplesGetUrl) . '"'
+										. ' data-edit-url="' . h($samplesEditUrl) . '"'
+										. ' data-view-url="' . h($samplesViewUrl) . '"'
+										. ' data-delete-url="' . h($samplesDeleteUrl) . '"'
+										. ' data-delete-form-prefix="sample"'
+										. ' data-labels="sample"'
+										. ' data-title="' . h(__('Sample details')) . '"'
+										. '>' . h($sample->name)
+										. '<span class="record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span></a>';
+								}
+								echo implode(', ', $sampleLinks);
+								?>
+							</dd>
+						</div>
+					<?php endif; ?>
+					<div class="record-view-row"><dt><?= __('Created') ?></dt><dd><?= $parent->created ? h(\App\Utility\LocaleDateParser::format($parent->created, 'datetime_short')) : '—' ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Modified') ?></dt><dd><?= $parent->modified ? h(\App\Utility\LocaleDateParser::format($parent->modified, 'datetime_short')) : '—' ?></dd></div>
 				</dl>
 			</div>
 			<div class="card-footer">
-				<?= $this->Html->link(
-					'<span class="btn-label"><i class="fa fa-pencil"></i></span>' . __('Edit'),
-					['action' => 'edit', $parent->id],
-					['escape' => false, 'class' => 'btn btn-primary']
-				) ?>
-				<?= $this->Html->link(
-					'<span class="btn-label"><i class="fa fa-arrow-left"></i></span>' . __('Back to list'),
-					['action' => 'index'],
-					['escape' => false, 'class' => 'btn btn-outline-secondary ms-2']
-				) ?>
+				<div class="record-view-footer-actions">
+					<?= $this->Html->link(
+						'<span class="btn-label"><i class="fa fa-pencil"></i></span>' . __('Edit'),
+						['action' => 'edit', $parent->id],
+						['escape' => false, 'class' => 'btn btn-primary']
+					) ?>
+				</div>
 			</div>
 		</div>
 

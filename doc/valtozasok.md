@@ -5,6 +5,904 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-03 — Index URL: page mindig + első oldal fix
+
+### Mi változott / miért
+- Cake elhagyta a `page=1`-et → session visszaírta a régi oldalt (első oldal gomb „nem működött”).
+- `App\View\Helper\PaginatorHelper`: `page=1` is az URL-ben; kanonikus redirect; üres index → mentett URL.
+- Lapozáskor (page változás) → `clearLastVisited`; listaállapot könyvjelzőzhető.
+
+### Érintett
+- `src/View/Helper/PaginatorHelper.php`, `Admin/AppController.php`, Samples/Parents/Cities/Countries `index`
+- docs + `admin-kereses-index-allapot.mdc`, `admin-paginator.mdc`
+
+---
+
+## 2026-08-03 — Vissza a tetejére gomb
+
+### Mi változott / miért
+- Jobb alsó FA felfelé nyíl; csak lejjebb görgetve látszik; kattintásra az oldal tetejére görget.
+
+### Érintett
+- `templates/layout/admin.php`, `webroot/js/app.js`, `webroot/css/style.css`, `hu_HU/default.po`
+
+---
+
+## 2026-08-03 — Lapozó: FA ikonok + last-visited törlés + keresés→1. oldal
+
+### Mi változott / miért
+- Paginator: szöveg helyett FA `angle-double-left` / `angle-left` / `angle-right` / `angle-double-right` (aria/title marad fordítva).
+- Lapozáskor (`?page=`) törlődik a last-visited kiemelés.
+- Keresés submit (form: `q` van, `page` nincs) → mindig 1. oldal (javítás).
+
+### Érintett
+- `templates/element/admin/index_pagination.php`, `Admin/AppController.php`
+- `.cursor/rules/admin-paginator.mdc`, `admin-kereses-index-allapot.mdc`
+- `doc/admin-konvenciok.md`, `admin-oldal.md`, `uj-projekt.md`
+
+---
+
+## 2026-08-03 — Keresőmező: kurzor a szöveg végén keresés után
+
+### Mi változott / miért
+- Keresés után a fókusz a keresőmezőn marad, kurzor a lekérdezés végén (továbbszerkesztés).
+
+### Érintett
+- `webroot/js/app.js` (`focusActiveSearchField`), `webroot/js/pages/index.js` (aktív keresésnél nincs last-visited scroll), `templates/Admin/Search/index.php`
+
+---
+
+## 2026-08-03 — Dokumentáció: keresés / lapozó / pénz specek + cursor rules
+
+### Mi változott / miért
+- Összefoglaló specek a jövőbeli agent munkához: lapozó First…Last, globális keresés UI + config kulcsok, `labelsKey`, element inventory.
+- Új rule: `.cursor/rules/admin-paginator.mdc`; bővítve: `admin-kereses-index-allapot.mdc`, `auto-dokumentalas.mdc` (rule+doc együtt).
+
+### Érintett
+- `doc/README.md`, `admin-konvenciok.md`, `admin-oldal.md`, `uj-projekt.md`, `i18n.md`, `keretrendszer.md`, `minta-tanulsagok.md`, `struktura.md`
+- `.cursor/rules/admin-paginator.mdc`, `admin-kereses-index-allapot.mdc`, `auto-dokumentalas.mdc`
+- `config/admin_search.php` (komment)
+
+---
+
+## 2026-08-03 — Paginator: First / Previous / Next / Last
+
+### Mi változott / miért
+- `admin/index_pagination`: First + Previous + számsor + Next + Last; első/utolsó oldalon disabled (Cake `hasPrev` / `hasNext`).
+
+### Érintett
+- `templates/element/admin/index_pagination.php`, `hu_HU/default.po`
+
+---
+
+## 2026-08-03 — Globális keresés lapozás + `index_counter` element
+
+### Mi változott / miért
+- `/admin/search` eddig nem lapozott → `PaginatedResultSet` + `admin/index_pagination` (fent) + `admin/index_footer` (lent).
+- Config: `globalPageLimit` (20), `globalLimitPerModel` (200), `globalMaxResults` (1000).
+- Footer bal összesítő külön element: `admin/index_counter` (a lapozó már `index_pagination` volt).
+
+### Érintett
+- `SearchController`, `AdminSearch`, `admin_search.php`, `Search/index.php`
+- `templates/element/admin/index_counter.php`, `index_footer.php`
+
+---
+
+## 2026-08-03 — Globális keresés UI: Google-szerű találatok + modal
+
+### Mi változott / miért
+- `/admin/search` találatok: cite (tábla · #id), kék cím → AJAX modal (összes mező + **Table** sor), szem ikon = modal, ceruza = edit.
+- `pages/search.css`; `data-source-table` a linked modalban; `admin_search.php` → `labelsKey`.
+
+### Érintett
+- `templates/Admin/Search/index.php`, `webroot/css/pages/search.css`, `pages/index.js`, `admin_search.php`, layout messages
+
+---
+
+## 2026-08-03 — Keresés/index állapot: greenfield kötelező specek
+
+### Mi változott / miért
+- A keresés + session index állapot + clear→last-visited **minden új projekt** kötelező része.
+- Playbook: `uj-projekt.md` §2.8; agent rule frissítve; README / minta-tanulsagok / admin-konvenciok checklist.
+
+### Érintett
+- `doc/uj-projekt.md`, `README.md`, `minta-tanulsagok.md`, `admin-konvenciok.md`
+- `.cursor/rules/admin-kereses-index-allapot.mdc`
+
+---
+
+## 2026-08-03 — Keresés törlése → last-visited oldal
+
+### Mi változott / miért
+- `clear_search` után nem `page=1`, hanem a **last-visited** rekord oldala a szűretlen listában (`resolveIndexPageForLastVisited` + `findRecordPageNumber`).
+- Ha nincs last-visited: a keresés előtti oldal (`_pageBeforeSearch`).
+- Scroll a meglévő `.last-visited` logikával.
+
+### Érintett
+- `Admin/AppController.php`; Samples/Parents/Cities/Countries `index()`
+
+---
+
+## 2026-08-03 — Keresés törlése gomb (index + header)
+
+### Mi változott / miért
+- Nagyító mellett **×** gomb: `__('Clear search')` → „Keresés törlése”.
+- Index: `?clear_search=1` → session `q` törlése, `page=1`, szűretlen lista (sort megmarad).
+- Header / Search oldal: üres `/admin/search`. Üres keresésnél disabled.
+- Tooltip magyarázat (HTML): index → „Search in the text fields of this list.”; globális → „…of all configured tables.” (+ clear magyarázatok); hu `.po`.
+
+### Érintett
+- `templates/element/admin/{table_search,header_search}.php`, `Admin/Search/index.php`
+- `Admin/AppController::applyIndexListState`, `style.css`, `.po`
+
+---
+
+## 2026-08-03 — Index / globális keresés + lista-állapot session + last-visited scroll
+
+### Mi változott / miért
+- **Index kereső** (`admin/table_search`): az adott model szöveges mezőiben (`config/admin_search.php`) — szűrt lista.
+- **Header kereső** (`admin/header_search`): összes model összes szöveges mezője → `/admin/search`.
+- Nagyító gomb + tooltip `__('Start search')` / hu: „Keresés indítása”.
+- Session `Admin.indexState[Alias]`: sort, direction, page, `q` — visszatérés ugyanarra az oldalra / szűrőre; edit/add save → `redirectToIndexList()`.
+- Last-visited sor: görgetés a breadcrumb alá (~mt-3).
+- Új projekt: `admin_search.php` mezőlista kötelező az első felépítéskor.
+
+### Spec
+- [admin-konvenciok.md](admin-konvenciok.md), [uj-projekt.md](uj-projekt.md), [struktura.md](struktura.md)
+
+### Érintett
+- `config/admin_search.php`, `config/bootstrap.php`
+- `src/Utility/AdminSearch.php`, `Admin/AppController.php`, `Admin/SearchController.php`
+- CRUD `index()` + save redirect; `templates/element/admin/{table_search,header_search,breadcrumb}.php`
+- `templates/Admin/Search/index.php`, `webroot/js/pages/index.js`, `webroot/css/style.css`
+- `.cursor/rules/admin-kereses-index-allapot.mdc`
+
+---
+
+## 2026-08-03 — Agent rule: pénznem `formatCurrency`
+
+### Mi változott / miért
+- Cursor rule az agentnek: pénz UI → `LocaleNumberParser::formatCurrency()` (HUF, ICU); tilos kézi Ft/HUF összerakás.
+
+### Érintett
+- `.cursor/rules/penznem-formatcurrency.mdc`
+
+---
+
+## 2026-08-03 — Pénznem (netto): ICU `formatCurrency` (HUF, locale pozíció)
+
+### Mi változott / miért
+- Angol UI-n a `netto` eddig mindig „… Ft” volt (suffix + hardcode); ICU szerint **en → `HUF 12,345.67`**, hu → `12 345,67 Ft`, de/fr/sk → összeg + `HUF`.
+- Új: `LocaleNumberParser::formatCurrency()` — teljes pénzstring (pozíció, szóköz, szimbólum).
+- `currencySymbol()` ICU-ból (`@currency=HUF`): hu → `Ft`, en → `HUF` (önmagában ritkán kell; megjelenítéshez `formatCurrency`).
+
+### Spec
+- [admin-konvenciok.md](admin-konvenciok.md), [i18n.md](i18n.md), [admin-oldal.md](admin-oldal.md)
+
+### Érintett
+- `src/Utility/LocaleNumberParser.php`
+- `templates/Admin/Samples/{index,view}.php`, `Cities/view.php`, `Parents/view.php`
+- `src/Controller/Admin/SamplesController.php` (`recordGet`)
+
+---
+
+## 2026-08-03 — Számmezők: egységes locale formázás (ezres + tizedes)
+
+### Mi változott / miért
+- `LocaleNumberParser::formIntegerOptions()` / `formDecimalOptions()` — minden Admin szám input: `type=text`, class, **locale value**, placeholder (`1 234` / `1 234,56`).
+- `jsConfig()` bővítve: `groupSize`, `decimalDigits`, placeholderek; inputmask `autoGroup` + `groupSize: 3`.
+
+### Spec
+- [admin-konvenciok.md](admin-konvenciok.md); [middleware.md](middleware.md)
+
+### Érintett
+- `src/Utility/LocaleNumberParser.php`, `webroot/js/pages/form.js`
+- `templates/Admin/{Samples,Parents,Cities,Countries}/form.php`
+
+---
+
+## 2026-08-03 — Form számmezők: inputmask minden Admin formon
+
+### Mi változott / miért
+- Minden Admin `form.php` betölti az **inputmask** plugint + `numberFormat`.
+- Egész szám: `.js-input-integer` (és `#pos` / `name=pos` fallback a `form.js`-ben) — csak számjegyek, locale ezres csoportosítás.
+- Tizedes: `.js-input-decimal` (Samples `netto`).
+- Parents `pos` eddig maszk nélkül volt; Cities/Countries-nél a plugin hiányzott.
+
+### Spec
+- [admin-konvenciok.md](admin-konvenciok.md) számmezők; [minta-tanulsagok.md](minta-tanulsagok.md) §6
+
+### Érintett
+- `webroot/js/pages/form.js`
+- `templates/Admin/{Parents,Cities,Countries}/form.php`
+
+---
+
+## 2026-08-03 — Index footer: Cake bake Paginator::counter (i18n)
+
+### Mi változott / miért
+- `admin/index_footer` bal oldala: bake sablon szövege  
+  `__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')`  
+  → `$this->Paginator->counter(...)` (placeholderek a msgid-ben maradnak; `.po` fordítja; számok locale formázással).
+- hu: `{{page}}. oldal / {{pages}}, megjelenítve: {{current}} rekord, összesen: {{count}}`
+
+### Spec
+- [admin-konvenciok.md](admin-konvenciok.md) Index card footer; [admin-oldal.md](admin-oldal.md); [i18n.md](i18n.md)
+
+### Érintett
+- `templates/element/admin/index_footer.php`
+- `resources/locales/hu_HU/default.po`
+
+---
+
+## 2026-08-03 — Countries/Continents kód ↔ séma szinkron
+
+### Mi változott / miért
+- ORM / controller / template igazítva a DB sémához: `countries.continent_id` → `belongsTo Continents`; nincs `continent` string mező; modalban nincs i18n lista.
+- `CountriesTable` / `ContinentsTable`: teljes oszlop-validáció + `iso2`/`code` unique + `existsIn(continent_id)`.
+- Template mezősorrend a séma szerint: iso2 → name → locale → continent → visible → pos → user_count.
+
+### Érintett
+- `src/Model/{Entity,Table}/Country*`, `Continent*`
+- `src/Model/Entity/I18nTranslation.php`
+- `src/Controller/Admin/CountriesController.php`
+- `templates/Admin/Countries/{index,form,view}.php`
+
+---
+
+## 2026-08-03 — Modal: i18n fordításlista tiltva (minden recordGet)
+
+### Mi változott / miért
+- A gyorsnézet modal **ne** listázza a kapcsolt `i18n` EAV sorokat (Countries `translations` mező kikerült a `recordGet`-ből és a `recordFieldLabels`-ből).
+- Tartós szabály: Translate csak a megjelenített mező locale szerinti értékére kell; a modalban nincs fordítás-felsorolás.
+
+### Spec
+- [i18n.md](i18n.md) → Országnevek
+
+### Érintett
+- `src/Controller/Admin/CountriesController.php`
+- `templates/Admin/Countries/index.php`
+
+---
+
+## 2026-08-03 — Countries ID újraszámozás (1..N) + i18n sync
+
+### Mi változott / miért
+- `countries.id` **267…532** → **1…266** (hézagmentes); `AUTO_INCREMENT = 267`.
+- `i18n.foreign_key` (`model=Countries`) ugyanezzel az offsettel frissítve — fordítások megmaradtak (67032 sor, 0 árva).
+
+```bash
+php tmp/renumber_countries_ids.php
+```
+
+### Spec
+- [i18n.md](i18n.md) (kapcsolat: `foreign_key` = szülő `id`)
+
+### Érintett
+- DB: `countries`, `i18n`
+- `tmp/renumber_countries_ids.php`
+
+---
+
+## 2026-08-03 — i18n árva rekordok tisztítása
+
+### Mi változott / miért
+- `bin/cake cleanup_i18n_orphans` (+ `--dry-run`): törli azokat az `i18n` sorokat, ahol a `foreign_key` már nem létezik a szülő táblában (`Countries`→`countries`, `Continents`→`continents`); ismeretlen `model` → teljes wipe.
+- Aktuális DB: **0 árva** (Countries 266 fk / Continents 7 fk egyezik a szülőkkel; 68796 sor maradt).
+
+### Spec
+- [i18n.md](i18n.md) → Árva i18n sorok tisztítása
+
+### Érintett
+- `src/Command/CleanupI18nOrphansCommand.php`
+- `tmp/cleanup_i18n_orphans.php`
+
+---
+
+## 2026-08-03 — Index card footer: közös `admin/index_footer` (minden listán)
+
+### Mi változott / miért
+- Countries (és minden Admin index) bal alsó láblécében hiányzott a **X–Y / Z records | N. page / M** infó (Samples-en megvolt).
+- Új element: `templates/element/admin/index_footer.php` — bal summary + jobb `index_pagination`.
+- Samples / Parents / Cities / Countries: inline footer → `<?= $this->element('admin/index_footer') ?>`.
+
+### Spec
+- [admin-konvenciok.md](admin-konvenciok.md) Index card footer; [admin-oldal.md](admin-oldal.md) §4; [struktura.md](struktura.md); [README.md](README.md) Rögzített döntések
+
+### Érintett
+- `templates/element/admin/index_footer.php`
+- `templates/Admin/{Samples,Parents,Cities,Countries}/index.php`
+
+---
+
+## 2026-08-03 — Összefoglaló: Countries / Continents / Admin lista (mai kör)
+
+### Döntések
+| Téma | Döntés |
+|------|--------|
+| Countries Admin | Csak **visible** + **pos** szerkeszthető; nincs add/delete; név/locale/continent seed |
+| Országnév | `countries.name` (EN) + Translate `i18n` (`model=Countries`) — UI locale szerint |
+| Földrész | Külön **`continents`** tábla + `countries.continent_id`; Translate `model=Continents` (CLDR, minden locale) |
+| Lapozás | `$indexLimit = 100`, `$indexMaxLimit = 1000` (AppController + CRUD-ok) |
+| Index footer | Kötelező `admin/index_footer` (rekord/oldal infó + lapozó) |
+| Modal fordítások | **Ne** listázd az i18n EAV sorokat a modalban (`recordGet` / `recordFieldLabels`) |
+| `pos` | Mindig DB DEFAULT (`.cursor/rules/pos-db-default.mdc`) |
+
+### Seed
+```bash
+php tmp/seed_continents.php   # continents + i18n + continent_id migráció
+```
+
+### Spec fájlok
+- [i18n.md](i18n.md) — Országnevek + Continents
+- [struktura.md](struktura.md) — Countries / Continents / elementek
+- [admin-konvenciok.md](admin-konvenciok.md) / [admin-oldal.md](admin-oldal.md) — index footer, limit
+
+---
+
+## 2026-08-03 — Continents tábla + countries.continent_id (Translate)
+
+### Mi változott / miért
+- Új `continents` tábla (`code`, angol `name`, `visible`, `pos`); Cake Translate EAV (`model=Continents`).
+- CLDR territory kódokból i18n fordítás **minden** Countries-locale-ra (252 × 7).
+- `countries.continent` string mező helyett `continent_id` FK (`belongsTo Continents`).
+- Admin lista/view/form/modal: `$country->continent->name` az UI locale szerint.
+
+### Spec
+- [i18n.md](i18n.md); `config/schema/continents.sql`, `countries.sql`
+
+### Érintett
+- `tmp/seed_continents.php`, `tmp/cldr_territories/*`
+- `src/Model/{Table,Entity}/Continent*`
+- `CountriesTable` / `Country` / `CountriesController`
+- `templates/Admin/Countries/*`
+
+---
+
+## 2026-08-03 — Countries: `continent` (földrész) mező
+
+### Mi változott / miért
+- `countries.continent` — angol földrésznév (UN M49 + legacy ISO aliasok); a lista későbbi csoportosításához.
+- Feltöltés: `php tmp/update_countries_continent.php` (+ `tmp/iso3166_regions.csv`).
+- Admin: oszlop / view / form (read-only) / modal; alap rendezés: continent ASC, name ASC.
+- UI címke + érték `__()` (hu: Földrész / Európa, …).
+
+### Spec
+- [i18n.md](i18n.md) → Országnevek; `config/schema/countries.sql`
+
+### Érintett
+- `config/schema/countries.sql`
+- `tmp/update_countries_continent.php`, `tmp/iso3166_regions.csv`
+- `src/Model/Entity/Country.php`, `CountriesController`
+- `templates/Admin/Countries/{index,view,form}.php`
+- `resources/locales/hu_HU/default.po`
+
+---
+
+## 2026-08-03 — Index lapozás: 100 / 1000
+
+### Mi változott / miért
+- Admin alap: `$indexLimit = 100`, `$indexMaxLimit = 1000` (`AppController` + Samples / Parents / Cities / Countries).
+
+### Spec
+- [admin-konvenciok.md](admin-konvenciok.md), [admin-oldal.md](admin-oldal.md)
+
+### Érintett
+- `src/Controller/Admin/AppController.php`
+- `SamplesController`, `ParentsController`, `CitiesController`, `CountriesController`
+
+---
+
+## 2026-08-03 — Modal: Countries fordítások megjelenítése ([object Object] javítás)
+
+### Mi változott / miért
+- A gyorsnézet modalban a `translations` mező `[object Object],…` szöveget mutatott, mert objektumtömbre `String()` futott.
+- `recordGet` most `[{locale, name, visible}, …]` listát ad (i18n tábla, ABC locale).
+- `index.js`: `renderTranslationList` + `content`/`name` fallback; objektum/tömb soha nem `String()`-gel.
+
+### Spec
+- [i18n.md](i18n.md) → Országnevek (modal: csak olvasható lista)
+
+### Érintett
+- `src/Controller/Admin/CountriesController.php`
+- `templates/Admin/Countries/index.php`
+- `webroot/js/pages/index.js`
+
+---
+
+## 2026-08-03 — Countries Admin: csak visible + pos (i18n UI nélkül)
+
+### Mi változott / miért
+- Országok referenciaadat (seed): Adminban **csak** `visible` és `pos` módosítható.
+- i18n fordítások **nem** jelennek meg / szerkeszthetők a formon — a Translate csak arra kell, hogy mindenki a saját nyelvén lássa az országnevet.
+- Nincs add / delete a Countries UI-n.
+
+### Spec
+- [i18n.md](i18n.md) → Országnevek; [struktura.md](struktura.md)
+
+### Érintett
+- `src/Controller/Admin/CountriesController.php`, `CountriesTable.php`, `Entity/Country.php`
+- `templates/Admin/Countries/*`
+
+---
+
+## 2026-08-03 — Countries locale lista: összes ország (nem csak en/hu/GB)
+
+### Mi változott / miért
+- A form / modell nem szűkült `['en_US','hu_HU','en_GB']`-re: `translationLocales()` = Member nyelvek + **minden ország** primary `locale`-ja; `primaryLocaleOptions()` ugyanez a selecthez.
+- Seed: i18n minden country-primary locale-ra is (ICU).
+
+### Spec
+- [i18n.md](i18n.md) → Országnevek
+
+### Érintett
+- `src/Model/Table/CountriesTable.php`, `src/Controller/Admin/CountriesController.php`
+- `tmp/seed_countries.php`
+
+---
+
+## 2026-08-03 — Szabály: `pos` = csak DB DEFAULT (örök)
+
+### Mi változott / miért
+- Rögzítve: a `pos` értékét az agent **soha** ne állítsa / ne írja felül — mindig a séma DEFAULT; a felhasználó módosítja ha kell.
+- Cursor rule: `.cursor/rules/pos-db-default.mdc` (`alwaysApply`).
+
+### Spec
+- [README.md](README.md) Rögzített döntések; meglévő: [admin-konvenciok.md](admin-konvenciok.md), [crud-utmutato.md](crud-utmutato.md), [struktura.md](struktura.md)
+
+### Érintett
+- `.cursor/rules/pos-db-default.mdc`
+
+---
+
+## 2026-08-03 — Tempus edit: mentett érték megjelenik (JeffAdmin5 setValue)
+
+### Mi változott / miért
+- Dátum / dátumidő szerkesztéskor üres maradt: a Tempus 6 natívan nem parse-olta a locale display stringet.
+- JeffAdmin5 minta: init előtt input ürítés ha van ISO `data-picker-value`; `parseInput(moment(...).toDate())` + `setValue`; saját moment `parseInput` / `formatInput`.
+
+### Spec
+- [minta-tanulsagok.md](minta-tanulsagok.md) §6 (Edit init érték) + gyakori hibák
+
+### Érintett
+- `webroot/js/pages/form.js`
+
+---
+
+## 2026-08-03 — Countries Admin CRUD + nyelvenkénti láthatóság
+
+### Mi változott / miért
+- Teljes Admin modul: `CountriesController` + index/form/view; sidebar **Countries**.
+- Form: angol név + primary locale + **minden nyelv** fordítása és **Visible** kapcsoló (`i18n.visible`).
+- Ország szintű `visible` / `pos`; törlésvédelem `user_count`-tal.
+- Modal: fordításlista megjelenítés (`index.js`).
+
+### Spec
+- [i18n.md](i18n.md) → Országnevek; `config/schema/i18n.sql` (`visible`)
+
+### Érintett
+- `src/Controller/Admin/CountriesController.php`
+- `src/Model/Table/CountriesTable.php`, `Entity/Country.php`, `I18nTranslation.php`
+- `templates/Admin/Countries/*`, `element/admin/sidebar.php`
+- `webroot/js/pages/index.js`, `resources/locales/hu_HU/default.po`
+
+---
+
+## 2026-08-03 — Countries + i18n seed (összes ország, fordítások, locale)
+
+### Mi változott / miért
+- `countries` feltöltve (~266 ISO régió/ország): `iso2`, angol `name`, ország **primary** `locale` (pl. HU→`hu_HU`).
+- CakePHP Translate EAV `i18n`: minden ország neve a `config/languages.php` nyelvein + `en_US` / `hu_HU` (ICU `Locale::getDisplayRegion`) — pl. HU: Magyarország / Hungary / Ungarn.
+- Model: `CountriesTable` + `Translate` (`EavStrategy`), `Country` entitás; `I18nTable` / `I18nTranslation`.
+- Séma: `iso2` UNIQUE; `name` varchar(150); seed: `php tmp/seed_countries.php`.
+
+### Spec
+- [i18n.md](i18n.md) → „Országnevek (DB Translate)”
+- `config/schema/countries.sql`, `config/schema/i18n.sql`
+
+### Érintett
+- DB: `countries`, `i18n`
+- `src/Model/Table/CountriesTable.php`, `I18nTable.php`
+- `src/Model/Entity/Country.php`, `I18nTranslation.php`
+- `tmp/seed_countries.php`
+
+---
+
+## 2026-08-03 — Tempus AM/PM: látható gomb (kék-a-kéken fix)
+
+### Mi változott / miért
+- 12h módban az AM/PM csak hoverre látszott: a light téma kék gombháttere + a mi `color:#0d6efd` szövege = azonos szín.
+- Override: világoskék háttér + kék szöveg + keret (`button[data-action=toggleMeridiem]`), hover: sötétebb kék.
+
+### Spec
+- [minta-tanulsagok.md](minta-tanulsagok.md) §6 (AM/PM gomb) + gyakori hibák
+
+### Érintett
+- `webroot/css/style.css`
+
+---
+
+## 2026-08-03 — SweetAlert2: popup árnyék
+
+### Mi változott / miért
+- A SWAL panelnek legyen látható mélysége (mint a Bootstrap linked modal / Tempus), ne „lapos” fehér doboz.
+- CSS: `.swal2-popup` box-shadow; `.swal2-container` z-index továbbra is `20000`.
+
+### Spec
+- [admin-konvenciok.md](admin-konvenciok.md) → SweetAlert „Kinézet”
+- [admin-oldal.md](admin-oldal.md) §8, [minta-tanulsagok.md](minta-tanulsagok.md) §5 / §8, [keretrendszer.md](keretrendszer.md), [README.md](README.md)
+
+### Érintett
+- `webroot/css/style.css`
+
+---
+
+## 2026-08-03 — Tempus: idő és dátumidő óra egy család
+
+### Mi változott
+- Közös `tempusClockComponents` (time + datetime); ugyanazok az ikonok/gombok; time: explicit `calendar:false` + `clock:true`.
+- CSS: `.time-container-clock` egységes (számok, AM/PM, szeparátor); datetime SBS: bal szegély az óra mellett.
+
+### Érintett
+- `webroot/js/pages/form.js`, `webroot/css/style.css`, `doc/minta-tanulsagok.md`
+
+---
+
+## 2026-08-03 — Tempus idő: locale AM/PM vs 24h
+
+### Mi változott
+- `dateFormat.useTwentyFourHour`: `en_US` → 12h + **AM/PM**; hu/de/… → 24h (nincs DE/DU).
+- DateTime `setLocale(intl)` — a meridiem a picker nyelvét követi.
+- Mentés: `LocaleDateParser` elfogadja az `2:30:00 PM` formátumot is.
+
+### Érintett
+- `src/Utility/LocaleDateParser.php`, `webroot/js/pages/form.js`
+- `doc/middleware.md`, `doc/minta-tanulsagok.md`
+
+---
+
+## 2026-08-03 — View/index/modal: dátum locale szerint
+
+### Mi változott
+- `LocaleDateParser`: `datetime_short` / `time_short` (lista/view/modal, mp nélkül).
+- View / index / form fejléc / `recordGet`: nincs hardcode `Y.m.d.` — `LocaleDateParser::format()` + meglévő számformázók.
+
+### Érintett
+- `src/Utility/LocaleDateParser.php`
+- `templates/Admin/{Samples,Parents,Cities}/{view,index}.php`, form fejlécek
+- `SamplesController` / `ParentsController` / `CitiesController` JSON
+- `doc/minta-tanulsagok.md`, `doc/middleware.md`
+
+---
+
+## 2026-08-03 — Agent: automatikus dokumentálás (mindig)
+
+### Mi változott
+- Kötelező: lényeges módosítás → `doc/` frissítés **ugyanabban a körben**; ne kelljen külön kérni.
+- Cursor rule: `.cursor/rules/auto-dokumentalas.mdc` (`alwaysApply`).
+- `doc/README.md` Agent szabályok frissítve.
+
+### Érintett
+- `.cursor/rules/auto-dokumentalas.mdc`, `doc/README.md`
+
+---
+
+## 2026-08-03 — Dokumentáció: éles DB playbook frissítve
+
+### Mi változott
+- `minta-tanulsagok.md`: §0.1 fájllista, §0.2 `App.adminLocale`, §6–6c (Tempus locale/hétkezdet, szám MW, mezőhiba), view footer, §11–14 agent éles indulás.
+- Szinkron: `README`, `i18n`, `keretrendszer`, `uj-projekt`, `admin-oldal`, `struktura`, `admin-konvenciok`, `middleware`.
+
+### Érintett
+- `doc/minta-tanulsagok.md` + fenti specek
+
+---
+
+## 2026-08-03 — View Edit gomb: adatoszlop alatt
+
+### Mi változott
+- View lábléc nem `offset-md-2` (az form labelhez való); `.record-view-footer-actions` → `9rem + 1rem` (dt + gap), az értékoszloppal egy vonalban.
+
+### Érintett
+- `templates/Admin/{Samples,Parents,Cities}/view.php`
+- `webroot/css/style.css`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-03 — Tempus picker: locale a nyelvből (en/hu)
+
+### Mi változott
+- `LocaleDateParser::jsConfig()`: `intl`, `moment`, `startOfTheWeek` (követi `App.adminLocale`).
+- `form.js`: ne hardcode `hu` — naptár Intl + mezőformátum a `dateFormat` configból; mentés továbbra is middleware.
+
+### Érintett
+- `src/Utility/LocaleDateParser.php`, `webroot/js/pages/form.js`, `doc/middleware.md`
+
+---
+
+## 2026-08-03 — Szám middleware + Form errorClass deprecation
+
+### Mi változott / miért
+- `errorClass` config deprecated (Cake 5.2+) → `templates.errorClass` = `is-invalid`.
+- `LocaleNumberParser::looksLikeNumber`: a `1 234 567` típusú ezres csoport **ne** dátumnak számítson (korábban kihagyta a normalizálást → „must be an integer”).
+- Form inputmask: `autoUnmask` + `removeMaskOnSubmit` (middleware továbbra is fallback).
+
+### Érintett
+- `src/View/AppView.php`
+- `src/Utility/LocaleNumberParser.php`
+- `webroot/js/pages/form.js`
+- `doc/middleware.md`
+
+---
+
+## 2026-08-03 — Form mezőhibák: wrapper alatt (Select2 / Tempus / checkbox)
+
+### Mi változott
+- Összetett widgetnél (`input-group`, `select2-with-add`, checkbox) a hiba a wrapper **alatt**: `'error' => false` + `element('admin/field_error')`.
+- CSS: `.error-message` kötelezően piros / félkövér; flex sorban nem szorul mellé.
+
+### Érintett
+- `templates/element/admin/field_error.php`
+- `templates/Admin/{Samples,Parents,Cities}/form.php`
+- `src/View/AppView.php`, `webroot/css/style.css`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-03 — Tempus picker: világos panel, keret, árnyék
+
+### Mi változott
+- Tempus `display.theme: 'light'` (ne rendszer dark auto).
+- Popup: fehér háttér, `#ced4da` szegély, lágy box-shadow.
+
+### Érintett
+- `webroot/js/pages/form.js`, `webroot/css/style.css`
+
+---
+
+## 2026-08-03 — Form mezőhibák: mező alatt, piros félkövér
+
+### Mi változott
+- Admin Form helper (`AppView`): `errorClass=is-invalid`; hiba a control után (`.error-message`).
+- CSS: piros (`#dc3545`), `font-weight: 700`; input-groupban teljes sorba tördelve.
+
+### Érintett
+- `src/View/AppView.php`, `webroot/css/style.css`
+- `templates/Admin/{Samples,Cities}/form.php` (helyi template override eltávolítva)
+
+---
+
+## 2026-08-03 — Dátum mentés: locale middleware + Tempus formatInput
+
+### Mi változott / miért
+- Tempus 6.0 `formatInput` Intl hu → `2024. 03. 15.` (szóköz) — Cake `date(ymd)` elutasította.
+- `LocaleDateParser`: szóközös / DMY / MDY / ISO; `format()` + `jsConfig()`.
+- `form.js`: moment `formatInput` felülírás + `MyAdmin.config.dateFormat`.
+- Szám parser nem eszi meg a szóközös dátumot.
+
+### Érintett
+- `src/Utility/LocaleDateParser.php`, `LocaleNumberParser.php`
+- `webroot/js/pages/form.js`, `templates/Admin/Samples/form.php`
+- `doc/middleware.md`, `minta-tanulsagok.md`
+
+---
+
+## 2026-08-03 — Form szám maszk: nagy számok (inputmode)
+
+### Mi változott
+- Inputmask: `inputmode: 'text'` (ne `decimal`/`numeric`) — ezres csoportosítással a nagy számok begépelése nem akad el ~3 jegy után.
+- `shortcuts: null`; templateből kikerült a `inputmode` attr a Samples számmezőkről.
+
+### Érintett
+- `webroot/js/pages/form.js`, `templates/Admin/Samples/form.php`
+- Spec: `admin-konvenciok.md`, `middleware.md`
+
+---
+
+## 2026-08-03 — View/form footer: `offset-md-2`
+
+### Mi változott
+- View Edit és form Save/Cancel: `col-12 col-md-10 col-xxl-9 offset-md-2` (label oszloppal egy vonalban).
+
+### Érintett
+- `templates/Admin/{Samples,Parents,Cities}/view.php` (+ Parents/Cities `form.php`)
+
+---
+
+## 2026-08-03 — Form hr: csak `visible` fölött, mezőszélességgel
+
+### Mi változott
+- Samples: a `logikai` fölötti `<hr>` eltávolítva; az elválasztó csak a **`visible`** fölött.
+- Markup minden formon: `<div class="row"><div class="col-12 col-xxl-11"><hr class="my-4"></div></div>` (nem teljes szélességű bare `<hr>`).
+
+### Érintett
+- `templates/Admin/{Samples,Parents,Cities}/form.php`
+- Spec: `admin-konvenciok.md`, `admin-oldal.md`, `minta-tanulsagok.md`
+
+---
+
+## 2026-08-03 — View footer: nincs „Back to list”
+
+### Mi változott
+- View card footer: csak **Edit**; a „Back to list” a breadcrumbben marad (ne duplikáld).
+
+### Érintett
+- `templates/Admin/{Samples,Parents,Cities}/view.php`
+- Spec: `admin-konvenciok.md`, `admin-oldal.md`
+
+---
+
+## 2026-08-03 — Form: `visible` + `pos` elválasztva, sorrend rögzítve
+
+### Mi változott
+- Minden Admin formon (`Samples`, `Parents`, `Cities`): a `visible` / `pos` blokk a **többi mező után** áll; felettük `<hr class="my-4">`.
+- Sorrend **minden esetben**: először **visible**, alatta **pos**.
+
+### Érintett
+- `templates/Admin/{Samples,Parents,Cities}/form.php`
+- Spec: `admin-konvenciok.md`, `admin-oldal.md`, `minta-tanulsagok.md`, `README.md`
+
+---
+
+## 2026-08-03 — Éles DB dokumentáció frissítve
+
+### Mi változott
+- **[minta-tanulsagok.md](minta-tanulsagok.md)** bővítve: §0 éles-adatbázis playbook, Delete UI, Flash Notify/SWAL, Tempus Dominus, modul checklist (§11).
+- Összehangolva: `README.md` (rögzített döntések), `uj-projekt.md`, `crud-utmutato.md`, `middleware.md`, `admin-oldal.md`, `admin-konvenciok.md`, `keretrendszer.md`.
+
+### Miért
+Következő éles DB CRUD-nál az agent a `doc/`-ból (főleg `minta-tanulsagok.md` §0–11) építsen, ne a chatelőzményből.
+
+---
+
+## 2026-08-03 — Törlés gomb: secondary + disabled ha nem törölhető
+
+### Mi változott
+- Nem törölhető rekord: Delete = **`btn-secondary` / `btn-outline-secondary` + `disabled`** (tooltip a tilalomról).
+- Törölhető: továbbra is danger + Swal question megerősítés.
+- Érintett: index sorok, view related, breadcrumb, record/linked modal.
+
+---
+
+## 2026-08-03 — Flash: Simple Notify + SweetAlert2 (JeffAdmin5)
+
+### Mi változott
+- Admin Flash alapértelmezés: **Simple Notify** toast (több üzenet egyszerre) — JeffAdmin5 `flash/` + `script_flash`.
+- Második típus: **SWAL** (`flash/*_swal.php`) — SweetAlert2 modal; egyszerre egy (több sorban).
+- Legacy: `flash_/` + jquery-toastmessage assetek (opcionális).
+- JS: simple-notify **1.0.6**, sweetalert2 **11.26.25**.
+- Helper: `$this->flashSwal('success'|'error'|…, $msg)`.
+
+### Érintett fájlok
+- `templates/element/flash/*`, `flash_/*`, `templates/element/admin/script_flash.php`
+- `templates/layout/admin.php`, `webroot/js/app.js` (`MyAdmin.flashSwal`)
+- `webroot/plugins/simple-notify/`, `sweetalert2/`, `jquery-toastmessage/`
+- `src/Controller/Admin/AppController.php`
+
+---
+
+## 2026-08-03 — Dátum/idő picker: Tempus Dominus (JeffAdmin5)
+
+### Mi változott
+- Form date / time / datetime: **daterangepicker + inputmask** helyett **Tempus Dominus 6** ([zsfoto/jeffadmin5](https://packagist.org/packages/zsfoto/jeffadmin5) beállításokkal).
+- Formátumok: `yyyy.MM.dd.` / `HH:mm:ss` / `yyyy.MM.dd HH:mm:ss` (hu); mentés továbbra is `LocaleDateParser` → SQL.
+- Asset: `webroot/plugins/tempus-dominus/`, `webroot/js/popper.js`
+
+### Érintett fájlok
+- `templates/Admin/Samples/form.php`, `webroot/js/pages/form.js`, `webroot/css/style.css`
+- `src/Utility/LocaleDateParser.php` (trailing `.` a hu dátumhoz)
+
+---
+
+## 2026-08-03 — Törlés UX: kattintható + SweetAlert question
+
+### Mi változott
+- Tiltott Delete: Bootstrap `.disabled` helyett **`is-delete-blocked`** (kattintható → Swal hibaüzenet; tooltip működik).
+- Engedélyezett törlés: `MyAdmin.confirmDelete` **`icon: 'question'`** mindenhol (index sor, breadcrumb, record/linked modal, related tab).
+- View related táblák: látható **trash** gomb (`btn-row-delete`) + rejtett form / blocked állapot.
+
+### Érintett fájlok
+- `webroot/js/app.js`, `webroot/js/pages/index.js`, `webroot/css/style.css`
+- `templates/element/admin/breadcrumb.php`
+- Index + view: Samples / Parents / Cities
+
+---
+
+## 2026-08-03 — Demó tanulságok naplózva (éles építéshez)
+
+### Mi változott
+- Új tartós spec: **[minta-tanulsagok.md](minta-tanulsagok.md)** — Samples/Parents/Cities minta → CounterCache, modal 20/ABC, törlésvédelem, JS/SweetAlert, AppController helperek, gyakori hibák.
+- Frissítve: `README.md`, `keretrendszer.md`, `uj-projekt.md` (agent szabályok + checklist) — a demó eldobható, a szabályok megmaradnak.
+
+### Miért
+A MyAdmin demó DB / CRUD csak minta. Új éles projektnél ebből a `doc/`-ból (különösen `minta-tanulsagok.md`) kell építkezni, nem a chatelőzményből.
+
+---
+
+## 2026-08-03 — CounterCache véglegesítés (működő elvárások)
+
+### Mi változott
+- HABTM: `belongsTo` → majd CounterCache; `cascadeCallbacks` + `saveStrategy => replace`
+- Trait: `*_count` friss DB olvasás törlés / `canDelete` előtt
+- Samples form: üres `cities._ids` → `[]` (mint Cities)
+- `bin/cake rebuild_counter_caches` — Parents/Samples/Cities számlálók újraépítése
+- Számlálók újraszámolva a demó DB-n
+
+### Érintett fájlok
+- Table-ek + `PreventsDeleteWithChildrenTrait`, `SamplesController`, `RebuildCounterCachesCommand`
+- Doc: `admin-konvenciok.md`, `valtozasok.md`
+
+---
+
+## 2026-08-03 — CounterCache a `*_count` mezőkhöz (ne élő COUNT)
+
+### Mi változott / szabály
+- **Igaz:** a `*_count` mezőket a CakePHP **CounterCache** behavior tartja karban.
+- `countRelatedChildren()` többé **nem** futtat `find()->count()` — a CounterCache oszlopot olvassa (`relatedChildrenCountField()`).
+- HABTM: CounterCache a **through** Table-en (`CitiesSamples`); `belongsToMany` + `cascadeCallbacks => true`.
+- hasMany: CounterCache a **gyerek** Table-en (`Samples` → `Parents.sample_count`).
+- Controller: törölve a manuális `city_count` / `sample_count = count(_ids)`.
+
+### Érintett fájlok
+- `PreventsDeleteWithChildrenTrait.php`, `SamplesTable`, `ParentsTable`, `CitiesTable`, `CitiesSamplesTable`
+- `SamplesController`, `CitiesController` (normalize* eltávolítva)
+- Doc: `admin-konvenciok.md` (CounterCache szekció), `crud-utmutato.md`, `keretrendszer.md`, `valtozasok.md`
+
+---
+
+## 2026-08-03 — Modal gyereklista: utolsó 20 modified + ABC
+
+### Mi változott
+- Modal JSON (`recordGet` / `parentGet`): kapcsolt nevek = **utoljára módosított max. 20**, megjelenítés **name ASC**.
+- `Admin\AppController`: `$modalRelatedLimit`, `containRelatedForModal()`, `relatedNameLinksForModal()`.
+
+### Érintett fájlok
+- `AppController.php`, `ParentsController`, `SamplesController`, `CitiesController`
+- Doc: `admin-konvenciok.md`, `valtozasok.md`, `admin-oldal.md`, `crud-utmutato.md`
+
+---
+
+## 2026-08-03 — Modal Delete: minden modal + SweetAlert Bootstrap fölött
+
+### Mi változott
+- `MyAdmin.swal()`: Bootstrap Modal **FocusTrap** pause/resume + z-index 20000 (record, linked, Select2 hibaüzenetek).
+- Record + linked Delete: event delegation; linked `deleteUrl` soha nem a saját `#delete-form-{id}`-re megy.
+- CSS: `.swal2-container` z-index, `.btn-label { pointer-events: none }`, modal footer stacking.
+- Samples index Parent link: `data-delete-form-prefix="parent"`.
+
+### Érintett fájlok
+- `webroot/js/app.js`, `webroot/js/pages/index.js`, `webroot/css/style.css`
+- `templates/Admin/Samples/index.php`
+- Doc: `valtozasok.md`
+
+---
+
+## 2026-08-03 — Modal Delete: tooltip + kattintható tiltott állapot
+
+### Mi változott
+- Modal Delete gomb: **ne** natív `disabled` (az blokkolta a kattintást és a tooltipet).
+- `aria-disabled` + `.disabled` + tooltip; tiltott kattintás → SweetAlert hibaüzenet.
+- Linked modal: `can_delete` csak a JSON-ból (ne a más entitású index-sor `data-can-delete`-jéből).
+- SweetAlert z-index a Bootstrap modal fölött (`didOpen` → 20000).
+
+### Érintett fájlok
+- `webroot/js/pages/index.js`, `webroot/js/app.js`, `webroot/css/style.css`
+- Doc: `valtozasok.md`, `admin-konvenciok.md`
+
+---
+
+## 2026-08-03 — Parent modal: Sample list linkekkel
+
+### Mi változott
+- Samples index Parent link / `parentGet`: Parent modalban **Sample list** (`[{id,name}]` ASC) → kattintás → Sample linked modal (Edit/View/Delete).
+- Parents `recordGet` + index ugyanígy; Parents view fő `dl`: Sample list linkek.
+
+### Érintett fájlok
+- `SamplesController::parentGet`, `ParentsController::recordGet` / `view`
+- `templates/Admin/Samples/index.php`, `Parents/{index,view}.php`
+- Doc: `admin-konvenciok.md`, `valtozasok.md`
+
+---
+
 ## 2026-07-31 — Cities form: Samples HABTM Select2 multiple
 
 ### Mi változott

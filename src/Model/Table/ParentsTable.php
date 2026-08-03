@@ -5,7 +5,6 @@ namespace App\Model\Table;
 
 use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -47,6 +46,7 @@ class ParentsTable extends Table
         $this->addBehavior('Timestamp');
 
         // No dependent cascade: delete is refused while Samples exist (beforeDelete).
+        // sample_count: CounterCache on SamplesTable (belongsTo Parents).
         $this->hasMany('Samples', [
             'foreignKey' => 'parent_id',
             'dependent' => false,
@@ -54,19 +54,13 @@ class ParentsTable extends Table
     }
 
     /**
-     * @param \Cake\Datasource\EntityInterface $entity
-     * @return int
+     * CounterCache column used for delete protection (maintained by SamplesTable).
+     *
+     * @return string
      */
-    public function countRelatedChildren(EntityInterface $entity): int
+    protected function relatedChildrenCountField(): string
     {
-        $id = $entity->get('id');
-        if ($id === null || $id === '') {
-            return (int)($entity->get('sample_count') ?? 0);
-        }
-
-        return $this->Samples->find()
-            ->where(['Samples.parent_id' => $id])
-            ->count();
+        return 'sample_count';
     }
 
     /**

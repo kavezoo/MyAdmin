@@ -9,7 +9,7 @@
  */
 
 $this->Html->css([
-	'/plugins/datetimepicker/css/daterangepicker',
+	'/plugins/tempus-dominus/css/tempus-dominus.min',
 	'/plugins/select2-4.1.0/css/select2.min',
 	'/plugins/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min',
 	'pages/form',
@@ -18,6 +18,7 @@ $this->Html->css([
 $config = [
 	'indexUrl' => $this->Url->build(['action' => 'index']),
 	'numberFormat' => \App\Utility\LocaleNumberParser::jsConfig(),
+	'dateFormat' => \App\Utility\LocaleDateParser::jsConfig(),
 ];
 $this->Html->scriptBlock(
 	'window.MyAdmin = window.MyAdmin || {}; window.MyAdmin.config = Object.assign(window.MyAdmin.config || {}, '
@@ -27,7 +28,8 @@ $this->Html->scriptBlock(
 );
 
 $this->Html->script([
-	'/plugins/datetimepicker/js/daterangepicker',
+	'popper',
+	'/plugins/tempus-dominus/js/tempus-dominus.min',
 	'/plugins/inputmask/jquery.inputmask.min',
 	'/plugins/select2-4.1.0/js/select2.full.min',
 	'pages/form',
@@ -47,8 +49,8 @@ $isEdit = !$sample->isNew();
 				<div class="float-right d-flex align-items-center gap-3">
 					<?php if ($isEdit): ?>
 						<div class="text-end text-muted small lh-sm">
-							<div><?= __('Created:') ?> <b><?= $sample->created ? h($sample->created->format('Y.m.d.')) : '—' ?></b></div>
-							<div><?= __('Modified:') ?> <b><?= $sample->modified ? h($sample->modified->format('Y.m.d.')) : '—' ?></b></div>
+							<div><?= __('Created:') ?> <b><?= $sample->created ? h(\App\Utility\LocaleDateParser::format($sample->created, 'date')) : '—' ?></b></div>
+							<div><?= __('Modified:') ?> <b><?= $sample->modified ? h(\App\Utility\LocaleDateParser::format($sample->modified, 'date')) : '—' ?></b></div>
 						</div>
 					<?php endif; ?>
 					<a role="button" href="<?= $this->Url->build(['action' => 'index']) ?>" class="btn btn-outline-secondary" id="btn-close-form" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h('<b>' . __('Close window') . '</b>') ?>">
@@ -62,10 +64,6 @@ $isEdit = !$sample->isNew();
 				<?= $this->Form->create($sample, [
 					'id' => 'form-horizontal',
 					'autocomplete' => 'off',
-					'templates' => [
-						'inputContainer' => '{{content}}',
-						'inputContainerError' => '{{content}}{{error}}',
-					],
 				]) ?>
 
 					<div class="form-group row">
@@ -79,6 +77,7 @@ $isEdit = !$sample->isNew();
 										'empty' => __('Select parent...'),
 										'class' => 'js-example-basic-single form-select',
 										'id' => 'parent-id',
+										'error' => false,
 									]) ?>
 								</div>
 								<button
@@ -93,6 +92,7 @@ $isEdit = !$sample->isNew();
 									<i class="fa fa-plus" aria-hidden="true"></i>
 								</button>
 							</div>
+							<?= $this->element('admin/field_error', ['field' => 'parent_id']) ?>
 						</div>
 					</div>
 
@@ -112,76 +112,117 @@ $isEdit = !$sample->isNew();
 					<div class="form-group row">
 						<label for="szam" class="col-sm-3 col-md-2 col-form-label"><?= __('Number:') ?></label>
 						<div class="col-12 col-md-10 col-xl-5">
-							<?= $this->Form->control('szam', [
-								'label' => false,
-								'type' => 'text',
-								'class' => 'form-control js-input-integer',
-								'placeholder' => __('e.g. 1 234'),
-								'inputmode' => 'numeric',
-								'id' => 'szam',
-								'value' => $sample->szam !== null && $sample->szam !== ''
-									? \App\Utility\LocaleNumberParser::format($sample->szam, decimals: 0)
-									: '',
-							]) ?>
+							<?= $this->Form->control('szam', \App\Utility\LocaleNumberParser::formIntegerOptions(
+								$sample->szam,
+								['id' => 'szam']
+							)) ?>
 						</div>
 					</div>
 
 					<div class="form-group row">
 						<label for="netto" class="col-sm-3 col-md-2 col-form-label"><?= __('Net:') ?></label>
 						<div class="col-12 col-md-10 col-xl-5">
-							<?= $this->Form->control('netto', [
-								'label' => false,
-								'type' => 'text',
-								'class' => 'form-control js-input-decimal',
-								'placeholder' => __('e.g. 1 234,56'),
-								'inputmode' => 'decimal',
-								'id' => 'netto',
-								'value' => $sample->netto !== null && $sample->netto !== ''
-									? \App\Utility\LocaleNumberParser::format($sample->netto, decimals: 2)
-									: '',
-							]) ?>
+							<?= $this->Form->control('netto', \App\Utility\LocaleNumberParser::formDecimalOptions(
+								$sample->netto,
+								2,
+								['id' => 'netto']
+							)) ?>
 						</div>
 					</div>
 
 					<div class="form-group row">
 						<label for="datum" class="col-sm-3 col-md-2 col-form-label"><?= __('Date:') ?></label>
 						<div class="col-12 col-md-10 col-xl-4">
-							<?= $this->Form->control('datum', [
-								'label' => false,
-								'type' => 'text',
-								'class' => 'form-control',
-								'placeholder' => 'yyyy-mm-dd',
-								'id' => 'datum',
-								'value' => $sample->datum ? $sample->datum->format('Y-m-d') : '',
-							]) ?>
+							<div class="form-group date mb-0">
+								<div
+									class="input-group js-tempus-picker"
+									id="picker-datum"
+									data-td-target-input="nearest"
+									data-td-target-toggle="nearest"
+									data-picker-type="date"
+									data-picker-value="<?= $sample->datum ? h($sample->datum->format('Y-m-d')) : '' ?>"
+								>
+									<?= $this->Form->control('datum', [
+										'label' => false,
+										'type' => 'text',
+										'class' => 'form-control',
+										'placeholder' => __('Date'),
+										'id' => 'datum',
+										'data-td-target' => '#picker-datum',
+										'value' => \App\Utility\LocaleDateParser::format($sample->datum, 'date'),
+										'autocomplete' => 'off',
+										'error' => false,
+									]) ?>
+									<span class="input-group-text" data-td-target="#picker-datum" data-td-toggle="datetimepicker" role="button" tabindex="0">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</span>
+								</div>
+								<?= $this->element('admin/field_error', ['field' => 'datum']) ?>
+							</div>
 						</div>
 					</div>
 
 					<div class="form-group row">
 						<label for="ido" class="col-sm-3 col-md-2 col-form-label"><?= __('Time:') ?></label>
 						<div class="col-12 col-md-10 col-xl-4">
-							<?= $this->Form->control('ido', [
-								'label' => false,
-								'type' => 'text',
-								'class' => 'form-control',
-								'placeholder' => 'hh:mm',
-								'id' => 'ido',
-								'value' => $sample->ido ? $sample->ido->format('H:i') : '',
-							]) ?>
+							<div class="form-group time mb-0">
+								<div
+									class="input-group js-tempus-picker"
+									id="picker-ido"
+									data-td-target-input="nearest"
+									data-td-target-toggle="nearest"
+									data-picker-type="time"
+									data-picker-value="<?= $sample->ido ? h($sample->ido->format('H:i:s')) : '' ?>"
+								>
+									<?= $this->Form->control('ido', [
+										'label' => false,
+										'type' => 'text',
+										'class' => 'form-control',
+										'placeholder' => __('Time'),
+										'id' => 'ido',
+										'data-td-target' => '#picker-ido',
+										'value' => \App\Utility\LocaleDateParser::format($sample->ido, 'time'),
+										'autocomplete' => 'off',
+										'error' => false,
+									]) ?>
+									<span class="input-group-text" data-td-target="#picker-ido" data-td-toggle="datetimepicker" role="button" tabindex="0">
+										<i class="fa fa-clock-o" aria-hidden="true"></i>
+									</span>
+								</div>
+								<?= $this->element('admin/field_error', ['field' => 'ido']) ?>
+							</div>
 						</div>
 					</div>
 
 					<div class="form-group row">
 						<label for="datumido" class="col-sm-3 col-md-2 col-form-label"><?= __('Date and time:') ?></label>
 						<div class="col-12 col-md-10 col-xl-4">
-							<?= $this->Form->control('datumido', [
-								'label' => false,
-								'type' => 'text',
-								'class' => 'form-control',
-								'placeholder' => 'yyyy-mm-dd hh:mm',
-								'id' => 'datumido',
-								'value' => $sample->datumido ? $sample->datumido->format('Y-m-d H:i') : '',
-							]) ?>
+							<div class="form-group datetime mb-0">
+								<div
+									class="input-group js-tempus-picker"
+									id="picker-datumido"
+									data-td-target-input="nearest"
+									data-td-target-toggle="nearest"
+									data-picker-type="datetime"
+									data-picker-value="<?= $sample->datumido ? h($sample->datumido->format('Y-m-d H:i:s')) : '' ?>"
+								>
+									<?= $this->Form->control('datumido', [
+										'label' => false,
+										'type' => 'text',
+										'class' => 'form-control',
+										'placeholder' => __('Date and time'),
+										'id' => 'datumido',
+										'data-td-target' => '#picker-datumido',
+										'value' => \App\Utility\LocaleDateParser::format($sample->datumido, 'datetime'),
+										'autocomplete' => 'off',
+										'error' => false,
+									]) ?>
+									<span class="input-group-text" data-td-target="#picker-datumido" data-td-toggle="datetimepicker" role="button" tabindex="0">
+										<i class="fa fa-calendar" aria-hidden="true"></i>
+									</span>
+								</div>
+								<?= $this->element('admin/field_error', ['field' => 'datumido']) ?>
+							</div>
 						</div>
 					</div>
 
@@ -197,6 +238,7 @@ $isEdit = !$sample->isNew();
 										'class' => 'js-example-basic-multiple form-select',
 										'id' => 'cities-ids',
 										'data-placeholder' => __('Select cities...'),
+										'error' => false,
 									]) ?>
 								</div>
 								<button
@@ -211,12 +253,7 @@ $isEdit = !$sample->isNew();
 									<i class="fa fa-plus" aria-hidden="true"></i>
 								</button>
 							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-12 col-xxl-11">
-							<hr class="my-4">
+							<?= $this->element('admin/field_error', ['field' => 'cities._ids']) ?>
 						</div>
 					</div>
 
@@ -230,9 +267,15 @@ $isEdit = !$sample->isNew();
 								]) ?>
 								<label class="form-check-label" for="logikai"><?= __('Boolean') ?></label>
 							</div>
+							<?= $this->element('admin/field_error', ['field' => 'logikai']) ?>
 						</div>
 					</div>
 
+					<div class="row">
+						<div class="col-12 col-xxl-11">
+							<hr class="my-4">
+						</div>
+					</div>
 					<div class="form-group row">
 						<div class="d-none d-md-block col-md-2 col-form-label"></div>
 						<div class="col-12 col-md-10 col-xxl-9">
@@ -243,23 +286,17 @@ $isEdit = !$sample->isNew();
 								]) ?>
 								<label class="form-check-label" for="visible"><?= __('Visible') ?></label>
 							</div>
+							<?= $this->element('admin/field_error', ['field' => 'visible']) ?>
 						</div>
 					</div>
 
 					<div class="form-group row">
 						<label for="pos" class="col-sm-3 col-md-2 col-form-label"><?= __('Position:') ?></label>
 						<div class="col-12 col-md-10 col-xl-3">
-							<?= $this->Form->control('pos', [
-								'label' => false,
-								'type' => 'text',
-								'class' => 'form-control js-input-integer',
-								'placeholder' => __('e.g. 1 000'),
-								'inputmode' => 'numeric',
-								'id' => 'pos',
-								'value' => $sample->pos !== null && $sample->pos !== ''
-									? \App\Utility\LocaleNumberParser::format($sample->pos, decimals: 0)
-									: '',
-							]) ?>
+							<?= $this->Form->control('pos', \App\Utility\LocaleNumberParser::formIntegerOptions(
+								$sample->pos,
+								['id' => 'pos']
+							)) ?>
 						</div>
 					</div>
 

@@ -14,6 +14,7 @@ Kapcsolódó specifikációk (ugyanebben a `doc/`-ban):
 | [crud-utmutato.md](crud-utmutato.md) | Egy új CRUD modul lépései |
 | [struktura.md](struktura.md) | Könyvtárak, routing, element lista |
 | [keretrendszer.md](keretrendszer.md) | Mi tartós / mi eldobható |
+| [minta-tanulsagok.md](minta-tanulsagok.md) | Demó → éles: CounterCache, modal, törlésvédelem |
 
 ---
 
@@ -60,11 +61,13 @@ webroot/
   js/pikeadmin.js (vagy sablon app JS)
   js/app.js                     # window.MyAdmin API (lásd 2.6)
   js/pages/index.js             # lista: modal, delete confirm, tooltip
-  js/pages/form.js              # select2, daterangepicker, inputmask, select2-add modal
+  js/pages/form.js              # select2, Tempus Dominus, inputmask, select2-add modal
   plugins/sweetalert2/
+  plugins/simple-notify/
   plugins/select2/
-  plugins/daterangepicker/ (vagy datetimepicker a sablon szerint)
+  plugins/tempus-dominus/ (+ popper.js a form oldalakon)
   plugins/inputmask/
+  plugins/jquery-toastmessage/  # opcionális legacy flash_
   plugins/trumbowyg/            # csak ha lesz .editor mező
   fontawesome/                  # all.min + v4-shims + v4-font-face
   img/                          # logo, avatars (sidebar/header)
@@ -99,7 +102,8 @@ $routes->scope('/{lang}', function (RouteBuilder $builder): void {
 
 `{lang}` whitelist: `config/languages.php` + `Configure::read('App.languages')`.
 
-Default locale: `config/app.php` → `App.defaultLocale` = `hu_HU`.
+Default locale: `config/app.php` → `App.defaultLocale` = `hu_HU`.  
+Admin locale: `App.adminLocale` = **`hu_HU`** (éles); teszt: `en_US` — [i18n.md](i18n.md), [minta-tanulsagok.md](minta-tanulsagok.md) §0.2.
 
 ### 2.3 Middleware + utility
 
@@ -107,7 +111,7 @@ Hozd létre (spec: [middleware.md](middleware.md)):
 
 | Osztály | Felelősség |
 |---------|------------|
-| `App\Middleware\LocaleMiddleware` | Admin → mindig `hu_HU`; Member → `{lang}` |
+| `App\Middleware\LocaleMiddleware` | Admin → `App.adminLocale` (éles: `hu_HU`); Member → `{lang}` |
 | `App\Middleware\NormalizeLocalizedDateMiddleware` | POST body dátum/idő → `Y-m-d` / `Y-m-d H:i:s` / `H:i:s` |
 | `App\Middleware\NormalizeLocalizedNumberMiddleware` | POST body szám → `1234.56` |
 | `App\Utility\LocaleDateParser` | parse logika |
@@ -135,9 +139,11 @@ src/Controller/Member/DashboardController.php
 Admin `AppController::initialize()`:
 
 ```php
-I18n::setLocale('hu_HU');
+I18n::setLocale((string)Configure::read('App.adminLocale', 'hu_HU'));
 $this->viewBuilder()->setLayout('admin');
 ```
+
+AppView (Admin Form hibák): `templates.errorClass` = `is-invalid` — [minta-tanulsagok.md](minta-tanulsagok.md) §6c.
 
 ### 2.5 Layout + elementek
 
@@ -149,10 +155,15 @@ $this->viewBuilder()->setLayout('admin');
 | `templates/element/admin/breadcrumb.php` | Cím + kontextus gombok (Back, New, Save, Edit, View, Delete) |
 | `templates/element/admin/footer.php` | Lábléc |
 | `templates/element/admin/header_*.php` | profile, alerts, messages, help, search (language fájl létezhet, de **ne** legyen behúzva) |
-| `templates/element/admin/index_pagination.php` | Lista lapozó |
+| `templates/element/admin/index_pagination.php` | Lista / keresés lapozó |
+| `templates/element/admin/index_counter.php` | Bake `Paginator::counter` összesítő |
+| `templates/element/admin/index_footer.php` | Card lábléc: counter + lapozó |
+| `templates/element/admin/table_search.php` | Index szöveges kereső + nagyító (`Start search`) |
+| `templates/element/admin/header_search.php` | Globális kereső → `/admin/search` |
 | `templates/element/admin/modal_record_view.php` | `#modalRecordView` |
 | `templates/element/admin/modal_linked_record_view.php` | Kapcsolt rekord modal (ha kell) |
 | `templates/element/admin/view_related_tabs.php` | View gyerek tab sheet-ek |
+| `templates/element/admin/field_error.php` | Form mezőhiba összetett widgetnél |
 
 Layout közös CSS (példa lista): `bootstrap.min`, fontawesome (+ v4 shims), `style`, sweetalert2.  
 Layout közös JS: modernizr, jquery, moment, bootstrap.bundle, bridge/detect/fastclick/blockUI/nicescroll (ha a sablonhoz kellenek), pikeadmin, sweetalert2, **`app.js`**.
@@ -186,7 +197,7 @@ $showModifiedColumn = true;
 ```
 
 Részletek: [admin-konvenciok.md](admin-konvenciok.md).  
-`pages/form.js`: `#name` autofókusz; daterangepicker + inputmask; **számmezők locale szerint** (`numberFormat`); Select2; `.btn-select2-add` + modal name-fókusz …
+`pages/form.js`: `#name` autofókusz; Tempus Dominus (date/time/datetime); **számmezők locale szerint** (`numberFormat`); Select2; `.btn-select2-add` + modal name-fókusz …
 
 ### 2.7 i18n
 
@@ -195,19 +206,95 @@ Részletek: [admin-konvenciok.md](admin-konvenciok.md).
 3. Extract: `bin/cake i18n extract ...`
 4. Layout `MyAdmin.messages` kulcsai is `__()`-zel
 
-### 2.8 Első CRUD modul
+### 2.8 Keresés + index állapot + last-visited (kötelező keretrész)
+
+**Minden új projektben** ez a csomag a keretrendszer része — az első Admin felépítéskor másold be / építsd fel, ne hagyd „későbbre”.
+
+#### Fájlok (egyszer)
+
+| Elem | Útvonal |
+|------|---------|
+| Keresés config | `config/admin_search.php` — bootstrap: `Configure::load('admin_search')` |
+| Helper | `src/Utility/AdminSearch.php` |
+| AppController API | `applyIndexListState`, `applyIndexSearch`, `resolveIndexPageForLastVisited`, `redirectToIndexList`, `rememberLastVisited`, `setLastVisitedForIndex`, `indexListUrl` |
+| Globális keresés | `Admin\SearchController` + `templates/Admin/Search/index.php` + `css/pages/search.css` (Google-szerű találat + modal) |
+| Index kereső UI | `templates/element/admin/table_search.php` |
+| Header kereső UI | `templates/element/admin/header_search.php` (header include) |
+| Lapozó | `index_pagination` (First…Last), `index_counter`, `index_footer` |
+| Scroll | `webroot/js/pages/index.js` → `.last-visited` a breadcrumb alá (~mt-3) |
+
+Agent rules (másolat új repo `.cursor/rules/`-ba): `admin-kereses-index-allapot.mdc`, `admin-paginator.mdc`, `penznem-formatcurrency.mdc`, `pos-db-default.mdc`, `auto-dokumentalas.mdc`.
+
+#### Config — első felépítés + minden új Table
+
+Az Admin **indulásakor** sorold fel az **összes** CRUD modelt és **minden szöveges** mezőt (`fields`). Új modulnál azonnal bővítsd.
+
+```php
+'Things' => [
+    'label' => 'Things',           // msgid __()
+    'controller' => 'Things',
+    'titleField' => 'name',
+    'labelsKey' => 'thing',        // Search modal entityFieldLabels
+    'fields' => ['name', 'code'],  // string/text only — ne szám/dátum/bool/FK
+],
+```
+
+Globális kulcsok: `queryParam`, `globalPageLimit` (20), `globalLimitPerModel` (200), `globalMaxResults` (1000).
+
+| Kereső | Hol keres |
+|--------|-----------|
+| Index (`table_search`) | Csak az adott model `fields` |
+| Header (`header_search`) | Összes model összes `fields` → `/admin/search` (Google UI + lapozás) |
+
+#### Viselkedés (ne térj el)
+
+| Esemény | Elvárás |
+|---------|---------|
+| Index `?q=` | Szűrt lista; session `Admin.indexState[Alias]` (sort, direction, page, q) |
+| Bare index URL | Sessionből visszatölt (ugyanaz az oldal / szűrő / rendezés) |
+| Save / Back to list | `redirectToIndexList('Alias')` / `$indexListUrl` — **ne** bare `index` |
+| Clear search | `?clear_search=1` → `q` törölve, **szűretlen** lista; `resolveIndexPageForLastVisited` → a **last-visited** rekord **oldala**; scroll a kiemelt sorra. Nincs last-visited → keresés előtti oldal |
+| Keresés submit | Form csak `q` (nincs `page`) → **mindig 1. oldal** |
+| Lapozás (`?page=`) | `clearLastVisited` — kiemelés törlése |
+| Üres keresőmező | A törlés (×) gomb **nem** jelenik meg |
+| Tooltipek | `data-bs-html`: pl. `__('Start search')` + `__('Search in the text fields of this list.')` (index) / `…of all configured tables.` (globális); clear magyarázat; EN msgid + `hu_HU` `.po` |
+
+#### Index controller minta
+
+```php
+$redirect = $this->applyIndexListState('Things');
+if ($redirect !== null) {
+    return $redirect;
+}
+$paginateOptions = $this->indexPaginateOptions(['sortableFields' => [/* … */]]);
+$query = $this->applyIndexSearch($this->Things->find(), $this->Things);
+$redirect = $this->resolveIndexPageForLastVisited('Things', $query, $paginateOptions);
+if ($redirect !== null) {
+    return $redirect;
+}
+$items = $this->paginate($query, $paginateOptions);
+$this->setLastVisitedForIndex('Things');
+```
+
+**URL = igazság:** a listaállapot (sort / direction / **page** / q / limit) a query stringben van (könyvjelzőzhető). A `page=1` is mindig szerepel (egyedi `App\View\Helper\PaginatorHelper` — a Cake alapból elhagyná). Üres `/admin/things` → redirect a sessionben mentett kanonikus URL-re. Lapozáskor, ha az oldal változik → `clearLastVisited`.
+
+Részletek: [admin-konvenciok.md](admin-konvenciok.md) → „Keresés” / „Index lista állapot” / „Utolsó rekord”.
+
+### 2.9 Első CRUD modul
 
 Kövesd a [crud-utmutato.md](crud-utmutato.md)-t egy **valós** táblára (vagy ideiglenes teszt táblára).
 
 Kötelező checklist modulonként:
 
 - [ ] Model + asszociációk (reserved entity név kezelve)
-- [ ] Admin controller: index, add, edit→`form`, view (+ contain, kapcsolt lista **ASC**), delete, `recordGet` (modal lista is ASC)
-- [ ] `index.php` — teljes lista-minta ([admin-konvenciok.md](admin-konvenciok.md))
+- [ ] Admin controller `index`: `applyIndexListState` + `applyIndexSearch` + `resolveIndexPageForLastVisited` + `paginate` + `setLastVisitedForIndex`
+- [ ] Save / delete után: `redirectToIndexList('Alias')` (ne bare `['action'=>'index']`)
+- [ ] `index.php` — `admin/table_search` + `admin/index_pagination` + `admin/index_footer` + teljes lista-minta ([admin-konvenciok.md](admin-konvenciok.md))
+- [ ] `config/admin_search.php` — model + **összes** szöveges `fields` + `labelsKey`
 - [ ] `form.php` — közös add/edit; `#name` autofocus; mentés try/catch + Flash
 - [ ] `view.php` — `dl` + `view_related_tabs` gyerekekhez
 - [ ] Sidebar menüpont
-- [ ] Új stringek a `.po`-ban
+- [ ] Új stringek a `.po`-ban (kereső tooltip msgid-ek is, ha hiányoznak)
 - [ ] `doc/valtozasok.md` bejegyzés
 
 ---
@@ -248,16 +335,17 @@ Olvasd el és **kövesd** — a felhasználónak ne kelljen ezeket minden chatbe
 1. Először: [admin-oldal.md](admin-oldal.md) (célkép) + ez a fájl + [admin-konvenciok.md](admin-konvenciok.md) + [i18n.md](i18n.md) + [middleware.md](middleware.md).
 2. Üres projekt → **2. szakasz**. Új tábla → [crud-utmutato.md](crud-utmutato.md).
 3. Címkék: `__('English msgid')` + `hu_HU/default.po`. Admin locale mindig `hu_HU` (middleware + AppController). **Nincs** nyelvválasztó az admin headerben.
-4. Számok **kiírása** (index/view/modal): `LocaleNumberParser::format()`; count: `formatCount()`; pénznem: `currencySymbol()` → **Ft**. Form: `numberFormat` + `.js-input-decimal`/`.js-input-integer`. Mentés: szám/dátum middleware.
+4. Számok **kiírása** (index/view/modal): `LocaleNumberParser::format()`; count: `formatCount()`; pénz: `formatCurrency()` (HUF, ICU). Form: `numberFormat` + `.js-input-decimal`/`.js-input-integer`. Mentés: szám/dátum middleware.
 5. Index fix oszlopszélesség (`style.css`): minta (`MyPluginTemplate`) + MyAdmin kiegészítés — `count`/`visible`/`boolean`/`date`/`datetime`/`time` a mintából; `id`/`pos`/`number`/`currency` fix; **`string` rugalmas**.
-6. Modal/view kapcsolt listák: **ABC ASC** (`contain` + `orderBy` name).
-7. Dialógusok: csak SweetAlert (`MyAdmin.alert` / `alertError` / `confirmDelete`) — **tilos** `window.alert`.
+6. Modal kapcsolt névlisták: utolsó **20** `modified DESC`, megjelenítés **ABC ASC** (`containRelatedForModal` / `relatedNameLinksForModal`). View tab: teljes ABC lista OK.
+7. Dialógusok: SweetAlert (`MyAdmin.swal` / `alert` / `alertError` / `confirmDelete` / `flashSwal`) — **tilos** `window.alert`; Bootstrap modal FocusTrap pause. Flash alap: **Simple Notify**; modal Flash: `flashSwal()`.
 8. Select2 „+” ahol egyszerű create; HABTM multiple **mindkét** formon; `fetchTable()`, ne Association. **belongsTo lista** (Parent): `visible = true`, order `pos` ASC + `name` ASC; editnél aktuális szülő akkor is.
-9. Form: `#name` autofocus + `form.js`; `newEntityWithSchemaDefaults()` (pos/visible/… = DB); mentés try/catch + Flash; `beforeMarshal` ArrayObject → `getArrayCopy()`.
+9. Form: `#name` autofocus + `form.js`; Tempus Dominus date/time/datetime; `newEntityWithSchemaDefaults()`; mentés try/catch + Flash; `beforeMarshal` ArrayObject → `getArrayCopy()`.
 10. View: bake `dl` + `view_related_tabs` (üres tab is); kapcsolt nevek `.record-modal-link` + AJAX modal; `$rowDoubleClickAction` a kapcsolt táblára.
-11. Index: `$indexLimit` / `$indexMaxLimit` + `indexPaginateOptions()`; `setLastVisitedForIndex` + `.last-visited`; `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; `*_count` → `formatCount`; `pos` = DB default.
-12. Layoutba csak közös asset; oldalspecifikus a templateben.
-13. Minden lényeges változás → `valtozasok.md` (+ érintett spec, különösen `admin-oldal.md` / `admin-konvenciok.md`).
+11. Index / keresés (kötelező csomag — [§2.8](#28-keresés--index-állapot--last-visited-kötelező-keretrész)): `$indexLimit` / `$indexMaxLimit`; `applyIndexListState` + `applyIndexSearch` + `resolveIndexPageForLastVisited`; `setLastVisitedForIndex` + scroll; `redirectToIndexList` save után; `admin/table_search` + header globális kereső (Google UI + lapozás); `admin/index_pagination` First…Last; `admin_search.php` mezőlista + `labelsKey` az **első** felépítéskor; clear → last-visited oldal; `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; `*_count` → CounterCache + `formatCount`; `pos` = DB default; pénz → `formatCurrency`.
+12. Törlésvédelem: `PreventsDeleteWithChildrenTrait` + CounterCache; UI: törölhető = danger + Swal question; **nem** = secondary disabled ([minta-tanulsagok.md](minta-tanulsagok.md) §3). HABTM through + `cascadeCallbacks`; `bin/cake rebuild_counter_caches` ha kell.
+13. Layoutba csak közös asset; oldalspecifikus a templateben.
+14. Éles DB modul: [minta-tanulsagok.md](minta-tanulsagok.md) **§0 + §11**. Minden lényeges változás → `valtozasok.md` (+ érintett spec).
 
 ---
 
@@ -265,10 +353,13 @@ Olvasd el és **kövesd** — a felhasználónak ne kelljen ezeket minden chatbe
 
 - [ ] `/admin` betölt (Dashboard + layout)
 - [ ] Nincs nyelvválasztó az admin headerben
-- [ ] `MyAdmin.alert` / `confirmDelete` működik; **nincs** `window.alert` az admin JS-ben
+- [ ] `MyAdmin.alert` / `confirmDelete` / Flash Notify működik; **nincs** `window.alert` az admin JS-ben
 - [ ] Legalább egy CRUD: lista dupla klikk modal működik
-- [ ] Form: `#name` fókusz; Parent/belongsTo lista visible + pos/name sorrend; szám/dátum middleware; Select2 „+”; mentés Flash (ne nyers PHP)
+- [ ] Form: `#name` fókusz; Parent/belongsTo lista visible + pos/name sorrend; Tempus ha van dátum; szám/dátum middleware; Select2 „+”; mentés Flash (ne nyers PHP)
 - [ ] Index számok locale szerint; fix oszlopok: id/pos/number/currency/count/boolean/date/time ([admin-oldal.md](admin-oldal.md) §4.3); `string` rugalmas; count 0 üres
-- [ ] View: fő mezők + (ha van gyerek) tab sheet ASC, üresen is; modal linkek
+- [ ] Keresés csomag ([§2.8](#28-keresés--index-állapot--last-visited-kötelező-keretrész)): `admin_search.php` kitöltve (`fields` + `labelsKey`); index + header kereső; Search lapozás; First…Last paginator; session sort/page/q; clear → last-visited oldal + scroll; `redirectToIndexList`
+- [ ] `.cursor/rules/` másolva (keresés, paginator, pénz, pos, auto-dokumentálás)
+- [ ] View: fő mezők + (ha van gyerek) tab sheet ASC, üresen is; modal linkek (modal lista: max 20 modified → ABC)
+- [ ] CounterCache + törlésvédelem; Delete UI: secondary disabled ha van gyerek
 - [ ] Flash / gombok magyarul (`hu_HU` .po)
-- [ ] `doc/` naprakész (`admin-oldal.md` is tükrözi a célképet)
+- [ ] `doc/minta-tanulsagok.md` §0–11 tükrözi az éles építési szabályokat

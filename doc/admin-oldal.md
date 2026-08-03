@@ -49,7 +49,8 @@ Minden üzleti modulnak **ugyanaz** a viselkedés-mintája: lista → form → a
 | view | Edit, Delete, Back |
 
 Layout assetek: csak közös (bootstrap, fontawesome, `style.css`, sweetalert2, `app.js`, …).  
-Select2 / daterangepicker / inputmask / `pages/*` → **template** `block`.
+Select2 / Tempus Dominus / inputmask / `pages/*` → **template** `block`.
+Flash: layout végén Notify/SWAL script ([minta-tanulsagok.md](minta-tanulsagok.md) §5) — **ne** a tartalom közepén HTML flash Adminban.
 
 ---
 
@@ -77,13 +78,13 @@ Külső wrapper (a tartalom tetején):
 		<div class="card …">
 ```
 
-(`mt-3` = térköz a breadcrumb / Flash alatt; `pt-0` a col-on — ne legyen dupla felső padding.)
+(`mt-3` = térköz a breadcrumb alatt; `pt-0` a col-on — ne legyen dupla felső padding. Flash: layout végén Notify/SWAL, nem a tartalom tetején.)
 
-1. **Fejléc:** ikon + modulcím (`__('English')`), súgó a dupla kattintásról (ha nem `none`), Search mező (UI megvan; bekötés később), lapozó felül
+1. **Fejléc:** ikon + modulcím (`__('English')`), súgó a dupla kattintásról (ha nem `none`), `admin/table_search` (nagyító + `__('Start search')`), lapozó felül
 2. **Tábla:** `.table.index-data-table` — típusoszlop osztályokkal
-3. **Sor:** `id="record-{id}"` + `data-id="{id}"`
-4. **Actions oszlop:** View details → Edit → Delete (outline gombok, HTML tooltip) + rejtett `#delete-form-{id}`
-5. **Lábléc:** „Showing X–Y of Z” + `admin/index_pagination`
+3. **Sor:** `id="record-{id}"` + `data-id="{id}"` + opcionális `.last-visited` (görgetés a breadcrumb alá ~mt-3)
+4. **Actions oszlop:** View → Edit → Delete (outline; törölhető = danger + form; **nem** = outline-secondary **disabled** + tooltip) — [minta-tanulsagok.md](minta-tanulsagok.md) §3
+5. **Lábléc:** `admin/index_footer` — bal: `admin/index_counter` (bake counter msgid); jobb: `admin/index_pagination` (**First | Previous | számok | Next | Last**, disabled a széleken)
 6. **Modalok:** `#modalRecordView` (+ linked modal, ha van szülő/kapcsolt link)
 
 ### 4.2 Template eleji config (minden indexen)
@@ -112,7 +113,7 @@ Ezeket tedd a `MyAdmin.config`-ba is (`rowDoubleClickAction`, URL-ek, `recordFie
 | `number pos` | pozíció | `5.5rem` | max ~5 jegy + locale ezres |
 | `number` (+ pl. `.szam`) | általános szám | `6.5rem` | ne `id`/`pos`/`count` |
 | `number count` | `*_count` | `5.5rem` | minta; **0/null → üres** (`formatCount`) |
-| `currency` (+ pl. `.netto`) | összeg + pénznem | `12rem` | `.currency-amount` + `currencySymbol()` → **Ft** (hu) |
+| `currency` (+ pl. `.netto`) | összeg + pénznem | `12rem` | `.currency-amount` + `formatCurrency()` (HUF, ICU) |
 | `boolean` (+ `.logikai` / `.visible` / `.valid`) | FA pipa / X | `7.5rem` | minta `.visible`/`.valid` |
 | `date` | dátum | `8.5rem` | |
 | `datetime` | dátum+idő | `10.5rem` | created/modified közös oszlop is |
@@ -127,10 +128,10 @@ CSS: `webroot/css/style.css`. Sort link `id`/`pos`/`number`/`currency`/`count`/`
 ```php
 LocaleNumberParser::format($value, decimals: $numberDecimals['integer']); // vagy 'decimal'
 LocaleNumberParser::formatCount($row->city_count); // 0/null → üres
-LocaleNumberParser::currencySymbol(); // hu → „Ft” (ne „HUF”)
+LocaleNumberParser::formatCurrency($row->netto); // hu → „12 345,67 Ft”; en → „HUF 12,345.67”
 ```
 
-Admin `hu_HU` → pl. `1 234` / `1 234,56` / `12 345,67 Ft`. Címkék továbbra is `__('English')`.
+Admin `hu_HU` → pl. `1 234` / `1 234,56` / `12 345,67 Ft`; `en_*` → `HUF 12,345.67`. Címkék továbbra is `__('English')`.
 
 Részletek: [admin-konvenciok.md](admin-konvenciok.md) (oszlopok + pénznem).
 
@@ -146,7 +147,8 @@ Részletek: [admin-konvenciok.md](admin-konvenciok.md) (oszlopok + pénznem).
 - URL: `?sort=mezo&direction=asc|desc`
 - Index query-n **ne** legyen előre `orderBy`
 - `paginate(..., $this->indexPaginateOptions(['sortableFields' => [...]]))` — associált mezők is (pl. `Parents.name`)
-- Controller tetején: `$indexLimit = 10` (alap), `$indexMaxLimit = 100` (`?limit=` felső korlát / hack ellen)
+- Controller tetején: `$indexLimit = 100` (alap), `$indexMaxLimit = 1000` (`?limit=` felső korlát / hack ellen)
+- **Lapozó UI:** mindig `admin/index_pagination` — FA « ‹ › »; első oldalon First+Prev disabled, utolsón Next+Last disabled. Footer: `admin/index_footer`. Lapozás törli a last-visitedet. Keresés submit → page 1. Rule: `.cursor/rules/admin-paginator.mdc`.
 
 ---
 
@@ -155,13 +157,17 @@ Részletek: [admin-konvenciok.md](admin-konvenciok.md) (oszlopok + pénznem).
 | Interakció | Viselkedés |
 |------------|------------|
 | Sor **dupla katt** | `$rowDoubleClickAction`: `modal` → AJAX `recordGet` + `#modalRecordView`; `edit` → edit URL; `none` → semmi |
-| **Utolsó rekord** | Session `Admin.lastVisited` (model + id); index sor: `.last-visited` (zöld kiemelés) |
+| **Utolsó rekord** | Session `Admin.lastVisited`; index: `.last-visited` + scroll (header+breadcrumb+~mt-3) |
+| **Lista állapot** | Session `Admin.indexState[Alias]`: sort, direction, page, `q` — visszatérés + `redirectToIndexList` |
+| **Keresés (index)** | `admin/table_search` → `q` az adott model szöveges mezőin (`admin_search.php`) |
+| **Keresés (globális)** | Header → `/admin/search` — összes model `fields`; Google UI (cím→modal, szem→view, ceruza→edit); lapozás (`globalPageLimit` + `index_pagination` / `index_footer`) |
+| **Lapozó** | First / Previous / számok / Next / Last — disabled a széleken |
 | View details gomb | Ugyanaz a modal (vagy view URL — a mintában modal/gyorsnézet + külön view oldal) |
 | Edit gomb | `/admin/.../edit/{id}` |
-| Delete gomb | `MyAdmin.confirmDelete` → `#delete-form-{id}` submit |
+| Delete gomb | Törölhető: `confirmDelete` (question) → form submit. Nem: **secondary disabled** + tooltip |
 | `.category-link` | Kapcsolt rekord linked modal (`categoryGetUrl`) |
 | Fejléc sort | Paginator link → újratöltés új sorrenddel |
-| Modal kapcsolt nevek (HABTM/hasMany) | **ABC ASC** + **`.record-modal-link`** → linked modal (`relatedLinkFields` + `[{id,name}]` JSON) |
+| Modal kapcsolt nevek (HABTM/hasMany) | Utolsó **20** `modified DESC`, megjelenítés **ABC ASC** + **`.record-modal-link`** (`containRelatedForModal` + `relatedNameLinksForModal`) |
 | Üres lista | Egy sor `colspan="$indexColspan"` + „nincs találat” szöveg |
 
 Modal mezősorrend / címkék: `MyAdmin.config.recordFieldLabels`.  
@@ -176,9 +182,12 @@ Edit gomb a modalban a View details **előtt** (UX konvenció).
 - Egy card: cím (New / Edit …), editnél Created/Modified a fejlécben, bezáró → index
 - Bootstrap rács: label `col-md-2` **félkövér**, mező jobbra
 - Boolean: switch
-- Lábléc: Save + Cancel; Save a breadcrumbben is (`form="form-horizontal"`)
+- **`visible` + `pos`:** form végén; `visible` fölött mezőszélességű `<hr>` (`row` + `col-12 col-xxl-11`); sorrend: **visible → pos**
+- **Mezőhiba:** control alatt, piros félkövér (`.error-message`); Tempus/Select2+/checkbox: `admin/field_error`
+- Lábléc: Save + Cancel (`offset-md-2`, form labelhez); Save a breadcrumbben is (`form="form-horizontal"`)
 - Select2 mező mellett **„+”** gomb (single **és** multiple), ha új kapcsolt rekord **egyszerűen** felvehető; HABTM multiple Select2 **mindkét** CRUD formon
 - **Fókusz:** **minden** Admin formon a `#name` (vagy első szöveges mező) azonnal fókuszt kap — `pages/form.js` kötelező asset + `autofocus`
+- **Locale:** `numberFormat` + `dateFormat` = parser `jsConfig()`; követi `App.adminLocale` (picker nyelv + hétkezdet is)
 
 ### Mentés hibakezelés
 
@@ -209,9 +218,9 @@ Részletek + példa: [admin-konvenciok.md](admin-konvenciok.md) → „Kapcsolt 
 | Réteg | Szabály |
 |-------|---------|
 | Megjelenítés | `LocaleNumberParser::format()`; hu: `1 234,56` |
-| Pénznem szuffixum | `LocaleNumberParser::currencySymbol()` → **`Ft`** (ne `HUF`; később EUR a helperben) |
+| Pénz (netto) | `LocaleNumberParser::formatCurrency()` — HUF, ICU pozíció (hu: Ft utótag; en: HUF előtag) |
 | Input | `.js-input-decimal` / `.js-input-integer` + `MyAdmin.config.numberFormat` (= `LocaleNumberParser::jsConfig()`) |
-| Dátum UI | daterangepicker + inputmask (`yyyy-mm-dd`, `hh:mm`) |
+| Dátum UI | Tempus Dominus 6 — formátum + naptár + hétkezdet a `dateFormat` / `App.adminLocale` szerint |
 | Mentés előtt | Middleware: locale szám → `1234.56`; dátum → SQL formátum ([middleware.md](middleware.md)) |
 
 **Ne** hardkódold az angol inputmaskot (`radixPoint: '.'`) hu Adminban.
@@ -228,7 +237,7 @@ Részletek + példa: [admin-konvenciok.md](admin-konvenciok.md) → „Kapcsolt 
 ### HABTM multiple Select2 (form)
 
 - Samples form: `cities._ids`; Cities form: `samples._ids` (szimmetrikus)
-- Mentés: `associated` + üres `_ids` → `[]`; frissítsd a `*_count` mezőt
+- Mentés: `associated` + üres `_ids` → `[]`; `*_count` → **CounterCache** (ne kézi count)
 - Részletek: [admin-konvenciok.md](admin-konvenciok.md) → „HABTM — multiple Select2”
 
 Részletek Select2 „+”: [admin-konvenciok.md](admin-konvenciok.md) → Select2.
@@ -242,7 +251,8 @@ Részletek Select2 „+”: [admin-konvenciok.md](admin-konvenciok.md) → Selec
 │ dl.record-view-fields                       │
 │   belongsTo / HABTM nevek = félkövér LINK   │
 │     → AJAX modal (Close/Edit/View/Delete)   │
-│ Edit + Back                                 │
+│ Edit — `.record-view-footer-actions` (dd oszlop alatt) │
+│ (Back to list → breadcrumb)                         │
 └─────────────────────────────────────────────┘
 ┌─ Card: tab sheet (ha van gyerek) ───────────┐
 │ [Cities (n)] …                              │
@@ -261,7 +271,7 @@ Részletek Select2 „+”: [admin-konvenciok.md](admin-konvenciok.md) → Selec
 **View elején:** `$rowDoubleClickAction = 'modal'|'edit'|'none'` + `entityFieldLabels` a `MyAdmin.config`-ban.  
 Asset: `pages/index` CSS+JS + `admin/modal_linked_record_view`.  
 Modal Delete: SweetAlert (`confirmDelete`) → rejtett **`Form`** (`#delete-form-…`); gyerek rekordnál gomb disabled.  
-Model: gyerek van → törlés tiltva (Flash hiba); gyerek nélkül törölhető (+ HABTM join cascade).  
+Model: gyerek van → törlés tiltva (UI: secondary disabled; szerver: Flash hiba ha mégis POST); gyerek nélkül törölhető (+ HABTM join cascade).
 Részletek: [admin-konvenciok.md](admin-konvenciok.md) → „Törlés — gyerekvédelem”.
 
 Kapcsolt lista sorrend: **ASC** név szerint.
@@ -272,13 +282,17 @@ Kapcsolt lista sorrend: **ASC** név szerint.
 
 | API | Mikor |
 |-----|--------|
-| `MyAdmin.confirmDelete({ onConfirm })` | Törlés |
+| `MyAdmin.confirmDelete({ onConfirm })` | Törlés (`icon: 'question'`) |
 | `MyAdmin.alert({ icon, title, text })` | Info / warning / success |
 | `MyAdmin.alertError(text)` | Hiba (AJAX, validáció UI) |
+| `MyAdmin.flashSwal({ icon, title, html })` | Flash SWAL (queue) |
+| `flashMessage(title, text, status)` | Flash Notify toast (`script_flash`) |
 | `MyAdmin.initTooltips()` | Action gomb tooltippek |
 
 Szövegek: `MyAdmin.messages` a layoutból (`__()` → hu).  
-**Tilos:** `window.alert`, `confirm`, `prompt`.
+**Tilos:** `window.alert`, `confirm`, `prompt`.  
+**Kinézet:** `.swal2-container` z-index `20000`; `.swal2-popup` **látható árnyék** (`style.css` — mint a linked modal).  
+Flash / Tempus / szám / mezőhiba: [minta-tanulsagok.md](minta-tanulsagok.md) §5–6c. Éles DB: ugyanott §0 + §14.
 
 ---
 
@@ -287,7 +301,7 @@ Szövegek: `MyAdmin.messages` a layoutból (`__()` → hu).
 1. Minden UI string: `__('English msgid')`
 2. Fordítás: `resources/locales/hu_HU/default.po`
 3. Admin: `LocaleMiddleware` + `Admin\AppController` → mindig `hu_HU`
-4. Számok megjelenítése ≠ fordítás: `LocaleNumberParser::format()` / `formatCount()`; pénznem: `currencySymbol()` → **Ft**; nem `__()` a számra / Ft-re
+4. Számok megjelenítése ≠ fordítás: `LocaleNumberParser::format()` / `formatCount()`; pénz: `formatCurrency()`; nem `__()` a számra / Ft-re / HUF-ra
 
 Részletek: [i18n.md](i18n.md).
 
@@ -296,10 +310,11 @@ Részletek: [i18n.md](i18n.md).
 ## 10. Kötelező checklist egy „kész” Admin modulhoz
 
 - [ ] Sidebar menüpont
-- [ ] `index`: config változók, `$indexLimit`/`$indexMaxLimit`, `setLastVisitedForIndex` + `.last-visited`, típusoszlopok, sort URL, modal, SweetAlert delete, `pages/index`
-- [ ] `form`: közös add/edit, `#name` autofocus + `pages/form.js`, locale szám/dátum, Select2 „+” ahol kell; `newEntityWithSchemaDefaults()`
-- [ ] `view`: `dl` + `view_related_tabs`; kapcsolt nevek `.record-modal-link` + modal; `$rowDoubleClickAction`; `pages/index` JS/CSS
-- [ ] `recordGet` (+ kapcsolt listák ASC) + `rememberLastVisited`; DashedRoute (`record-get`)
+- [ ] `index`: `applyIndexListState` + `applyIndexSearch`; `admin/table_search`; config változók, `$indexLimit`/`$indexMaxLimit`, `setLastVisitedForIndex` + `.last-visited` + scroll, típusoszlopok, sort URL/session, modal, SweetAlert delete, `pages/index`
+- [ ] `admin_search.php`: model + szöveges mezők; save → `redirectToIndexList`- [ ] `form`: közös add/edit, `#name` autofocus + `pages/form.js`, Tempus ha kell, locale szám/dátum, Select2 „+” ahol kell; `newEntityWithSchemaDefaults()`
+- [ ] `view`: `dl` + `view_related_tabs`; kapcsolt nevek `.record-modal-link` + modal; Delete §3; `$rowDoubleClickAction`; `pages/index` JS/CSS
+- [ ] `recordGet` (`can_delete` + kapcsolt listák) + `rememberLastVisited`; DashedRoute (`record-get`)
+- [ ] Flash: Notify alap; fontos üzenet → `flashSwal()`
 - [ ] Új stringek a `.po`-ban
 - [ ] Nincs `window.alert` az admin JS-ben
 - [ ] `doc/valtozasok.md` bejegyzés, ha a keret/szabály változott
@@ -315,6 +330,7 @@ Részletek: [i18n.md](i18n.md).
 | Új tábla lépései | [crud-utmutato.md](crud-utmutato.md) |
 | Szám/dátum middleware | [middleware.md](middleware.md) |
 | `__()` / .po | [i18n.md](i18n.md) |
+| Demó → éles DB playbook | [minta-tanulsagok.md](minta-tanulsagok.md) |
 | Könyvtárak / elementek | [struktura.md](struktura.md) |
 | Tartós vs. demó | [keretrendszer.md](keretrendszer.md) |
 | Változásnapló | [valtozasok.md](valtozasok.md) |
