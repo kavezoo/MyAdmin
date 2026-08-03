@@ -5,6 +5,17 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-03 — AdminCountry: ambiguous `visible` (Countries + i18n)
+
+### Mi változott / miért
+- Az `i18n` táblának is van `visible` oszlopa; Translate join mellett a minősítetlen `visible` / `iso2` SQL hibát adott.
+- `AdminCountry` lekérdezései: `Countries.visible`, `Countries.iso2`, `Countries.id`.
+
+### Érintett
+- `src/Utility/AdminCountry.php`
+
+---
+
 ## 2026-08-03 — MyAdminUsage.md (programozói cheat sheet)
 
 ### Mi változott / miért

@@ -105,7 +105,7 @@ class AdminCountry
         }
 
         $rows = $countries->find()
-            ->select(['id', 'iso2', 'name'])
+            ->select(['Countries.id', 'Countries.iso2', 'Countries.name'])
             ->where(['Countries.visible' => true])
             ->orderBy(['Countries.name' => 'ASC'])
             ->all();
@@ -129,7 +129,11 @@ class AdminCountry
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
 
-        return $countries->exists(['id' => $countryId, 'visible' => true]);
+        // Qualify columns: i18n also has `visible` (Translate join).
+        return $countries->exists([
+            'Countries.id' => $countryId,
+            'Countries.visible' => true,
+        ]);
     }
 
     public static function defaultCountryId(): int
@@ -137,16 +141,19 @@ class AdminCountry
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
         $row = $countries->find()
-            ->select(['id'])
-            ->where(['iso2' => self::DEFAULT_ISO2, 'visible' => true])
+            ->select(['Countries.id'])
+            ->where([
+                'Countries.iso2' => self::DEFAULT_ISO2,
+                'Countries.visible' => true,
+            ])
             ->first();
         if ($row !== null) {
             return (int)$row->get('id');
         }
         $any = $countries->find()
-            ->select(['id'])
-            ->where(['visible' => true])
-            ->orderBy(['id' => 'ASC'])
+            ->select(['Countries.id'])
+            ->where(['Countries.visible' => true])
+            ->orderBy(['Countries.id' => 'ASC'])
             ->first();
 
         return $any !== null ? (int)$any->get('id') : 0;
