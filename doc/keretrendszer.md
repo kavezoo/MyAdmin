@@ -14,6 +14,7 @@ Ez a fájl megkülönbözteti, mi **maradjon meg** minden projektben, és mi **c
 | Routing prefixek | `config/routes.php` — Admin; opcionálisan Member+`{lang}` |
 | Admin locale konfig | `config/app.php` → `App.adminLocale` (éles: `hu_HU`) |
 | Admin keresés config | `config/admin_search.php` → model → szöveges `fields` + `labelsKey`; globális limitok — **kötelező** ([uj-projekt.md](uj-projekt.md) §2.8) |
+| Setups (opcionális) | Típusos EAV beállítások — [setups.md](setups.md) |
 | Locale middleware | `src/Middleware/LocaleMiddleware.php` |
 | Form hibák (Admin) | `src/View/AppView.php` + `templates/element/admin/field_error.php` |
 | Szám normalizálás | `NormalizeLocalizedNumberMiddleware` + `LocaleNumberParser` (`format`, `formatCount`, `formatCurrency`) |

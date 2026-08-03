@@ -1,7 +1,8 @@
 # Admin oldal — teljes kép (kinézet + működés)
 
 Ez a fájl a **egységes célkép**: hogyan nézzen ki és hogyan működjön egy Admin CRUD felület.  
-Részletszabályok: [admin-konvenciok.md](admin-konvenciok.md). Greenfield: [uj-projekt.md](uj-projekt.md). Új modul: [crud-utmutato.md](crud-utmutato.md).
+Részletszabályok: [admin-konvenciok.md](admin-konvenciok.md). Greenfield: [uj-projekt.md](uj-projekt.md). Új modul: [crud-utmutato.md](crud-utmutato.md).  
+Típusos beállítások: [setups.md](setups.md).
 
 Ha az agent / fejlesztő „hogyan kell kinéznie?” kérdést kap — **ezt olvasd először**, majd a hivatkozott fájlokat.
 
@@ -311,12 +312,14 @@ Részletek: [i18n.md](i18n.md).
 
 - [ ] Sidebar menüpont
 - [ ] `index`: `applyIndexListState` + `applyIndexSearch`; `admin/table_search`; config változók, `$indexLimit`/`$indexMaxLimit`, `setLastVisitedForIndex` + `.last-visited` + scroll, típusoszlopok, sort URL/session, modal, SweetAlert delete, `pages/index`
-- [ ] `admin_search.php`: model + szöveges mezők; save → `redirectToIndexList`- [ ] `form`: közös add/edit, `#name` autofocus + `pages/form.js`, Tempus ha kell, locale szám/dátum, Select2 „+” ahol kell; `newEntityWithSchemaDefaults()`
+- [ ] `admin_search.php`: model + szöveges mezők; save → `redirectToIndexList`
+- [ ] `form`: közös add/edit, `#name` autofocus + `pages/form.js`, Tempus ha kell, locale szám/dátum, Select2 „+” ahol kell; `newEntityWithSchemaDefaults()`
 - [ ] `view`: `dl` + `view_related_tabs`; kapcsolt nevek `.record-modal-link` + modal; Delete §3; `$rowDoubleClickAction`; `pages/index` JS/CSS
 - [ ] `recordGet` (`can_delete` + kapcsolt listák) + `rememberLastVisited`; DashedRoute (`record-get`)
 - [ ] Flash: Notify alap; fontos üzenet → `flashSwal()`
 - [ ] Új stringek a `.po`-ban
 - [ ] Nincs `window.alert` az admin JS-ben
+- [ ] (Ha Setups kell) [setups.md](setups.md) checklist: séma, típusok, slug `_`, `SetupValue`
 - [ ] `doc/valtozasok.md` bejegyzés, ha a keret/szabály változott
 
 ---
@@ -328,6 +331,7 @@ Részletek: [i18n.md](i18n.md).
 | Asset, index/form/view UI, Select2, oszloposztályok | [admin-konvenciok.md](admin-konvenciok.md) |
 | Nulláról felállítás | [uj-projekt.md](uj-projekt.md) |
 | Új tábla lépései | [crud-utmutato.md](crud-utmutato.md) |
+| Típusos Setups (EAV) | [setups.md](setups.md) |
 | Szám/dátum middleware | [middleware.md](middleware.md) |
 | `__()` / .po | [i18n.md](i18n.md) |
 | Demó → éles DB playbook | [minta-tanulsagok.md](minta-tanulsagok.md) |

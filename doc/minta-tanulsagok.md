@@ -342,6 +342,7 @@ Részlet: [middleware.md](middleware.md).
 - [ ] Keresés: `admin_search.php` mezők + `labelsKey`; `applyIndexListState` / `applyIndexSearch` / `resolveIndexPageForLastVisited`; `table_search` + header; clear → last-visited oldal; `redirectToIndexList`
 - [ ] Form: Select2, Tempus §6, szám §6b, mezőhiba §6c, schema defaults, üres `_ids`, `visible`→`pos`+hr
 - [ ] View: `dl` + related tabs + Edit `.record-view-footer-actions` + delete §3 + locale dátum/szám
+- [ ] Ha Setups kell: [setups.md](setups.md) — séma, `SetupValue`, slug `_`, típus widgetek, `admin_search`, sidebar
 - [ ] i18n: `__()` + `.po`; `App.adminLocale` = `hu_HU` élesben
 - [ ] Sidebar menüpont
 - [ ] Ha importált számlálók: `bin/cake rebuild_counter_caches`
@@ -355,7 +356,7 @@ Részlet: [middleware.md](middleware.md).
 3. Állítsd: `App.adminLocale` = **`hu_HU`** (és `APP_ADMIN_LOCALE` ha van .env).
 4. Demó Samples/Parents/Cities **ne** legyen kötelező — helyette a valós domain ([crud-utmutato.md](crud-utmutato.md) + **§0–11 itt**).
 5. Minden új modulnál: CounterCache + trait + modal 20/ABC + Delete UI + Flash + Tempus + szám MW + mezőhiba + **keresés/index állapot** ([uj-projekt.md](uj-projekt.md) §2.8) **ebből** a fájlból / a specekből.
-6. `valtozasok.md` az éles projektben újraindítható; ez a fájl + a többi spec **marad**. Másold a `.cursor/rules/` fájlokat is (`admin-kereses-index-allapot.mdc`, `admin-paginator.mdc`, `penznem-formatcurrency.mdc`, `pos-db-default.mdc`, `auto-dokumentalas.mdc`).
+6. `valtozasok.md` az éles projektben újraindítható; ez a fájl + a többi spec **marad**. Másold a `.cursor/rules/` fájlokat is (`admin-kereses-index-allapot.mdc`, `admin-paginator.mdc`, `penznem-formatcurrency.mdc`, `pos-db-default.mdc`, `setups-eav.mdc`, `auto-dokumentalas.mdc`).
 
 ---
 

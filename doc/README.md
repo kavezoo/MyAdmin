@@ -8,6 +8,8 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | **Demó mintából éles projekt / éles DB** | **[minta-tanulsagok.md](minta-tanulsagok.md)** (§0 playbook + §0.1 fájlok + §6–6c form + §11 checklist + §14 agent) |
 | Üres / új CakePHP app | [uj-projekt.md](uj-projekt.md) |
 | Keretrendszer megvan, új tábla/modul | [crud-utmutato.md](crud-utmutato.md) |
+| Típusos beállítások (Setups EAV) | **[setups.md](setups.md)** |
+| **Kódba nyúlás — API cheat sheet** | **[MyAdminUsage.md](MyAdminUsage.md)** (`Setup::get`, …) |
 | UI / asset / view részletszabály | [admin-konvenciok.md](admin-konvenciok.md) |
 | Fordítás | [i18n.md](i18n.md) |
 | Mentéskori szám/dátum | [middleware.md](middleware.md) |
@@ -25,12 +27,15 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | [i18n.md](i18n.md) | `__()` szabály, locale, .po |
 | [middleware.md](middleware.md) | Locale szám- és dátumnormalizálás |
 | [crud-utmutato.md](crud-utmutato.md) | Új Admin CRUD modul lépései |
+| [setups.md](setups.md) | Típusos Setups (EAV) modul — widgetek, slug, JSON/tömb |
+| **[MyAdminUsage.md](MyAdminUsage.md)** | **Programozói használat** — `Setup::get()` és társai (gyakorlati példák) |
 | [valtozasok.md](valtozasok.md) | Változásnapló (projekt-specifikus; új projektben nullázható) |
 
 ## Cursor rules (`.cursor/rules/`) — agent playbook
 
 | Rule | Tartalom |
 |------|----------|
+| `setups-eav.mdc` | Setups EAV típus / slug / widget |
 | `auto-dokumentalas.mdc` | Minden változás után `doc/` (+ tartós mintánál rule) frissítés |
 | `admin-kereses-index-allapot.mdc` | Keresés, session index, last-visited, Search UI |
 | `admin-paginator.mdc` | First…Last lapozó + counter/footer |
@@ -55,6 +60,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - **Index oszlopok:** `string` rugalmas; fix: `id` 4.75 / `pos` 5.5 / `number` 6.5 / `currency` 12 / `count` 5.5 / `boolean|visible` 7.5 / `date` 8.5 / `datetime` 10.5 / `time` 5 rem ([admin-oldal.md](admin-oldal.md) §4.3)
 - Index config: `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; **`$indexLimit = 100` / `$indexMaxLimit = 1000`**; session **`Admin.indexState`** (sort/page/`q`); utolsó rekord: **`Admin.lastVisited`** + **`.last-visited`** + scroll
 - **Keresés (minden projekt):** `config/admin_search.php` (`fields` + `labelsKey`; `globalPageLimit` / `globalLimitPerModel` / `globalMaxResults`); index + header; `/admin/search` Google UI + lapozás; clear → szűretlen + **last-visited oldal**; `redirectToIndexList` — [uj-projekt.md](uj-projekt.md) §2.8; rule: `admin-kereses-index-allapot.mdc`
+- **Setups (ha kell):** EAV `setups` + `SetupValue`; slug csak `a-z0-9_`; olvasás: `Setup::get('slug', $default)` — [setups.md](setups.md); rule: `setups-eav.mdc`
 - Számok megjelenítése: `LocaleNumberParser::format()` / `formatCount()`; pénz: **`formatCurrency()`** (HUF, locale pozíció: hu `… Ft`, en `HUF …`) — rule: `penznem-formatcurrency.mdc`
 - View: bake-szerű `dl` + gyerek **tab sheet**; belongsTo/HABTM/name **félkövér link** → AJAX modal; Edit lábléc: **`.record-view-footer-actions`** (adatoszlop alatt); `$rowDoubleClickAction` a kapcsolt táblán
 - Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon; **belongsTo lista**: `visible` + `pos`/`name` sorrend; form végén **`visible` → `pos`** + `visible` fölött mezőszélességű `<hr>`; `fetchTable()`, ne Association

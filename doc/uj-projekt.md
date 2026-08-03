@@ -343,9 +343,10 @@ Olvasd el és **kövesd** — a felhasználónak ne kelljen ezeket minden chatbe
 9. Form: `#name` autofocus + `form.js`; Tempus Dominus date/time/datetime; `newEntityWithSchemaDefaults()`; mentés try/catch + Flash; `beforeMarshal` ArrayObject → `getArrayCopy()`.
 10. View: bake `dl` + `view_related_tabs` (üres tab is); kapcsolt nevek `.record-modal-link` + AJAX modal; `$rowDoubleClickAction` a kapcsolt táblára.
 11. Index / keresés (kötelező csomag — [§2.8](#28-keresés--index-állapot--last-visited-kötelező-keretrész)): `$indexLimit` / `$indexMaxLimit`; `applyIndexListState` + `applyIndexSearch` + `resolveIndexPageForLastVisited`; `setLastVisitedForIndex` + scroll; `redirectToIndexList` save után; `admin/table_search` + header globális kereső (Google UI + lapozás); `admin/index_pagination` First…Last; `admin_search.php` mezőlista + `labelsKey` az **első** felépítéskor; clear → last-visited oldal; `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; `*_count` → CounterCache + `formatCount`; `pos` = DB default; pénz → `formatCurrency`.
-12. Törlésvédelem: `PreventsDeleteWithChildrenTrait` + CounterCache; UI: törölhető = danger + Swal question; **nem** = secondary disabled ([minta-tanulsagok.md](minta-tanulsagok.md) §3). HABTM through + `cascadeCallbacks`; `bin/cake rebuild_counter_caches` ha kell.
-13. Layoutba csak közös asset; oldalspecifikus a templateben.
-14. Éles DB modul: [minta-tanulsagok.md](minta-tanulsagok.md) **§0 + §11**. Minden lényeges változás → `valtozasok.md` (+ érintett spec).
+12. Típusos beállítások (ha kell): [setups.md](setups.md) — `setups` EAV + `SetupValue`.
+13. Törlésvédelem: `PreventsDeleteWithChildrenTrait` + CounterCache; UI: törölhető = danger + Swal question; **nem** = secondary disabled ([minta-tanulsagok.md](minta-tanulsagok.md) §3). HABTM through + `cascadeCallbacks`; `bin/cake rebuild_counter_caches` ha kell.
+14. Layoutba csak közös asset; oldalspecifikus a templateben.
+15. Éles DB modul: [minta-tanulsagok.md](minta-tanulsagok.md) **§0 + §11**. Minden lényeges változás → `valtozasok.md` (+ érintett spec).
 
 ---
 

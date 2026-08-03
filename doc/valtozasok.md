@@ -5,6 +5,62 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-03 — MyAdminUsage.md (programozói cheat sheet)
+
+### Mi változott / miért
+- `doc/MyAdminUsage.md`: gyakorlati útmutató a kódba nyúláshoz — első bejegyzés: `Setup::get()`.
+
+### Érintett
+- `doc/MyAdminUsage.md`, `doc/README.md`, `doc/setups.md`
+
+---
+
+## 2026-08-03 — Setup::get() — értékolvasás bárhonnan
+
+### Mi változott / miért
+- `App\Utility\Setup::get($slug, $default)` — static facade a `SetupsTable::getValue()` fölött, hívható controller / view / utility / CLI-ből `fetchTable` nélkül.
+
+### Érintett
+- `src/Utility/Setup.php`, `doc/setups.md`, `admin-konvenciok.md`, `setups-eav.mdc`
+
+---
+
+## 2026-08-03 — Setups specek teljes dokumentálás
+
+### Mi változott / miért
+- `doc/setups.md` bővítve (slug `_`, típusok, fájllista, form/controller, hibák).
+- Hivatkozások: README, admin-oldal, admin-konvenciok, crud-utmutato, i18n, minta-tanulsagok, auto-dokumentalas, `setups-eav.mdc`.
+
+### Érintett
+- `doc/setups.md`, `admin-oldal.md`, `i18n.md`, `minta-tanulsagok.md`, `valtozasok.md`
+- `.cursor/rules/setups-eav.mdc`, `auto-dokumentalas.mdc`
+- `resources/locales/default.pot` (Setups msgid-ek)
+
+---
+
+## 2026-08-03 — Setups slug: `_` elválasztó (nem `-`)
+
+### Mi változott / miért
+- Slug csak `a-z0-9` + aláhúzás; javaslat és validáció ennek megfelelően.
+
+### Érintett
+- `SetupValue`, `SetupsTable`, `setups_form.js`, form, `doc/setups.md`, `setups-eav.mdc`, `.po`
+
+---
+
+## 2026-08-03 — Setups: típusos beállítások CRUD
+
+### Mi változott / miért
+- Új `setups` EAV modul: type-függő érték widget (string/text/int/float/bool/date/time/datetime/json/array), slug validáció + név javaslat, teljes Admin CRUD + keresés.
+- Spec a későbbi projektekhez: `doc/setups.md`.
+
+### Érintett
+- `config/schema/setups.sql`, `SetupValue`, `SetupsTable` / `Setup`, `SetupsController`
+- `templates/Admin/Setups/*`, `pages/setups_form.js|css`, sidebar, `admin_search.php`, Search labels
+- `doc/setups.md`, specek
+
+---
+
 ## 2026-08-03 — Index URL: page mindig + első oldal fix
 
 ### Mi változott / miért

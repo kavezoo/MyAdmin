@@ -82,6 +82,17 @@ return [
                     'locale',
                 ],
             ],
+            'Setups' => [
+                'label' => 'Setups',
+                'controller' => 'Setups',
+                'titleField' => 'name',
+                'labelsKey' => 'setup',
+                'fields' => [
+                    'name',
+                    'slug',
+                    'description',
+                ],
+            ],
             // Continents: nincs külön Admin CRUD index — globális kereséshez később felvehető:
             // 'Continents' => [
             //     'label' => 'Continents',

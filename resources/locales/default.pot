@@ -781,3 +781,113 @@ msgstr ""
 msgid "An Internal Error Has Occurred."
 msgstr ""
 
+#: ./src/Controller/Admin/SetupsController.php
+#: ./templates/Admin/Setups/index.php
+msgid "Setups"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "New setup"
+msgstr ""
+
+msgid "Edit setup"
+msgstr ""
+
+msgid "Setup details"
+msgstr ""
+
+msgid "The setup has been saved."
+msgstr ""
+
+msgid "Slug"
+msgstr ""
+
+msgid "Slug:"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Type:"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Value:"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Description:"
+msgstr ""
+
+msgid "String"
+msgstr ""
+
+msgid "Integer"
+msgstr ""
+
+msgid "Float"
+msgstr ""
+
+msgid "JSON"
+msgstr ""
+
+msgid "Array"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "e.g. site_title"
+msgstr ""
+
+msgid "Lowercase letters, numbers and underscores only. Suggested from the name."
+msgstr ""
+
+msgid "The slug may only contain lowercase letters, numbers and underscores."
+msgstr ""
+
+msgid "This slug is already in use."
+msgstr ""
+
+msgid "Invalid type."
+msgstr ""
+
+msgid "The value is not valid for the selected type."
+msgstr ""
+
+msgid "Please enter a valid integer."
+msgstr ""
+
+msgid "Please enter a valid number."
+msgstr ""
+
+msgid "Please enter a valid date."
+msgstr ""
+
+msgid "Please enter a valid time."
+msgstr ""
+
+msgid "Please enter a valid date and time."
+msgstr ""
+
+msgid "Please enter valid JSON."
+msgstr ""
+
+msgid "JSON must be an object or an array."
+msgstr ""
+
+msgid "Please enter a valid list."
+msgstr ""
+
+msgid "Enter a JSON object or array."
+msgstr ""
+
+msgid "One value per line (or a JSON array)."
+msgstr ""
+

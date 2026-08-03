@@ -1,0 +1,29 @@
+---
+description: Setups EAV modul — típusfüggő value widgetek, slug a-z0-9_, SetupValue; specek doc/setups.md.
+globs: "**/Setups/**","**/Setup*.php","**/SetupValue.php","**/setups*","**/setups_form.*"
+alwaysApply: false
+---
+
+# Setups (típusos beállítások)
+
+**Teljes specek:** `doc/setups.md` — olvasd / frissítsd együtt a kóddal.
+
+## Kötelező
+
+- Tábla: `setups` (`config/schema/setups.sql`) — EAV: `name`, `slug`, `type`, `value` TEXT, `description`, `pos`/`visible` DB default
+- Típusok + normalize/display/cast: `App\Utility\SetupValue`
+- **Slug:** csak `a-z0-9` + **`_`** (pl. `site_title`). Regex: `/^[a-z0-9]+(?:_[a-z0-9]+)*$/`. **Tilos** a `-` kötőjel.
+- Form: type → widget (`pages/setups_form.js`); név → slug javaslat (`_`); kézzel felülírható
+- Teljes Admin CRUD + `admin_search` (`labelsKey=setup`) + sidebar Settings → Setups
+- Olvasás bárhol: `App\Utility\Setup::get('slug', $default)` → `SetupsTable::getValue` (invisible → default)
+
+## Típusok
+
+`string` | `text` | `integer` | `float` | `boolean` | `date` | `time` | `datetime` | `json` | `array`
+
+## Tilos
+
+- Külön DB oszlop típusonként
+- Slug ékezet / nagybetű / szóköz / kötőjel
+- Type váltás után `name="value"` sync nélkül
+- Specek nélküli „egyszerű” settings oldal

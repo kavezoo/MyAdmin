@@ -181,6 +181,18 @@ Agent rule: `.cursor/rules/admin-paginator.mdc`.
 Msgid (csak accessibility / tooltip): `First` / `Previous` / `Next` / `Last` / `Pagination`.  
 **Lapozáskor** (`?page=` a queryben): `clearLastVisited($model)` — az utoljára megtekintett kiemelés törlődik.
 
+### Setups (típusos beállítások)
+
+EAV modul — teljes specek: **[setups.md](setups.md)**. Rule: `.cursor/rules/setups-eav.mdc`.
+
+| Szabály | Érték |
+|---------|--------|
+| Tárolás | `setups.value` TEXT + `type` (ne külön oszlop típusonként) |
+| Slug | csak `a-z0-9` + **`_`** (pl. `site_title`); **tilos** a `-` |
+| Form | type → widget (`setups_form.js`); név → slug javaslat |
+| Olvasás | **bárhol:** `Setup::get('slug', $default)` (`App\Utility\Setup`); Table: `getValue()` |
+| Típusok | string, text, integer, float, boolean, date, time, datetime, json, array |
+
 ### Utolsó rekord (`.last-visited`) — session
 
 Az utoljára megtekintett / szerkesztésre megnyitott / sikeresen mentett (új vagy szerkesztett) rekord sessionben:

@@ -69,6 +69,18 @@ $config = [
 			'created' => __('Created'),
 			'modified' => __('Modified'),
 		],
+		'setup' => [
+			'id' => __('ID'),
+			'name' => __('Name'),
+			'slug' => __('Slug'),
+			'type' => __('Type'),
+			'value' => __('Value'),
+			'description' => __('Description'),
+			'pos' => __('Position'),
+			'visible' => __('Visible'),
+			'created' => __('Created'),
+			'modified' => __('Modified'),
+		],
 	],
 ];
 $this->Html->scriptBlock(

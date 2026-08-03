@@ -98,7 +98,18 @@ $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the 
 
 `templates/element/admin/sidebar.php` — új menüpont.
 
-## 5. Asset szabály
+## 5. Speciális modul: Setups (típusos EAV)
+
+Ha a projektnek kell **alkalmazásbeállítás** tábla: kövesd a **[setups.md](setups.md)** speceket (ne találj ki új sémát).
+
+Röviden:
+
+- Schema: `config/schema/setups.sql`
+- `SetupValue` + típusfüggő form widgetek + slug **`_`** elválasztóval (nem `-`)
+- Teljes Admin CRUD + `admin_search` + sidebar Settings
+- Rule: `.cursor/rules/setups-eav.mdc`
+
+## 6. Asset szabály
 
 - Layoutba **ne** tegyél oldalspecifikus plugint
 - Form Select2 Parent lista: `visible = true`, order `pos` ASC + `name` ASC (edit: aktuális szülő akkor is a listában)
@@ -111,11 +122,11 @@ $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the 
 - Szám / dátum: middleware normalizál — [middleware.md](middleware.md); form számmezők: `numberFormat` + `.js-input-decimal` / `.js-input-integer`
 - Pénz cellák: `LocaleNumberParser::formatCurrency()` (HUF, ICU) — [admin-konvenciok.md](admin-konvenciok.md)
 
-## 6. Dokumentáció frissítés
+## 7. Dokumentáció frissítés
 
 1. `doc/valtozasok.md` — mit és miért
 2. `doc/struktura.md` — ha új keretrendszer-fájl (nem minden domain modulnál kötelező)
-3. `doc/admin-konvenciok.md` / `uj-projekt.md` — ha UI/asset szabály változik
+3. `doc/admin-konvenciok.md` / `uj-projekt.md` / `setups.md` — ha UI/asset / Setups szabály változik
 
 Domain DB sémát ne dokumentáld a keretrendszer-doksiba, hacsak a csapat külön nem kéri.
 

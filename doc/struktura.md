@@ -54,6 +54,7 @@ $this->viewBuilder()->setLayout('admin');
 
 | Controller | Tanulság |
 |------------|----------|
+| `SetupsController` | Típusos beállítások CRUD (`SetupValue`) — [setups.md](setups.md) |
 | `CitiesController` | Teljes CRUD + `recordGet` + HABTM `samples._ids` (CounterCache tartja a `sample_count`-ot) |
 | `CountriesController` | Lista / view / edit; **csak** `visible` + `pos`; contain Continents; i18n csak megjelenítés |
 | `ContinentsTable` | Földrészek (seed); Translate → `i18n`; hasMany Countries |
@@ -79,6 +80,7 @@ $this->viewBuilder()->setLayout('admin');
 | Admin keresés | `config/admin_search.php` + `App\Utility\AdminSearch` — index / globális szöveges mezők; Search Google UI + lapozás |
 | Lapozó | `admin/index_pagination` FA «‹›»; `App\View\Helper\PaginatorHelper` (`page=1` az URL-ben) |
 | Index állapot | URL könyvjelzőzhető (sort/page/q); üres index → session redirect |
+| Setups (EAV) | `setups` + `SetupValue` + `Setup::get()`; `pages/setups_form.js|css`; [setups.md](setups.md) |
 
 ## Template típusok
 

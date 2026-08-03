@@ -7,6 +7,7 @@ $isSamples = $controller === 'Samples';
 $isParents = $controller === 'Parents';
 $isCities = $controller === 'Cities';
 $isCountries = $controller === 'Countries';
+$isSetups = $controller === 'Setups';
 $isDashboard = $controller === 'Dashboard';
 ?>
 <!-- Left Sidebar -->
@@ -36,6 +37,17 @@ $isDashboard = $controller === 'Dashboard';
 						</li>
 						<li<?= $isCountries ? ' class="active"' : '' ?>>
 							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Countries', 'action' => 'index']) ?>"><?= __('Countries') ?></a>
+						</li>
+					</ul>
+				</li>
+
+				<li class="submenu">
+					<a href="#"<?= $isSetups ? ' class="active"' : '' ?>>
+						<i class="fa fa-fw fa-cogs"></i> <span> <?= __('Settings') ?> </span> <span class="menu-arrow"></span>
+					</a>
+					<ul class="list-unstyled">
+						<li<?= $isSetups ? ' class="active"' : '' ?>>
+							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Setups', 'action' => 'index']) ?>"><?= __('Setups') ?></a>
 						</li>
 					</ul>
 				</li>

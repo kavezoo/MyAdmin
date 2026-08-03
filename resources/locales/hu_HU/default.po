@@ -872,3 +872,123 @@ msgstr "Felhasználók"
 msgid "Language"
 msgstr "Nyelv"
 
+msgid "Setups"
+msgstr "Beállítások"
+
+msgid "Settings"
+msgstr "Konfiguráció"
+
+msgid "New setup"
+msgstr "Új beállítás"
+
+msgid "Edit setup"
+msgstr "Beállítás szerkesztése"
+
+msgid "Setup details"
+msgstr "Beállítás részletei"
+
+msgid "The setup has been saved."
+msgstr "A beállítás mentése sikeres."
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Slug:"
+msgstr "Slug:"
+
+msgid "Type"
+msgstr "Típus"
+
+msgid "Type:"
+msgstr "Típus:"
+
+msgid "Value"
+msgstr "Érték"
+
+msgid "Value:"
+msgstr "Érték:"
+
+msgid "Description"
+msgstr "Leírás"
+
+msgid "Description:"
+msgstr "Leírás:"
+
+msgid "String"
+msgstr "Szöveg"
+
+msgid "Text"
+msgstr "Hosszú szöveg"
+
+msgid "Integer"
+msgstr "Egész szám"
+
+msgid "Float"
+msgstr "Tört szám"
+
+msgid "JSON"
+msgstr "JSON"
+
+msgid "Array"
+msgstr "Tömb"
+
+msgid "Enabled"
+msgstr "Engedélyezve"
+
+msgid "e.g. site-title"
+msgstr "pl. site-title"
+
+msgid "e.g. site_title"
+msgstr "pl. site_title"
+
+msgid "Lowercase letters, numbers and hyphens only. Suggested from the name."
+msgstr "Csak kisbetű, szám és kötőjel. A név alapján javasolt."
+
+msgid "Lowercase letters, numbers and underscores only. Suggested from the name."
+msgstr "Csak kisbetű, szám és aláhúzás. A név alapján javasolt."
+
+msgid "The slug may only contain lowercase letters, numbers and hyphens."
+msgstr "A slug csak kisbetűket, számokat és kötőjeleket tartalmazhat."
+
+msgid "The slug may only contain lowercase letters, numbers and underscores."
+msgstr "A slug csak kisbetűket, számokat és aláhúzást tartalmazhat."
+
+msgid "This slug is already in use."
+msgstr "Ez a slug már foglalt."
+
+msgid "Invalid type."
+msgstr "Érvénytelen típus."
+
+msgid "The value is not valid for the selected type."
+msgstr "Az érték nem érvényes a kiválasztott típushoz."
+
+msgid "Please enter a valid integer."
+msgstr "Adjon meg egy érvényes egész számot."
+
+msgid "Please enter a valid number."
+msgstr "Adjon meg egy érvényes számot."
+
+msgid "Please enter a valid date."
+msgstr "Adjon meg egy érvényes dátumot."
+
+msgid "Please enter a valid time."
+msgstr "Adjon meg egy érvényes időpontot."
+
+msgid "Please enter a valid date and time."
+msgstr "Adjon meg egy érvényes dátumot és időt."
+
+msgid "Please enter valid JSON."
+msgstr "Adjon meg érvényes JSON-t."
+
+msgid "JSON must be an object or an array."
+msgstr "A JSON objektum vagy tömb legyen."
+
+msgid "Please enter a valid list."
+msgstr "Adjon meg egy érvényes listát."
+
+msgid "Enter a JSON object or array."
+msgstr "Adjon meg egy JSON objektumot vagy tömböt."
+
+msgid "One value per line (or a JSON array)."
+msgstr "Egy érték soronként (vagy JSON tömb)."
+
