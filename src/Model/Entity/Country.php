@@ -9,7 +9,8 @@ use Cake\ORM\Entity;
 /**
  * Country Entity — matches `countries` table (+ Translate on `name`).
  *
- * Admin mass-assignment: only `visible` and `pos` (seed: iso2, name, locale, continent_id).
+ * Default mass-assignment: visible + pos (admin).
+ * Superuser patches use accessibleFields for seed columns (iso2, name, locale, continent_id).
  *
  * @property int $id
  * @property string $iso2
@@ -22,6 +23,8 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
  * @property \App\Model\Entity\Continent $continent
+ * @property \CakeDC\Users\Model\Entity\User[] $users
+ * @property \App\Model\Entity\Setup[] $setups
  */
 class Country extends Entity
 {
@@ -33,5 +36,8 @@ class Country extends Entity
     protected array $_accessible = [
         'visible' => true,
         'pos' => true,
+        'continent' => true,
+        'users' => true,
+        'setups' => true,
     ];
 }

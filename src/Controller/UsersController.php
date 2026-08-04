@@ -206,6 +206,22 @@ class UsersController extends CakeDCUsersController
     {
         /** @var \CakeDC\Users\Model\Entity\User|null $user */
         $user = $this->viewBuilder()->getVar('user');
+        // Always re-read is_superuser from DB (session/entity cast must not invent a badge).
+        if ($user !== null && $user->get('id')) {
+            try {
+                $row = $this->getUsersTable()->find()
+                    ->select(['is_superuser'])
+                    ->where(['Users.id' => $user->get('id')])
+                    ->disableHydration()
+                    ->first();
+                if (is_array($row) && array_key_exists('is_superuser', $row)) {
+                    $user->set('is_superuser', $row['is_superuser']);
+                    $user->setDirty('is_superuser', false);
+                }
+            } catch (\Throwable $e) {
+                // keep loaded entity
+            }
+        }
         $countryLabel = '';
         $countryId = $user !== null ? (int)($user->get('country_id') ?? 0) : 0;
         if ($countryId > 0) {

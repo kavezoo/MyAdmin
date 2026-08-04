@@ -24,6 +24,8 @@
  *   MyAdmin.config.indexUrl
 	 *   MyAdmin.config.numberFormat = { locale, decimal, thousand, groupSize, decimalDigits, placeholderInteger, placeholderDecimal }
  *   MyAdmin.config.dateFormat = { locale, intl, moment, startOfTheWeek, useTwentyFourHour, date, datetime, time }
+ *   MyAdmin.config.trumbowygSvgPath
+ *   MyAdmin.config.trumbowygUploadPath
  */
 (function (window, $) {
 	'use strict';
@@ -54,6 +56,8 @@
 		? String(dateFormat.locale).replace('_', '-')
 		: 'hu-HU');
 	var pickerMomentLocale = dateFormat.moment || String(pickerIntlLocale).split('-')[0] || 'hu';
+	var trumbowygSvgPath = cfg.trumbowygSvgPath || '/plugins/trumbowyg/ui/icons.svg';
+	var trumbowygUploadPath = cfg.trumbowygUploadPath || '/plugins/trumbowyg/texteditor-upload.php';
 
 	/**
 	 * Tempus: 0=Sunday … 6=Saturday.
@@ -678,6 +682,55 @@
 				window.location.href = indexUrl;
 			}
 		});
+
+		if ($.fn.trumbowyg && $('.editor').length) {
+			var trumbowygOptions = {
+				svgPath: trumbowygSvgPath,
+				btns: [
+					['viewHTML'],
+					['historyUndo', 'historyRedo'],
+					['formatting'],
+					['strong', 'em', 'del'],
+					['superscript', 'subscript'],
+					['foreColor', 'backColor'],
+					['fontfamily'],
+					['fontsize'],
+					['lineheight'],
+					['link'],
+					['insertImage', 'upload', 'base64', 'noembed'],
+					['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+					['unorderedList', 'orderedList'],
+					['preformatted'],
+					['highlight'],
+					['table'],
+					['specialChars'],
+					['horizontalRule'],
+					['removeformat'],
+					['fullscreen']
+				],
+				plugins: {
+					upload: {
+						serverPath: trumbowygUploadPath,
+						fileFieldName: 'fileToUpload'
+					}
+				}
+			};
+
+			$('.editor').trumbowyg(trumbowygOptions);
+
+			$('#formLanguageTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+				var target = e.target.getAttribute('data-bs-target');
+				if (!target) {
+					return;
+				}
+				$(target).find('.editor').each(function () {
+					var $editor = $(this);
+					if ($editor.data('trumbowyg')) {
+						$editor.trumbowyg('html', $editor.trumbowyg('html'));
+					}
+				});
+			});
+		}
 
 		// After Select2 (and other plugins) — every form starts ready to type
 		focusPrimaryFormField();

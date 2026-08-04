@@ -5,6 +5,59 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-04 — Superuser ACL = Users.role (nem CakeDC flag)
+
+### Mi változott / miért
+- `CurrentUser::isSuperuser()` **csak** `role === superuser` (nem `is_superuser` oszlop).
+- Countries / Setups jogok ehhez igazodnak; `admin` + `is_superuser=0|1` → nincs teljes ország CRUD.
+- Profil badge: szigorú truthy + friss DB `is_superuser` olvasás.
+
+### Érintett
+- `src/Auth/CurrentUser.php`, `src/Auth/CountryAccess.php`
+- `templates/Users/profile.php`, `src/Controller/UsersController.php`
+
+---
+
+## 2026-08-04 — Countries view related Users/Setups; is_superuser javítva
+
+### Mi változott / miért
+- Countries `view`: kapcsolt **Users** + **Setups** tabok (mint Parents/Samples).
+- `zsolt@saghysat.hu` `is_superuser` DB-ben `0` (korábban még `1` volt → badge + teljes ország edit).
+
+### Érintett
+- `templates/Admin/Countries/view.php`
+- `src/Controller/Admin/CountriesController.php`, `src/Model/Table/CountriesTable.php`, `src/Model/Entity/Country.php`
+
+---
+
+## 2026-08-04 — Countries.user_count CounterCache (Users)
+
+### Mi változott / miért
+- `UsersTable` CounterCache → `Countries.user_count` (regisztráció / országváltás / törlés).
+- Ország törlés gombja eddig stale `user_count=0` miatt aktív maradt user mellett.
+- `bin/cake rebuild_counter_caches` bővítve; Translate ideiglenes kikapcsolás a rebuild alatt (ambiguous `ORDER BY id`).
+
+### Érintett
+- `src/Model/Table/UsersTable.php`, `src/Model/Table/CountriesTable.php`
+- `src/Command/RebuildCounterCachesCommand.php`
+
+---
+
+## 2026-08-04 — Tiltott törlés gomb: `btn-secondary disabled`
+
+### Mi változott / miért
+- Gyerek rekordnál a Delete gomb egységesen **`btn-secondary disabled`** + tooltip („related child records”) — index, view related, breadcrumb.
+- Korábbi `btn-outline-secondary` mintát lecserélve.
+- Új Cursor rule: `.cursor/rules/admin-delete-blocked.mdc`.
+
+### Érintett
+- `templates/Admin/{Samples,Cities,Parents,Countries}/index.php`
+- `templates/Admin/{Samples,Cities,Parents}/view.php` (related actions)
+- `doc/admin-konvenciok.md`, `doc/minta-tanulsagok.md`
+- `.cursor/rules/admin-delete-blocked.mdc`
+
+---
+
 ## 2026-08-04 — Auth/role baseline dokumentálva új projektekhez
 
 ### Mi változott / miért

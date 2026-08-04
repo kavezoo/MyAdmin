@@ -17,6 +17,7 @@ Teljes spec: **`doc/users-auth.md`** (§0 baseline / képlékeny). Greenfield: *
 6. Panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös `admin` layout; `RoleHome` + afterLogin **`$event->setResult()`**.
 7. Regisztráció default role → **csak** `/new`. Header search: csak president+ (és admin/superuser).
 8. Login azonosító baseline: **email**. Ország Select2 + `users.country_id` + BrowserLocale.
+9. App ACL „superuser” = **`Users.role === superuser`**. A CakeDC `is_superuser` oszlop **csak** profil badge — nem ad Countries/Setups teljes jogot.
 
 ## Képlékeny (projektenként)
 

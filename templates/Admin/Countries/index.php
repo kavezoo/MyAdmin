@@ -1,10 +1,14 @@
 <?php
 /**
- * Countries index — reference data; edit only visible + pos.
+ * Countries index — superuser: full CRUD; admin: visible + pos.
  *
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Country> $countries
+ * @var bool $canDeleteCountry
+ * @var array<int, true> $deletableCountryIds
  */
+$canDeleteCountry = (bool)$this->get('canDeleteCountry', false);
+$deletableCountryIds = $deletableCountryIds ?? [];
 $this->Html->css(['pages/index'], ['block' => true]);
 
 $rowDoubleClickAction = 'modal';
@@ -36,7 +40,13 @@ if ($showTimestampColumn) {
 }
 
 $tooltipDetails = '<b>' . __('View details') . '</b><br>' . __('View the selected record details.');
-$tooltipEdit = '<b>' . __('Edit') . '</b><br>' . __('Only visibility and position can be changed.');
+$tooltipEdit = '<b>' . __('Edit') . '</b><br>' . (
+	$canDeleteCountry
+		? __('Edit the selected record.')
+		: __('Only visibility and position can be changed.')
+);
+$tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
+$tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete this record because it has related child records.');
 
 $rowDoubleClickHints = [
 	'modal' => __('Double-click a row to view the record details.'),
@@ -50,6 +60,7 @@ $config = [
 	'recordGetUrl' => $this->Url->build(['action' => 'recordGet']),
 	'editUrl' => $this->Url->build(['action' => 'edit']),
 	'viewUrl' => $this->Url->build(['action' => 'view']),
+	'deleteUrl' => $canDeleteCountry ? $this->Url->build(['action' => 'delete']) : '',
 	'recordFieldLabels' => [
 		'id' => __('ID'),
 		'iso2' => __('ISO'),
@@ -138,8 +149,9 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 							<?php foreach ($countries as $country): ?>
 								<?php
 								$isLastVisited = isset($lastVisitedId) && (int)$lastVisitedId === (int)$country->id;
+								$rowCanDelete = $canDeleteCountry && !empty($deletableCountryIds[(int)$country->id]);
 								?>
-								<tr id="record-<?= (int)$country->id ?>" data-id="<?= (int)$country->id ?>" data-can-delete="0"<?= $isLastVisited ? ' class="last-visited"' : '' ?>>
+								<tr id="record-<?= (int)$country->id ?>" data-id="<?= (int)$country->id ?>" data-can-delete="<?= $rowCanDelete ? '1' : '0' ?>"<?= $isLastVisited ? ' class="last-visited"' : '' ?>>
 									<?php if ($showIdColumn): ?>
 										<td class="number id"><?= h($country->id) ?></td>
 									<?php endif; ?>
@@ -198,6 +210,25 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 												'title' => $tooltipEdit,
 											]
 										) ?>
+										<?php if ($canDeleteCountry): ?>
+											<?php if ($rowCanDelete): ?>
+												<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$country->id ?>">
+													<i class="fa fa-trash"></i>
+												</a>
+												<?= $this->Form->create(null, [
+													'url' => ['action' => 'delete', $country->id],
+													'id' => 'delete-form-' . $country->id,
+													'class' => 'd-none js-row-delete-form',
+												]) ?>
+												<?= $this->Form->end() ?>
+											<?php else: ?>
+												<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+													<a role="button" href="#" class="btn btn-secondary disabled" tabindex="-1" aria-disabled="true">
+														<i class="fa fa-trash"></i>
+													</a>
+												</span>
+											<?php endif; ?>
+										<?php endif; ?>
 									</td>
 								</tr>
 							<?php endforeach; ?>

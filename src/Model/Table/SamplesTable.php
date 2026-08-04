@@ -5,6 +5,7 @@ namespace App\Model\Table;
 
 use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
+use Cake\ORM\Behavior\Translate\EavStrategy;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -27,6 +28,7 @@ use Cake\Validation\Validator;
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Cake\ORM\Behavior\CounterCacheBehavior
+ * @mixin \Cake\ORM\Behavior\TranslateBehavior
  */
 class SamplesTable extends Table
 {
@@ -46,6 +48,12 @@ class SamplesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Translate', [
+            'strategyClass' => EavStrategy::class,
+            'fields' => ['name', 'description'],
+            'defaultLocale' => 'en_GB',
+            'allowEmptyTranslations' => true,
+        ]);
 
         $this->belongsTo('Parents', [
             'foreignKey' => 'parent_id',
@@ -92,6 +100,10 @@ class SamplesTable extends Table
             ->maxLength('name', 100)
             ->requirePresence('name', 'create')
             ->notEmptyString('name');
+
+        $validator
+            ->scalar('description')
+            ->allowEmptyString('description');
 
         $validator
             ->integer('szam')

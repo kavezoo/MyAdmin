@@ -21,7 +21,8 @@ if ($displayName === '') {
 }
 $roleKey = strtolower(trim((string)($user->role ?? '')));
 $roleLabel = $roleKey !== '' ? AppRoles::labeled($roleKey) : '';
-$isSuperuser = (bool)($user->is_superuser ?? false);
+// CakeDC flag only — not Users.role. Strict truthy (0 / "0" / false → no badge).
+$isSuperuser = \App\Auth\CurrentUser::truthyFlag($user->get('is_superuser'));
 $userAvatar = trim((string)($user->avatar ?? ''));
 $dashboardUrl = $this->Url->build($this->get('panelHomeUrl') ?? [
 	'prefix' => 'Admin',

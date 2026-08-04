@@ -5,6 +5,7 @@ namespace App\Model\Table;
 
 use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
+use Cake\ORM\Behavior\Translate\EavStrategy;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -24,6 +25,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\ParentRecord saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \Cake\ORM\Behavior\TranslateBehavior
  */
 class ParentsTable extends Table
 {
@@ -44,6 +46,12 @@ class ParentsTable extends Table
         $this->setEntityClass(\App\Model\Entity\ParentRecord::class);
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Translate', [
+            'strategyClass' => EavStrategy::class,
+            'fields' => ['name'],
+            'defaultLocale' => 'en_GB',
+            'allowEmptyTranslations' => true,
+        ]);
 
         // No dependent cascade: delete is refused while Samples exist (beforeDelete).
         // sample_count: CounterCache on SamplesTable (belongsTo Parents).

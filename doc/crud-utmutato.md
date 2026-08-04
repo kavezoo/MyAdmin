@@ -63,7 +63,7 @@ A view tab / teljes lista továbbra is lehet ABC ASC limit nélkül.
 | `form.php` | Add/edit közös form; `#name` **autofocus**; HABTM: `related._ids` multiple Select2; „+” csak ha egyszerű create lehetséges |
 | `view.php` | Adatlap + related tabs; `$rowDoubleClickAction`; `.record-modal-link`; `pages/index` JS + linked modal |
 
-**Törlés (gyerekvédelem):** `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()` — a szám a **CounterCache** `*_count` mezőből jön (ne élő `COUNT()`). HABTM: through Table CounterCache + `cascadeCallbacks => true`. UI: törölhető = danger + Swal question; **nem törölhető** = `btn-secondary` / `btn-outline-secondary` + **disabled** + tooltip ([minta-tanulsagok.md](minta-tanulsagok.md) §3). Trait: `App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait`.
+**Törlés (gyerekvédelem):** `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()` — a szám a **CounterCache** `*_count` mezőből jön (ne élő `COUNT()`). HABTM: through Table CounterCache + `cascadeCallbacks => true`. UI: törölhető = danger + Swal question; **nem törölhető** = `btn-secondary` + **disabled** + tooltip ([minta-tanulsagok.md](minta-tanulsagok.md) §3). Trait: `App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait`.
 
 **Dátum / idő mezők a formon:** Tempus Dominus 6 (`.js-tempus-picker`, JeffAdmin5 formátumok) — [minta-tanulsagok.md](minta-tanulsagok.md) §6. Mentés: [middleware.md](middleware.md).
 

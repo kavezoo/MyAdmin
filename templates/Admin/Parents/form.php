@@ -2,6 +2,8 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\ParentRecord $parent
+ * @var list<array{locale: string, code: string, iso2: string, country_id: int}> $formLanguageTabs
+ * @var string $formDefaultLocale
  */
 $this->Html->css(['pages/form'], ['block' => true]);
 
@@ -37,12 +39,18 @@ $isEdit = !$parent->isNew();
 			</div>
 			<div class="card-body">
 				<?= $this->Form->create($parent, ['id' => 'form-horizontal', 'autocomplete' => 'off']) ?>
-					<div class="form-group row mb-3">
-						<label for="name" class="col-sm-3 col-md-2 col-form-label"><?= __('Name:') ?></label>
-						<div class="col-12 col-md-10 col-xl-5">
-							<?= $this->Form->control('name', ['label' => false, 'class' => 'form-control', 'id' => 'name', 'autofocus' => true]) ?>
-						</div>
-					</div>
+					<?= $this->element('admin/form_language_fields', [
+						'entity' => $parent,
+						'formLanguageTabs' => $formLanguageTabs ?? [],
+						'defaultLocale' => $formDefaultLocale ?? 'en_GB',
+						'i18nFields' => [
+							[
+								'name' => 'name',
+								'label' => __('Name:'),
+								'type' => 'text',
+							],
+						],
+					]) ?>
 					<div class="row">
 						<div class="col-12 col-xxl-11">
 							<hr class="my-4">

@@ -88,6 +88,7 @@ class ParentsController extends AppController
             $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
 
+        $this->setFormLanguageTabs();
         $this->set(compact('parent'));
         $this->set('title', __('New parent'));
         $this->viewBuilder()->setVar('breadcrumb', __('Parents'));
@@ -100,7 +101,7 @@ class ParentsController extends AppController
      */
     public function edit(?string $id = null)
     {
-        $parent = $this->Parents->get($id);
+        $parent = $this->getWithTranslations($this->Parents, $id);
         $this->rememberLastVisited('Parents', $parent->id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -118,6 +119,7 @@ class ParentsController extends AppController
             $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
 
+        $this->setFormLanguageTabs();
         $this->set(compact('parent'));
         $this->setCanDeleteFlag($this->Parents, $parent);
         $this->set('title', __('Edit parent'));

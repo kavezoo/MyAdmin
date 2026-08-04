@@ -229,7 +229,7 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 										<?= $this->Form->end() ?>
 									<?php else: ?>
 										<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
-											<a role="button" href="#" class="btn btn-outline-secondary disabled" tabindex="-1" aria-disabled="true">
+											<a role="button" href="#" class="btn btn-secondary disabled" tabindex="-1" aria-disabled="true">
 												<i class="fa fa-trash"></i>
 											</a>
 										</span>

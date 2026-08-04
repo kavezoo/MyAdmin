@@ -12,6 +12,11 @@ $this->Html->css([
 	'/plugins/tempus-dominus/css/tempus-dominus.min',
 	'/plugins/select2-4.1.0/css/select2.min',
 	'/plugins/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min',
+	'/plugins/trumbowyg/ui/trumbowyg.min',
+	'/plugins/trumbowyg/plugins/colors/ui/trumbowyg.colors.min',
+	'/plugins/trumbowyg/plugins/table/ui/trumbowyg.table.min',
+	'/plugins/trumbowyg/plugins/highlight/ui/trumbowyg.highlight.min',
+	'/plugins/trumbowyg/plugins/specialchars/ui/trumbowyg.specialchars.min',
 	'pages/form',
 ], ['block' => true]);
 
@@ -19,6 +24,8 @@ $config = [
 	'indexUrl' => $this->Url->build(['action' => 'index']),
 	'numberFormat' => \App\Utility\LocaleNumberParser::jsConfig(),
 	'dateFormat' => \App\Utility\LocaleDateParser::jsConfig(),
+	'trumbowygSvgPath' => $this->Url->build('/plugins/trumbowyg/ui/icons.svg'),
+	'trumbowygUploadPath' => $this->Url->build('/plugins/trumbowyg/texteditor-upload.php'),
 ];
 $this->Html->scriptBlock(
 	'window.MyAdmin = window.MyAdmin || {}; window.MyAdmin.config = Object.assign(window.MyAdmin.config || {}, '
@@ -32,6 +39,20 @@ $this->Html->script([
 	'/plugins/tempus-dominus/js/tempus-dominus.min',
 	'/plugins/inputmask/jquery.inputmask.min',
 	'/plugins/select2-4.1.0/js/select2.full.min',
+	'/plugins/trumbowyg/trumbowyg.min',
+	'/plugins/trumbowyg/plugins/colors/trumbowyg.colors.min',
+	'/plugins/trumbowyg/plugins/fontsize/trumbowyg.fontsize.min',
+	'/plugins/trumbowyg/plugins/fontfamily/trumbowyg.fontfamily.min',
+	'/plugins/trumbowyg/plugins/lineheight/trumbowyg.lineheight.min',
+	'/plugins/trumbowyg/plugins/table/trumbowyg.table.min',
+	'/plugins/trumbowyg/plugins/upload/trumbowyg.upload.min',
+	'/plugins/trumbowyg/plugins/base64/trumbowyg.base64.min',
+	'/plugins/trumbowyg/plugins/noembed/trumbowyg.noembed.min',
+	'/plugins/trumbowyg/plugins/preformatted/trumbowyg.preformatted.min',
+	'/plugins/trumbowyg/plugins/highlight/trumbowyg.highlight.min',
+	'/plugins/trumbowyg/plugins/specialchars/trumbowyg.specialchars.min',
+	'/plugins/trumbowyg/plugins/history/trumbowyg.history.min',
+	'/plugins/trumbowyg/plugins/pasteimage/trumbowyg.pasteimage.min',
 	'pages/form',
 ], ['block' => 'scriptBottom']);
 
@@ -96,18 +117,24 @@ $isEdit = !$sample->isNew();
 						</div>
 					</div>
 
-					<div class="form-group row">
-						<label for="name" class="col-sm-3 col-md-2 col-form-label"><?= __('Name:') ?></label>
-						<div class="col-12 col-md-10 col-xl-5">
-							<?= $this->Form->control('name', [
-								'label' => false,
-								'class' => 'form-control',
-								'placeholder' => __('Name'),
-								'id' => 'name',
-								'autofocus' => true,
-							]) ?>
-						</div>
-					</div>
+					<?= $this->element('admin/form_language_fields', [
+						'entity' => $sample,
+						'formLanguageTabs' => $formLanguageTabs ?? [],
+						'defaultLocale' => $formDefaultLocale ?? 'en_GB',
+						'i18nFields' => [
+							[
+								'name' => 'name',
+								'label' => __('Name:'),
+								'type' => 'text',
+							],
+							[
+								'name' => 'description',
+								'label' => __('Description:'),
+								'type' => 'editor',
+								'rows' => 8,
+							],
+						],
+					]) ?>
 
 					<div class="form-group row">
 						<label for="szam" class="col-sm-3 col-md-2 col-form-label"><?= __('Number:') ?></label>

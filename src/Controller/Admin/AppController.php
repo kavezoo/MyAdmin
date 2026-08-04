@@ -698,6 +698,47 @@ class AppController extends BaseController
     }
 
     /**
+     * Language tabs for translatable Admin forms (visible countries, EN first).
+     *
+     * @return void
+     */
+    protected function setFormLanguageTabs(): void
+    {
+        $this->set('formLanguageTabs', \App\Utility\FormLanguages::tabs());
+        $this->set('formDefaultLocale', 'en_GB');
+    }
+
+    /**
+     * Load entity with all Translate EAV rows (edit form).
+     * Forces default locale on the root fields so EN tab maps to entity->name etc.
+     *
+     * @param \Cake\ORM\Table $table
+     * @param mixed $id
+     * @param array<string, mixed>|list<string> $contain
+     * @return \Cake\Datasource\EntityInterface
+     */
+    protected function getWithTranslations(Table $table, mixed $id, array $contain = []): EntityInterface
+    {
+        if (!$table->hasBehavior('Translate')) {
+            return $table->get($id, contain: $contain);
+        }
+
+        $defaultLocale = (string)($table->getBehavior('Translate')->getConfig('defaultLocale') ?: 'en_GB');
+        $table->setLocale($defaultLocale);
+
+        $pk = $table->aliasField($table->getPrimaryKey());
+        $query = $table->find('translations')->where([$pk => $id]);
+        if ($contain !== []) {
+            $query->contain($contain);
+        }
+
+        /** @var \Cake\Datasource\EntityInterface $entity */
+        $entity = $query->firstOrFail();
+
+        return $entity;
+    }
+
+    /**
      * Expose canDelete for breadcrumb / view (Tables using PreventsDeleteWithChildrenTrait).
      *
      * @param \Cake\ORM\Table $table

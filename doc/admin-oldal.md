@@ -84,7 +84,7 @@ Külső wrapper (a tartalom tetején):
 1. **Fejléc:** ikon + modulcím (`__('English')`), súgó a dupla kattintásról (ha nem `none`), `admin/table_search` (nagyító + `__('Start search')`), lapozó felül
 2. **Tábla:** `.table.index-data-table` — típusoszlop osztályokkal
 3. **Sor:** `id="record-{id}"` + `data-id="{id}"` + opcionális `.last-visited` (görgetés a breadcrumb alá ~mt-3)
-4. **Actions oszlop:** View → Edit → Delete (outline; törölhető = danger + form; **nem** = outline-secondary **disabled** + tooltip) — [minta-tanulsagok.md](minta-tanulsagok.md) §3
+4. **Actions oszlop:** View → Edit → Delete (outline; törölhető = danger + form; **nem** = `btn-secondary` **disabled** + tooltip) — [minta-tanulsagok.md](minta-tanulsagok.md) §3
 5. **Lábléc:** `admin/index_footer` — bal: `admin/index_counter` (bake counter msgid); jobb: `admin/index_pagination` (**First | Previous | számok | Next | Last**, disabled a széleken)
 6. **Modalok:** `#modalRecordView` (+ linked modal, ha van szülő/kapcsolt link)
 

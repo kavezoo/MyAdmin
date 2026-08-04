@@ -132,7 +132,7 @@ foreach ($panelPrefixes as $prefix) {
 | `src/Model/Table/UsersTable.php` | `country_id`; register validáció; OneTimeLogin wrappers |
 | `src/Auth/AppRoles.php` | role lista + search/setups role listák |
 | `src/Auth/RoleHome.php` | role → panel URL / sidebar |
-| `src/Auth/CurrentUser.php` | identity role |
+| `src/Auth/CurrentUser.php` | identity **role**; `isSuperuser()` = `role===superuser` (nem CakeDC `is_superuser` flag) |
 | `src/Controller/PanelAppController.php` | közös panel chrome |
 | `src/Controller/{New,Member,Clubpresident,President}/` | panelek |
 | `src/Utility/BrowserLocale.php` | resolve / persist / `forLoggedIn` / `localeFromUser` |

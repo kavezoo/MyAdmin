@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use Cake\ORM\Behavior\Translate\TranslateTrait;
 use Cake\ORM\Entity;
 
 /**
@@ -20,6 +21,8 @@ use Cake\ORM\Entity;
  */
 class ParentRecord extends Entity
 {
+    use TranslateTrait;
+
     /**
      * @var array<string, bool>
      */
@@ -31,5 +34,6 @@ class ParentRecord extends Entity
         'created' => true,
         'modified' => true,
         'samples' => true,
+        '_translations' => true,
     ];
 }

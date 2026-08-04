@@ -149,7 +149,7 @@ Referencia-implementáció (ha van a projektben): bármely teljes CRUD `index.ph
 2. Card fejléc: cím, súgó („Dupla kattintással…”), `admin/table_search`, `admin/index_pagination`
 3. Tábla: `.table.index-data-table`
 4. Sor: `id="record-{id}"` `data-id="{id}"`; ha `$lastVisitedId` egyezik → `class="last-visited"`
-5. Actions: View / Edit / Delete (outline + HTML tooltip). Ha `*_count > 0`: Delete **disabled** + tooltip a tilalom okáról. Egyébként rejtett `#delete-form-{id}` (**`Form->create`**, nem `postLink`)
+5. Actions: View / Edit / Delete (outline + HTML tooltip). Ha `*_count > 0`: Delete **`btn-secondary disabled`** + tooltip („related child records”). Egyébként rejtett `#delete-form-{id}` (**`Form->create`**, nem `postLink`)
 6. Lábléc: **`admin/index_footer`** (bal: `1–100 / 266 records | 1. page / 3`; jobb: lapozó) — **ne** másold be inline a summary-t
 7. Modal: `#modalRecordView` (+ linked modal, ha van kapcsolt entitás link) — Delete gomb `can_delete` szerint enable/disable
 8. Page asset: `pages/index` CSS + `pages/index` JS + `MyAdmin.config` (legalább `recordGetUrl`, `editUrl`, `viewUrl`, `recordFieldLabels`)
@@ -414,7 +414,7 @@ $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the 
 | HABTM | through Table-en CounterCache; `belongsToMany`: `dependent => true` + **`cascadeCallbacks => true`** |
 | hasMany szülő | gyerek Table-en CounterCache (`belongsTo` szülő); szülőn `dependent => false` — gyerek meglétekor **tilos** a törlés |
 | Controller | `deleteEntityOrFail()` / Flash; `setCanDeleteFlag()`; új rekordnál `*_count = 0` csak ha NOT NULL + nincs DB DEFAULT |
-| Index UI | `*_count > 0` → `btn-outline-secondary disabled` + tooltip; különben danger + `Form->create` `#delete-form-{id}` |
+| Index UI | `*_count > 0` → `btn-secondary disabled` + tooltip („related child records”); különben danger + `Form->create` `#delete-form-{id}` |
 | Modal | `record.can_delete` → `#btn-record-delete` / `#btn-linked-delete`: törölhető = `btn-danger`; nem = `btn-secondary disabled` + tooltip |
 | Breadcrumb | `#btn-delete` → `#delete-form-current` + Swal; nem törölhető = `btn-secondary disabled` |
 
@@ -582,7 +582,7 @@ Link / dupla klikk → `#modalLinkedRecordView` (`admin/modal_linked_record_view
 | **Close** | Modal bezárás |
 | **Edit** | Kapcsolt entitás `edit` URL |
 | **View details** | Kapcsolt entitás `view` URL |
-| Delete gomb | `MyAdmin.confirmDelete` → rejtett form submit; ha van gyerek → **`btn-secondary` / outline-secondary + disabled** + tooltip; Swal z-index > Bootstrap modal |
+| Delete gomb | `MyAdmin.confirmDelete` → rejtett form submit; ha van gyerek → **`btn-secondary disabled`** + tooltip; Swal z-index > Bootstrap modal |
 
 Link attribútumok (`.record-modal-link`):
 

@@ -148,7 +148,7 @@ if ($citiesCount > 0):
 						<?= $this->Form->end() ?>
 					<?php else: ?>
 						<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
-							<a role="button" href="#" class="btn btn-outline-secondary disabled" tabindex="-1" aria-disabled="true">
+							<a role="button" href="#" class="btn btn-secondary disabled" tabindex="-1" aria-disabled="true">
 								<i class="fa fa-trash"></i>
 							</a>
 						</span>
@@ -207,6 +207,11 @@ $citiesTable = ob_get_clean();
 						</dd>
 					</div>
 					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h($sample->name) ?></dd></div>
+					<?php if (!empty($sample->description)): ?>
+						<div class="record-view-row"><dt><?= __('Description') ?></dt><dd class="record-view-html"><?= $sample->description ?></dd></div>
+					<?php else: ?>
+						<div class="record-view-row"><dt><?= __('Description') ?></dt><dd>—</dd></div>
+					<?php endif; ?>
 					<div class="record-view-row"><dt><?= __('Number') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($sample->szam, decimals: 0)) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Net') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::formatCurrency($sample->netto, decimals: 2)) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Date') ?></dt><dd><?= $sample->datum ? h(\App\Utility\LocaleDateParser::format($sample->datum, 'date')) : '—' ?></dd></div>

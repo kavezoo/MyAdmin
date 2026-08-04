@@ -106,6 +106,7 @@ class SamplesController extends AppController
         }
 
         $this->setFormOptions($sample);
+        $this->setFormLanguageTabs();
         $this->set(compact('sample'));
         $this->set('title', __('New sample'));
         $this->viewBuilder()->setVar('breadcrumb', __('Samples'));
@@ -118,7 +119,7 @@ class SamplesController extends AppController
      */
     public function edit(?string $id = null)
     {
-        $sample = $this->Samples->get($id, contain: ['Parents', 'Cities']);
+        $sample = $this->getWithTranslations($this->Samples, $id, ['Parents', 'Cities']);
         $this->rememberLastVisited('Samples', $sample->id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -144,6 +145,7 @@ class SamplesController extends AppController
         }
 
         $this->setFormOptions($sample);
+        $this->setFormLanguageTabs();
         $this->set(compact('sample'));
         $this->setCanDeleteFlag($this->Samples, $sample);
         $this->set('title', __('Edit sample'));
@@ -213,6 +215,7 @@ class SamplesController extends AppController
             'id' => $sample->id,
             'parent' => $sample->parent->name ?? '',
             'name' => $sample->name,
+            'description' => $sample->description,
             'szam' => \App\Utility\LocaleNumberParser::format($sample->szam, decimals: 0),
             'netto' => \App\Utility\LocaleNumberParser::formatCurrency($sample->netto, decimals: 2),
             'datum' => $sample->datum ? \App\Utility\LocaleDateParser::format($sample->datum, 'date') : '',

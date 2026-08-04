@@ -62,7 +62,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - Admin Flash: alap **Simple Notify** toast; modal Flash: `$this->flashSwal()` / `flash/*_swal.php`; **auth (`login` layout) Flash is toast** — [users-auth.md](users-auth.md)
 - Form dátum/idő: **Tempus Dominus 6** — formátum + naptárnyelv + hétkezdet a `dateFormat` / `App.adminLocale` szerint; mentés: dátum middleware
 - Form számok: `numberFormat` + inputmask; mentés: szám middleware (`1 234,56` → `1234.56`); mezőhiba a control **alatt** (piros félkövér; összetett widget: `admin/field_error`)
-- Törlés UI: törölhető = danger + Swal **question**; **nem törölhető** = secondary / outline-secondary + **disabled** + tooltip
+- Törlés UI: törölhető = danger + Swal **question**; **nem törölhető** = `btn-secondary` + **disabled** + tooltip
 - **Index oszlopok:** `string` rugalmas; fix: `id` 4.75 / `pos` 5.5 / `number` 6.5 / `currency` 12 / `count` 5.5 / `boolean|visible` 7.5 / `date` 8.5 / `datetime` 10.5 / `time` 5 rem ([admin-oldal.md](admin-oldal.md) §4.3)
 - Index config: `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; **`$indexLimit = 100` / `$indexMaxLimit = 1000`**; session **`Admin.indexState`** (sort/page/`q`); utolsó rekord: **`Admin.lastVisited`** + **`.last-visited`** + scroll
 - **Keresés (minden projekt):** `config/admin_search.php` (`fields` + `labelsKey`; globális limitok); index + header; `/admin/search`; header search **csak** superuser/admin/president/vicepresident; clear → last-visited — [uj-projekt.md](uj-projekt.md) §2.8; rule: `admin-kereses-index-allapot.mdc`

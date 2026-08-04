@@ -1,0 +1,38 @@
+---
+description: Admin törlés gomb — gyerek rekordnál secondary + disabled + tooltip (index/view/breadcrumb/modal).
+globs: templates/Admin/**/{index,view}.php,templates/element/admin/breadcrumb.php
+alwaysApply: true
+---
+
+# Admin delete — gyerek rekordnál tiltott gomb
+
+Ha egy rekord **nem törölhető**, mert van kapcsolt gyerek (`*_count > 0`, users/setups, `canDelete() === false`):
+
+1. A törlés gomb **mindig megjelenik** (ne tűnjön el).
+2. Osztály: **`btn btn-secondary disabled`** (nem `btn-outline-secondary`, nem `btn-outline-danger`).
+3. `tabindex="-1"` + `aria-disabled="true"`.
+4. Tooltip a **külső** `span.d-inline-block`-on (disabled gombon a Bootstrap tooltip nem megbízható):
+   - `$tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete this record because it has related child records.');`
+5. Sor: `data-can-delete="0"`.
+6. Nincs `#delete-form-{id}` / nincs `btn-row-delete`.
+
+## Törölhető rekord
+
+- `btn btn-outline-danger btn-row-delete` + `$tooltipDelete` („Permanently delete…”)
+- Rejtett `Form->create` → `#delete-form-{id}`
+- `data-can-delete="1"`
+
+## Hol érvényes
+
+- Minden Admin **`index.php`** actions oszlop
+- Kapcsolt táblák a **`view.php`**-n
+- Breadcrumb `#btn-delete`
+- Modal `#btn-record-delete` / `#btn-linked-delete` (JS: `btn-secondary` + tooltip)
+
+## Kaszkád törlés
+
+Alapból **ne** kaszkádolj. Ha később egy modulnál kell cascade delete, az kivétel — külön döntés, ne ez legyen az alapértelmezés.
+
+## Dokumentáció
+
+`doc/admin-konvenciok.md` — Delete UI sor: `btn-secondary disabled` + a fenti tooltip szöveg.

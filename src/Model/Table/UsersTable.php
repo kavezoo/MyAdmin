@@ -11,6 +11,10 @@ use CakeDC\Users\Model\Table\UsersTable as CakeDCUsersTable;
 
 /**
  * App Users table — CakeDC Users + country_id + CakePHP 5.3 OneTimeLogin wrappers.
+ *
+ * CounterCache: Countries.user_count (registration / country change / delete).
+ *
+ * @mixin \Cake\ORM\Behavior\CounterCacheBehavior
  */
 class UsersTable extends CakeDCUsersTable
 {
@@ -23,6 +27,10 @@ class UsersTable extends CakeDCUsersTable
             'foreignKey' => 'country_id',
             'className' => 'Countries',
             'joinType' => 'LEFT',
+        ]);
+        // Countries.user_count — child (belongsTo) side CounterCache
+        $this->addBehavior('CounterCache', [
+            'Countries' => ['user_count'],
         ]);
     }
 

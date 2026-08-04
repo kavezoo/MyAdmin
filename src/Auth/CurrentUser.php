@@ -8,12 +8,15 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 
 /**
- * Resolve current user role without requiring CakeDC Users / Authentication yet.
+ * Resolve current user role from Authentication identity.
  *
  * Order:
- * 1. Request identity (Authentication plugin / CakeDC) — role / role_id string field
+ * 1. Request identity — `role` / `role_id`
  * 2. Configure AppRoles.devRole or App.devRole
- * 3. debug → superuser; otherwise → new (no Setups access)
+ * 3. debug → superuser; otherwise → new
+ *
+ * App “superuser” powers = Users.role === `superuser` only.
+ * CakeDC `users.is_superuser` is a separate profile badge — not used for ACL.
  */
 class CurrentUser
 {
@@ -42,9 +45,62 @@ class CurrentUser
         return AppRoles::NEW;
     }
 
+    /**
+     * True only when Users.role is `superuser` (not CakeDC is_superuser flag).
+     */
     public static function isSuperuser(?ServerRequest $request = null): bool
     {
         return static::role($request) === AppRoles::SUPERUSER;
+    }
+
+    /**
+     * CakeDC `users.is_superuser` flag from identity (profile badge only).
+     * Strict: only true/1/"1" count — never treat empty / "0" as true.
+     */
+    public static function isSuperuserFlag(?ServerRequest $request = null): bool
+    {
+        $request ??= Router::getRequest();
+        if ($request === null) {
+            return false;
+        }
+
+        return static::truthyFlag(static::identityValue($request->getAttribute('identity'), 'is_superuser'));
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public static function truthyFlag(mixed $value): bool
+    {
+        if ($value === true || $value === 1 || $value === '1') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param mixed $identity
+     * @param string $field
+     * @return mixed
+     */
+    protected static function identityValue(mixed $identity, string $field): mixed
+    {
+        if ($identity === null) {
+            return null;
+        }
+
+        if (is_object($identity) && method_exists($identity, 'get')) {
+            return $identity->get($field);
+        }
+        if (is_object($identity) && isset($identity->{$field})) {
+            return $identity->{$field};
+        }
+        if (is_array($identity)) {
+            return $identity[$field] ?? null;
+        }
+
+        return null;
     }
 
     /**
@@ -52,19 +108,9 @@ class CurrentUser
      */
     protected static function roleFromIdentity(mixed $identity): ?string
     {
-        if ($identity === null) {
-            return null;
-        }
-
-        $raw = null;
-        if (is_object($identity)) {
-            if (method_exists($identity, 'get')) {
-                $raw = $identity->get('role') ?? $identity->get('role_id') ?? null;
-            } elseif (isset($identity->role)) {
-                $raw = $identity->role;
-            }
-        } elseif (is_array($identity)) {
-            $raw = $identity['role'] ?? $identity['role_id'] ?? null;
+        $raw = static::identityValue($identity, 'role');
+        if ($raw === null || $raw === '') {
+            $raw = static::identityValue($identity, 'role_id');
         }
 
         if (is_object($raw) && method_exists($raw, '__toString')) {

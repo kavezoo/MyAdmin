@@ -3,15 +3,18 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Auth\CountryAccess;
 use App\Utility\AdminCountry;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\I18n\I18n;
 
 /**
  * Countries Controller — reference data (`countries` + Continents + Translate).
  *
- * Schema-driven fields: iso2, name, locale, continent_id, visible, pos, user_count.
- * Admin may only change `visible` and `pos`. No add/delete. No i18n list in modal.
+ * Access:
+ * - superuser: add, delete, full edit
+ * - admin: edit visible + pos only
  *
  * @property \App\Model\Table\CountriesTable $Countries
  */
@@ -32,12 +35,36 @@ class CountriesController extends AppController
     }
 
     /**
+     * Breadcrumb flags for Countries CRUD.
+     *
+     * @param \App\Model\Entity\Country|null $country
+     * @return void
+     */
+    protected function setCountryAccessFlags(?\App\Model\Entity\Country $country = null): void
+    {
+        $this->set('canAdd', CountryAccess::canAdd());
+        $canDelete = CountryAccess::canDelete();
+        if ($canDelete && $country !== null) {
+            $canDelete = $this->Countries->canDelete($country);
+        } elseif ($country === null) {
+            $canDelete = false;
+        }
+        $this->set('canDelete', $canDelete);
+        $this->set('canEditFully', CountryAccess::canEditFully());
+    }
+
+    /**
      * @return \Cake\Http\Response|null|void
      */
     public function index()
     {
+        if (!CountryAccess::canEditMeta()) {
+            throw new ForbiddenException(__('You are not allowed to access countries.'));
+        }
+
         $this->set('title', __('Countries'));
         $this->viewBuilder()->setVar('breadcrumb', __('Countries'));
+        $this->setCountryAccessFlags();
 
         $this->setTranslateLocales();
         $redirect = $this->applyIndexListState('Countries');
@@ -76,29 +103,53 @@ class CountriesController extends AppController
 
         $countries = $this->paginate($query, $paginateOptions);
         $this->setLastVisitedForIndex('Countries');
-        $this->set(compact('countries'));
+
+        $deletableCountryIds = [];
+        if (CountryAccess::canDelete()) {
+            foreach ($countries as $country) {
+                if ($this->Countries->canDelete($country)) {
+                    $deletableCountryIds[(int)$country->id] = true;
+                }
+            }
+        }
+
+        $this->set(compact('countries', 'deletableCountryIds'));
+        $this->set('canDeleteCountry', CountryAccess::canDelete());
     }
 
     /**
-     * @param string|null $id
      * @return \Cake\Http\Response|null|void
      */
-    public function edit(?string $id = null)
+    public function add()
     {
-        $this->setTranslateLocales();
-        $country = $this->Countries->get($id, contain: ['Continents']);
-        $this->rememberLastVisited('Countries', $country->id);
+        if (!CountryAccess::canAdd()) {
+            throw new ForbiddenException(__('Only a superuser can add countries.'));
+        }
 
-        if ($this->request->is(['patch', 'post', 'put'])) {
+        $this->setTranslateLocales();
+        $country = $this->newEntityWithSchemaDefaults($this->Countries);
+        if ($country->get('user_count') === null) {
+            $country->set('user_count', 0);
+        }
+
+        if ($this->request->is('post')) {
             try {
-                // Seed fields (iso2, name, locale, continent_id) are not patchable
                 $data = $this->request->getData();
-                $country = $this->Countries->patchEntity($country, [
-                    'visible' => $data['visible'] ?? $country->visible,
-                    'pos' => $data['pos'] ?? $country->pos,
-                ], [
-                    'fields' => ['visible', 'pos'],
+                $country = $this->Countries->patchEntity($country, $data, [
+                    'fields' => ['iso2', 'name', 'locale', 'continent_id', 'visible', 'pos', 'user_count'],
+                    'accessibleFields' => [
+                        'iso2' => true,
+                        'name' => true,
+                        'locale' => true,
+                        'continent_id' => true,
+                        'visible' => true,
+                        'pos' => true,
+                        'user_count' => true,
+                    ],
                 ]);
+                if ($country->get('user_count') === null) {
+                    $country->set('user_count', 0);
+                }
                 if ($this->Countries->save($country)) {
                     $this->rememberLastVisited('Countries', $country->id);
                     $this->Flash->success(__('The country has been saved.'));
@@ -111,7 +162,66 @@ class CountriesController extends AppController
             $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
 
+        $this->setFormOptions();
         $this->set(compact('country'));
+        $this->setCountryAccessFlags($country);
+        $this->set('title', __('New country'));
+        $this->viewBuilder()->setVar('breadcrumb', __('Countries'));
+        $this->render('form');
+    }
+
+    /**
+     * @param string|null $id
+     * @return \Cake\Http\Response|null|void
+     */
+    public function edit(?string $id = null)
+    {
+        if (!CountryAccess::canEditMeta()) {
+            throw new ForbiddenException(__('You are not allowed to edit countries.'));
+        }
+
+        $this->setTranslateLocales();
+        $country = $this->Countries->get($id, contain: ['Continents']);
+        $this->rememberLastVisited('Countries', $country->id);
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            try {
+                $data = $this->request->getData();
+                if (CountryAccess::canEditFully()) {
+                    $country = $this->Countries->patchEntity($country, $data, [
+                        'fields' => ['iso2', 'name', 'locale', 'continent_id', 'visible', 'pos'],
+                        'accessibleFields' => [
+                            'iso2' => true,
+                            'name' => true,
+                            'locale' => true,
+                            'continent_id' => true,
+                            'visible' => true,
+                            'pos' => true,
+                        ],
+                    ]);
+                } else {
+                    $country = $this->Countries->patchEntity($country, [
+                        'visible' => $data['visible'] ?? $country->visible,
+                        'pos' => $data['pos'] ?? $country->pos,
+                    ], [
+                        'fields' => ['visible', 'pos'],
+                    ]);
+                }
+                if ($this->Countries->save($country)) {
+                    $this->rememberLastVisited('Countries', $country->id);
+                    $this->Flash->success(__('The country has been saved.'));
+
+                    return $this->redirectToIndexList('Countries');
+                }
+            } catch (\Throwable $e) {
+                // Unexpected errors → user-facing flash
+            }
+            $this->Flash->error(__('The record could not be saved. Please try again.'));
+        }
+
+        $this->setFormOptions();
+        $this->set(compact('country'));
+        $this->setCountryAccessFlags($country);
         $this->set('title', __('Edit country'));
         $this->viewBuilder()->setVar('breadcrumb', __('Countries'));
         $this->render('form');
@@ -123,12 +233,40 @@ class CountriesController extends AppController
      */
     public function view(?string $id = null)
     {
+        if (!CountryAccess::canEditMeta()) {
+            throw new ForbiddenException(__('You are not allowed to access countries.'));
+        }
+
         $this->setTranslateLocales();
-        $country = $this->Countries->get($id, contain: ['Continents']);
+        $country = $this->Countries->get($id, contain: [
+            'Continents',
+            'Users' => function ($q) {
+                return $q->orderBy(['Users.email' => 'ASC']);
+            },
+            'Setups' => function ($q) {
+                return $q->orderBy(['Setups.pos' => 'ASC', 'Setups.name' => 'ASC']);
+            },
+        ]);
         $this->rememberLastVisited('Countries', $country->id);
         $this->set(compact('country'));
+        $this->setCountryAccessFlags($country);
+        $this->set('canDeleteSetup', \App\Auth\SetupAccess::canDelete());
         $this->set('title', __('Country details'));
         $this->viewBuilder()->setVar('breadcrumb', __('Countries'));
+    }
+
+    /**
+     * @param string|null $id
+     * @return \Cake\Http\Response|null
+     */
+    public function delete(?string $id = null): ?Response
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        if (!CountryAccess::canDelete()) {
+            throw new ForbiddenException(__('Only a superuser can delete countries.'));
+        }
+
+        return $this->deleteEntityOrFail($this->Countries, $this->Countries->get($id));
     }
 
     /**
@@ -140,6 +278,15 @@ class CountriesController extends AppController
     public function recordGet(?string $id = null): Response
     {
         $this->request->allowMethod(['get']);
+        if (!CountryAccess::canEditMeta()) {
+            return $this->response
+                ->withStatus(403)
+                ->withType('application/json')
+                ->withStringBody(json_encode([
+                    'success' => false,
+                    'message' => __('You are not allowed to access countries.'),
+                ], JSON_UNESCAPED_UNICODE));
+        }
 
         try {
             $this->setTranslateLocales();
@@ -171,8 +318,20 @@ class CountriesController extends AppController
                     'user_count' => \App\Utility\LocaleNumberParser::formatCount($country->user_count, decimals: 0),
                     'created' => $country->created ? \App\Utility\LocaleDateParser::format($country->created, 'datetime_short') : '',
                     'modified' => $country->modified ? \App\Utility\LocaleDateParser::format($country->modified, 'datetime_short') : '',
-                    'can_delete' => false,
+                    'can_delete' => CountryAccess::canDelete() && $this->Countries->canDelete($country),
                 ],
             ], JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * @return void
+     */
+    protected function setFormOptions(): void
+    {
+        $continents = $this->Countries->Continents->find('list', keyField: 'id', valueField: 'name')
+            ->orderBy(['Continents.name' => 'ASC'])
+            ->toArray();
+
+        $this->set(compact('continents'));
     }
 }

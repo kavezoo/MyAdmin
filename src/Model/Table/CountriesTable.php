@@ -5,8 +5,12 @@ namespace App\Model\Table;
 
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
 use App\Utility\AdminCountry;
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 use Cake\I18n\I18n;
 use Cake\ORM\Behavior\Translate\EavStrategy;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -18,9 +22,12 @@ use Cake\Validation\Validator;
  * Columns: iso2, name, locale, continent_id, visible, pos, user_count, created, modified
  * - `name` Translate EAV → i18n (model=Countries)
  * - belongsTo Continents via continent_id
- * - Admin may change only visible + pos
+ * - `user_count`: CounterCache from UsersTable (belongsTo Countries)
+ * - Access: superuser full CRUD; admin visible + pos only (see CountryAccess)
  *
  * @property \App\Model\Table\ContinentsTable&\Cake\ORM\Association\BelongsTo $Continents
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
+ * @property \App\Model\Table\SetupsTable&\Cake\ORM\Association\HasMany $Setups
  *
  * @method \App\Model\Entity\Country newEmptyEntity()
  * @method \App\Model\Entity\Country newEntity(array $data, array $options = [])
@@ -37,6 +44,7 @@ use Cake\Validation\Validator;
  */
 class CountriesTable extends Table
 {
+    use LocatorAwareTrait;
     use UsesDatabaseColumnDefaultsTrait;
 
     /**
@@ -63,6 +71,17 @@ class CountriesTable extends Table
         $this->belongsTo('Continents', [
             'foreignKey' => 'continent_id',
             'joinType' => 'INNER',
+        ]);
+
+        // Delete protection / view related tabs — no cascade
+        $this->hasMany('Users', [
+            'foreignKey' => 'country_id',
+            'className' => 'Users',
+            'dependent' => false,
+        ]);
+        $this->hasMany('Setups', [
+            'foreignKey' => 'country_id',
+            'dependent' => false,
         ]);
     }
 
@@ -120,6 +139,67 @@ class CountriesTable extends Table
         $rules->add($rules->existsIn(['continent_id'], 'Continents'), ['errorField' => 'continent_id']);
 
         return $rules;
+    }
+
+    /**
+     * Delete only when no users and no setups reference the country.
+     * Users: CounterCache `user_count` (fresh DB read). Setups: live count (no setup_count column yet).
+     *
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @return bool
+     */
+    public function canDelete(EntityInterface $entity): bool
+    {
+        if ($this->countUsers($entity) > 0) {
+            return false;
+        }
+
+        $setups = $this->fetchTable('Setups');
+        $setupCount = $setups->find()
+            ->where(['Setups.country_id' => $entity->get('id')])
+            ->count();
+
+        return $setupCount === 0;
+    }
+
+    /**
+     * Related users blocking delete — CounterCache `user_count` (fresh DB when PK present).
+     *
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @return int
+     */
+    public function countUsers(EntityInterface $entity): int
+    {
+        $id = $entity->get($this->getPrimaryKey());
+        if ($id !== null && $id !== '') {
+            $row = $this->find()
+                ->select(['user_count'])
+                ->where([$this->aliasField($this->getPrimaryKey()) => $id])
+                ->disableHydration()
+                ->first();
+            if (is_array($row) && array_key_exists('user_count', $row)) {
+                return (int)$row['user_count'];
+            }
+        }
+
+        return (int)($entity->get('user_count') ?? 0);
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param \ArrayObject<string, mixed> $options
+     * @return void
+     */
+    public function beforeDelete(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
+    {
+        if (!$this->canDelete($entity)) {
+            $entity->setError('_delete', [
+                __('Cannot delete this record because it has related child records.'),
+            ]);
+            $event->stopPropagation();
+            $event->setResult(false);
+        }
     }
 
     /**

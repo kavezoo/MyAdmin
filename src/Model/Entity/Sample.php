@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use Cake\ORM\Behavior\Translate\TranslateTrait;
 use Cake\ORM\Entity;
 
 /**
@@ -11,6 +12,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $parent_id
  * @property string $name
+ * @property string|null $description
  * @property int $szam
  * @property float $netto
  * @property \Cake\I18n\Date $datum
@@ -28,12 +30,15 @@ use Cake\ORM\Entity;
  */
 class Sample extends Entity
 {
+    use TranslateTrait;
+
     /**
      * @var array<string, bool>
      */
     protected array $_accessible = [
         'parent_id' => true,
         'name' => true,
+        'description' => true,
         'szam' => true,
         'netto' => true,
         'datum' => true,
@@ -47,5 +52,6 @@ class Sample extends Entity
         'modified' => true,
         'parent' => true,
         'cities' => true,
+        '_translations' => true,
     ];
 }

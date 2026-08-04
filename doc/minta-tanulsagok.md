@@ -94,7 +94,7 @@ A Tempus naptár: `dateFormat.intl` + `Intl.Locale.weekInfo` (fallback: `dateFor
 
 | Kapcsolat | CounterCache hol? | Mező |
 |-----------|-------------------|------|
-| hasMany / belongsTo | **Gyerek** Table | pl. `Parents.sample_count` |
+| hasMany / belongsTo | **Gyerek** Table | pl. `Parents.sample_count`, `Countries.user_count` (Users → Countries) |
 | belongsToMany | **Through** Table | pl. `Samples.city_count`, `Cities.sample_count` |
 
 ```php
@@ -140,7 +140,7 @@ Részlet: [admin-konvenciok.md](admin-konvenciok.md) → „CounterCache”, „
 | Állapot | Index / view related | Breadcrumb / modal footer |
 |---------|----------------------|---------------------------|
 | **Törölhető** (`*_count = 0` / `can_delete: true`) | `btn-outline-danger btn-row-delete` + rejtett `#delete-form-…` | `btn-danger` |
-| **Nem törölhető** | `btn-outline-secondary disabled` (wrapper `span` + tooltip) | `btn-secondary disabled` (+ modal: JS wrapper tooltip) |
+| **Nem törölhető** | `btn-secondary disabled` (wrapper `span` + tooltip) | `btn-secondary disabled` (+ modal: JS wrapper tooltip) |
 
 - Megerősítés (csak ha törölhető): `MyAdmin.confirmDelete` → **`icon: 'question'`** → form POST.
 - Linked / related delete: `deleteUrl` + `deleteFormPrefix` (soha ne a saját modul `#delete-form-{id}`-je kapcsolt entitásnál).
@@ -367,7 +367,7 @@ Részlet: [middleware.md](middleware.md).
 | Élő `COUNT()` a törlésvédelemben | CounterCache `*_count` + `relatedChildrenCountField()` |
 | `*_count = count(_ids)` controllerben | CounterCache (+ üres `_ids` → `[]`) |
 | HABTM CounterCache a fő Table-en | Through Table + `cascadeCallbacks` |
-| Nem törölhető Delete = danger / kattintható blocked | `btn-secondary` / outline-secondary + **disabled** + tooltip |
+| Nem törölhető Delete = danger / kattintható blocked | `btn-secondary` + **disabled** + tooltip |
 | Linked delete a saját `#delete-form-{id}`-re megy | `deleteUrl` + `deleteFormPrefix` |
 | Modalban az összes gyerek ABC | Max 20 legutóbb módosított, majd ABC |
 | Dátum: daterangepicker | Tempus Dominus 6 + `dateFormat` locale |
