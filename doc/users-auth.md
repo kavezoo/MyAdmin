@@ -206,24 +206,12 @@ Minta: `CakeDC-Login-layout-with-KeyCloak/templates/layout/login.php`.
 
 `templates/element/admin/header_profile.php`:
 
+0. Cím: **Logged in: {0}** / hu: **Belépve: Név** (kisebb condensed betű)
 1. **Profile** → `UsersUrl::actionUrl('profile')` (profiladatok)
 2. **Change password** → `changePassword` (ugyanaz, mint a profil gomb)
 3. **Log out** → `logout`
 
-CSS (`style.css`):
-
-```css
-.profile-dropdown {
-  min-width: 240px;
-  width: max-content;
-  max-width: min(320px, calc(100vw - 1.5rem));
-}
-.profile-dropdown .dropdown-item,
-.profile-dropdown .notify-item,
-.profile-dropdown span {
-  white-space: nowrap; /* „Jelszó módosítása” ne törjön */
-}
-```
+CSS (`style.css`): `.profile-dropdown` min 280px / max 420px; `.profile-dropdown-signed-in` ~0.75rem condensed.
 
 ---
 

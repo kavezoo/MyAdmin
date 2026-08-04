@@ -73,6 +73,13 @@ return [
             'controller' => 'Users',
             'action' => ['profile', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword'],
         ],
+        // Global header search (Admin\Search) — president / vicepresident and above
+        [
+            'role' => ['superuser', 'admin', 'president', 'vicepresident'],
+            'prefix' => 'Admin',
+            'controller' => 'Search',
+            'action' => '*',
+        ],
         // Role → own panel only
         [
             'role' => 'new',

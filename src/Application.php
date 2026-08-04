@@ -147,7 +147,7 @@ class Application extends BaseApplication
     {
         $eventManager->on(
             UsersPlugin::EVENT_AFTER_LOGIN,
-            function (EventInterface $event) {
+            function (EventInterface $event): void {
                 $user = $event->getData('user');
                 $role = 'new';
                 if (is_array($user)) {
@@ -156,7 +156,7 @@ class Application extends BaseApplication
                     $role = strtolower(trim((string)($user->get('role') ?? 'new')));
                 }
 
-                return RoleHome::url($role !== '' ? $role : CurrentUser::role());
+                $event->setResult(RoleHome::url($role !== '' ? $role : CurrentUser::role()));
             },
         );
 

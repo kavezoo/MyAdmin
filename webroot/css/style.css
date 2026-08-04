@@ -866,25 +866,54 @@ body.adminbody .main-sidebar.left {
 }
 
 .profile-dropdown {
-	min-width: 240px;
+	min-width: 280px;
 	width: max-content;
-	max-width: min(320px, calc(100vw - 1.5rem));
+	max-width: min(420px, calc(100vw - 1.5rem));
 }
 
-.profile-dropdown .dropdown-item,
-.profile-dropdown .notify-item {
+.profile-dropdown .profile-dropdown-user {
+	white-space: normal;
+	cursor: default;
+	pointer-events: none;
+}
+
+.profile-dropdown .profile-dropdown-user,
+.profile-dropdown .profile-dropdown-user:hover,
+.profile-dropdown .profile-dropdown-user:focus {
+	color: #ffffff;
+	background-color: #3492ea;
+}
+
+/* Same title pattern as Help / Messages: h5 > small, white */
+.profile-dropdown .noti-title h5.profile-dropdown-signed-in {
+	color: #ffffff;
+	margin: 0;
+	font-weight: 500;
+	white-space: normal;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+.profile-dropdown .noti-title h5.profile-dropdown-signed-in small {
+	color: #ffffff;
+	white-space: normal;
+}
+
+/* Menu links: same size as other .notif .dropdown-item.notify-item (e.g. Messages) */
+.profile-dropdown > a.dropdown-item.notify-item {
+	font-size: 0.9rem;
+	font-family: inherit;
+	font-weight: 400;
+	line-height: 1.5;
 	white-space: nowrap;
 }
 
-.profile-dropdown i {
-    font-size: 17px;
-    vertical-align: middle;
-    margin-right: 5px;
-}
-
-.profile-dropdown span {
-    vertical-align: middle;
-    white-space: nowrap;
+.profile-dropdown > a.dropdown-item.notify-item i {
+	font-size: 0.9rem;
+	width: 1.25em;
+	text-align: center;
+	margin-right: 0.35rem;
+	vertical-align: middle;
 }
 
 .nav-user {

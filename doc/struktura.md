@@ -32,7 +32,8 @@ $this->viewBuilder()->setLayout('admin');
 | `index_counter.php` | igen (index / search footer) | Bake `Paginator::counter` összesítő |
 | `index_footer.php` | igen (index / search) | Card lábléc: `index_counter` + `index_pagination` |
 | `table_search.php` | igen (index) | Tábla szöveges kereső + nagyító |
-| `header_search.php` | igen | Globális kereső (összes model) → `/admin/search` |
+| `header_search.php` | igen | Globális kereső → `/admin/search` — csak `superuser`/`admin`/`president`/`vicepresident` |
+
 | `modal_record_view.php` | igen (index) | Rekord modal |
 | `modal_linked_record_view.php` | ha van kapcsolt link | Linked modal |
 | `view_related_tabs.php` | igen (view + gyerek) | Gyerek tab sheet-ek |

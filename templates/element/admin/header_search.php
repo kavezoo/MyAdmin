@@ -1,10 +1,18 @@
 <?php
 /**
- * Global Admin search (header) — all models / text fields from config/admin_search.php
+ * Global Admin search (header) — president / vicepresident and above only.
  *
  * @var \App\View\AppView $this
  */
-$qKey = \App\Utility\AdminSearch::queryParam();
+use App\Auth\AppRoles;
+use App\Auth\CurrentUser;
+use App\Utility\AdminSearch;
+
+if (!AppRoles::canUseGlobalSearch(CurrentUser::role($this->getRequest()))) {
+	return;
+}
+
+$qKey = AdminSearch::queryParam();
 $currentQ = (string)$this->getRequest()->getQuery($qKey);
 if ($this->getRequest()->getParam('controller') !== 'Search') {
 	$currentQ = '';

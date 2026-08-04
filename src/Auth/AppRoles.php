@@ -108,4 +108,25 @@ class AppRoles
             self::VICEPRESIDENT,
         ];
     }
+
+    /**
+     * Roles that may use the global header search (Admin Search).
+     * President / vicepresident and above; not clubpresident or below.
+     *
+     * @return list<string>
+     */
+    public static function globalSearchRoles(): array
+    {
+        return [
+            self::SUPERUSER,
+            self::ADMIN,
+            self::PRESIDENT,
+            self::VICEPRESIDENT,
+        ];
+    }
+
+    public static function canUseGlobalSearch(string $role): bool
+    {
+        return in_array(strtolower(trim($role)), static::globalSearchRoles(), true);
+    }
 }

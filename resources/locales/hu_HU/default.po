@@ -695,6 +695,9 @@ msgstr "Profilkép"
 msgid "Hello, {0}"
 msgstr "Helló, {0}"
 
+msgid "Logged in: {0}"
+msgstr "Belépve: {0}"
+
 #: ./templates/element/admin/header_profile.php:10
 msgid "Profile"
 msgstr "Profil"

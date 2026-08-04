@@ -22,21 +22,21 @@ if ($identity !== null) {
 					<img src="<?= $this->Url->image('avatars/admin.png') ?>" alt="<?= h(__('Profile picture')) ?>" class="avatar-rounded">
 				</a>
 				<div class="dropdown-menu dropdown-menu-right profile-dropdown border border-1 border-secondary">
-					<div class="dropdown-item noti-title">
-						<h5 class="text-overflow"><small><?= h(__('Hello, {0}', $displayName)) ?></small></h5>
+					<div class="dropdown-item noti-title profile-dropdown-user">
+						<h5 class="profile-dropdown-signed-in"><small><?= h(__('Logged in: {0}', $displayName)) ?></small></h5>
 					</div>
 					<?= $this->Html->link(
-						'<i class="fa fa-user"></i> <span>' . h(__('Profile')) . '</span>',
+						'<i class="fa fa-fw fa-user"></i> ' . h(__('Profile')),
 						UsersUrl::actionUrl('profile'),
 						['escape' => false, 'class' => 'dropdown-item notify-item']
 					) ?>
 					<?= $this->Html->link(
-						'<i class="fa fa-key"></i> <span>' . h(__('Change password')) . '</span>',
+						'<i class="fa fa-fw fa-key"></i> ' . h(__('Change password')),
 						UsersUrl::actionUrl('changePassword'),
 						['escape' => false, 'class' => 'dropdown-item notify-item']
 					) ?>
 					<?= $this->Html->link(
-						'<i class="fa fa-power-off"></i> <span>' . h(__('Log out')) . '</span>',
+						'<i class="fa fa-fw fa-power-off"></i> ' . h(__('Log out')),
 						UsersUrl::actionUrl('logout'),
 						['escape' => false, 'class' => 'dropdown-item notify-item']
 					) ?>
