@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: hr_HR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Već imate račun? Prijava"
+
+msgid "Back to admin"
+msgstr "Natrag na admin"
+
+msgid "Back to login"
+msgstr "Natrag na prijavu"
+
+msgid "Back to profile"
+msgstr "Natrag na profil"
+
+msgid "Change password"
+msgstr "Promijeni lozinku"
+
+msgid "Confirm password"
+msgstr "Potvrdi lozinku"
+
+msgid "Country"
+msgstr "Država"
+
+msgid "Current password"
+msgstr "Trenutna lozinka"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email or username"
+msgstr "E-mail ili korisničko ime"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Unesite e-mail ili korisničko ime; poslat ćemo poveznicu za reset lozinke."
+
+msgid "Error"
+msgstr "Greška"
+
+msgid "Forgot password?"
+msgstr "Zaboravljena lozinka?"
+
+msgid "I accept the terms of service"
+msgstr "Prihvaćam uvjete korištenja"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Log out"
+msgstr "Odjava"
+
+msgid "Login"
+msgstr "Prijava"
+
+msgid "Message"
+msgstr "Poruka"
+
+msgid "Name"
+msgstr "Ime"
+
+msgid "New password"
+msgstr "Nova lozinka"
+
+msgid "No results found."
+msgstr "Nema rezultata."
+
+msgid "Password"
+msgstr "Lozinka"
+
+msgid "Please enter a valid email."
+msgstr "Unesite valjani e-mail."
+
+msgid "Please enter your email."
+msgstr "Unesite svoj e-mail."
+
+msgid "Please enter your name."
+msgstr "Unesite svoje ime."
+
+msgid "Please select your country."
+msgstr "Odaberite svoju državu."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Registracija"
+
+msgid "Remember me"
+msgstr "Zapamti me"
+
+msgid "Search..."
+msgstr "Pretraži..."
+
+msgid "Select country"
+msgstr "Odaberite državu"
+
+msgid "Select country..."
+msgstr "Odaberite državu..."
+
+msgid "Send reset link"
+msgstr "Pošalji poveznicu"
+
+msgid "Social accounts"
+msgstr "Društveni računi"
+
+msgid "Success"
+msgstr "Uspjeh"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Jezik države (locale) postaje jezik vašeg računa."
+
+msgid "Username"
+msgstr "Korisničko ime"
+
+msgid "Warning"
+msgstr "Upozorenje"
+

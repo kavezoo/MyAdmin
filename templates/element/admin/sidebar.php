@@ -2,6 +2,8 @@
 /**
  * @var \App\View\AppView $this
  */
+use App\Auth\SetupAccess;
+
 $controller = (string)$this->request->getParam('controller');
 $isSamples = $controller === 'Samples';
 $isParents = $controller === 'Parents';
@@ -9,6 +11,7 @@ $isCities = $controller === 'Cities';
 $isCountries = $controller === 'Countries';
 $isSetups = $controller === 'Setups';
 $isDashboard = $controller === 'Dashboard';
+$showSetupsMenu = SetupAccess::canAccessModule($this->request);
 ?>
 <!-- Left Sidebar -->
 <div class="left main-sidebar">
@@ -22,7 +25,7 @@ $isDashboard = $controller === 'Dashboard';
 				</li>
 
 				<li class="submenu">
-					<a href="#"<?= ($isSamples || $isParents || $isCities || $isCountries) ? ' class="active"' : '' ?>>
+					<a href="#"<?= ($isSamples || $isParents || $isCities) ? ' class="active"' : '' ?>>
 						<i class="fa fa-fw fa-table"></i> <span> <?= __('Data') ?> </span> <span class="menu-arrow"></span>
 					</a>
 					<ul class="list-unstyled">
@@ -35,19 +38,21 @@ $isDashboard = $controller === 'Dashboard';
 						<li<?= $isCities ? ' class="active"' : '' ?>>
 							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'index']) ?>"><?= __('Cities') ?></a>
 						</li>
-						<li<?= $isCountries ? ' class="active"' : '' ?>>
-							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Countries', 'action' => 'index']) ?>"><?= __('Countries') ?></a>
-						</li>
 					</ul>
 				</li>
 
 				<li class="submenu">
-					<a href="#"<?= $isSetups ? ' class="active"' : '' ?>>
+					<a href="#"<?= (($showSetupsMenu && $isSetups) || $isCountries) ? ' class="active"' : '' ?>>
 						<i class="fa fa-fw fa-cogs"></i> <span> <?= __('Settings') ?> </span> <span class="menu-arrow"></span>
 					</a>
 					<ul class="list-unstyled">
-						<li<?= $isSetups ? ' class="active"' : '' ?>>
-							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Setups', 'action' => 'index']) ?>"><?= __('Setups') ?></a>
+						<?php if ($showSetupsMenu): ?>
+							<li<?= $isSetups ? ' class="active"' : '' ?>>
+								<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Setups', 'action' => 'index']) ?>"><?= __('Setups') ?></a>
+							</li>
+						<?php endif; ?>
+						<li<?= $isCountries ? ' class="active"' : '' ?>>
+							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Countries', 'action' => 'index']) ?>"><?= __('Countries') ?></a>
 						</li>
 					</ul>
 				</li>

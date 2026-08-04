@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Masz już konto? Zaloguj się"
+
+msgid "Back to admin"
+msgstr "Powrót do admina"
+
+msgid "Back to login"
+msgstr "Powrót do logowania"
+
+msgid "Back to profile"
+msgstr "Powrót do profilu"
+
+msgid "Change password"
+msgstr "Zmień hasło"
+
+msgid "Confirm password"
+msgstr "Potwierdź hasło"
+
+msgid "Country"
+msgstr "Kraj"
+
+msgid "Current password"
+msgstr "Obecne hasło"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email or username"
+msgstr "E-mail lub nazwa użytkownika"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Podaj e-mail lub nazwę użytkownika — wyślemy link do resetu hasła."
+
+msgid "Error"
+msgstr "Błąd"
+
+msgid "Forgot password?"
+msgstr "Nie pamiętasz hasła?"
+
+msgid "I accept the terms of service"
+msgstr "Akceptuję regulamin"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Log out"
+msgstr "Wyloguj"
+
+msgid "Login"
+msgstr "Logowanie"
+
+msgid "Message"
+msgstr "Wiadomość"
+
+msgid "Name"
+msgstr "Imię i nazwisko"
+
+msgid "New password"
+msgstr "Nowe hasło"
+
+msgid "No results found."
+msgstr "Brak wyników."
+
+msgid "Password"
+msgstr "Hasło"
+
+msgid "Please enter a valid email."
+msgstr "Podaj prawidłowy adres e-mail."
+
+msgid "Please enter your email."
+msgstr "Podaj swój e-mail."
+
+msgid "Please enter your name."
+msgstr "Podaj swoje imię i nazwisko."
+
+msgid "Please select your country."
+msgstr "Wybierz swój kraj."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Rejestracja"
+
+msgid "Remember me"
+msgstr "Zapamiętaj mnie"
+
+msgid "Search..."
+msgstr "Szukaj..."
+
+msgid "Select country"
+msgstr "Wybierz kraj"
+
+msgid "Select country..."
+msgstr "Wybierz kraj..."
+
+msgid "Send reset link"
+msgstr "Wyślij link resetujący"
+
+msgid "Social accounts"
+msgstr "Konta społecznościowe"
+
+msgid "Success"
+msgstr "Sukces"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Język kraju (locale) stanie się językiem Twojego konta."
+
+msgid "Username"
+msgstr "Nazwa użytkownika"
+
+msgid "Warning"
+msgstr "Ostrzeżenie"
+

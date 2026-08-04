@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Už máte účet? Přihlásit se"
+
+msgid "Back to admin"
+msgstr "Zpět do administrace"
+
+msgid "Back to login"
+msgstr "Zpět na přihlášení"
+
+msgid "Back to profile"
+msgstr "Zpět na profil"
+
+msgid "Change password"
+msgstr "Změnit heslo"
+
+msgid "Confirm password"
+msgstr "Potvrzení hesla"
+
+msgid "Country"
+msgstr "Země"
+
+msgid "Current password"
+msgstr "Aktuální heslo"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email or username"
+msgstr "E-mail nebo uživatelské jméno"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Zadejte e-mail nebo uživatelské jméno; pošleme odkaz pro obnovení hesla."
+
+msgid "Error"
+msgstr "Chyba"
+
+msgid "Forgot password?"
+msgstr "Zapomenuté heslo?"
+
+msgid "I accept the terms of service"
+msgstr "Souhlasím s podmínkami použití"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Log out"
+msgstr "Odhlásit se"
+
+msgid "Login"
+msgstr "Přihlášení"
+
+msgid "Message"
+msgstr "Zpráva"
+
+msgid "Name"
+msgstr "Jméno"
+
+msgid "New password"
+msgstr "Nové heslo"
+
+msgid "No results found."
+msgstr "Nebyly nalezeny žádné výsledky."
+
+msgid "Password"
+msgstr "Heslo"
+
+msgid "Please enter a valid email."
+msgstr "Zadejte platný e-mail."
+
+msgid "Please enter your email."
+msgstr "Zadejte svůj e-mail."
+
+msgid "Please enter your name."
+msgstr "Zadejte své jméno."
+
+msgid "Please select your country."
+msgstr "Vyberte svou zemi."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Registrace"
+
+msgid "Remember me"
+msgstr "Zapamatovat si mě"
+
+msgid "Search..."
+msgstr "Hledat..."
+
+msgid "Select country"
+msgstr "Vyberte zemi"
+
+msgid "Select country..."
+msgstr "Vyberte zemi..."
+
+msgid "Send reset link"
+msgstr "Odeslat odkaz"
+
+msgid "Social accounts"
+msgstr "Sociální účty"
+
+msgid "Success"
+msgstr "Úspěch"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Jazyk země (locale) se stane jazykem vašeho účtu."
+
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+msgid "Warning"
+msgstr "Varování"
+

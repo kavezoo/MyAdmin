@@ -571,6 +571,7 @@ msgid "View the selected record (read-only)."
 msgstr ""
 
 #: ./templates/Member/Dashboard/index.php:9
+#: ./src/Auth/AppRoles.php:66
 msgid "Member"
 msgstr ""
 
@@ -580,6 +581,7 @@ msgstr ""
 
 #: ./templates/element/admin/breadcrumb.php:30
 #: ./templates/element/admin/breadcrumb.php:31
+#: ./src/Auth/AppRoles.php:67
 msgid "New"
 msgstr ""
 
@@ -606,6 +608,7 @@ msgstr ""
 #: ./templates/element/admin/header.php:7
 #: ./templates/layout/admin.php:11
 #: ./templates/layout/admin.php:20
+#: ./src/Auth/AppRoles.php:61
 msgid "Admin"
 msgstr ""
 
@@ -664,11 +667,14 @@ msgid "Profile picture"
 msgstr ""
 
 #: ./templates/element/admin/header_profile.php:7
-msgid "Hello, admin"
+msgid "Hello, {0}"
 msgstr ""
 
 #: ./templates/element/admin/header_profile.php:10
 msgid "Profile"
+msgstr ""
+
+msgid "Role"
 msgstr ""
 
 #: ./templates/element/admin/header_profile.php:13
@@ -891,3 +897,136 @@ msgstr ""
 msgid "One value per line (or a JSON array)."
 msgstr ""
 
+#: ./src/Auth/AppRoles.php:60
+msgid "Superuser"
+msgstr ""
+
+#: ./src/Auth/AppRoles.php:62
+msgid "President"
+msgstr ""
+
+#: ./src/Auth/AppRoles.php:63
+msgid "Vice president"
+msgstr ""
+
+#: ./src/Auth/AppRoles.php:64
+msgid "Club president"
+msgstr ""
+
+#: ./src/Auth/AppRoles.php:65
+msgid "Editor"
+msgstr ""
+
+#: ./src/Utility/SetupEditBy.php:74
+msgid "Who may change this value: Superuser (system-critical), Admin and above, or President / Vice president level."
+msgstr ""
+
+#: ./src/Controller/Admin/SetupsController.php
+msgid "You are not allowed to access Setups."
+msgstr ""
+
+msgid "Only a Superuser may create setups."
+msgstr ""
+
+msgid "You are not allowed to edit this setup."
+msgstr ""
+
+msgid "Only a Superuser may delete setups."
+msgstr ""
+
+msgid "Email or username"
+msgstr ""
+
+msgid "Forgot password?"
+msgstr ""
+
+msgid "Register"
+msgstr ""
+
+msgid "Remember me"
+msgstr ""
+
+msgid "Confirm password"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "Select country"
+msgstr ""
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr ""
+
+msgid "I accept the terms of service"
+msgstr ""
+
+msgid "Already have an account? Login"
+msgstr ""
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr ""
+
+msgid "Send reset link"
+msgstr ""
+
+msgid "Back to login"
+msgstr ""
+
+msgid "Please select your country."
+msgstr ""
+
+msgid "Please enter your name."
+msgstr ""
+
+msgid "Please enter your email."
+msgstr ""
+
+msgid "Please enter a valid email."
+msgstr ""
+
+msgid "Login"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Change password"
+msgstr ""
+
+msgid "Current password"
+msgstr ""
+
+msgid "New password"
+msgstr ""
+
+msgid "Back to profile"
+msgstr ""
+
+msgid "Back to admin"
+msgstr ""
+
+msgid "Social accounts"
+msgstr ""
+
+
+msgid "Select country..."
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Message"
+msgstr ""

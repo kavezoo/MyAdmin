@@ -1,10 +1,23 @@
+<?php
+/**
+ * Panel top bar (Admin + role prefixes).
+ *
+ * @var \App\View\AppView $this
+ */
+$panelHomeUrl = $this->get('panelHomeUrl') ?? [
+	'prefix' => 'Admin',
+	'controller' => 'Dashboard',
+	'action' => 'index',
+];
+$panelBrand = (string)($this->get('panelBrand') ?? __('Admin'));
+?>
 <!-- top bar navigation -->
 <div class="headerbar">
 
 	<div class="headerbar-left">
-		<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Dashboard', 'action' => 'index']) ?>" class="logo">
+		<a href="<?= $this->Url->build($panelHomeUrl) ?>" class="logo">
 			<img alt="Logo" src="<?= $this->Url->image('logo.png') ?>" />
-			<span><?= __('Admin') ?></span>
+			<span><?= h($panelBrand) ?></span>
 		</a>
 	</div>
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Default flash: Admin → Simple Notify toast; egyébként HTML.
+ * Default flash: Admin / login layout → Simple Notify toast; egyébként HTML.
  *
  * @var \App\View\AppView $this
  * @var array $params
@@ -13,8 +13,7 @@ if (!empty($params['class'])) {
 if (!isset($params['escape']) || $params['escape'] !== false) {
 	$message = h($message);
 }
-$useJs = strcasecmp((string)$this->request->getParam('prefix'), 'Admin') === 0;
-if ($useJs):
+if ($this->usesFlashToast()):
 	$status = 'info';
 	if (!empty($params['class'])) {
 		$pc = (string)$params['class'];

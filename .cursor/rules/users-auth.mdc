@@ -1,0 +1,23 @@
+---
+description: CakeDC Users auth UI (login/register/profile) — ValiAdmin layout, country, Flash toast, permissions.
+alwaysApply: true
+---
+
+# CakeDC Users — Auth UI (kötelező minta)
+
+Teljes spec: **`doc/users-auth.md`**. Greenfield: **`doc/uj-projekt.md` §2.9**.
+
+## Ha auth / login / register / profile / jelszó feladat jön
+
+1. Olvasd a `doc/users-auth.md`-t — **ne** találj ki új layoutot / Flash HTML-t.
+2. Templatek: **`templates/Users/`** (App controller), **nem** `templates/plugin/CakeDC/…`.
+3. Layout: `templates/layout/login.php` — ValiAdmin CDN; **nincs** kis logo a boxban; magasság = tartalom.
+4. Flash: Simple Notify toast (`script_flash` + `AppView::usesFlashToast()`), mint Admin.
+5. Permissions: App Usersnél **ne** `'plugin' => false` (null ≠ false → login redirect loop).
+6. Login **és** register: ország Select2 (kereshető); cookie ország + locale ≥ 1 év; register mentés `users.country_id`.
+6b. Login után: user `country_id` locale → session/cookie + Admin UI nyelv (ne a login vendégnyelv maradjon).
+7. Header profil: Profile → Admin layout adatlap; Change password → login layout űrlap.
+8. OneTimeLoginLink: Table-en explicit `getBehavior()` wrapper (CakePHP 5.3+).
+9. Struktúra a minta szerint: `login-box local-login` + tartalom `.local-login-form` (ne `.login-form` — azt a flip elrejti). Magasság: flow layout a `users_auth.css`-ben.
+
+Módosítás után: `doc/valtozasok.md` + ha a minta változott → `doc/users-auth.md`.

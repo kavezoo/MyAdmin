@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Controller\AppController as BaseController;
+use App\Utility\AdminCountry;
 use App\Utility\AdminSearch;
+use App\Utility\BrowserLocale;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -17,7 +19,9 @@ use Cake\ORM\Table;
  * Admin Application Controller
  *
  * Shared base for controllers under the Admin prefix.
- * Locale: `App.adminLocale` (default hu_HU); no language switcher in the UI.
+ * Locale: same language as at login — Users.country_id → Countries.locale,
+ * else session/cookie from the login screen, else App.adminLocale.
+ * No language switcher in the UI.
  */
 class AppController extends BaseController
 {
@@ -52,8 +56,22 @@ class AppController extends BaseController
     {
         parent::initialize();
 
-        I18n::setLocale((string)Configure::read('App.adminLocale', 'hu_HU'));
+        $request = $this->getRequest();
+        $locale = BrowserLocale::forLoggedIn($request, $request->getAttribute('identity'));
+        I18n::setLocale($locale);
+        Configure::write('App.defaultLocale', $locale);
+        BrowserLocale::remember($request, $locale);
+        AdminCountry::applyTranslateLocale($locale);
+
         $this->viewBuilder()->setLayout('admin');
+        $this->set('panelPrefix', 'Admin');
+        $this->set('panelBrand', __('Admin'));
+        $this->set('panelSidebar', 'admin/sidebar');
+        $this->set('panelHomeUrl', [
+            'prefix' => 'Admin',
+            'controller' => 'Dashboard',
+            'action' => 'index',
+        ]);
     }
 
     /**

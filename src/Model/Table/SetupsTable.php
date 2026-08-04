@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\Setup;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
 use App\Utility\AdminCountry;
+use App\Utility\SetupEditBy;
 use App\Utility\SetupValue;
 use ArrayObject;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -27,7 +30,9 @@ use Cake\Validation\Validator;
  */
 class SetupsTable extends Table
 {
-    use UsesDatabaseColumnDefaultsTrait;
+    use UsesDatabaseColumnDefaultsTrait {
+        beforeMarshal as protected applyDatabaseColumnDefaultsMarshal;
+    }
 
     /**
      * @param array<string, mixed> $config
@@ -40,7 +45,7 @@ class SetupsTable extends Table
         $this->setTable('setups');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
-        $this->setEntityClass(\App\Model\Entity\Setup::class);
+        $this->setEntityClass(Setup::class);
 
         $this->addBehavior('Timestamp');
 
@@ -58,6 +63,8 @@ class SetupsTable extends Table
      */
     public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options): void
     {
+        $this->applyDatabaseColumnDefaultsMarshal($event, $data, $options);
+
         $copy = $data->getArrayCopy();
         $type = isset($copy['type']) && is_string($copy['type']) ? $copy['type'] : '';
 
@@ -65,9 +72,24 @@ class SetupsTable extends Table
             $data['slug'] = strtolower(trim($copy['slug']));
         }
 
+        if (isset($copy['edit_by']) && is_string($copy['edit_by'])) {
+            $data['edit_by'] = SetupEditBy::normalizeStored($copy['edit_by']);
+        }
+
         if ($type === SetupValue::TYPE_BOOLEAN && !array_key_exists('value', $copy)) {
             $data['value'] = '0';
             $copy['value'] = '0';
+        }
+
+        // Secret: empty → do not overwrite; beforeSave restores original on edit / '' on create.
+        if (
+            $type === SetupValue::TYPE_SECRET
+            && array_key_exists('value', $copy)
+            && ($copy['value'] === null || (is_string($copy['value']) && trim($copy['value']) === ''))
+        ) {
+            unset($data['value']);
+
+            return;
         }
 
         if (array_key_exists('value', $copy) && $copy['value'] === null) {
@@ -75,6 +97,7 @@ class SetupsTable extends Table
             $copy['value'] = '';
         }
 
+        $copy = $data->getArrayCopy();
         if ($type === '' || !array_key_exists('value', $copy)) {
             return;
         }
@@ -83,6 +106,40 @@ class SetupsTable extends Table
         if ($result['ok']) {
             $data['value'] = $result['value'] ?? '';
         }
+    }
+
+    /**
+     * Keep previous secret when the password field was left blank on edit.
+     *
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param \ArrayObject<string, mixed> $options
+     * @return void
+     */
+    public function beforeSave(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
+    {
+        if (!$entity instanceof Setup) {
+            return;
+        }
+        if ((string)$entity->get('type') !== SetupValue::TYPE_SECRET) {
+            return;
+        }
+        if ($entity->isNew()) {
+            if ($entity->get('value') === null) {
+                $entity->set('value', '');
+            }
+
+            return;
+        }
+        if (!$entity->isDirty('value')) {
+            return;
+        }
+        $new = $entity->get('value');
+        if ($new !== null && $new !== '') {
+            return;
+        }
+        $entity->set('value', $entity->getOriginal('value'));
+        $entity->setDirty('value', false);
     }
 
     /**
@@ -122,12 +179,22 @@ class SetupsTable extends Table
             ->inList('type', SetupValue::typeList(), __('Invalid type.'));
 
         $validator
+            ->scalar('edit_by')
+            ->maxLength('edit_by', 20)
+            ->notEmptyString('edit_by')
+            ->inList('edit_by', SetupEditBy::list(), __('Invalid edit permission.'));
+
+        $validator
             ->scalar('value')
             ->allowEmptyString('value')
             ->add('value', 'typedValue', [
                 'rule' => static function ($value, $context) {
                     $type = (string)($context['data']['type'] ?? '');
                     if ($type === '' || !SetupValue::isValidType($type)) {
+                        return true;
+                    }
+                    // Empty secret on update is OK (keep previous).
+                    if ($type === SetupValue::TYPE_SECRET && ($value === null || $value === '')) {
                         return true;
                     }
                     $result = SetupValue::normalize($type, $value);
@@ -169,6 +236,86 @@ class SetupsTable extends Table
     }
 
     /**
+     * Create the same setup slug for every visible country.
+     * Returns the entity for $primaryCountryId (working country), or null on failure.
+     *
+     * @param array<string, mixed> $data Shared fields (name, slug, type, value, edit_by, …)
+     * @param int $primaryCountryId Country shown in the Admin UI after save
+     */
+    public function createForAllCountries(array $data, int $primaryCountryId): ?Setup
+    {
+        $slug = strtolower(trim((string)($data['slug'] ?? '')));
+        if ($slug === '' || $primaryCountryId < 1) {
+            return null;
+        }
+
+        $countryIds = AdminCountry::visibleIds();
+        if ($countryIds === []) {
+            return null;
+        }
+        if (!in_array($primaryCountryId, $countryIds, true)) {
+            $countryIds[] = $primaryCountryId;
+        }
+
+        $existing = $this->find()
+            ->select(['country_id'])
+            ->where(['slug' => $slug, 'country_id IN' => $countryIds])
+            ->all()
+            ->extract('country_id')
+            ->toList();
+        $existingMap = array_fill_keys(array_map('intval', $existing), true);
+
+        // Working country must not already have this slug.
+        if (isset($existingMap[$primaryCountryId])) {
+            return null;
+        }
+
+        $primary = null;
+        $connection = $this->getConnection();
+        $connection->begin();
+        try {
+            foreach ($countryIds as $countryId) {
+                if (isset($existingMap[$countryId])) {
+                    continue;
+                }
+
+                $rowData = $data;
+                $rowData['country_id'] = $countryId;
+                if (!isset($rowData['edit_by']) || $rowData['edit_by'] === '') {
+                    $rowData['edit_by'] = SetupEditBy::ADMIN;
+                }
+                if (!array_key_exists('value', $rowData) || $rowData['value'] === null) {
+                    $rowData['value'] = '';
+                }
+
+                $entity = $this->newEmptyEntity();
+                $this->applySchemaDefaults($entity);
+                $entity = $this->patchEntity($entity, $rowData);
+                if ($entity->getErrors()) {
+                    $connection->rollback();
+
+                    return null;
+                }
+                if (!$this->save($entity)) {
+                    $connection->rollback();
+
+                    return null;
+                }
+                if ($countryId === $primaryCountryId) {
+                    $primary = $entity;
+                }
+            }
+            $connection->commit();
+        } catch (\Throwable $e) {
+            $connection->rollback();
+
+            return null;
+        }
+
+        return $primary;
+    }
+
+    /**
      * Typed PHP value by slug for a country (or default if missing / invisible).
      *
      * @param string $slug Setup slug
@@ -189,8 +336,8 @@ class SetupsTable extends Table
         $row = $this->find()
             ->select(['type', 'value', 'visible'])
             ->where([
-                'slug' => $slug,
-                'country_id' => $countryId,
+                'Setups.slug' => $slug,
+                'Setups.country_id' => $countryId,
             ])
             ->first();
         if ($row === null || !(bool)$row->get('visible')) {

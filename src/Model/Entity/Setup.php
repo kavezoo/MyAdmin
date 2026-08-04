@@ -13,6 +13,7 @@ use Cake\ORM\Entity;
  * @property string $name
  * @property string $slug
  * @property string $type
+ * @property string $edit_by
  * @property string $value
  * @property bool $visible
  * @property int $pos
@@ -30,6 +31,7 @@ class Setup extends Entity
         'name' => true,
         'slug' => true,
         'type' => true,
+        'edit_by' => true,
         'value' => true,
         'visible' => true,
         'pos' => true,

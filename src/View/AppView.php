@@ -40,6 +40,12 @@ class AppView extends View
      */
     public function initialize(): void
     {
+        try {
+            $this->loadHelper('CakeDC/Users.User');
+        } catch (\Throwable) {
+            // Plugin unavailable in some CLI contexts.
+        }
+
         if ($this->getRequest()->getParam('prefix') === 'Admin') {
             // Ensure field errors render under the input (red bold in style.css)
             $this->Form->setTemplates([
@@ -51,5 +57,17 @@ class AppView extends View
                 'errorClass' => 'is-invalid',
             ]);
         }
+    }
+
+    /**
+     * Flash as Simple Notify toast (Admin + CakeDC auth / login layout).
+     */
+    public function usesFlashToast(): bool
+    {
+        if (strcasecmp((string)$this->getRequest()->getParam('prefix'), 'Admin') === 0) {
+            return true;
+        }
+
+        return strcasecmp((string)$this->getLayout(), 'login') === 0;
     }
 }

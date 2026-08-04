@@ -5,6 +5,190 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-04 — Szerepkör panelek; nincs URL nyelv-prefix
+
+### Mi változott / miért
+- Eltávolítva a `/{lang}/member/...` nyelv-prefix.
+- Új panelek (Admin chrome): `/new`, `/member`, `/clubpresident`, `/president` (+ meglévő `/admin`).
+- Regisztrált `new` role **csak** `/new`-ba léphet; login → `RoleHome` szerint.
+- Locale: session / user ország (nem URL).
+
+### Érintett
+- `config/routes.php`, `config/permissions.php`, `config/users.php`
+- `src/Auth/RoleHome.php`, `src/Controller/PanelAppController.php`
+- `src/Controller/{New,Member,Clubpresident,President}/`
+- `templates/{New,Member,Clubpresident,President}/`, `templates/element/{new,member,clubpresident,president}/sidebar.php`
+- `src/Application.php` (EVENT_AFTER_LOGIN), `src/Controller/LocalesController.php`, `LocaleMiddleware`
+- `templates/layout/admin.php`, `templates/element/admin/header.php`
+
+---
+
+## 2026-08-04 — Profile → Admin layout (view stílus)
+
+### Mi változott / miért
+- `/profile` a `admin` layoutot használja (nem login); template Admin `view.php` mintára (`dl.record-view-fields`, footer Change password).
+- Breadcrumb: vissza gomb címkéje állítható (`breadcrumbBackLabel` → Dashboard).
+
+### Érintett
+- `templates/Users/profile.php`, `src/Controller/UsersController.php`
+- `templates/element/admin/breadcrumb.php`
+- `doc/users-auth.md`
+
+---
+
+### Mi változott / miért
+- Loginon is országlista (Select2, kereshető); váltás → `?country_id=` + locale cookie; nincs a login POST-ban.
+- Közös JS: `users_auth_country.js` (login + register).
+
+### Érintett
+- `templates/Users/login.php`, `templates/Users/register.php`
+- `webroot/js/pages/users_auth_country.js` (régi `users_register.js` eltávolítva)
+- `src/Controller/UsersController.php`
+
+---
+
+### Mi változott / miért
+- UI nyelv megjegyzés: session + cookie `AppUiLocale` (~400 nap).
+- Bejelentkezéskor a `users.country_id` → `countries.locale` felülírja a login űrlap vendégnyelvét (cookie/session).
+- Admin: bejelentkezett user country locale (fallback `App.adminLocale`).
+
+### Érintett
+- `src/Utility/BrowserLocale.php`, `src/Middleware/LocaleMiddleware.php`
+- `src/Controller/UsersController.php` (`login` + register persist)
+- `src/Controller/Admin/AppController.php`
+- `doc/users-auth.md`, `doc/i18n.md`
+
+---
+
+### Mi változott / miért
+- Látható `countries.locale` értékekhez auth UI fordítások (`Login`, `Register`, ország, jelszó, …).
+- Országváltáskor azonnal az adott locale `.po` szövegei jelennek meg.
+- Generátor: `php tmp/build_auth_locale_pos.php`; `default.pot` auth msgid-ekkel kiegészítve.
+
+### Érintett
+- `resources/locales/{cs_CZ,da_DK,de_*,en_*,fi_FI,fr_FR,gl_ES,hr_HR,hu_HU,it_*,lb_LU,nl_*,pl_PL,sk_SK,sl_SI,sr_RS,uk_UA}/default.po`
+- `resources/locales/default.pot`
+- `tmp/build_auth_locale_pos.php`, `doc/i18n.md`, `doc/users-auth.md`
+
+---
+
+### Mi változott / miért
+- Regisztráció `country_id`: Select2 + bootstrap-5 theme, kereshető lista (Setups working country mintára).
+
+### Érintett
+- `templates/Users/register.php`, `webroot/js/pages/users_register.js`, `webroot/css/pages/users_auth.css`
+- `doc/users-auth.md`, `.cursor/rules/users-auth.mdc`
+
+---
+
+### Mi változott / miért
+- A ValiAdmin `.login-form` absolute fill + `min-height: 0` összecsukta / szétcsúsztatta a boxot.
+- Minta szerint: `.login-box.local-login` + `.local-login-form`; a face flow layoutban, magasság = tartalom.
+
+### Érintett
+- `templates/layout/login.php`, `templates/Users/*`, `webroot/css/pages/users_auth.css`
+- `doc/users-auth.md`, `.cursor/rules/users-auth.mdc`
+
+---
+
+### Mi változott / miért
+- Teljes auth playbook: `doc/users-auth.md` + rule `users-auth.mdc`; greenfield §2.9; README / struktura / keretrendszer / i18n / setups frissítve.
+- Login box: tartalomhoz igazodó magasság; nincs kis logo; ValiAdmin `local-login` elkerülése (láthatatlan form).
+- Register: ország első mező; cookie ≥ 1 év (`+400 days`); mentés `users.country_id`.
+- Header: Profile + Change password; szélesebb `.profile-dropdown` (nowrap).
+- Auth Flash: Simple Notify toast (Admin mintára); `AppView::usesFlashToast()`.
+
+### Érintett
+- `doc/users-auth.md`, `doc/uj-projekt.md`, `doc/README.md`, `doc/struktura.md`, `doc/keretrendszer.md`, `doc/i18n.md`, `doc/setups.md`
+- `.cursor/rules/users-auth.mdc`, `auto-dokumentalas.mdc`
+- `templates/layout/login.php`, `templates/Users/*`, `templates/element/admin/header_profile.php`
+- `src/Controller/UsersController.php`, `src/View/AppView.php`, `src/Utility/AdminCountry.php`
+- `webroot/css/pages/users_auth.css`, `webroot/css/style.css`, `templates/element/flash/*`
+
+---
+
+## 2026-08-04 — CakeDC auth UI (login layout + register country)
+
+### Mi változott / miért
+- ValiAdmin-stílusú `templates/layout/login.php`; App override: `templates/Users/*` (nem plugin path).
+- Regisztráció: név, email, jelszó, ország (`visible`); lista: `Név (ISO) — locale`.
+- Ország választáskor a `countries.locale` lesz az oldal nyelve; `users.country_id` migráció.
+- Permissions: App Users `plugin` null — ne `plugin => false`; `SanitizeAuthRedirectMiddleware`.
+
+### Érintett
+- `templates/layout/login.php`, `templates/Users/*`
+- `src/Controller/UsersController.php`, `UsersTable`, `AdminCountry`, `BrowserLocale`
+- `config/users.php`, `config/permissions.php`, migráció
+
+---
+
+## 2026-08-04 — CakeDC Users: CakePHP 5.3 behavior deprecation fix
+
+### Mi változott / miért
+- CakeDC `sendLoginLink` / `loginWithToken` tábla-proxy hívása 5.3-ban deprecation → HTML warning → „Unable to emit headers”.
+- `App\Model\Table\UsersTable` explicit metódusokkal `getBehavior('OneTimeLoginLink')`-re delegál; `config/users.php` + `Users.config`.
+
+### Érintett
+- `src/Model/Table/UsersTable.php`, `config/users.php`, `src/Application.php`
+
+---
+
+## 2026-08-04 — Szerepkörök + Setups jogosultság + i18n címkék
+
+### Mi változott / miért
+- `AppRoles` / `CurrentUser` / `SetupAccess` — Setups menü, URL, create/delete/country/meta csak a megfelelő szerepeknek.
+- `edit_by`: `superuser` | `admin` | `president` (régi `officers` → `president`).
+- Szerepkör megjelenés: `kulcs — Lefordított név` (`__()` → pot/po).
+
+### Érintett
+- `src/Auth/*`, `SetupEditBy`, `SetupsController`, templates, `config/roles.php`
+- `resources/locales/default.pot`, `hu_HU/default.po`
+- `doc/setups.md`, `MyAdminUsage.md`, `setups-eav.mdc`
+
+---
+
+## 2026-08-04 — Countries menü → Settings
+
+### Mi változott / miért
+- Sidebar: Countries a Settings csoport alá került (Setups mellé).
+
+### Érintett
+- `templates/element/admin/sidebar.php`
+
+---
+
+## Országnevek listázása (Select2 / AdminCountry)
+
+- **Nem** nyelvváltás: az Admin oldal locale-ja (`App.adminLocale` / `I18n`) szerint jelennek meg a nevek (Translate `i18n`).
+- Központi API: `AdminCountry::options()` → `Countries->find('visibleTranslated')`.
+- Csak `Countries.visible = true`.
+- Locale alias: pl. `en_UK` → `en_GB` (`AdminCountry::normalizeTranslateLocale`).
+- ABC sorrend a **fordított** név szerint.
+
+```php
+use App\Utility\AdminCountry;
+
+// Select2: id => "Magyarország (HU)" ha adminLocale = hu_HU
+$options = AdminCountry::options();
+```
+
+---
+
+## 2026-08-04 — Setups: ország-scope, multi-create, edit_by, secret típus
+
+### Mi változott / miért
+- Index: csak working country; címsor „Listing settings for {ország}”; Select2; default HU.
+- Új felvitel: `createForAllCountries()` — minden látható országra ugyanaz a slug.
+- `edit_by` (`admin` | `officers`) — jövőbeli Users szerepkörökhöz.
+- Új típus: `secret` (password mező, Security::encrypt tárolás).
+- Unique `(country_id, slug)`; leírás mező nincs a sémában.
+
+### Érintett
+- DB `setups`, `SetupsTable` / `Setup`, `SetupsController`, templates, `SetupValue`, `SetupEditBy`, `AdminCountry`
+- `doc/setups.md`, `MyAdminUsage.md`, `setups-eav.mdc`, `.po`
+
+---
+
 ## 2026-08-03 — AdminCountry: ambiguous `visible` (Countries + i18n)
 
 ### Mi változott / miért

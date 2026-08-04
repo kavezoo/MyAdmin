@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: gl_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Xa tes unha conta? Acceder"
+
+msgid "Back to admin"
+msgstr "Volver ao admin"
+
+msgid "Back to login"
+msgstr "Volver ao acceso"
+
+msgid "Back to profile"
+msgstr "Volver ao perfil"
+
+msgid "Change password"
+msgstr "Cambiar contrasinal"
+
+msgid "Confirm password"
+msgstr "Confirmar contrasinal"
+
+msgid "Country"
+msgstr "País"
+
+msgid "Current password"
+msgstr "Contrasinal actual"
+
+msgid "Email"
+msgstr "Correo"
+
+msgid "Email or username"
+msgstr "Correo ou nome de usuario"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Introduce o correo ou nome de usuario; enviarémosche unha ligazón para restablecer o contrasinal."
+
+msgid "Error"
+msgstr "Erro"
+
+msgid "Forgot password?"
+msgstr "Esqueciches o contrasinal?"
+
+msgid "I accept the terms of service"
+msgstr "Acepto as condicións de uso"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Log out"
+msgstr "Saír"
+
+msgid "Login"
+msgstr "Acceder"
+
+msgid "Message"
+msgstr "Mensaxe"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "New password"
+msgstr "Novo contrasinal"
+
+msgid "No results found."
+msgstr "Non se atoparon resultados."
+
+msgid "Password"
+msgstr "Contrasinal"
+
+msgid "Please enter a valid email."
+msgstr "Introduce un correo válido."
+
+msgid "Please enter your email."
+msgstr "Introduce o teu correo."
+
+msgid "Please enter your name."
+msgstr "Introduce o teu nome."
+
+msgid "Please select your country."
+msgstr "Selecciona o teu país."
+
+msgid "Profile"
+msgstr "Perfil"
+
+msgid "Register"
+msgstr "Rexistrarse"
+
+msgid "Remember me"
+msgstr "Lembrarme"
+
+msgid "Search..."
+msgstr "Buscar..."
+
+msgid "Select country"
+msgstr "Seleccionar país"
+
+msgid "Select country..."
+msgstr "Seleccionar país..."
+
+msgid "Send reset link"
+msgstr "Enviar ligazón"
+
+msgid "Social accounts"
+msgstr "Contas sociais"
+
+msgid "Success"
+msgstr "Éxito"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "A lingua do país (locale) pasa a ser a lingua da túa conta."
+
+msgid "Username"
+msgstr "Nome de usuario"
+
+msgid "Warning"
+msgstr "Aviso"
+

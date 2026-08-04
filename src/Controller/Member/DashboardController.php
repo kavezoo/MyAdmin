@@ -4,14 +4,13 @@ declare(strict_types=1);
 namespace App\Controller\Member;
 
 /**
- * Member dashboard – default target for /{lang}/member
+ * Member panel dashboard — content TBD.
  */
 class DashboardController extends AppController
 {
-    /**
-     * @return void
-     */
     public function index(): void
     {
+        $this->set('title', __('Dashboard'));
+        $this->set('breadcrumb', __('Dashboard'));
     }
 }

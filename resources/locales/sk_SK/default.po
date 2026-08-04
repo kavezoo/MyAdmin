@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: sk_SK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Už máte účet? Prihlásiť sa"
+
+msgid "Back to admin"
+msgstr "Späť do adminu"
+
+msgid "Back to login"
+msgstr "Späť na prihlásenie"
+
+msgid "Back to profile"
+msgstr "Späť na profil"
+
+msgid "Change password"
+msgstr "Zmeniť heslo"
+
+msgid "Confirm password"
+msgstr "Potvrdenie hesla"
+
+msgid "Country"
+msgstr "Krajina"
+
+msgid "Current password"
+msgstr "Aktuálne heslo"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email or username"
+msgstr "E-mail alebo používateľské meno"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Zadajte e-mail alebo používateľské meno; pošleme odkaz na obnovenie hesla."
+
+msgid "Error"
+msgstr "Chyba"
+
+msgid "Forgot password?"
+msgstr "Zabudnuté heslo?"
+
+msgid "I accept the terms of service"
+msgstr "Súhlasím s podmienkami používania"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Log out"
+msgstr "Odhlásiť sa"
+
+msgid "Login"
+msgstr "Prihlásenie"
+
+msgid "Message"
+msgstr "Správa"
+
+msgid "Name"
+msgstr "Meno"
+
+msgid "New password"
+msgstr "Nové heslo"
+
+msgid "No results found."
+msgstr "Nenašli sa žiadne výsledky."
+
+msgid "Password"
+msgstr "Heslo"
+
+msgid "Please enter a valid email."
+msgstr "Zadajte platný e-mail."
+
+msgid "Please enter your email."
+msgstr "Zadajte svoj e-mail."
+
+msgid "Please enter your name."
+msgstr "Zadajte svoje meno."
+
+msgid "Please select your country."
+msgstr "Vyberte svoju krajinu."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Registrácia"
+
+msgid "Remember me"
+msgstr "Zapamätať si ma"
+
+msgid "Search..."
+msgstr "Hľadať..."
+
+msgid "Select country"
+msgstr "Vyberte krajinu"
+
+msgid "Select country..."
+msgstr "Vyberte krajinu..."
+
+msgid "Send reset link"
+msgstr "Odoslať odkaz"
+
+msgid "Social accounts"
+msgstr "Sociálne účty"
+
+msgid "Success"
+msgstr "Úspech"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Jazyk krajiny (locale) sa stane jazykom vášho účtu."
+
+msgid "Username"
+msgstr "Používateľské meno"
+
+msgid "Warning"
+msgstr "Upozornenie"
+

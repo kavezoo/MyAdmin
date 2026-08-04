@@ -37,8 +37,9 @@ $this->viewBuilder()->setLayout('admin');
 | `modal_linked_record_view.php` | ha van kapcsolt link | Linked modal |
 | `view_related_tabs.php` | igen (view + gyerek) | Gyerek tab sheet-ek |
 | `field_error.php` | igen (form, összetett mező) | Validációs hiba a Tempus/Select2+/checkbox wrapper **után** |
-| `header_profile.php` stb. | opcionális | Header részek |
+| `header_profile.php` stb. | igen (auth után) | Profile + Change password + Logout; széles dropdown |
 | `header_language.php` | fájl lehet | **Ne** include-old az admin headerben |
+| `script_flash.php` | igen | Simple Notify `flashMessage()` — Admin + login layout |
 
 ## Controllerek
 
@@ -118,15 +119,28 @@ webroot/
 ## Routing
 
 ```php
-$routes->prefix('Admin', function (RouteBuilder $builder): void {
-    $builder->connect('/', ['controller' => 'Dashboard', 'action' => 'index']);
-    $builder->fallbacks(DashedRoute::class);
-});
+$panelPrefixes = ['Admin', 'New', 'Member', 'Clubpresident', 'President'];
+foreach ($panelPrefixes as $prefix) {
+    $routes->prefix($prefix, function (RouteBuilder $builder): void {
+        $builder->connect('/', ['controller' => 'Dashboard', 'action' => 'index']);
+        $builder->fallbacks(DashedRoute::class);
+    });
+}
 ```
 
 DashedRoute: `recordGet` → `/admin/{controller}/record-get/{id}`.
 
-Member (opcionális): `/{lang}/...` + `Member` prefix — lásd [uj-projekt.md](uj-projekt.md).
+**Nincs** `/{lang}/…` URL szegmens — locale session / user ország.
+
+| Prefix | URL | Role(ok) |
+|--------|-----|----------|
+| Admin | `/admin` | `superuser`, `admin` |
+| New | `/new` | `new` (regisztráció) |
+| Member | `/member` | `member`, `editor` |
+| Clubpresident | `/clubpresident` | `clubpresident` |
+| President | `/president` | `president`, `vicepresident` |
+
+Közös chrome: `templates/layout/admin.php` + `PanelAppController` / `Admin\AppController`. Sidebar: `templates/element/{prefix}/sidebar.php`.
 
 ## Middleware
 
@@ -134,6 +148,19 @@ Lásd [middleware.md](middleware.md).
 
 | Osztály | Szerep |
 |---------|--------|
-| `LocaleMiddleware` | Member: `{lang}`; Admin: fix `hu_HU` |
+| `LocaleMiddleware` | session / cookie / Accept-Language → `Countries.locale` (nincs URL lang) |
+| `SanitizeAuthRedirectMiddleware` | CakeDC login redirect loop ellen |
 | `NormalizeLocalizedDateMiddleware` | Dátum/idő → SQL |
 | `NormalizeLocalizedNumberMiddleware` | Locale szám → `1234.56` |
+
+## CakeDC Users (auth)
+
+| Réteg | Útvonal |
+|-------|---------|
+| Config | `config/users.php`, `config/permissions.php` |
+| Controller / Table | `src/Controller/UsersController.php`, `src/Model/Table/UsersTable.php` |
+| Layout | `templates/layout/login.php` |
+| Templatek | `templates/Users/` (login, register, profile, change_password, …) |
+| CSS/JS | `webroot/css/pages/users_auth.css`, `webroot/js/pages/users_register.js` |
+
+Spec: [users-auth.md](users-auth.md).

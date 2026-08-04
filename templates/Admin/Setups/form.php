@@ -7,6 +7,7 @@
  * @var array<string, string> $setupTypeOptions
  * @var string $setupValueForm
  */
+use App\Utility\SetupEditBy;
 use App\Utility\SetupValue;
 
 $this->Html->css(['pages/form', 'pages/setups_form'], ['block' => true]);
@@ -16,6 +17,10 @@ $type = (string)($setup->type ?: SetupValue::TYPE_STRING);
 $rawValue = $setup->value !== null ? (string)$setup->value : '';
 $formValue = $setupValueForm ?? '';
 $boolChecked = ($rawValue === '1' || $rawValue === 'true');
+$editByOptions = $setupEditByOptions ?? SetupEditBy::options();
+$hasSecretStored = $isEdit && $type === SetupValue::TYPE_SECRET && $rawValue !== '';
+$canEditMeta = (bool)($canEditSetupMetadata ?? true);
+$metaReadonly = $isEdit && !$canEditMeta;
 
 $config = [
 	'indexUrl' => $this->Url->build($indexListUrl ?? ['action' => 'index']),
@@ -46,6 +51,9 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 				<div class="float-left">
 					<h3><i class="fa fa-check-square-o"></i> <?= $isEdit ? __('Edit setup') : __('New setup') ?></h3>
 					<?= $isEdit ? __('Edit the selected record.') : __('Create a new record.') ?>
+					<?php if (!$isEdit): ?>
+						<div class="form-text mb-0"><?= __('A matching record will be created for every visible country.') ?></div>
+					<?php endif; ?>
 				</div>
 				<div class="float-right">
 					<a role="button" href="<?= h($this->Url->build($indexListUrl ?? ['action' => 'index'])) ?>" class="btn btn-outline-secondary"><i class="fa fa-times"></i></a>
@@ -56,13 +64,25 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 				<?= $this->Form->create($setup, ['id' => 'form-horizontal', 'autocomplete' => 'off']) ?>
 
 					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-md-2 col-form-label"><?= __('Country:') ?></label>
+						<div class="col-12 col-md-10 col-xl-5">
+							<p class="form-control-plaintext mb-0"><?= h($workingCountryLabel ?? '') ?></p>
+							<?= $this->Form->hidden('country_id') ?>
+							<?php if (!$isEdit): ?>
+								<div class="form-text"><?= __('New setups are saved for all countries; the list shows the working country.') ?></div>
+							<?php endif; ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
 						<label for="name" class="col-sm-3 col-md-2 col-form-label"><?= __('Name:') ?></label>
 						<div class="col-12 col-md-10 col-xl-5">
 							<?= $this->Form->control('name', [
 								'label' => false,
 								'class' => 'form-control',
 								'id' => 'name',
-								'autofocus' => true,
+								'autofocus' => !$metaReadonly,
+								'readonly' => $metaReadonly,
 							]) ?>
 						</div>
 					</div>
@@ -75,8 +95,11 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 								'class' => 'form-control',
 								'id' => 'slug',
 								'placeholder' => __('e.g. site_title'),
+								'readonly' => $metaReadonly,
 							]) ?>
-							<div class="form-text"><?= __('Lowercase letters, numbers and underscores only. Suggested from the name.') ?></div>
+							<?php if (!$metaReadonly): ?>
+								<div class="form-text"><?= __('Lowercase letters, numbers and underscores only. Suggested from the name.') ?></div>
+							<?php endif; ?>
 						</div>
 					</div>
 
@@ -89,7 +112,30 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 								'options' => $setupTypeOptions,
 								'class' => 'form-select',
 								'id' => 'type',
+								'disabled' => $metaReadonly,
 							]) ?>
+							<?php if ($metaReadonly): ?>
+								<?= $this->Form->hidden('type') ?>
+							<?php endif; ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<label for="edit-by" class="col-sm-3 col-md-2 col-form-label"><?= __('Editable by:') ?></label>
+						<div class="col-12 col-md-10 col-xl-7">
+							<?= $this->Form->control('edit_by', [
+								'label' => false,
+								'type' => 'select',
+								'options' => $editByOptions,
+								'class' => 'form-select',
+								'id' => 'edit-by',
+								'disabled' => $metaReadonly,
+							]) ?>
+							<?php if ($metaReadonly): ?>
+								<?= $this->Form->hidden('edit_by') ?>
+							<?php else: ?>
+								<div class="form-text"><?= SetupEditBy::helpText() ?></div>
+							<?php endif; ?>
 						</div>
 					</div>
 
@@ -184,20 +230,12 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 								<div class="form-text"><?= __('One value per line (or a JSON array).') ?></div>
 							</div>
 
-							<?= $this->element('admin/field_error', ['field' => 'value']) ?>
-						</div>
-					</div>
+							<div class="setup-value-panel" data-setup-type="<?= h(SetupValue::TYPE_SECRET) ?>" hidden>
+								<input type="password" class="form-control js-setup-value" id="value-secret" value="" autocomplete="new-password" placeholder="<?= $hasSecretStored ? h(__('Leave blank to keep the current value')) : '' ?>">
+								<div class="form-text"><?= __('Stored encrypted. Leave blank when editing to keep the current secret.') ?></div>
+							</div>
 
-					<div class="form-group row mb-3">
-						<label for="description" class="col-sm-3 col-md-2 col-form-label"><?= __('Description:') ?></label>
-						<div class="col-12 col-md-10 col-xl-7">
-							<?= $this->Form->control('description', [
-								'label' => false,
-								'type' => 'textarea',
-								'class' => 'form-control',
-								'id' => 'description',
-								'rows' => 3,
-							]) ?>
+							<?= $this->element('admin/field_error', ['field' => 'value']) ?>
 						</div>
 					</div>
 
@@ -210,9 +248,16 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 						<div class="d-none d-md-block col-md-2"></div>
 						<div class="col-12 col-md-10">
 							<div class="form-check form-switch">
-								<?= $this->Form->checkbox('visible', ['class' => 'form-check-input', 'id' => 'visible']) ?>
+								<?= $this->Form->checkbox('visible', [
+									'class' => 'form-check-input',
+									'id' => 'visible',
+									'disabled' => $metaReadonly,
+								]) ?>
 								<label class="form-check-label" for="visible"><?= __('Visible') ?></label>
 							</div>
+							<?php if ($metaReadonly): ?>
+								<?= $this->Form->hidden('visible') ?>
+							<?php endif; ?>
 							<?= $this->element('admin/field_error', ['field' => 'visible']) ?>
 						</div>
 					</div>
@@ -221,7 +266,7 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 						<div class="col-12 col-md-10 col-xl-3">
 							<?= $this->Form->control('pos', \App\Utility\LocaleNumberParser::formIntegerOptions(
 								$setup->pos,
-								['id' => 'pos']
+								['id' => 'pos', 'readonly' => $metaReadonly]
 							)) ?>
 						</div>
 					</div>

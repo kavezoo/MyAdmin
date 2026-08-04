@@ -15,22 +15,26 @@ $editUrl = $id ? $this->Url->build(['action' => 'edit', $id]) : '#';
 $viewUrl = $id ? $this->Url->build(['action' => 'view', $id]) : '#';
 
 $canDelete = (bool)$this->get('canDelete', true);
+$canAdd = (bool)$this->get('canAdd', true);
+$canEdit = (bool)$this->get('canEdit', true);
 $tooltipDeleteOk = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
 $tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete this record because it has related child records.');
 
 $crumbTitle = $this->fetch('breadcrumb') ?: ($this->get('breadcrumb') ?? $controller);
+$showBack = !$isIndex && (bool)$this->get('showBreadcrumbBack', true);
+$backLabel = (string)($this->get('breadcrumbBackLabel') ?? __('Back to list'));
 ?>
 <div class="row">
 	<div class="col-xl-12">
 		<div class="breadcrumb-holder breadcrumb-holder-actions border-bottom border-1">
 			<div class="float-left toolbar-buttons">
-				<?php if (!$isIndex): ?>
+				<?php if ($showBack): ?>
 					<a role="button" href="<?= h($indexUrl) ?>" class="btn btn-outline-secondary" id="btn-back">
-						<span class="btn-label"><i class="fa fa-arrow-left"></i></span><?= __('Back to list') ?>
+						<span class="btn-label"><i class="fa fa-arrow-left"></i></span><?= h($backLabel) ?>
 					</a>
 				<?php endif; ?>
 
-				<?php if ($isIndex || $isView): ?>
+				<?php if (($isIndex || $isView) && $canAdd): ?>
 					<a role="button" href="<?= h($addUrl) ?>" class="btn btn-success" id="btn-new" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h('<b>' . __('New') . '</b><br>' . __('Create a new record.')) ?>">
 						<span class="btn-label"><i class="fa fa-plus"></i></span><?= __('New') ?>
 					</a>
@@ -42,7 +46,7 @@ $crumbTitle = $this->fetch('breadcrumb') ?: ($this->get('breadcrumb') ?? $contro
 					</button>
 				<?php endif; ?>
 
-				<?php if ($isView && $id): ?>
+				<?php if ($isView && $id && $canEdit): ?>
 					<a role="button" href="<?= h($editUrl) ?>" class="btn btn-primary" id="btn-edit" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h('<b>' . __('Edit') . '</b><br>' . __('Edit the selected record.')) ?>">
 						<span class="btn-label"><i class="fa fa-pencil"></i></span><?= __('Edit') ?>
 					</a>

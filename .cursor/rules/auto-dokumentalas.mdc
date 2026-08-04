@@ -14,6 +14,7 @@ A felhasználónak **soha ne kelljen külön kérnie** a dokumentálást. Minden
 | Bármilyen lényeges módosítás | `doc/valtozasok.md` (dátumos bejegyzés: mi / miért / érintett fájlok) |
 | Admin UI / CRUD / Delete / form / view / modal / oszlop | `doc/admin-konvenciok.md` és/vagy `doc/admin-oldal.md` |
 | Setups EAV / típus / slug | `doc/setups.md` (+ `setups-eav.mdc`) |
+| CakeDC auth (login / register / profile / jelszó) | `doc/users-auth.md` (+ `users-auth.mdc`) |
 | Demó→éles / tartós minta-viselkedés | `doc/minta-tanulsagok.md` (checklist, gyakori hibák, §0 playbook) |
 | Locale / `__()` / Admin nyelv | `doc/i18n.md` |
 | Szám / dátum middleware, parser | `doc/middleware.md` |

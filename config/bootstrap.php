@@ -127,6 +127,17 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 Configure::load('languages');
 
 /*
+ * Application roles (keys; labels via App\Auth\AppRoles + .po).
+ */
+Configure::load('roles');
+
+/*
+ * CakeDC Users — app config files merged after plugin defaults
+ * (vendor/cakedc/users/config/bootstrap.php). Must be set before pluginBootstrap().
+ */
+Configure::write('Users.config', ['users']);
+
+/*
  * Admin index + global (header) text search field map.
  */
 Configure::load('admin_search');

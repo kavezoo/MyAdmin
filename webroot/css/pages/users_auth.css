@@ -1,0 +1,111 @@
+/**
+ * Auth screens — ValiAdmin local-login face (sample: CakeDC-Login-layout-with-KeyCloak).
+ *
+ * ValiAdmin puts .login-form / .local-login-form in absolute fill inside .login-box.
+ * Without a proper face + min-height the box collapses. We use .local-login +
+ * .local-login-form (visible), then switch the face to flow layout so the box
+ * height follows the form content (register / profile taller than login).
+ */
+
+/* Box: keep ValiAdmin chrome; height from content */
+.users-auth-body .login-content .login-box.local-login {
+	height: auto;
+	min-height: 0;
+	overflow: visible;
+}
+
+/* Visible local face = normal document flow (not absolute flip panel) */
+.users-auth-body .login-content .login-box .local-login-form {
+	position: relative;
+	top: auto;
+	right: auto;
+	bottom: auto;
+	left: auto;
+	opacity: 1 !important;
+	-webkit-transform: none !important;
+	transform: none !important;
+	padding: 40px;
+	backface-visibility: visible;
+	-webkit-backface-visibility: visible;
+}
+
+/* Hide unused Keycloak / forget faces if ever present */
+.users-auth-body .login-content .login-box.local-login > .login-form:not(.local-login-form) {
+	display: none;
+}
+
+.users-auth-body .users-auth-links {
+	margin-top: 0.75rem;
+	font-size: 0.9rem;
+}
+
+.users-auth-body .users-auth-links a {
+	display: inline-block;
+	margin-right: 0.75rem;
+}
+
+.users-auth-body .form-error,
+.users-auth-body .error-message {
+	color: #c0392b;
+	font-size: 0.85rem;
+}
+
+.users-auth-body .users-profile-header {
+	display: flex;
+	align-items: center;
+	gap: 0.85rem;
+}
+
+.users-auth-body .users-profile-avatar {
+	flex: 0 0 auto;
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.users-auth-body .users-profile-avatar-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #e9ecef;
+	color: #6c757d;
+	font-size: 2rem;
+}
+
+.users-auth-body .users-profile-name {
+	font-size: 1.15rem;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.users-auth-body .users-profile-role {
+	font-size: 0.85rem;
+}
+
+.users-auth-body .users-profile-value {
+	padding: 0.4rem 0.75rem;
+	background: #f8f9fa;
+	border: 1px solid #dee2e6;
+	border-radius: 0.25rem;
+	min-height: calc(1.5em + 0.75rem + 2px);
+}
+
+.users-auth-body .users-profile-form .btn-outline-secondary {
+	border-color: #ced4da;
+}
+
+/* Select2 on auth forms (register country) — above ValiAdmin box shadow */
+.users-auth-body .select2-container {
+	width: 100% !important;
+}
+
+.users-auth-body .select2-container--bootstrap-5 .select2-selection {
+	min-height: calc(1.5em + 0.75rem + 2px);
+}
+
+.users-auth-body .select2-container--open,
+.users-auth-body + .select2-container--open,
+body > .select2-container--bootstrap-5 {
+	z-index: 3000;
+}

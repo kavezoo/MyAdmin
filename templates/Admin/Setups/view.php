@@ -5,14 +5,18 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Setup $setup
  * @var array<string, string> $setupTypeOptions
+ * @var array<string, string> $setupEditByOptions
  * @var bool $canDelete
  */
+use App\Utility\SetupEditBy;
 use App\Utility\SetupValue;
 
 $this->Html->css(['pages/index'], ['block' => true]);
 
 $type = (string)$setup->type;
 $typeLabel = ($setupTypeOptions[$type] ?? $type);
+$editBy = (string)($setup->edit_by ?? SetupEditBy::ADMIN);
+$editByLabel = ($setupEditByOptions[$editBy] ?? SetupEditBy::label($editBy));
 $valueDisplay = SetupValue::formatForDisplay($type, $setup->value);
 $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
 $canDelete = $canDelete ?? true;
@@ -33,9 +37,17 @@ $canDelete = $canDelete ?? true;
 			<div class="card-body">
 				<dl class="record-view-dl mb-0">
 					<div class="record-view-row"><dt><?= __('ID') ?></dt><dd><?= h($setup->id) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Country') ?></dt><dd><?php
+						$countryLabel = '';
+						if (!empty($setup->country)) {
+							$countryLabel = h($setup->country->name) . ' (' . h($setup->country->iso2) . ')';
+						}
+						echo $countryLabel !== '' ? $countryLabel : h((string)$setup->country_id);
+					?></dd></div>
 					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h($setup->name) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Slug') ?></dt><dd><code><?= h($setup->slug) ?></code></dd></div>
 					<div class="record-view-row"><dt><?= __('Type') ?></dt><dd><?= h($typeLabel) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Editable by') ?></dt><dd><?= h($editByLabel) ?></dd></div>
 					<div class="record-view-row">
 						<dt><?= __('Value') ?></dt>
 						<dd>
@@ -43,6 +55,8 @@ $canDelete = $canDelete ?? true;
 								<?= ((string)$setup->value === '1')
 									? '<i class="fa fa-check text-success"></i> ' . h(__('Yes'))
 									: '<i class="fa fa-times text-danger"></i> ' . h(__('No')) ?>
+							<?php elseif ($type === SetupValue::TYPE_SECRET): ?>
+								<code><?= h($valueDisplay) ?></code>
 							<?php elseif (in_array($type, [SetupValue::TYPE_JSON, SetupValue::TYPE_ARRAY], true)): ?>
 								<pre class="mb-0 small bg-light border rounded p-2"><?= h(SetupValue::formatForForm($type, $setup->value)) ?></pre>
 							<?php else: ?>
@@ -50,9 +64,6 @@ $canDelete = $canDelete ?? true;
 							<?php endif; ?>
 						</dd>
 					</div>
-					<?php if ($setup->description): ?>
-						<div class="record-view-row"><dt><?= __('Description') ?></dt><dd><?= nl2br(h($setup->description)) ?></dd></div>
-					<?php endif; ?>
 					<div class="record-view-row"><dt><?= __('Position') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($setup->pos, decimals: 0)) ?></dd></div>
 					<div class="record-view-row">
 						<dt><?= __('Visible') ?></dt>
@@ -65,7 +76,9 @@ $canDelete = $canDelete ?? true;
 				</dl>
 
 				<div class="record-view-footer-actions mt-4">
-					<a href="<?= $this->Url->build(['action' => 'edit', $setup->id]) ?>" class="btn btn-primary"><i class="fa fa-pencil"></i> <?= __('Edit') ?></a>
+					<?php if (!empty($canEditThisSetup)): ?>
+						<a href="<?= $this->Url->build(['action' => 'edit', $setup->id]) ?>" class="btn btn-primary"><i class="fa fa-pencil"></i> <?= __('Edit') ?></a>
+					<?php endif; ?>
 					<?php if ($canDelete): ?>
 						<a role="button" href="#" class="btn btn-danger ms-2" id="btn-delete" data-delete-form="#delete-form-current" data-bs-toggle="tooltip" data-bs-html="true" title="<?= h($tooltipDelete) ?>">
 							<i class="fa fa-trash"></i> <?= __('Delete') ?>

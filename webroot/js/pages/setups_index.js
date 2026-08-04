@@ -13,7 +13,8 @@
 		$el.select2({
 			theme: 'bootstrap-5',
 			width: '100%',
-			minimumResultsForSearch: 8
+			// Always allow typing — options are page-locale country names (Translate).
+			minimumResultsForSearch: 0
 		});
 
 		$el.on('change', function () {

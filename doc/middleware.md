@@ -21,8 +21,9 @@ A megjelenítés locale szerinti lehet (`LocaleDateParser::format()` + Tempus `d
 | `src/Middleware/NormalizeLocalizedNumberMiddleware.php` | Request body → szám normalizálás |
 | `src/Utility/LocaleDateParser.php` | Parse + `format()` + `jsConfig()` |
 | `src/Utility/LocaleNumberParser.php` | Parse + `format()` / `jsConfig()` |
-| `src/Middleware/LocaleMiddleware.php` | Locale **előbb** (Admin → `hu_HU`) |
-| `src/Application.php` | Queue: Locale → BodyParser → **Date** → Number → CSRF |
+| `src/Middleware/LocaleMiddleware.php` | Locale **előbb** (Admin → `hu_HU`; auth → `BrowserLocale`) |
+| `src/Middleware/SanitizeAuthRedirectMiddleware.php` | CakeDC `/login?redirect=/login…` loop — [users-auth.md](users-auth.md) |
+| `src/Application.php` | Queue: SanitizeAuth → … → Locale → BodyParser → **Date** → Number → CSRF |
 
 ## Mikor fut?
 

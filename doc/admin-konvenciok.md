@@ -70,6 +70,8 @@ MyAdmin.flashSwal({ icon, title, html }); // Flash SWAL sorban
 | **SWAL** | `$this->flashSwal('success', $msg)` vagy `['element' => 'flash/success_swal']` | SweetAlert2 modal; egyszerre **egy** (több Flash sorban) |
 | Legacy | `['element' => 'flash_/success']` | jquery-toastmessage (asset: `plugins/jquery-toastmessage/`) |
 
+**Hol:** Admin layout **és** CakeDC auth (`login` layout) — `AppView::usesFlashToast()`; auth: `Flash->render('auth')` + default a layout végén. Spec: [users-auth.md](users-auth.md).
+
 Assetek: `simple-notify` 1.0.6, `sweetalert2` 11.x (legújabb), layout végén `<script>` + `admin/script_flash`.
 
 ### SweetAlert — kötelező (tilos a `window.alert`)
@@ -187,11 +189,12 @@ EAV modul — teljes specek: **[setups.md](setups.md)**. Rule: `.cursor/rules/se
 
 | Szabály | Érték |
 |---------|--------|
-| Tárolás | `setups.value` TEXT + `type` (ne külön oszlop típusonként) |
-| Slug | csak `a-z0-9` + **`_`** (pl. `site_title`); **tilos** a `-` |
-| Form | type → widget (`setups_form.js`); név → slug javaslat |
-| Olvasás | **bárhol:** `Setup::get('slug', $default)` (`App\Utility\Setup`); Table: `getValue()` |
-| Típusok | string, text, integer, float, boolean, date, time, datetime, json, array |
+| Tárolás | `setups.value` TEXT + `type` + `country_id` (ne külön oszlop típusonként) |
+| Slug | csak `a-z0-9` + **`_`**; unique **országonként** `(country_id, slug)` |
+| Ország | Index = working country (`AdminCountry`, default HU); új = minden látható ország |
+| `edit_by` | `superuser` \| `admin` \| `president` — [setups.md](setups.md) |
+| Form | type → widget (`setups_form.js`); `secret` = titkosított adat + encrypt |
+| Olvasás | **bárhol:** `Setup::get('slug', $default)` |
 
 ### Utolsó rekord (`.last-visited`) — session
 

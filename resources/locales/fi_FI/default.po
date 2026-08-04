@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: fi_FI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Onko sinulla jo tili? Kirjaudu"
+
+msgid "Back to admin"
+msgstr "Takaisin adminiin"
+
+msgid "Back to login"
+msgstr "Takaisin kirjautumiseen"
+
+msgid "Back to profile"
+msgstr "Takaisin profiiliin"
+
+msgid "Change password"
+msgstr "Vaihda salasana"
+
+msgid "Confirm password"
+msgstr "Vahvista salasana"
+
+msgid "Country"
+msgstr "Maa"
+
+msgid "Current password"
+msgstr "Nykyinen salasana"
+
+msgid "Email"
+msgstr "Sähköposti"
+
+msgid "Email or username"
+msgstr "Sähköposti tai käyttäjänimi"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Anna sähköposti tai käyttäjänimi; lähetämme salasanan nollauslinkin."
+
+msgid "Error"
+msgstr "Virhe"
+
+msgid "Forgot password?"
+msgstr "Unohtuiko salasana?"
+
+msgid "I accept the terms of service"
+msgstr "Hyväksyn käyttöehdot"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Log out"
+msgstr "Kirjaudu ulos"
+
+msgid "Login"
+msgstr "Kirjaudu"
+
+msgid "Message"
+msgstr "Viesti"
+
+msgid "Name"
+msgstr "Nimi"
+
+msgid "New password"
+msgstr "Uusi salasana"
+
+msgid "No results found."
+msgstr "Ei tuloksia."
+
+msgid "Password"
+msgstr "Salasana"
+
+msgid "Please enter a valid email."
+msgstr "Anna kelvollinen sähköpostiosoite."
+
+msgid "Please enter your email."
+msgstr "Anna sähköpostiosoitteesi."
+
+msgid "Please enter your name."
+msgstr "Anna nimesi."
+
+msgid "Please select your country."
+msgstr "Valitse maasi."
+
+msgid "Profile"
+msgstr "Profiili"
+
+msgid "Register"
+msgstr "Rekisteröidy"
+
+msgid "Remember me"
+msgstr "Muista minut"
+
+msgid "Search..."
+msgstr "Haku..."
+
+msgid "Select country"
+msgstr "Valitse maa"
+
+msgid "Select country..."
+msgstr "Valitse maa..."
+
+msgid "Send reset link"
+msgstr "Lähetä nollauslinkki"
+
+msgid "Social accounts"
+msgstr "Sosiaalisen median tilit"
+
+msgid "Success"
+msgstr "Onnistui"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Maan kieli (locale) tulee tilisi kieleksi."
+
+msgid "Username"
+msgstr "Käyttäjänimi"
+
+msgid "Warning"
+msgstr "Varoitus"
+

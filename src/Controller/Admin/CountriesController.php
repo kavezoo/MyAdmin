@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Utility\AdminCountry;
 use Cake\Http\Response;
 use Cake\I18n\I18n;
 
@@ -27,9 +28,7 @@ class CountriesController extends AppController
      */
     protected function setTranslateLocales(): void
     {
-        $locale = I18n::getLocale();
-        $this->Countries->getBehavior('Translate')->setLocale($locale);
-        $this->Countries->Continents->getBehavior('Translate')->setLocale($locale);
+        AdminCountry::applyTranslateLocale(I18n::getLocale());
     }
 
     /**

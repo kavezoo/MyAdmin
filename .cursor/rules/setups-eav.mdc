@@ -1,29 +1,37 @@
 ---
-description: Setups EAV modul — típusfüggő value widgetek, slug a-z0-9_, SetupValue; specek doc/setups.md.
-globs: "**/Setups/**","**/Setup*.php","**/SetupValue.php","**/setups*","**/setups_form.*"
+description: Setups EAV — ország-scope, edit_by, secret típus, Setup::get; specek doc/setups.md.
+globs: "**/Setups/**","**/Setup*.php","**/SetupValue.php","**/SetupEditBy.php","**/AdminCountry.php","**/setups*","**/setups_form.*","**/setups_index.*"
 alwaysApply: false
 ---
 
 # Setups (típusos beállítások)
 
-**Teljes specek:** `doc/setups.md` — olvasd / frissítsd együtt a kóddal.
+**Teljes specek:** `doc/setups.md` — olvasd / frissítsd együtt a kóddal. Használat: `doc/MyAdminUsage.md`.
 
 ## Kötelező
 
-- Tábla: `setups` (`config/schema/setups.sql`) — EAV: `name`, `slug`, `type`, `value` TEXT, `description`, `pos`/`visible` DB default
-- Típusok + normalize/display/cast: `App\Utility\SetupValue`
-- **Slug:** csak `a-z0-9` + **`_`** (pl. `site_title`). Regex: `/^[a-z0-9]+(?:_[a-z0-9]+)*$/`. **Tilos** a `-` kötőjel.
-- Form: type → widget (`pages/setups_form.js`); név → slug javaslat (`_`); kézzel felülírható
-- Teljes Admin CRUD + `admin_search` (`labelsKey=setup`) + sidebar Settings → Setups
-- Olvasás bárhol: `App\Utility\Setup::get('slug', $default)` → `SetupsTable::getValue` (invisible → default)
+- Tábla: `setups` — `country_id`, `name`, `slug`, `type`, `edit_by`, `value`, `pos`/`visible` DB default
+- Unique: `(country_id, slug)`
+- Working country: `AdminCountry` (session + cookie; default HU)
+- Index: csak aktuális ország; címsorban ország neve; Select2 váltó
+- **Új rekord:** `createForAllCountries()` — minden látható országra ugyanaz a slug
+- Típusok + normalize/display/cast: `SetupValue` (benne **`secret`** = encrypt)
+- `edit_by`: `superuser` | `admin` | `president` — `SetupEditBy` + `AppRoles::labeled()`
+- Hozzáférés: `SetupAccess` / `CurrentUser` (CakeDC identity-safe fallback)
+- Olvasás: `Setup::get('slug', $default)` (ország + cast; secret → plaintext)
 
-## Típusok
+## Slug
 
-`string` | `text` | `integer` | `float` | `boolean` | `date` | `time` | `datetime` | `json` | `array`
+Csak `a-z0-9` + `_`. Tilos `-`.
+
+## Secret
+
+- Form: maszkolt mező; üres edit = megtartás
+- Tárolás: `Security::encrypt` + base64
+- UI preview: `••••••••`
 
 ## Tilos
 
-- Külön DB oszlop típusonként
-- Slug ékezet / nagybetű / szóköz / kötőjel
-- Type váltás után `name="value"` sync nélkül
-- Specek nélküli „egyszerű” settings oldal
+- Globális unique slug (ország nélkül)
+- Secret plaintext a listában / form visszatöltésben
+- `pos` PHP-ból növelgetve

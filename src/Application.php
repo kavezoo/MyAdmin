@@ -20,10 +20,14 @@ use App\Middleware\HostHeaderMiddleware;
 use App\Middleware\LocaleMiddleware;
 use App\Middleware\NormalizeLocalizedDateMiddleware;
 use App\Middleware\NormalizeLocalizedNumberMiddleware;
+use App\Middleware\SanitizeAuthRedirectMiddleware;
+use App\Auth\CurrentUser;
+use App\Auth\RoleHome;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Datasource\FactoryLocator;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
+use Cake\Event\EventInterface;
 use Cake\Event\EventManagerInterface;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
@@ -32,6 +36,7 @@ use Cake\Http\MiddlewareQueue;
 use Cake\ORM\Locator\TableLocator;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use CakeDC\Users\UsersPlugin;
 
 /**
  * Application setup class.
@@ -58,6 +63,10 @@ class Application extends BaseApplication
             'Table',
             (new TableLocator())->allowFallbackClass(false),
         );
+
+        // Must be set before plugin bootstrap merges config/users.php.
+        Configure::write('Users.config', ['users']);
+        $this->addPlugin('CakeDC/Users');
     }
 
     /**
@@ -77,6 +86,9 @@ class Application extends BaseApplication
             // In production, ensures App.fullBaseUrl is configured and validates
             // the incoming Host header against it.
             ->add(new HostHeaderMiddleware())
+
+            // Stop /login?redirect=/login?redirect=… loops (Request-URI Too Long).
+            ->add(new SanitizeAuthRedirectMiddleware())
 
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware([
@@ -133,7 +145,20 @@ class Application extends BaseApplication
      */
     public function events(EventManagerInterface $eventManager): EventManagerInterface
     {
-        // $eventManager->on(new SomeCustomListenerClass());
+        $eventManager->on(
+            UsersPlugin::EVENT_AFTER_LOGIN,
+            function (EventInterface $event) {
+                $user = $event->getData('user');
+                $role = 'new';
+                if (is_array($user)) {
+                    $role = strtolower(trim((string)($user['role'] ?? 'new')));
+                } elseif (is_object($user) && method_exists($user, 'get')) {
+                    $role = strtolower(trim((string)($user->get('role') ?? 'new')));
+                }
+
+                return RoleHome::url($role !== '' ? $role : CurrentUser::role());
+            },
+        );
 
         return $eventManager;
     }

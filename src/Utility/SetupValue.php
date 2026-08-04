@@ -6,6 +6,7 @@ namespace App\Utility;
 use Cake\I18n\Date;
 use Cake\I18n\DateTime;
 use Cake\I18n\Time;
+use Cake\Utility\Security;
 use Cake\Utility\Text;
 
 /**
@@ -23,6 +24,7 @@ class SetupValue
     public const TYPE_DATETIME = 'datetime';
     public const TYPE_JSON = 'json';
     public const TYPE_ARRAY = 'array';
+    public const TYPE_SECRET = 'secret';
 
     /**
      * @return list<string>
@@ -40,6 +42,7 @@ class SetupValue
             self::TYPE_DATETIME,
             self::TYPE_JSON,
             self::TYPE_ARRAY,
+            self::TYPE_SECRET,
         ];
     }
 
@@ -61,6 +64,7 @@ class SetupValue
             self::TYPE_DATETIME => __('Date and time'),
             self::TYPE_JSON => __('JSON'),
             self::TYPE_ARRAY => __('Array'),
+            self::TYPE_SECRET => __('Encrypted data'),
         ];
         $out = [];
         foreach (static::typeList() as $type) {
@@ -132,8 +136,32 @@ class SetupValue
             self::TYPE_DATETIME => static::normalizeDateTime($str),
             self::TYPE_JSON => static::normalizeJson($str),
             self::TYPE_ARRAY => static::normalizeArray($str),
+            self::TYPE_SECRET => static::normalizeSecret($str),
             default => ['ok' => false, 'value' => null, 'error' => __('Invalid type.')],
         };
+    }
+
+    /**
+     * Encrypt plaintext with app Security salt (base64 for TEXT column).
+     * Empty string = no new value (caller should keep previous on edit).
+     *
+     * @return array{ok: bool, value: string|null, error: string|null}
+     */
+    protected static function normalizeSecret(string $str): array
+    {
+        if ($str === '') {
+            return ['ok' => true, 'value' => '', 'error' => null];
+        }
+        try {
+            $cipher = Security::encrypt($str, Security::getSalt());
+            if ($cipher === false || $cipher === '') {
+                return ['ok' => false, 'value' => null, 'error' => __('Could not encrypt the value.')];
+            }
+
+            return ['ok' => true, 'value' => base64_encode($cipher), 'error' => null];
+        } catch (\Throwable) {
+            return ['ok' => false, 'value' => null, 'error' => __('Could not encrypt the value.')];
+        }
     }
 
     /**
@@ -323,6 +351,7 @@ class SetupValue
             self::TYPE_TIME => LocaleDateParser::format($value !== '' ? $value : null, 'time_short'),
             self::TYPE_DATETIME => LocaleDateParser::format($value !== '' ? $value : null, 'datetime_short'),
             self::TYPE_JSON, self::TYPE_ARRAY => static::formatJsonPreview($value),
+            self::TYPE_SECRET => $value !== '' ? '••••••••' : '',
             default => $value,
         };
     }
@@ -351,6 +380,10 @@ class SetupValue
      */
     public static function formatForForm(string $type, ?string $value): string
     {
+        // Never put decrypted secrets into the form — leave empty (keep previous if unchanged).
+        if ($type === self::TYPE_SECRET) {
+            return '';
+        }
         $value = $value ?? '';
         if ($type === self::TYPE_ARRAY && $value !== '') {
             try {
@@ -406,9 +439,31 @@ class SetupValue
             self::TYPE_INTEGER => (int)$value,
             self::TYPE_FLOAT => (float)$value,
             self::TYPE_JSON, self::TYPE_ARRAY => json_decode($value !== '' ? $value : '[]', true),
+            self::TYPE_SECRET => static::decryptSecret($value),
             self::TYPE_DATE, self::TYPE_TIME, self::TYPE_DATETIME,
             self::TYPE_STRING, self::TYPE_TEXT => $value,
             default => $value,
         };
+    }
+
+    /**
+     * Decrypt stored secret (base64 cipher) → plaintext, or null.
+     */
+    public static function decryptSecret(string $stored): ?string
+    {
+        if ($stored === '') {
+            return null;
+        }
+        $bin = base64_decode($stored, true);
+        if ($bin === false || $bin === '') {
+            return null;
+        }
+        try {
+            $plain = Security::decrypt($bin, Security::getSalt());
+
+            return $plain === false ? null : $plain;
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

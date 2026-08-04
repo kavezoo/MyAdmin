@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Al een account? Inloggen"
+
+msgid "Back to admin"
+msgstr "Terug naar admin"
+
+msgid "Back to login"
+msgstr "Terug naar inloggen"
+
+msgid "Back to profile"
+msgstr "Terug naar profiel"
+
+msgid "Change password"
+msgstr "Wachtwoord wijzigen"
+
+msgid "Confirm password"
+msgstr "Bevestig wachtwoord"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Current password"
+msgstr "Huidig wachtwoord"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email or username"
+msgstr "E-mail of gebruikersnaam"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Voer uw e-mail of gebruikersnaam in; we sturen een link om uw wachtwoord te resetten."
+
+msgid "Error"
+msgstr "Fout"
+
+msgid "Forgot password?"
+msgstr "Wachtwoord vergeten?"
+
+msgid "I accept the terms of service"
+msgstr "Ik accepteer de gebruiksvoorwaarden"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Log out"
+msgstr "Uitloggen"
+
+msgid "Login"
+msgstr "Inloggen"
+
+msgid "Message"
+msgstr "Bericht"
+
+msgid "Name"
+msgstr "Naam"
+
+msgid "New password"
+msgstr "Nieuw wachtwoord"
+
+msgid "No results found."
+msgstr "Geen resultaten gevonden."
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "Please enter a valid email."
+msgstr "Voer een geldig e-mailadres in."
+
+msgid "Please enter your email."
+msgstr "Voer uw e-mailadres in."
+
+msgid "Please enter your name."
+msgstr "Voer uw naam in."
+
+msgid "Please select your country."
+msgstr "Selecteer uw land."
+
+msgid "Profile"
+msgstr "Profiel"
+
+msgid "Register"
+msgstr "Registreren"
+
+msgid "Remember me"
+msgstr "Onthoud mij"
+
+msgid "Search..."
+msgstr "Zoeken..."
+
+msgid "Select country"
+msgstr "Selecteer land"
+
+msgid "Select country..."
+msgstr "Selecteer land..."
+
+msgid "Send reset link"
+msgstr "Resetlink verzenden"
+
+msgid "Social accounts"
+msgstr "Sociale accounts"
+
+msgid "Success"
+msgstr "Gelukt"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "De taal van het land (locale) wordt de taal van uw account."
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Warning"
+msgstr "Waarschuwing"
+

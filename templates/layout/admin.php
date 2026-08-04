@@ -41,7 +41,7 @@ if ($pageTitle === '' || $pageTitle === null) {
 <div id="main">
 
 	<?= $this->element('admin/header') ?>
-	<?= $this->element('admin/sidebar') ?>
+	<?= $this->element((string)($this->get('panelSidebar') ?? 'admin/sidebar')) ?>
 
 	<div class="content-page">
 		<div class="content">

@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: da_DK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Har du allerede en konto? Log ind"
+
+msgid "Back to admin"
+msgstr "Tilbage til admin"
+
+msgid "Back to login"
+msgstr "Tilbage til login"
+
+msgid "Back to profile"
+msgstr "Tilbage til profil"
+
+msgid "Change password"
+msgstr "Skift adgangskode"
+
+msgid "Confirm password"
+msgstr "Bekræft adgangskode"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Current password"
+msgstr "Nuværende adgangskode"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email or username"
+msgstr "E-mail eller brugernavn"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Indtast e-mail eller brugernavn; vi sender et link til nulstilling af adgangskode."
+
+msgid "Error"
+msgstr "Fejl"
+
+msgid "Forgot password?"
+msgstr "Glemt adgangskode?"
+
+msgid "I accept the terms of service"
+msgstr "Jeg accepterer vilkårene"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Log out"
+msgstr "Log ud"
+
+msgid "Login"
+msgstr "Log ind"
+
+msgid "Message"
+msgstr "Besked"
+
+msgid "Name"
+msgstr "Navn"
+
+msgid "New password"
+msgstr "Ny adgangskode"
+
+msgid "No results found."
+msgstr "Ingen resultater."
+
+msgid "Password"
+msgstr "Adgangskode"
+
+msgid "Please enter a valid email."
+msgstr "Indtast en gyldig e-mail."
+
+msgid "Please enter your email."
+msgstr "Indtast din e-mail."
+
+msgid "Please enter your name."
+msgstr "Indtast dit navn."
+
+msgid "Please select your country."
+msgstr "Vælg dit land."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Registrer"
+
+msgid "Remember me"
+msgstr "Husk mig"
+
+msgid "Search..."
+msgstr "Søg..."
+
+msgid "Select country"
+msgstr "Vælg land"
+
+msgid "Select country..."
+msgstr "Vælg land..."
+
+msgid "Send reset link"
+msgstr "Send nulstillingslink"
+
+msgid "Social accounts"
+msgstr "Sociale konti"
+
+msgid "Success"
+msgstr "Succes"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Landets sprog (locale) bliver sproget for din konto."
+
+msgid "Username"
+msgstr "Brugernavn"
+
+msgid "Warning"
+msgstr "Advarsel"
+

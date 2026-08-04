@@ -1,14 +1,24 @@
 <?php
 /**
- * Setups index
+ * Setups index — filtered by Admin working country.
  *
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Setup> $setups
  * @var array<string, string> $setupTypeOptions
+ * @var array<string, string> $setupEditByOptions
+ * @var int $workingCountryId
+ * @var string $workingCountryLabel
+ * @var array<int, string> $countryOptions
  */
+use App\Utility\SetupEditBy;
 use App\Utility\SetupValue;
 
-$this->Html->css(['pages/index'], ['block' => true]);
+$this->Html->css([
+	'/plugins/select2-4.1.0/css/select2.min',
+	'/plugins/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min',
+	'pages/index',
+	'pages/setups_index',
+], ['block' => true]);
 
 $rowDoubleClickAction = 'modal';
 $numberDecimals = ['integer' => 0, 'decimal' => 2];
@@ -18,7 +28,7 @@ $showCreatedColumn = true;
 $showModifiedColumn = true;
 $showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
 
-$indexColspan = 5; // name, slug, type, value, actions
+$indexColspan = 6; // name, slug, type, value, edit_by, actions
 if ($showIdColumn) {
 	$indexColspan++;
 }
@@ -41,6 +51,8 @@ $rowDoubleClickHints = [
 ];
 $rowDoubleClickHint = $rowDoubleClickHints[$rowDoubleClickAction] ?? $rowDoubleClickHints['modal'];
 
+$editByOptions = $setupEditByOptions ?? SetupEditBy::options();
+
 $config = [
 	'rowDoubleClickAction' => $rowDoubleClickAction,
 	'recordGetUrl' => $this->Url->build(['action' => 'recordGet']),
@@ -52,8 +64,8 @@ $config = [
 		'name' => __('Name'),
 		'slug' => __('Slug'),
 		'type' => __('Type'),
+		'edit_by' => __('Editable by'),
 		'value' => __('Value'),
-		'description' => __('Description'),
 		'pos' => __('Position'),
 		'visible' => __('Visible'),
 		'created' => __('Created'),
@@ -66,9 +78,20 @@ $this->Html->scriptBlock(
 	. ');',
 	['block' => 'script']
 );
-$this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
+$this->Html->script([
+	'/plugins/select2-4.1.0/js/select2.full.min',
+	'pages/index',
+	'pages/setups_index',
+], ['block' => 'scriptBottom']);
 
 $typeOptions = $setupTypeOptions ?? SetupValue::typeOptions();
+$workingCountryId = (int)($workingCountryId ?? 0);
+$workingCountryLabel = (string)($workingCountryLabel ?? '');
+$countryOptions = $countryOptions ?? [];
+$canDeleteRows = (bool)($canDeleteSetup ?? false);
+$setupCount = is_object($setups) && method_exists($setups, 'count')
+	? $setups->count()
+	: (is_countable($setups) ? count($setups) : 0);
 ?>
 <div class="row mt-3">
 	<div class="col-12 p-2 pt-0">
@@ -76,11 +99,19 @@ $typeOptions = $setupTypeOptions ?? SetupValue::typeOptions();
 			<div class="card-header">
 				<div class="float-left">
 					<h3 class="fw-bold"><i class="fa fa-cogs"></i> <?= __('Setups') ?></h3>
+					<?php if ($workingCountryLabel !== ''): ?>
+						<div class="text-muted">
+							<?= h(__('Listing settings for {0}', $workingCountryLabel)) ?>
+						</div>
+					<?php endif; ?>
 					<?php if ($rowDoubleClickHint !== ''): ?>
 						<?= h($rowDoubleClickHint) ?>
 					<?php endif; ?>
 				</div>
-				<div class="float-right d-flex align-items-center gap-2">
+				<div class="float-right d-flex align-items-center gap-2 flex-wrap justify-content-end">
+					<?php if (!empty($canChangeCountry) && $countryOptions !== []): ?>
+						<?= $this->element('admin/working_country_select', compact('workingCountryId', 'countryOptions')) ?>
+					<?php endif; ?>
 					<?= $this->element('admin/table_search') ?>
 					<?= $this->element('admin/index_pagination') ?>
 				</div>
@@ -97,6 +128,7 @@ $typeOptions = $setupTypeOptions ?? SetupValue::typeOptions();
 							<th scope="col" class="string slug"><?= $this->Paginator->sort('slug', __('Slug')) ?></th>
 							<th scope="col" class="string type"><?= $this->Paginator->sort('type', __('Type')) ?></th>
 							<th scope="col" class="string value"><?= __('Value') ?></th>
+							<th scope="col" class="string edit-by"><?= $this->Paginator->sort('edit_by', __('Editable by')) ?></th>
 							<th scope="col" class="number pos"><?= $this->Paginator->sort('pos', __('Position')) ?></th>
 							<?php if ($showVisibleColumn): ?>
 								<th scope="col" class="boolean visible"><?= $this->Paginator->sort('visible', __('Visible')) ?></th>
@@ -120,9 +152,11 @@ $typeOptions = $setupTypeOptions ?? SetupValue::typeOptions();
 							$isLastVisited = isset($lastVisitedId) && (int)$lastVisitedId === (int)$setup->id;
 							$type = (string)$setup->type;
 							$typeLabel = $typeOptions[$type] ?? $type;
+							$editBy = (string)($setup->edit_by ?? SetupEditBy::ADMIN);
+							$editByLabel = $editByOptions[$editBy] ?? $editBy;
 							$valuePreview = SetupValue::formatForDisplay($type, $setup->value);
 							?>
-							<tr id="record-<?= (int)$setup->id ?>" data-id="<?= (int)$setup->id ?>" data-can-delete="1"<?= $isLastVisited ? ' class="last-visited"' : '' ?>>
+							<tr id="record-<?= (int)$setup->id ?>" data-id="<?= (int)$setup->id ?>" data-can-delete="<?= $canDeleteRows ? '1' : '0' ?>"<?= $isLastVisited ? ' class="last-visited"' : '' ?>>
 								<?php if ($showIdColumn): ?>
 									<td class="number id"><?= h($setup->id) ?></td>
 								<?php endif; ?>
@@ -134,10 +168,13 @@ $typeOptions = $setupTypeOptions ?? SetupValue::typeOptions();
 										<?= ((string)$setup->value === '1')
 											? '<i class="fa fa-check text-success"></i>'
 											: '<i class="fa fa-times text-danger"></i>' ?>
+									<?php elseif ($type === SetupValue::TYPE_SECRET): ?>
+										<code><?= h($valuePreview) ?></code>
 									<?php else: ?>
 										<?= h($valuePreview) ?>
 									<?php endif; ?>
 								</td>
+								<td class="string edit-by"><span class="small"><?= h($editByLabel) ?></span></td>
 								<td class="number pos text-end"><?= h(\App\Utility\LocaleNumberParser::format($setup->pos, decimals: $numberDecimals['integer'])) ?></td>
 								<?php if ($showVisibleColumn): ?>
 									<td class="boolean visible">
@@ -186,6 +223,7 @@ $typeOptions = $setupTypeOptions ?? SetupValue::typeOptions();
 											'title' => $tooltipEdit,
 										]
 									) ?>
+									<?php if ($canDeleteRows): ?>
 									<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$setup->id ?>">
 										<i class="fa fa-trash"></i>
 									</a>
@@ -195,10 +233,11 @@ $typeOptions = $setupTypeOptions ?? SetupValue::typeOptions();
 										'class' => 'd-none js-row-delete-form',
 									]) ?>
 									<?= $this->Form->end() ?>
+									<?php endif; ?>
 								</td>
 							</tr>
 						<?php endforeach; ?>
-						<?php if ($setups->count() === 0): ?>
+						<?php if ($setupCount === 0): ?>
 							<tr><td colspan="<?= (int)$indexColspan ?>" class="text-center text-muted py-4"><?= __('No records found.') ?></td></tr>
 						<?php endif; ?>
 					</tbody>

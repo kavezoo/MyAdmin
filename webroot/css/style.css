@@ -866,7 +866,14 @@ body.adminbody .main-sidebar.left {
 }
 
 .profile-dropdown {
-	width: 170px;
+	min-width: 240px;
+	width: max-content;
+	max-width: min(320px, calc(100vw - 1.5rem));
+}
+
+.profile-dropdown .dropdown-item,
+.profile-dropdown .notify-item {
+	white-space: nowrap;
 }
 
 .profile-dropdown i {
@@ -877,6 +884,7 @@ body.adminbody .main-sidebar.left {
 
 .profile-dropdown span {
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 .nav-user {

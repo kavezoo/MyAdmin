@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Вже є обліковий запис? Увійти"
+
+msgid "Back to admin"
+msgstr "Назад до адмінки"
+
+msgid "Back to login"
+msgstr "Назад до входу"
+
+msgid "Back to profile"
+msgstr "Назад до профілю"
+
+msgid "Change password"
+msgstr "Змінити пароль"
+
+msgid "Confirm password"
+msgstr "Підтвердіть пароль"
+
+msgid "Country"
+msgstr "Країна"
+
+msgid "Current password"
+msgstr "Поточний пароль"
+
+msgid "Email"
+msgstr "Електронна пошта"
+
+msgid "Email or username"
+msgstr "Ел. пошта або ім’я користувача"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Введіть ел. пошту або ім’я користувача — надішлемо посилання для скидання пароля."
+
+msgid "Error"
+msgstr "Помилка"
+
+msgid "Forgot password?"
+msgstr "Забули пароль?"
+
+msgid "I accept the terms of service"
+msgstr "Я приймаю умови використання"
+
+msgid "Info"
+msgstr "Інфо"
+
+msgid "Log out"
+msgstr "Вийти"
+
+msgid "Login"
+msgstr "Вхід"
+
+msgid "Message"
+msgstr "Повідомлення"
+
+msgid "Name"
+msgstr "Ім’я"
+
+msgid "New password"
+msgstr "Новий пароль"
+
+msgid "No results found."
+msgstr "Нічого не знайдено."
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Please enter a valid email."
+msgstr "Введіть дійсну ел. пошту."
+
+msgid "Please enter your email."
+msgstr "Введіть свою ел. пошту."
+
+msgid "Please enter your name."
+msgstr "Введіть своє ім’я."
+
+msgid "Please select your country."
+msgstr "Оберіть свою країну."
+
+msgid "Profile"
+msgstr "Профіль"
+
+msgid "Register"
+msgstr "Реєстрація"
+
+msgid "Remember me"
+msgstr "Запам’ятати мене"
+
+msgid "Search..."
+msgstr "Пошук..."
+
+msgid "Select country"
+msgstr "Оберіть країну"
+
+msgid "Select country..."
+msgstr "Оберіть країну..."
+
+msgid "Send reset link"
+msgstr "Надіслати посилання"
+
+msgid "Social accounts"
+msgstr "Соціальні акаунти"
+
+msgid "Success"
+msgstr "Успіх"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Мова країни (locale) стане мовою вашого облікового запису."
+
+msgid "Username"
+msgstr "Ім’я користувача"
+
+msgid "Warning"
+msgstr "Попередження"
+

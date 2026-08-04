@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
+use App\Utility\AdminCountry;
+use Cake\I18n\I18n;
 use Cake\ORM\Behavior\Translate\EavStrategy;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -117,5 +120,24 @@ class CountriesTable extends Table
         $rules->add($rules->existsIn(['continent_id'], 'Continents'), ['errorField' => 'continent_id']);
 
         return $rules;
+    }
+
+    /**
+     * Visible countries with `name` in the UI / Admin page locale (Translate).
+     * Use for Select2 and any listing that must follow the page language (not a language switch).
+     *
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
+     */
+    public function findVisibleTranslated(SelectQuery $query, ?string $locale = null): SelectQuery
+    {
+        $locale = AdminCountry::normalizeTranslateLocale(
+            ($locale !== null && $locale !== '') ? $locale : I18n::getLocale()
+        );
+        $this->getBehavior('Translate')->setLocale($locale);
+
+        return $query
+            ->where(['Countries.visible' => true])
+            ->orderBy(['Countries.name' => 'ASC']);
     }
 }

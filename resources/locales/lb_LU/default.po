@@ -1,0 +1,123 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: lb_LU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Hues schonn e Kont? Aloggen"
+
+msgid "Back to admin"
+msgstr "Zeréck bei den Admin"
+
+msgid "Back to login"
+msgstr "Zeréck bei den Login"
+
+msgid "Back to profile"
+msgstr "Zeréck bei de Profil"
+
+msgid "Change password"
+msgstr "Passwuert änneren"
+
+msgid "Confirm password"
+msgstr "Passwuert bestätegen"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Current password"
+msgstr "Aktuellt Passwuert"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "Email or username"
+msgstr "E-Mail oder Benotzernumm"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Gëff deng E-Mail oder de Benotzernumm an; mir schécken e Link fir d’Passwuert zeréckzesetzen."
+
+msgid "Error"
+msgstr "Feeler"
+
+msgid "Forgot password?"
+msgstr "Passwuert vergiess?"
+
+msgid "I accept the terms of service"
+msgstr "Ech akzeptéieren d’Notzungsbedingunge"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Log out"
+msgstr "Ofmellen"
+
+msgid "Login"
+msgstr "Aloggen"
+
+msgid "Message"
+msgstr "Message"
+
+msgid "Name"
+msgstr "Numm"
+
+msgid "New password"
+msgstr "Neit Passwuert"
+
+msgid "No results found."
+msgstr "Keng Resultater fonnt."
+
+msgid "Password"
+msgstr "Passwuert"
+
+msgid "Please enter a valid email."
+msgstr "Gëff w.e.g. eng valabel E-Mail an."
+
+msgid "Please enter your email."
+msgstr "Gëff w.e.g. deng E-Mail an."
+
+msgid "Please enter your name."
+msgstr "Gëff w.e.g. däin Numm an."
+
+msgid "Please select your country."
+msgstr "Wiel w.e.g. däi Land."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Registréieren"
+
+msgid "Remember me"
+msgstr "Erënner mech"
+
+msgid "Search..."
+msgstr "Sichen..."
+
+msgid "Select country"
+msgstr "Land auswielen"
+
+msgid "Select country..."
+msgstr "Land auswielen..."
+
+msgid "Send reset link"
+msgstr "Reset-Link schécken"
+
+msgid "Social accounts"
+msgstr "Sozial Konten"
+
+msgid "Success"
+msgstr "Erfolleg"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "D’Sprooch vum Land (Locale) gëtt d’Sprooch vun dengem Kont."
+
+msgid "Username"
+msgstr "Benotzernumm"
+
+msgid "Warning"
+msgstr "Warnung"
+

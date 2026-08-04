@@ -596,6 +596,7 @@ msgid "View the selected record (read-only)."
 msgstr "A kiválasztott rekord megtekintése (csak olvasható)."
 
 #: ./templates/Member/Dashboard/index.php:9
+#: ./src/Auth/AppRoles.php:66
 msgid "Member"
 msgstr "Tag"
 
@@ -605,6 +606,7 @@ msgstr "Aktuális nyelv:"
 
 #: ./templates/element/admin/breadcrumb.php:30
 #: ./templates/element/admin/breadcrumb.php:31
+#: ./src/Auth/AppRoles.php:67
 msgid "New"
 msgstr "Új"
 
@@ -631,6 +633,7 @@ msgstr "Motor:"
 #: ./templates/element/admin/header.php:7
 #: ./templates/layout/admin.php:11
 #: ./templates/layout/admin.php:20
+#: ./src/Auth/AppRoles.php:61
 msgid "Admin"
 msgstr "Admin"
 
@@ -689,12 +692,15 @@ msgid "Profile picture"
 msgstr "Profilkép"
 
 #: ./templates/element/admin/header_profile.php:7
-msgid "Hello, admin"
-msgstr "Helló, admin"
+msgid "Hello, {0}"
+msgstr "Helló, {0}"
 
 #: ./templates/element/admin/header_profile.php:10
 msgid "Profile"
 msgstr "Profil"
+
+msgid "Role"
+msgstr "Szerepkör"
 
 #: ./templates/element/admin/header_profile.php:13
 msgid "Log out"
@@ -805,7 +811,7 @@ msgid "Success"
 msgstr "Siker"
 
 msgid "Info"
-msgstr "Info"
+msgstr "Információ"
 
 msgid "OK"
 msgstr "OK"
@@ -992,3 +998,195 @@ msgstr "Adjon meg egy JSON objektumot vagy tömböt."
 msgid "One value per line (or a JSON array)."
 msgstr "Egy érték soronként (vagy JSON tömb)."
 
+msgid "Encrypted data"
+msgstr "Titkosított adat"
+
+msgid "Editable by"
+msgstr "Módosíthatja"
+
+msgid "Editable by:"
+msgstr "Módosíthatja:"
+
+msgid "Admin / Superuser only"
+msgstr "Csak Admin / Superuser"
+
+msgid "Admin, Superuser, President and Vice president"
+msgstr "Admin, Superuser, President és Vice president"
+
+msgid "Who may change this value once user roles exist (Admin / Superuser, optionally President and Vice president)."
+msgstr "Ki módosíthatja az értéket (Users szerepkörök után): Admin / Superuser, opcionálisan President és Vice president."
+
+msgid "Listing settings for {0}"
+msgstr "{0} beállításai"
+
+msgid "Country:"
+msgstr "Ország:"
+
+msgid "Working country"
+msgstr "Aktuális ország"
+
+msgid "Select country..."
+msgstr "Ország választása..."
+
+msgid "A matching record will be created for every visible country."
+msgstr "Minden látható országhoz létrejön egy rekord ugyanezzel a sluggal."
+
+msgid "New setups are saved for all countries; the list shows the working country."
+msgstr "Az új beállítás minden országhoz mentésre kerül; a lista az aktuális országot mutatja."
+
+msgid "The setup has been saved for all countries."
+msgstr "A beállítás mentése minden országhoz sikeres."
+
+msgid "This slug is already in use for this country."
+msgstr "Ez a slug ebben az országban már foglalt."
+
+msgid "Invalid edit permission."
+msgstr "Érvénytelen szerkesztési jogosultság."
+
+msgid "Could not encrypt the value."
+msgstr "Az érték titkosítása nem sikerült."
+
+msgid "Leave blank to keep the current value"
+msgstr "Hagyja üresen a jelenlegi érték megtartásához"
+
+msgid "Stored encrypted. Leave blank when editing to keep the current secret."
+msgstr "Titkosítva tárolva. Szerkesztéskor hagyja üresen, ha nem akarja megváltoztatni."
+
+msgid "No visible country is available. Add or enable a country first."
+msgstr "Nincs látható ország. Előbb vegyen fel vagy engedélyezzen egy országot."
+
+#: ./src/Auth/AppRoles.php:60
+msgid "Superuser"
+msgstr "Superuser"
+
+#: ./src/Auth/AppRoles.php:62
+msgid "President"
+msgstr "Elnök"
+
+#: ./src/Auth/AppRoles.php:63
+msgid "Vice president"
+msgstr "Alelnök"
+
+#: ./src/Auth/AppRoles.php:64
+msgid "Club president"
+msgstr "Klubelnök"
+
+#: ./src/Auth/AppRoles.php:65
+msgid "Editor"
+msgstr "Szerkesztő"
+
+#: ./src/Utility/SetupEditBy.php:74
+msgid "Who may change this value: Superuser (system-critical), Admin and above, or President / Vice president level."
+msgstr "Ki módosíthatja az értéket: Superuser (rendszerkritikus), Admin és afölött, vagy Elnök / Alelnök szint."
+
+#: ./src/Controller/Admin/SetupsController.php
+msgid "You are not allowed to access Setups."
+msgstr "Nincs jogosultsága a Setups modulhoz."
+
+msgid "Only a Superuser may create setups."
+msgstr "Új beállítást csak Superuser vihet fel."
+
+msgid "You are not allowed to edit this setup."
+msgstr "Nincs jogosultsága ennek a beállításnak a szerkesztéséhez."
+
+msgid "Only a Superuser may delete setups."
+msgstr "Beállítást csak Superuser törölhet."
+
+msgid "Email or username"
+msgstr "Email vagy felhasználónév"
+
+msgid "Forgot password?"
+msgstr "Elfelejtett jelszó?"
+
+msgid "Register"
+msgstr "Regisztráció"
+
+msgid "Remember me"
+msgstr "Emlékezz rám"
+
+msgid "Confirm password"
+msgstr "Jelszó megerősítése"
+
+msgid "Country"
+msgstr "Ország"
+
+msgid "Select country"
+msgstr "Ország választása"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Az ország nyelve (locale) lesz a fiók nyelvezete."
+
+msgid "I accept the terms of service"
+msgstr "Elfogadom a felhasználási feltételeket"
+
+msgid "Already have an account? Login"
+msgstr "Már van fiókja? Bejelentkezés"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Adja meg az email címét vagy felhasználónevét, és küldünk egy jelszó-visszaállító linket."
+
+msgid "Send reset link"
+msgstr "Visszaállító link küldése"
+
+msgid "Back to login"
+msgstr "Vissza a bejelentkezéshez"
+
+msgid "Please select your country."
+msgstr "Kérjük, válassza ki az országát."
+
+msgid "Please enter your name."
+msgstr "Kérjük, adja meg a nevét."
+
+msgid "Please enter your email."
+msgstr "Kérjük, adja meg az email címét."
+
+msgid "Please enter a valid email."
+msgstr "Kérjük, adjon meg érvényes email címet."
+
+msgid "Login"
+msgstr "Bejelentkezés"
+
+msgid "Password"
+msgstr "Jelszó"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Username"
+msgstr "Felhasználónév"
+
+msgid "Change password"
+msgstr "Jelszó módosítása"
+
+msgid "Current password"
+msgstr "Jelenlegi jelszó"
+
+msgid "New password"
+msgstr "Új jelszó"
+
+msgid "Back to profile"
+msgstr "Vissza a profilhoz"
+
+msgid "Back to admin"
+msgstr "Vissza az Adminba"
+
+msgid "Social accounts"
+msgstr "Közösségi fiókok"
+
+msgid "Warning"
+msgstr "Figyelmeztetés"
+
+msgid "Message"
+msgstr "Üzenet"
+
+msgid "Welcome. Content for the New role panel will be added later."
+msgstr "Üdvözöljük. Az Új szerepkör panel tartalma később kerül kialakításra."
+
+msgid "Welcome. Content for the Member role panel will be added later."
+msgstr "Üdvözöljük. A Tag szerepkör panel tartalma később kerül kialakításra."
+
+msgid "Welcome. Content for the Club president role panel will be added later."
+msgstr "Üdvözöljük. A Klubelnök szerepkör panel tartalma később kerül kialakításra."
+
+msgid "Welcome. Content for the President role panel will be added later."
+msgstr "Üdvözöljük. Az Elnök szerepkör panel tartalma később kerül kialakításra."

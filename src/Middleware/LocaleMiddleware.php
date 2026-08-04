@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use App\Utility\AdminCountry;
+use App\Utility\BrowserLocale;
 use Cake\Core\Configure;
+use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\I18n\I18n;
 use Psr\Http\Message\ResponseInterface;
@@ -12,33 +15,36 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Sets the application locale from the `{lang}` route parameter.
+ * Sets the application locale from session / cookie / Accept-Language
+ * (matched to visible Countries.locale). No URL language prefix.
+ *
+ * Panel AppControllers may refine from Users.country_id after Auth.
+ * Responses refresh the locale cookie from session (≥1 year).
  */
 class LocaleMiddleware implements MiddlewareInterface
 {
-    /**
-     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
-     * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
-     * @return \Psr\Http\Message\ResponseInterface A response.
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($request instanceof ServerRequest) {
-            $languages = Configure::read('App.languages', []);
-            $lang = $request->getParam('lang');
-            $prefix = $request->getParam('prefix');
+            static::apply(BrowserLocale::resolve($request));
+        }
 
-            // Admin has no URL language segment — locale from App.adminLocale.
-            if ($prefix === 'Admin') {
-                $adminLocale = (string)Configure::read('App.adminLocale', 'hu_HU');
-                I18n::setLocale($adminLocale);
-                Configure::write('App.defaultLocale', $adminLocale);
-            } elseif (is_string($lang) && isset($languages[$lang])) {
-                I18n::setLocale($languages[$lang]);
-                Configure::write('App.defaultLocale', $languages[$lang]);
+        $response = $handler->handle($request);
+
+        if ($request instanceof ServerRequest && $response instanceof Response) {
+            $sessionLocale = $request->getSession()->read(BrowserLocale::SESSION_KEY);
+            if (is_string($sessionLocale) && BrowserLocale::isKnownLocale($sessionLocale)) {
+                return BrowserLocale::persist($request, $response, $sessionLocale);
             }
         }
 
-        return $handler->handle($request);
+        return $response;
+    }
+
+    protected static function apply(string $locale): void
+    {
+        I18n::setLocale($locale);
+        Configure::write('App.defaultLocale', $locale);
+        AdminCountry::applyTranslateLocale($locale);
     }
 }

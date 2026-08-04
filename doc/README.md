@@ -5,10 +5,12 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | Ha… | Olvasd először |
 |-----|----------------|
 | **Hogyan nézzen ki / működjön egy Admin oldal?** | **[admin-oldal.md](admin-oldal.md)** (teljes kép) |
+| **Login / regisztráció / profil (CakeDC)** | **[users-auth.md](users-auth.md)** |
 | **Demó mintából éles projekt / éles DB** | **[minta-tanulsagok.md](minta-tanulsagok.md)** (§0 playbook + §0.1 fájlok + §6–6c form + §11 checklist + §14 agent) |
 | Üres / új CakePHP app | [uj-projekt.md](uj-projekt.md) |
 | Keretrendszer megvan, új tábla/modul | [crud-utmutato.md](crud-utmutato.md) |
 | Típusos beállítások (Setups EAV) | **[setups.md](setups.md)** |
+| **CakeDC auth (login / regisztráció / profil)** | **[users-auth.md](users-auth.md)** |
 | **Kódba nyúlás — API cheat sheet** | **[MyAdminUsage.md](MyAdminUsage.md)** (`Setup::get`, …) |
 | UI / asset / view részletszabály | [admin-konvenciok.md](admin-konvenciok.md) |
 | Fordítás | [i18n.md](i18n.md) |
@@ -28,6 +30,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | [middleware.md](middleware.md) | Locale szám- és dátumnormalizálás |
 | [crud-utmutato.md](crud-utmutato.md) | Új Admin CRUD modul lépései |
 | [setups.md](setups.md) | Típusos Setups (EAV) modul — widgetek, slug, JSON/tömb |
+| **[users-auth.md](users-auth.md)** | **CakeDC Users**: login layout, regisztráció+ország, profil, Flash toast, permissions |
 | **[MyAdminUsage.md](MyAdminUsage.md)** | **Programozói használat** — `Setup::get()` és társai (gyakorlati példák) |
 | [valtozasok.md](valtozasok.md) | Változásnapló (projekt-specifikus; új projektben nullázható) |
 
@@ -36,6 +39,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | Rule | Tartalom |
 |------|----------|
 | `setups-eav.mdc` | Setups EAV típus / slug / widget |
+| `users-auth.mdc` | CakeDC login/register/profile — layout, country, Flash toast, permissions |
 | `auto-dokumentalas.mdc` | Minden változás után `doc/` (+ tartós mintánál rule) frissítés |
 | `admin-kereses-index-allapot.mdc` | Keresés, session index, last-visited, Search UI |
 | `admin-paginator.mdc` | First…Last lapozó + counter/footer |
@@ -53,7 +57,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - **Vissza a tetejére:** `#btn-scroll-top` jobb alsó; csak lejjebb görgetve (`MyAdmin.initScrollTop`)
 - **Index card footer:** mindig `admin/index_footer` (= `index_counter` + `index_pagination`); lapozó: **First | Previous | számok | Next | Last** (disabled a széleken) — [admin-konvenciok.md](admin-konvenciok.md) Lapozó; rule: `admin-paginator.mdc`
 - Admin dialógusok: **SweetAlert2** (`MyAdmin.swal` / `alert` / `alertError` / `confirmDelete` / `flashSwal`) — soha `window.alert`; Bootstrap modal FocusTrap pause; popup **árnyék** + z-index 20000 (`style.css`)
-- Admin Flash: alap **Simple Notify** toast; modal Flash: `$this->flashSwal()` / `flash/*_swal.php`
+- Admin Flash: alap **Simple Notify** toast; modal Flash: `$this->flashSwal()` / `flash/*_swal.php`; **auth (`login` layout) Flash is toast** — [users-auth.md](users-auth.md)
 - Form dátum/idő: **Tempus Dominus 6** — formátum + naptárnyelv + hétkezdet a `dateFormat` / `App.adminLocale` szerint; mentés: dátum middleware
 - Form számok: `numberFormat` + inputmask; mentés: szám middleware (`1 234,56` → `1234.56`); mezőhiba a control **alatt** (piros félkövér; összetett widget: `admin/field_error`)
 - Törlés UI: törölhető = danger + Swal **question**; **nem törölhető** = secondary / outline-secondary + **disabled** + tooltip
@@ -61,6 +65,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - Index config: `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; **`$indexLimit = 100` / `$indexMaxLimit = 1000`**; session **`Admin.indexState`** (sort/page/`q`); utolsó rekord: **`Admin.lastVisited`** + **`.last-visited`** + scroll
 - **Keresés (minden projekt):** `config/admin_search.php` (`fields` + `labelsKey`; `globalPageLimit` / `globalLimitPerModel` / `globalMaxResults`); index + header; `/admin/search` Google UI + lapozás; clear → szűretlen + **last-visited oldal**; `redirectToIndexList` — [uj-projekt.md](uj-projekt.md) §2.8; rule: `admin-kereses-index-allapot.mdc`
 - **Setups (ha kell):** EAV `setups` + `SetupValue`; slug csak `a-z0-9_`; olvasás: `Setup::get('slug', $default)` — [setups.md](setups.md); rule: `setups-eav.mdc`
+- **CakeDC auth (bejelentkezés):** ValiAdmin `login` layout; App `Users` controller/table; templatek `templates/Users/`; regisztráció: ország első mező + cookie ≥ 1 év + `users.country_id`; Flash = Simple Notify; permissions **ne** `plugin => false`; header Profile + Change password — [users-auth.md](users-auth.md); rule: `users-auth.mdc`
 - Számok megjelenítése: `LocaleNumberParser::format()` / `formatCount()`; pénz: **`formatCurrency()`** (HUF, locale pozíció: hu `… Ft`, en `HUF …`) — rule: `penznem-formatcurrency.mdc`
 - View: bake-szerű `dl` + gyerek **tab sheet**; belongsTo/HABTM/name **félkövér link** → AJAX modal; Edit lábléc: **`.record-view-footer-actions`** (adatoszlop alatt); `$rowDoubleClickAction` a kapcsolt táblán
 - Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon; **belongsTo lista**: `visible` + `pos`/`name` sorrend; form végén **`visible` → `pos`** + `visible` fölött mezőszélességű `<hr>`; `fetchTable()`, ne Association
@@ -68,7 +73,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - **`pos`:** mindig DB DEFAULT — az agent **soha** ne állítsa / ne növelgesse; a felhasználó írja át ha kell (rule: `.cursor/rules/pos-db-default.mdc`)
 - **`*_count`:** **CounterCache** (hasMany → gyerek Table; HABTM → through + `cascadeCallbacks`); törlésvédelem: `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()`; **ne** élő COUNT / controller `count(_ids)`
 - Modal kapcsolt névlisták: utolsó **20** (`modified DESC`), megjelenítés **ABC ASC**; view tab lehet teljes ABC lista
-- Member (opcionális): `/{lang}/member/...`
+- Panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president` (nincs `/{lang}/…`)
 
 ## UI forrás
 
@@ -77,8 +82,8 @@ Konkrét mappaút **nem** kötelező a doksihoz — új projektben másold be a 
 
 ## Agent szabályok
 
-1. Módosítás előtt: **[admin-oldal.md](admin-oldal.md)** (célkép); **éles DB / demó→éles**: **[minta-tanulsagok.md](minta-tanulsagok.md)** (§0 playbook); majd a releváns részlet-doksik.
-2. Új projekt / hiányzó layout → [uj-projekt.md](uj-projekt.md) 2. szakasz.
+1. Módosítás előtt: **[admin-oldal.md](admin-oldal.md)** (célkép); **éles DB / demó→éles**: **[minta-tanulsagok.md](minta-tanulsagok.md)** (§0 playbook); **auth / login**: **[users-auth.md](users-auth.md)**; majd a releváns részlet-doksik.
+2. Új projekt / hiányzó layout → [uj-projekt.md](uj-projekt.md) 2. szakasz (+ §2.9 CakeDC auth).
 3. Kód kövesse a konvenciókat (`__()`, asset szabály, middleware, CounterCache, view tabs, oszlopszélességek).
 4. **Automatikus dokumentálás (kötelező):** minden lényeges kód/viselkedés-változás **ugyanabban a körben** frissítse a `valtozasok.md`-t **és** az érintett speceket (`admin-oldal.md` / `admin-konvenciok.md` / `minta-tanulsagok.md` / `middleware.md` / `i18n.md` / …). Tartós playbook → `.cursor/rules/*.mdc` is. A felhasználónak **ne kelljen** külön „dokumentáld” üzenetet írnia. Cursor rule: `.cursor/rules/auto-dokumentalas.mdc`.
 5. Domain DB sémát ne keverd a keretrendszer-doksi közé (teszt táblák eldobhatók — a tanulságok a `minta-tanulsagok.md`-ben maradnak).

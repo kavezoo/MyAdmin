@@ -15,6 +15,8 @@ Kapcsolódó specifikációk (ugyanebben a `doc/`-ban):
 | [struktura.md](struktura.md) | Könyvtárak, routing, element lista |
 | [keretrendszer.md](keretrendszer.md) | Mi tartós / mi eldobható |
 | [minta-tanulsagok.md](minta-tanulsagok.md) | Demó → éles: CounterCache, modal, törlésvédelem |
+| [users-auth.md](users-auth.md) | CakeDC login / register / profile |
+| [setups.md](setups.md) | Setups EAV (opcionális) |
 
 ---
 
@@ -111,17 +113,19 @@ Hozd létre (spec: [middleware.md](middleware.md)):
 
 | Osztály | Felelősség |
 |---------|------------|
-| `App\Middleware\LocaleMiddleware` | Admin → `App.adminLocale` (éles: `hu_HU`); Member → `{lang}` |
+| `App\Middleware\LocaleMiddleware` | Admin → `App.adminLocale` (éles: `hu_HU`); Member → `{lang}`; auth → `BrowserLocale` |
+| `App\Middleware\SanitizeAuthRedirectMiddleware` | `/login?redirect=/login…` loop ellen (CakeDC) |
 | `App\Middleware\NormalizeLocalizedDateMiddleware` | POST body dátum/idő → `Y-m-d` / `Y-m-d H:i:s` / `H:i:s` |
 | `App\Middleware\NormalizeLocalizedNumberMiddleware` | POST body szám → `1234.56` |
 | `App\Utility\LocaleDateParser` | parse logika |
 | `App\Utility\LocaleNumberParser` | parse logika |
+| `App\Utility\BrowserLocale` | Accept-Language → `countries.locale` |
 | `App\Middleware\HostHeaderMiddleware` | (ha a környezet igényli) |
 
 `Application::middleware()` sorrend:
 
 ```
-ErrorHandler → HostHeader → Asset → Routing → Locale
+ErrorHandler → HostHeader → SanitizeAuthRedirect → Asset → Routing → Locale
 → BodyParser → NormalizeLocalizedDate → NormalizeLocalizedNumber → Csrf
 ```
 
@@ -223,7 +227,7 @@ Részletek: [admin-konvenciok.md](admin-konvenciok.md).
 | Lapozó | `index_pagination` (First…Last), `index_counter`, `index_footer` |
 | Scroll | `webroot/js/pages/index.js` → `.last-visited` a breadcrumb alá (~mt-3) |
 
-Agent rules (másolat új repo `.cursor/rules/`-ba): `admin-kereses-index-allapot.mdc`, `admin-paginator.mdc`, `penznem-formatcurrency.mdc`, `pos-db-default.mdc`, `auto-dokumentalas.mdc`.
+Agent rules (másolat új repo `.cursor/rules/`-ba): `admin-kereses-index-allapot.mdc`, `admin-paginator.mdc`, `penznem-formatcurrency.mdc`, `pos-db-default.mdc`, `users-auth.mdc`, `auto-dokumentalas.mdc`.
 
 #### Config — első felépítés + minden új Table
 
@@ -280,7 +284,22 @@ $this->setLastVisitedForIndex('Things');
 
 Részletek: [admin-konvenciok.md](admin-konvenciok.md) → „Keresés” / „Index lista állapot” / „Utolsó rekord”.
 
-### 2.9 Első CRUD modul
+### 2.9 CakeDC Users — Auth UI (kötelező a bejelentkezéshez)
+
+Teljes spec + checklist: **[users-auth.md](users-auth.md)**. Cursor rule: `users-auth.mdc`.
+
+Röviden:
+
+1. `composer require cakedc/users` + `Users.config` → `config/users.php` (`table`/`controller` = App `Users`)
+2. `config/permissions.php` — App Users: **ne** `'plugin' => false`; `bypassAuth` login/register/…
+3. `SanitizeAuthRedirectMiddleware` (lásd §2.3)
+4. `App\Controller\UsersController` + `UsersTable` (+ `country_id`, OneTimeLogin wrappers)
+5. `templates/layout/login.php` (ValiAdmin, **nincs** box-logo, Simple Notify Flash)
+6. `templates/Users/{login,register,request_reset_password,profile,change_password}.php`
+7. Register: ország **első** mező (**Select2** kereshető); cookie ≥ 1 év; mentés `users.country_id`
+8. Header profil: Profile + Change password + Logout; széles `.profile-dropdown`
+
+### 2.10 Első CRUD modul
 
 Kövesd a [crud-utmutato.md](crud-utmutato.md)-t egy **valós** táblára (vagy ideiglenes teszt táblára).
 

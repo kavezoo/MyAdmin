@@ -39,6 +39,53 @@ $title = Setup::get('site_title', 'My Admin');
 | Date / Time / Datetime | `string` (SQL forma) | `'2026-01-01'` |
 | JSON | `array` (asszociatív / vegyes) | `[]` |
 | Array | `list` (indexelt tömb) | `[]` |
+| **Encrypted data / `secret`** | dekriptált `string` (vagy `null`) | `''` |
+
+### Ország-scope
+
+`Setup::get()` az **aktuális Admin working country** rekordját olvassa (`AdminCountry::id()` — session / cookie / alapból HU).
+
+```php
+// Explicit más ország:
+$title = Setup::get('site_title', 'My Admin', $countryId);
+```
+
+### Secret példa
+
+```php
+use App\Utility\Setup;
+
+// DB-ben titkosítva; itt plaintext
+$password = Setup::get('smtp_password', '');
+if ($password !== null && $password !== '') {
+    // … SMTP auth
+}
+```
+
+Soha ne írd ki a dekriptált értéket a HTML-be / logba.
+
+### Szerkeszthetőség (`edit_by`) + szerepkörök
+
+```php
+use App\Auth\CurrentUser;
+use App\Utility\SetupEditBy;
+
+$role = CurrentUser::role($this->request);
+if (!SetupEditBy::allows($setup->edit_by, $role)) {
+    throw new ForbiddenException();
+}
+
+// Select / lista: "president — Elnök"
+echo App\Auth\AppRoles::labeled('president');
+```
+
+| `edit_by` | Szerepkörök |
+|-----------|-------------|
+| `superuser` | superuser |
+| `admin` | admin, superuser |
+| `president` | president, vicepresident, admin, superuser |
+
+Szerepkör msgid-ek: `Superuser`, `Admin`, `President`, `Vice president`, `Club president`, `Editor`, `Member`, `New` → `resources/locales/*.po`.
 
 ### Slug szabály (röviden)
 
