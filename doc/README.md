@@ -30,7 +30,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | [middleware.md](middleware.md) | Locale szám- és dátumnormalizálás |
 | [crud-utmutato.md](crud-utmutato.md) | Új Admin CRUD modul lépései |
 | [setups.md](setups.md) | Típusos Setups (EAV) modul — widgetek, slug, JSON/tömb |
-| **[users-auth.md](users-auth.md)** | **CakeDC Users**: login layout, regisztráció+ország, profil, Flash toast, permissions |
+| **[users-auth.md](users-auth.md)** | **CakeDC Users + role panelek** — baseline új projektekhez; login/role képlékeny |
 | **[MyAdminUsage.md](MyAdminUsage.md)** | **Programozói használat** — `Setup::get()` és társai (gyakorlati példák) |
 | [valtozasok.md](valtozasok.md) | Változásnapló (projekt-specifikus; új projektben nullázható) |
 
@@ -39,7 +39,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | Rule | Tartalom |
 |------|----------|
 | `setups-eav.mdc` | Setups EAV típus / slug / widget |
-| `users-auth.mdc` | CakeDC login/register/profile — layout, country, Flash toast, permissions |
+| `users-auth.mdc` | CakeDC auth + role panelek — baseline; role/login projektenként változhat |
 | `auto-dokumentalas.mdc` | Minden változás után `doc/` (+ tartós mintánál rule) frissítés |
 | `admin-kereses-index-allapot.mdc` | Keresés, session index, last-visited, Search UI |
 | `admin-paginator.mdc` | First…Last lapozó + counter/footer |
@@ -51,7 +51,9 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 ## Rögzített döntések (minden projektben)
 
 - Framework: **CakePHP 5.4+**, Admin URL: `/admin/...`
-- UI szövegek: `__('English msgid')`; Admin locale: **`App.adminLocale`** (éles **`hu_HU`**; teszt: `en_US`); admin headerben **nincs** nyelvválasztó
+- UI szövegek: `__('English msgid')`; panel locale: **bejelentkezés után** user ország / login session (`BrowserLocale::forLoggedIn`); headerben **nincs** nyelvválasztó; **nincs** URL `/{lang}`
+- **Szerepkör panelek:** `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös Admin chrome; `new` csak `/new` — [users-auth.md](users-auth.md) §0–2
+- **CakeDC auth baseline:** ValiAdmin login; email login; ország + `country_id`; Flash toast; RoleHome afterLogin (`setResult`); header Belépve + Profile…; search role-gated — **projektenként változhat** (role/form/SSO) — [users-auth.md](users-auth.md); rule: `users-auth.mdc`
 - Országnevek: DB `countries` + Translate `i18n`; földrész: `continents` + `countries.continent_id` + Continents i18n (CLDR); Adminban csak `visible`/`pos` — seed: `php tmp/seed_continents.php` ([i18n.md](i18n.md))
 - Layout = csak közös CSS/JS; index/form/view oldalspecifikus asseteket a template tölti
 - **Vissza a tetejére:** `#btn-scroll-top` jobb alsó; csak lejjebb görgetve (`MyAdmin.initScrollTop`)
@@ -63,9 +65,8 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - Törlés UI: törölhető = danger + Swal **question**; **nem törölhető** = secondary / outline-secondary + **disabled** + tooltip
 - **Index oszlopok:** `string` rugalmas; fix: `id` 4.75 / `pos` 5.5 / `number` 6.5 / `currency` 12 / `count` 5.5 / `boolean|visible` 7.5 / `date` 8.5 / `datetime` 10.5 / `time` 5 rem ([admin-oldal.md](admin-oldal.md) §4.3)
 - Index config: `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; **`$indexLimit = 100` / `$indexMaxLimit = 1000`**; session **`Admin.indexState`** (sort/page/`q`); utolsó rekord: **`Admin.lastVisited`** + **`.last-visited`** + scroll
-- **Keresés (minden projekt):** `config/admin_search.php` (`fields` + `labelsKey`; `globalPageLimit` / `globalLimitPerModel` / `globalMaxResults`); index + header; `/admin/search` Google UI + lapozás; clear → szűretlen + **last-visited oldal**; `redirectToIndexList` — [uj-projekt.md](uj-projekt.md) §2.8; rule: `admin-kereses-index-allapot.mdc`
+- **Keresés (minden projekt):** `config/admin_search.php` (`fields` + `labelsKey`; globális limitok); index + header; `/admin/search`; header search **csak** superuser/admin/president/vicepresident; clear → last-visited — [uj-projekt.md](uj-projekt.md) §2.8; rule: `admin-kereses-index-allapot.mdc`
 - **Setups (ha kell):** EAV `setups` + `SetupValue`; slug csak `a-z0-9_`; olvasás: `Setup::get('slug', $default)` — [setups.md](setups.md); rule: `setups-eav.mdc`
-- **CakeDC auth (bejelentkezés):** ValiAdmin `login` layout; App `Users` controller/table; templatek `templates/Users/`; regisztráció: ország első mező + cookie ≥ 1 év + `users.country_id`; Flash = Simple Notify; permissions **ne** `plugin => false`; header Profile + Change password — [users-auth.md](users-auth.md); rule: `users-auth.mdc`
 - Számok megjelenítése: `LocaleNumberParser::format()` / `formatCount()`; pénz: **`formatCurrency()`** (HUF, locale pozíció: hu `… Ft`, en `HUF …`) — rule: `penznem-formatcurrency.mdc`
 - View: bake-szerű `dl` + gyerek **tab sheet**; belongsTo/HABTM/name **félkövér link** → AJAX modal; Edit lábléc: **`.record-view-footer-actions`** (adatoszlop alatt); `$rowDoubleClickAction` a kapcsolt táblán
 - Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon; **belongsTo lista**: `visible` + `pos`/`name` sorrend; form végén **`visible` → `pos`** + `visible` fölött mezőszélességű `<hr>`; `fetchTable()`, ne Association
@@ -73,7 +74,6 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - **`pos`:** mindig DB DEFAULT — az agent **soha** ne állítsa / ne növelgesse; a felhasználó írja át ha kell (rule: `.cursor/rules/pos-db-default.mdc`)
 - **`*_count`:** **CounterCache** (hasMany → gyerek Table; HABTM → through + `cascadeCallbacks`); törlésvédelem: `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()`; **ne** élő COUNT / controller `count(_ids)`
 - Modal kapcsolt névlisták: utolsó **20** (`modified DESC`), megjelenítés **ABC ASC**; view tab lehet teljes ABC lista
-- Panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president` (nincs `/{lang}/…`)
 
 ## UI forrás
 

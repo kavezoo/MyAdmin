@@ -9,15 +9,12 @@ Ez a fájl megkülönbözteti, mi **maradjon meg** minden projektben, és mi **c
 |---------|----------------------|
 | Admin layout | `templates/layout/admin.php` |
 | Admin elementek | `templates/element/admin/*` (header, sidebar, breadcrumb, footer, **index_footer**, **index_counter**, **index_pagination** First…Last, modalok, **view_related_tabs**) |
-| Admin AppController | `src/Controller/Admin/AppController.php` (layout + `App.adminLocale` + `$indexLimit` / `$indexMaxLimit` + `indexPaginateOptions()` + index state / search / lastVisited) |
-| Member AppController | `src/Controller/Member/AppController.php` (ha van Member) |
-| Routing prefixek | `config/routes.php` — Admin; opcionálisan Member+`{lang}` |
-| Admin locale konfig | `config/app.php` → `App.adminLocale` (éles: `hu_HU`) |
-| Admin keresés config | `config/admin_search.php` → model → szöveges `fields` + `labelsKey`; globális limitok — **kötelező** ([uj-projekt.md](uj-projekt.md) §2.8) |
-| Setups (opcionális) | Típusos EAV beállítások — [setups.md](setups.md) |
-| `LocaleMiddleware` | `src/Middleware/LocaleMiddleware.php` |
-| `SanitizeAuthRedirect` | `src/Middleware/SanitizeAuthRedirectMiddleware.php` (CakeDC login loop) |
-| CakeDC auth UI | `doc/users-auth.md` — layout `login`, `templates/Users/*`, permissions |
+| Admin AppController | `src/Controller/Admin/AppController.php` (CRUD helpers + panel chrome) |
+| Panel AppController | `src/Controller/PanelAppController.php` — New/Member/Clubpresident/President |
+| RoleHome / AppRoles | `src/Auth/RoleHome.php`, `AppRoles.php` — role → `/new`…`/admin` |
+| Routing prefixek | `config/routes.php` — Admin + New + Member + Clubpresident + President (**nincs** `/{lang}`) |
+| Admin keresés config | `config/admin_search.php` — header search csak elnök+ role ([users-auth.md](users-auth.md)) |
+| CakeDC auth UI | `doc/users-auth.md` — **baseline** új projektekhez; role/login képlékeny |
 | Form hibák (Admin) | `src/View/AppView.php` + `templates/element/admin/field_error.php` |
 | Szám normalizálás | `NormalizeLocalizedNumberMiddleware` + `LocaleNumberParser` (`format`, `formatCount`, `formatCurrency`) |
 | Dátum normalizálás | `NormalizeLocalizedDateMiddleware` + `LocaleDateParser` (`jsConfig` + locale picker) |

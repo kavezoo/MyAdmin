@@ -1,267 +1,206 @@
-# CakeDC Users — Auth UI (login / regisztráció / profil / jelszó)
+# CakeDC Users — Auth UI + szerepkör panelek
 
-Hordozható specifikáció: **új CakePHP 5 projektben** a CakeDC Users plugin telepítése után **ebből** építsd fel az auth képernyőket.  
-Admin CRUD specek: [admin-oldal.md](admin-oldal.md). Greenfield sorrend: [uj-projekt.md](uj-projekt.md) §2.9.  
+Hordozható specifikáció: **új CakePHP 5 projektben** a CakeDC Users plugin telepítése után **ebből** építsd fel (vagy igazítsd) az auth + role paneleket.  
+Admin CRUD: [admin-oldal.md](admin-oldal.md). Greenfield: [uj-projekt.md](uj-projekt.md) §2.2 + §2.9.  
 Cursor rule: `.cursor/rules/users-auth.mdc`.
 
 ---
 
-## 1. Célkép
+## 0. Baseline állapot (2026-08) — új projektek kiindulópontja
 
-| Oldal | URL (példa) | Layout | Tartalom |
-|-------|-------------|--------|----------|
-| Login | `/login` | `login` | **ország (Select2)** → **email** + jelszó + Remember me |
-| Regisztráció | `/register` | `login` | **ország (első mező, Select2)** → név → email → jelszó → confirm |
-| Elfelejtett jelszó | `/request-reset-password` | `login` | reference (email/username) |
-| Profil | `/profile` | **`admin`** | Admin `view.php` stílusú olvasó adatlap (`dl.record-view-fields`) |
-| Jelszócsere | `/change-password` | `login` | current (ha kell) + new + confirm |
+Ez a dokumentum a **MyAdmin-ban összerakott** auth / regisztráció / szerepkör-panel állapotot rögzíti.  
+**Innen indulnak az új projektek**, ha a `doc/` (+ `.cursor/rules/`) átkerül.
 
-Kinézet: **ValiAdmin** login (CDN: `saghysat.hu/plugins/valiadmin/…`) + helyi `users_auth.css`.  
-**Minta struktúra** (`CakeDC-Login-layout-with-KeyCloak`): `.login-box.local-login` + tartalom `.local-login-form` (helyi face; nincs Keycloak flip).  
-**Nincs** kis logo/ikon a `login-box`ban — csak a felső alkalmazásnév (`App.Name`).  
-A keret magassága a tartalomhoz igazodik: a ValiAdmin abszolút flip-panelek helyett a `.local-login-form` **flow** layout (`position: relative`) — különben `min-height: 0` + absolute → üres/összecsukló box.
+### Mi stabil (másold / kövesd, amíg a projekt mást nem kér)
 
-Flash: **Simple Notify** toast — ugyanaz, mint az Adminban (`admin/script_flash` + `flash/*`).
+| Terület | Rögzített minta |
+|---------|-----------------|
+| Login layout | ValiAdmin CDN + `login-box local-login` + `.local-login-form` flow; **nincs** box-logo |
+| Flash | Simple Notify toast (`usesFlashToast`) — Adminmal azonos |
+| App Users | `Users.controller` / `Users.table` = App; templatek `templates/Users/` |
+| Permissions | **ne** `'plugin' => false` App Usersre; `SanitizeAuthRedirectMiddleware` |
+| Ország + locale | Select2 login+register; cookie ≥ 1 év; `users.country_id`; `BrowserLocale` |
+| Login azonosító | **email** (nem username) — Form authenticator `fields.username` → `email` |
+| Profil | `admin` layout + view stílusú `dl`; header: Belépve / Profile / Change password / Logout |
+| URL nyelv | **nincs** `/{lang}/…` — locale session / user ország |
+| Panel chrome | ugyanaz az `admin` layout (header / sidebar / breadcrumb / content) minden szerepkör-prefixen |
+
+### Mi képlékeny (projektenként változhat — részletes „mit akarunk” később)
+
+Új projekteknél **várhatóan** eltérhet (de maradhat is ez a minta):
+
+- **Szerepkörök listája** (`AppRoles`) és melyik role melyik URL-prefixet kapja
+- **Login / regisztrációs form** mezői, kinézete, kötelező ország
+- **Auth megoldás** (CakeDC Form, SSO / Keycloak, magic link, stb.)
+- Panel tartalom (`/new`, `/member`, … Dashboard placeholder → domain UI)
+
+**Agent:** amíg a projekt nem ad új auth/role speceket, ezt a baseline-t használd. Ha a megrendelő mást kér, frissítsd ezt a fájlt + `valtozasok.md` + a rule-t.
 
 ---
 
-## 2. Plugin + konfig
+## 1. Célkép (jelenlegi MyAdmin)
 
-### 2.1 Composer / bootstrap
+| Oldal | URL | Layout | Tartalom |
+|-------|-----|--------|----------|
+| Login | `/login` | `login` | ország (Select2) → **email** + jelszó + Remember me |
+| Regisztráció | `/register` | `login` | ország (első) → név → email → jelszó → confirm → role=`new` |
+| Elfelejtett jelszó | `/request-reset-password` | `login` | reference |
+| Profil | `/profile` | **`admin`** | view-stílusú adatlap; vissza a role panel Dashboardjára |
+| Jelszócsere | `/change-password` | `login` | current + new + confirm |
 
-```bash
-composer require cakedc/users
-```
+Kinézet: **ValiAdmin** + `users_auth.css`. Minta: `login-box local-login` + `.local-login-form` (ne `.login-form` — ValiAdmin elrejti). Flash: Simple Notify.
 
-`Application::bootstrap()` — **mielőtt** a plugin betöltődik:
+---
+
+## 2. Szerepkör → panel prefix (RoleHome)
+
+Nincs URL nyelv-prefix. Panelek (Admin chrome):
+
+| `Users.role` | Prefix (Cake) | URL | Jogosultság |
+|--------------|---------------|-----|-------------|
+| `new` | `New` | `/new` | **csak** ez (regisztráció default) |
+| `member`, `editor` | `Member` | `/member` | saját panel |
+| `clubpresident` | `Clubpresident` | `/clubpresident` | saját panel |
+| `president`, `vicepresident` | `President` | `/president` | saját panel |
+| `admin`, `superuser` | `Admin` | `/admin` | Admin (+ wildcard) |
+
+Kód:
+
+- `App\Auth\AppRoles` — szerepkör konstansok / címkék
+- `App\Auth\RoleHome` — `prefix()` / `path()` / `url()` / `brand()` / `sidebarElement()`
+- `App\Controller\PanelAppController` — locale + `admin` layout + `panel*` view változók
+- `App\Controller\{New,Member,Clubpresident,President}\` — Dashboard placeholder
+- `templates/element/{new,member,clubpresident,president}/sidebar.php`
+- Login után: `Users.Authentication.afterLogin` → **`$event->setResult(RoleHome::url($role))`** (ne `return` — CakePHP 5.2 deprecation)
+
+`/` → bejelentkezve: role home; vendég: `/login` (`LocalesController::home`).
+
+### Globális header kereső
+
+Csak `superuser` / `admin` / `president` / `vicepresident` (`AppRoles::globalSearchRoles()` + `header_search.php` + permissions `Admin\Search`).  
+`clubpresident` és lejjebb: **nincs** keresőmező.
+
+Setups modul: továbbra is `SetupAccess` / `setupsModuleRoles()` (Admin panelen).
+
+---
+
+## 3. Plugin + konfig
+
+### 3.1 Bootstrap
 
 ```php
 Configure::write('Users.config', ['users']);
 $this->addPlugin('CakeDC/Users');
 ```
 
-(`config/bootstrap.php`-ban is lehet `Users.config` — a lényeg: az App `config/users.php` felülírja a plugin defaultot.)
+### 3.2 `config/users.php`
 
-### 2.2 `config/users.php` (App override)
+| Kulcs | MyAdmin érték |
+|-------|----------------|
+| `Users.table` / `controller` | `Users` (App) |
+| `Users.Registration.defaultRole` | `'new'` |
+| `Auth.Authenticators.Form…fields.username` | `'email'` |
+| `loginRedirect` | fallback `/login` (tényleges: afterLogin → RoleHome) |
+| `logoutRedirect` | `/login` |
+| `unauthorizedHandler.url` | App Users `login` (`plugin` null) |
 
-Kötelező irányok:
+### 3.3 `config/permissions.php` — kritikus
 
-| Kulcs | Érték / megjegyzés |
-|-------|---------------------|
-| `Users.table` | `'Users'` → `App\Model\Table\UsersTable` |
-| `Users.controller` | `'Users'` → `App\Controller\UsersController` |
-| `Users.Registration.active` | `true` (ha kell regisztráció) |
-| `Users.Registration.defaultRole` | pl. `'new'` ([roles](setups.md) / `AppRoles`) |
-| `Auth.AuthenticationComponent.loginRedirect` | fallback; tényleges: `Users.Authentication.afterLogin` → `RoleHome` |
-| `Auth.AuthenticationComponent.logoutRedirect` | `'/login'` |
-| `Auth.Authenticators.Form…fields.username` | `'email'` — login azonosító = email (nem username) |
-| `Auth.AuthorizationMiddleware.unauthorizedHandler.url` | App `Users` / `login` (`plugin` null) |
+App Users: **ne** `'plugin' => false` (`null !== false` → redirect loop / URI Too Long).  
+Szabályok: bypassAuth auth actionök; `role => '*'` profile/logout; Search (elnök+); role→saját prefix; Admin csak admin/superuser.
 
-**Permissions (role panel):** `new` → csak `prefix New`; `member`/`editor` → Member; `clubpresident` → Clubpresident; `president`/`vicepresident` → President; `superuser`/`admin` → Admin (+ wildcard).
-
-**Nincs** `/{lang}/…` — panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president`.
-
-
-### 2.3 `config/permissions.php` — **kritikus**
-
-Az App `Users.controller = Users` miatt a request **`plugin` = `null`**.
+### 3.4 `config/routes.php`
 
 ```php
-// HELYES — plugin kulcs NINCS, vagy null is OK
-[
-    'controller' => 'Users',
-    'action' => [/* login, register, … */],
-    'bypassAuth' => true,
-],
-
-// ROSSZ — CakeDC Rbac: false !== null → nincs match → login redirect loop
-[
-    'plugin' => false,  // NE!
-    'controller' => 'Users',
-    …
-]
+$panelPrefixes = ['Admin', 'New', 'Member', 'Clubpresident', 'President'];
+foreach ($panelPrefixes as $prefix) {
+    $routes->prefix($prefix, function (RouteBuilder $builder): void {
+        $builder->connect('/', ['controller' => 'Dashboard', 'action' => 'index']);
+        $builder->fallbacks(DashedRoute::class);
+    });
+}
+// NINCS $routes->scope('/{lang}', …)
 ```
-
-Tünet: `/login?redirect=/login?redirect=…` → **URI Too Long**.  
-Védelem: `SanitizeAuthRedirectMiddleware` + helyes permissions.
-
-Logged-in: `profile`, `changePassword`, `logout` (`role => '*'`).  
-Panelek: szerepkör → saját prefix (`new` → `New` csak; `admin`/`superuser` → Admin). Login cél: `RoleHome` / `EVENT_AFTER_LOGIN`.  
-Setups: `SetupAccess` (Admin panelen).
 
 ---
 
-## 3. App réteg (kötelező fájlok)
+## 4. App réteg (fájlinventory)
 
 | Fájl | Szerep |
 |------|--------|
-| `src/Controller/UsersController.php` | Extends CakeDC Users; `login` layout; register country/locale; cookie remember |
-| `src/Model/Table/UsersTable.php` | `country_id` validáció + belongsTo Countries; OneTimeLoginLink **wrapper** (CakePHP 5.3 deprecation) |
-| `src/Utility/BrowserLocale.php` | Accept-Language → látható `countries.locale` |
-| `src/Utility/AdminCountry.php` | Working country: session + cookie (**≥ 1 év**, pl. `+400 days`); `optionsWithLocale()` |
-| `src/Middleware/LocaleMiddleware.php` | Admin / Member / egyéb (auth) locale |
-| `src/Middleware/SanitizeAuthRedirectMiddleware.php` | Nested `/login?redirect=/login…` tisztítás |
-| `templates/layout/login.php` | ValiAdmin + simple-notify + Flash toast |
-| `templates/Users/*.php` | **App path** (nem `templates/plugin/CakeDC/…`) |
-| `webroot/css/pages/users_auth.css` | Box auto-height; local-login-form flow; Select2 z-index |
-| `webroot/js/pages/users_auth_country.js` | Ország Select2 (login + register) + `?country_id=` reload |
-| Migráció | `users.country_id` → `countries.id` (nullable FK OK; register: required) |
-
-### 3.1 Template path szabály
-
-`Users.controller = Users` (App) → Cake a **`templates/Users/`** mappát keresi.  
-**Ne** tedd a override-okat `templates/plugin/CakeDC/Users/Users/` alá (MissingTemplate).
-
-Kötelező App templatek:
-
-- `login.php`, `register.php`, `request_reset_password.php`
-- `profile.php`, `change_password.php`
-- (opcionális: további CakeDC actionök, ha használod őket)
-
-### 3.2 `UsersController` viselkedés
-
-- `AUTH_LAYOUT_ACTIONS` → `viewBuilder()->setLayout('login')`.
-- **Register:**
-  - Ország lista: `AdminCountry::optionsWithLocale()` → címke `Név (ISO) — locale`.
-  - Default ország: explicit POST/`?country_id=` → cookie/session (`AdminCountry::id`) → HU fallback.
-  - Explicit ország → UI locale = `countries.locale` + `BrowserLocale::remember` + Translate locale.
-  - POST/GET ország → `AdminCountry::set()` cookie **≥ 1 év**.
-  - `normalizeRegistrationData`: username = email ha üres; `country_id` int → mentés `users.country_id`.
-- **Profile:** country label; ha `is_superuser` → Superuser badge + mező; „Change password” → `UsersUrl::actionUrl('changePassword')`.
-
-### 3.3 OneTimeLoginLink (CakePHP 5.3+)
-
-A Table-proxy behavior hívás deprecation → warning HTML → „Unable to emit headers”.  
-`UsersTable`-en explicit:
-
-```php
-public function sendLoginLink(string $name): void
-{
-    $this->getBehavior('OneTimeLoginLink')->sendLoginLink($name);
-}
-// + loginWithToken(...)
-```
+| `src/Controller/UsersController.php` | login layout; ország/locale; profile panel home |
+| `src/Model/Table/UsersTable.php` | `country_id`; register validáció; OneTimeLogin wrappers |
+| `src/Auth/AppRoles.php` | role lista + search/setups role listák |
+| `src/Auth/RoleHome.php` | role → panel URL / sidebar |
+| `src/Auth/CurrentUser.php` | identity role |
+| `src/Controller/PanelAppController.php` | közös panel chrome |
+| `src/Controller/{New,Member,Clubpresident,President}/` | panelek |
+| `src/Utility/BrowserLocale.php` | resolve / persist / `forLoggedIn` / `localeFromUser` |
+| `src/Utility/AdminCountry.php` | working country cookie ≥ 1 év |
+| `src/Middleware/LocaleMiddleware.php` | session/cookie locale (**nincs** URL lang) |
+| `src/Middleware/SanitizeAuthRedirectMiddleware.php` | nested login redirect |
+| `src/Application.php` | afterLogin → `setResult(RoleHome::…)` |
+| `templates/layout/login.php` + `admin.php` | auth / panel |
+| `templates/Users/*` | App path |
+| `templates/element/admin/header_profile.php` | Belépve + menü (Help/Messages mintájú tipográfia) |
+| `templates/element/admin/header_search.php` | role-gated |
+| `webroot/css/pages/users_auth.css` | login box flow |
+| `webroot/js/pages/users_auth_country.js` | ország Select2 |
+| Migráció | `users.country_id` → `countries.id` |
 
 ---
 
-## 4. Layout + Flash toast
+## 5. Login / register részletek
 
-### 4.1 `templates/layout/login.php`
-
-1. ValiAdmin CSS/JS CDN + Bootstrap Icons.
-2. Helyi: `simple-notify` + `pages/users_auth`.
-3. **Nincs** `Html->image` logo a boxban.
-4. Tartalom: `$this->fetch('content')`.
-5. Layout végén (Admin mintára):
-
-```php
-<?php if (!empty($this->getRequest()->getSession()->read('Flash'))): ?>
-<script>
-<?= $this->element('admin/script_flash') ?>
-<?= $this->Flash->render('auth') ?>
-<?= $this->Flash->render() ?>
-</script>
-<?php endif; ?>
-```
-
-### 4.2 Flash elemek
-
-`AppView::usesFlashToast()` = `true`, ha:
-
-- `prefix === Admin`, **vagy**
-- `layout === login`
-
-Ilyenkor `templates/element/flash/{success,error,info,warning,default}.php` → `flashMessage(...)` JS (nem HTML `.message` div).
-
-### 4.3 ValiAdmin CSS / struktúra (minta)
-
-Minta: `CakeDC-Login-layout-with-KeyCloak/templates/layout/login.php`.
-
-| Elem | Szerep |
-|------|--------|
-| `.login-box.local-login` | Helyi face aktív (mintában Keycloak ↔ local flip) |
-| `.local-login-form` | Mezők / gombok (App templatek) |
-| `.login-form` | Mintában Keycloak face — nálunk **nem** használjuk a tartalomhoz |
-
-| Probléma | Ok | Fix |
-|----------|-----|-----|
-| Üres / szétcsúszott keret | Absolute `.login-form` + `min-height: 0` (nincs magasság) | `local-login` + `local-login-form` + `users_auth.css` flow |
-| Mezők láthatatlanok | `.local-login .login-form { opacity: 0 }` | Tartalom a `.local-login-form`-ban legyen |
-| Túl magas üres box | ValiAdmin fix min-height + üres absolute face | flow layout → magasság = tartalom |
+- Login: email mező (`type=email`); ország a POST-on **kívül** (GET `?country_id=`).
+- Register: `normalizeRegistrationData` (username←email); `country_id` kötelező; **ne** duplikáld a `nonNegativeInteger` szabályt a `validationRegister`-ben.
+- Locale login után: user `country_id` → `Countries.locale`, különben login session nyelv → `BrowserLocale::persist` + panel `forLoggedIn`.
 
 ---
 
-## 5. Regisztráció — ország
+## 6. Header profil menü
 
-1. **Első mező** a formon: `country_id` **Select2** (`theme: bootstrap-5`, kereshető; assetek a register templateben).
-2. Címke: `Name (ISO2) — locale` (pl. Franciaország (FR) — fr_FR vs (FX) — en_FX).
-3. Change → JS reload `?country_id=N` → oldal nyelve = ország locale.
-4. Megjegyzés: session + cookie `AdminWorkingCountryId` (**≥ 1 év** / `+400 days`).
-5. Mentés: `users.country_id` (validáció `validationRegister` + `existsIn Countries`).  
-   **Figyelem:** a `nonNegativeInteger('country_id')` már a `validationDefault`-ban van; ne add újra a `validationRegister`-ben (Cake Exception: rule already exists → regisztráció elhasal).
+`header_profile.php`:
 
----
-
-## 6. Header profil menü (Admin)
-
-`templates/element/admin/header_profile.php`:
-
-0. Cím: **Logged in: {0}** / hu: **Belépve: Név** (kisebb condensed betű)
-1. **Profile** → `UsersUrl::actionUrl('profile')` (profiladatok)
-2. **Change password** → `changePassword` (ugyanaz, mint a profil gomb)
-3. **Log out** → `logout`
-
-CSS (`style.css`): `.profile-dropdown` min 280px / max 420px; `.profile-dropdown-signed-in` ~0.75rem condensed.
+1. Kék cím: **Logged in: {0}** / hu **Belépve: {0}** (`h5 > small`, fehér — mint Help/Messages)
+2. Profile / Change password / Log out — `.dropdown-item.notify-item`, **0.9rem** (mint a többi header legördülő)
+3. `.profile-dropdown`: min ~280px, max ~420px
 
 ---
 
-## 7. Middleware sorrend (auth-szel)
+## 7. Middleware
 
 ```
 ErrorHandler → HostHeader → SanitizeAuthRedirect → Asset → Routing
 → Locale → BodyParser → NormalizeLocalizedDate → NormalizeLocalizedNumber → Csrf
 ```
 
-`LocaleMiddleware` auth (nincs Admin/Member prefix): `BrowserLocale::resolve` + opcionális remembered locale; országnevek Translate locale.
+`LocaleMiddleware`: mindig `BrowserLocale::resolve` (+ cookie refresh); panel AppController finomít `forLoggedIn`-nel.
 
 ---
 
 ## 8. i18n
 
-Minden auth UI szöveg: `__('English msgid')` + `.po` a **látható országok `locale` értékei** szerint.
-
-| Hol | Mi |
-|-----|-----|
-| `resources/locales/default.pot` | msgid lista (auth stringek is) |
-| `resources/locales/hu_HU/default.po` | teljes magyar katalog |
-| `resources/locales/{countries.locale}/default.po` | auth UI fordítás (országváltáskor azonnal) |
-
-Újraépítés: `php tmp/build_auth_locale_pos.php` (DB látható locale-ok → nyelvcsalád map).
-
-Auth locale (oldal nyelve): session / cookie (≥1 év) / böngésző / választott ország.  
-**Login után:** `Users.country_id` → `Countries.locale` (ha van); különben a login képernyő nyelve. Session + cookie frissül.  
-**Teljes Admin UI** ugyanezt használja (`BrowserLocale::forLoggedIn`) — **nem** marad `App.adminLocale`-on, ha van login nyelv.
-
+Auth stringek: `__()` + `resources/locales/{locale}/default.po` (látható ország locale-ok).  
+Újraépítés: `php tmp/build_auth_locale_pos.php`.  
 Részletek: [i18n.md](i18n.md).
 
 ---
 
 ## 9. Új projekt checklist
 
-- [ ] `composer require cakedc/users`
-- [ ] `Users.config` + `config/users.php` (`table`/`controller` = App)
-- [ ] `config/permissions.php` — **ne** `plugin => false` az App Usersre; `bypassAuth` login/register/…
-- [ ] `SanitizeAuthRedirectMiddleware` a queue-ban (Routing előtt)
-- [ ] `App\Controller\UsersController` + `UsersTable` (+ OneTimeLogin wrappers)
-- [ ] `users.country_id` migráció + Countries kapcsolat
-- [ ] `templates/layout/login.php` (ValiAdmin, **nincs** box-logo, simple-notify Flash)
-- [ ] `templates/Users/{login,register,request_reset_password,profile,change_password}.php`
-- [ ] `users_auth.css` + `users_register.js`
-- [ ] Register: ország **első** mező; cookie ≥ 1 év; mentés DB-be
-- [ ] Header: Profile + Change password + Logout; széles `profile-dropdown`
-- [ ] Flash toast: `usesFlashToast()` login layouton
+- [ ] CakeDC Users + `config/users.php` (App table/controller; email login ha kell)
+- [ ] `permissions.php` — nincs `plugin => false`; role→prefix; Search role-gate
+- [ ] Panel prefixek a `routes.php`-ban (**nincs** `/{lang}`)
+- [ ] `RoleHome` + `PanelAppController` + panel Dashboardok + sidebarek
+- [ ] afterLogin: **`setResult()`**, ne `return`
+- [ ] UsersController + UsersTable + country_id
+- [ ] login layout + `templates/Users/*` + users_auth CSS/JS
+- [ ] Header profile + (opcionális) role-gated search
 - [ ] `.po` msgid-ek
-- [ ] Smoke: `/login` 200, mezők látszanak; rossz jelszó → toast; register ország váltás → locale; login → Admin Dashboard
+- [ ] Smoke: register → login → `/new`; admin user → `/admin`; alsó role: nincs search
+
+**Projektspecifikus (később írd le, ha eltér):** role lista; login/reg form; auth provider.
 
 ---
 
@@ -269,36 +208,30 @@ Részletek: [i18n.md](i18n.md).
 
 | Tünet | Ok | Teendő |
 |-------|-----|--------|
-| URI Too Long /login?redirect=… | permissions `plugin => false` vagy hiányzó bypassAuth | permissions + Sanitize middleware |
-| Login után „nem érhető el” / redirect loop | rossz permission / rossz login cél | `RoleHome` + szerepkör→saját prefix a permissionsben |
-| MissingTemplate Users/login | template a plugin path alatt | tedd `templates/Users/` |
-| Üres / szétcsúszott login box | `.login-form` absolute + box `min-height: 0`; vagy hiányzó `local-login` | Minta: `login-box local-login` + `.local-login-form` + CSS flow (`users_auth.css`) |
-| Flash HTML a box tetején | nincs simple-notify / HTML fallback | login layout script + `usesFlashToast` |
-| Behavior deprecation / headers | Table proxy OneTimeLogin | explicit `getBehavior(…)` wrapper |
-| Change password szöveg törik | `.profile-dropdown { width: 170px }` | `min-width` + `nowrap` |
+| URI Too Long `/login?redirect=…` | `plugin => false` / hiányzó bypassAuth | permissions + Sanitize |
+| Redirect loop / „nem érhető el” | role nincs a cél prefixen | RoleHome + permissions |
+| afterLogin deprecation + headers already sent | `return` az eventből | `$event->setResult(...)` |
+| MissingTemplate Users/login | plugin path | `templates/Users/` |
+| Üres login box | `.login-form` absolute | `local-login` + `.local-login-form` + flow CSS |
+| Register crash: rule already exists | dupla `nonNegativeInteger('country_id')` | csak defaultban legyen |
+| OneTimeLogin deprecation | Table proxy | `getBehavior()` wrapper |
 
 ---
 
-## 11. Kapcsolódó fájlok (referencia inventory)
+## 11. Kapcsolódó
 
 ```
-config/users.php
-config/permissions.php
+config/users.php, permissions.php, routes.php, roles.php
+src/Auth/{AppRoles,RoleHome,CurrentUser,SetupAccess}.php
+src/Controller/PanelAppController.php
+src/Controller/{Users,Locales,New,Member,Clubpresident,President,Admin}/
 src/Application.php
-src/Controller/UsersController.php
-src/Model/Table/UsersTable.php
-src/Utility/AdminCountry.php
-src/Utility/BrowserLocale.php
-src/Middleware/LocaleMiddleware.php
-src/Middleware/SanitizeAuthRedirectMiddleware.php
-src/View/AppView.php                    # usesFlashToast()
-templates/layout/login.php
-templates/Users/*.php
-templates/element/admin/header_profile.php
-templates/element/admin/script_flash.php
-templates/element/flash/*.php
-webroot/css/pages/users_auth.css
-webroot/css/style.css                   # .profile-dropdown
-webroot/js/pages/users_register.js
-webroot/plugins/simple-notify/
+src/Utility/{BrowserLocale,AdminCountry}.php
+src/Middleware/{Locale,SanitizeAuthRedirect}Middleware.php
+templates/layout/{login,admin}.php
+templates/Users/*, templates/{New,Member,Clubpresident,President}/
+templates/element/admin/header_{profile,search}.php
+templates/element/{new,member,clubpresident,president}/sidebar.php
+webroot/css/pages/users_auth.css, webroot/css/style.css (.profile-dropdown)
+webroot/js/pages/users_auth_country.js
 ```

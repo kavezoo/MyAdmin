@@ -13,12 +13,27 @@ Greenfield: [uj-projekt.md](uj-projekt.md). Kinézet/működés: [admin-oldal.md
 | Elementek | `templates/element/admin/` |
 | URL | `/admin/{controller}/{action}` |
 
-Admin `AppController`:
+Admin `AppController` / `PanelAppController`:
 
 ```php
-I18n::setLocale('hu_HU');
+$locale = BrowserLocale::forLoggedIn($request, $identity);
+I18n::setLocale($locale);
 $this->viewBuilder()->setLayout('admin');
+// panelHomeUrl, panelSidebar, panelBrand
 ```
+
+## Szerepkör panelek
+
+| Prefix | URL | Controllers / templates |
+|--------|-----|-------------------------|
+| Admin | `/admin` | `src/Controller/Admin/`, `templates/Admin/` |
+| New | `/new` | `src/Controller/New/`, `templates/New/` |
+| Member | `/member` | `src/Controller/Member/`, `templates/Member/` |
+| Clubpresident | `/clubpresident` | `…/Clubpresident/` |
+| President | `/president` | `…/President/` |
+
+Sidebar elementek: `templates/element/{admin,new,member,clubpresident,president}/sidebar.php`.  
+Spec: [users-auth.md](users-auth.md).
 
 ## Element inventory (`templates/element/admin/`)
 
@@ -33,12 +48,11 @@ $this->viewBuilder()->setLayout('admin');
 | `index_footer.php` | igen (index / search) | Card lábléc: `index_counter` + `index_pagination` |
 | `table_search.php` | igen (index) | Tábla szöveges kereső + nagyító |
 | `header_search.php` | igen | Globális kereső → `/admin/search` — csak `superuser`/`admin`/`president`/`vicepresident` |
-
 | `modal_record_view.php` | igen (index) | Rekord modal |
 | `modal_linked_record_view.php` | ha van kapcsolt link | Linked modal |
 | `view_related_tabs.php` | igen (view + gyerek) | Gyerek tab sheet-ek |
 | `field_error.php` | igen (form, összetett mező) | Validációs hiba a Tempus/Select2+/checkbox wrapper **után** |
-| `header_profile.php` stb. | igen (auth után) | Profile + Change password + Logout; széles dropdown |
+| `header_profile.php` stb. | igen (auth után) | Belépve + Profile / Change password / Logout |
 | `header_language.php` | fájl lehet | **Ne** include-old az admin headerben |
 | `script_flash.php` | igen | Simple Notify `flashMessage()` — Admin + login layout |
 
@@ -48,9 +62,10 @@ $this->viewBuilder()->setLayout('admin');
 
 | Controller | Szerep |
 |------------|--------|
-| `Admin\AppController` | Layout + `App.adminLocale` + index state / search / lastVisited |
+| `Admin\AppController` | CRUD helpers + panel chrome + index state / search / lastVisited |
+| `PanelAppController` | New/Member/Clubpresident/President közös layout |
 | `Admin\DashboardController` | `/admin` kezdőlap |
-| `Admin\SearchController` | Globális keresés (`/admin/search`) |
+| `Admin\SearchController` | Globális keresés (`/admin/search`) — role-gated |
 
 ### Domain / demó (példa, nem kötelező az új projektben)
 
@@ -162,6 +177,7 @@ Lásd [middleware.md](middleware.md).
 | Controller / Table | `src/Controller/UsersController.php`, `src/Model/Table/UsersTable.php` |
 | Layout | `templates/layout/login.php` |
 | Templatek | `templates/Users/` (login, register, profile, change_password, …) |
-| CSS/JS | `webroot/css/pages/users_auth.css`, `webroot/js/pages/users_register.js` |
+| CSS/JS | `webroot/css/pages/users_auth.css`, `webroot/js/pages/users_auth_country.js` |
+| RoleHome | `src/Auth/RoleHome.php`, `AppRoles.php` |
 
 Spec: [users-auth.md](users-auth.md).

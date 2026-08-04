@@ -1,23 +1,25 @@
 ---
-description: CakeDC Users auth UI (login/register/profile) — ValiAdmin layout, country, Flash toast, permissions.
+description: CakeDC Users auth + role panels — baseline for new projects; login/roles may vary per project.
 alwaysApply: true
 ---
 
-# CakeDC Users — Auth UI (kötelező minta)
+# CakeDC Users — Auth UI + role panelek
 
-Teljes spec: **`doc/users-auth.md`**. Greenfield: **`doc/uj-projekt.md` §2.9**.
+Teljes spec: **`doc/users-auth.md`** (§0 baseline / képlékeny). Greenfield: **`doc/uj-projekt.md` §2.2 + §2.9**.
 
-## Ha auth / login / register / profile / jelszó feladat jön
+## Új projekt / auth feladat
 
-1. Olvasd a `doc/users-auth.md`-t — **ne** találj ki új layoutot / Flash HTML-t.
-2. Templatek: **`templates/Users/`** (App controller), **nem** `templates/plugin/CakeDC/…`.
-3. Layout: `templates/layout/login.php` — ValiAdmin CDN; **nincs** kis logo a boxban; magasság = tartalom.
-4. Flash: Simple Notify toast (`script_flash` + `AppView::usesFlashToast()`), mint Admin.
-5. Permissions: App Usersnél **ne** `'plugin' => false` (null ≠ false → login redirect loop).
-6. Login **és** register: ország Select2 (kereshető); cookie ország + locale ≥ 1 év; register mentés `users.country_id`.
-6b. Login után: user `country_id` locale → session/cookie + Admin UI nyelv (ne a login vendégnyelv maradjon).
-7. Header profil: Profile → Admin layout adatlap; Change password → login layout űrlap.
-8. OneTimeLoginLink: Table-en explicit `getBehavior()` wrapper (CakePHP 5.3+).
-9. Struktúra a minta szerint: `login-box local-login` + tartalom `.local-login-form` (ne `.login-form` — azt a flip elrejti). Magasság: flow layout a `users_auth.css`-ben.
+1. Olvasd a `doc/users-auth.md`-t — **ne** találj ki új layoutot / Flash HTML-t / URL `{lang}`-et.
+2. Amíg a projekt **nem** ad más auth/role speceket: ezt a baseline-t másold.
+3. Templatek: **`templates/Users/`** (App), **nem** `templates/plugin/CakeDC/…`.
+4. Layout login: ValiAdmin; `login-box local-login` + `.local-login-form`; Flash = Simple Notify.
+5. Permissions: App Usersnél **ne** `'plugin' => false`.
+6. Panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös `admin` layout; `RoleHome` + afterLogin **`$event->setResult()`**.
+7. Regisztráció default role → **csak** `/new`. Header search: csak president+ (és admin/superuser).
+8. Login azonosító baseline: **email**. Ország Select2 + `users.country_id` + BrowserLocale.
+
+## Képlékeny (projektenként)
+
+Más role-ok, más login/reg form, más auth (SSO stb.) → a megrendelő majd leírja; utána frissítsd `users-auth.md` + ezt a rule-t + `valtozasok.md`.
 
 Módosítás után: `doc/valtozasok.md` + ha a minta változott → `doc/users-auth.md`.

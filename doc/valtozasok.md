@@ -5,6 +5,18 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-04 — Auth/role baseline dokumentálva új projektekhez
+
+### Mi változott / miért
+- `doc/users-auth.md` újraírva: **§0 baseline** (stabil vs képlékeny), RoleHome panelek, email login, search role-gate, afterLogin `setResult`.
+- Greenfield / keret / README / `users-auth.mdc` igazítva: nincs `/{lang}`; panelek kötelező kiindulópont; role/login form projektenként változhat („majd leírjuk”).
+
+### Érintett
+- `doc/users-auth.md`, `doc/uj-projekt.md`, `doc/keretrendszer.md`, `doc/struktura.md`, `doc/README.md`
+- `.cursor/rules/users-auth.mdc`
+
+---
+
 ## 2026-08-04 — Szerepkör panelek; nincs URL nyelv-prefix
 
 ### Mi változott / miért

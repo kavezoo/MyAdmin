@@ -86,26 +86,26 @@ webroot/
 ```php
 use Cake\Routing\Route\DashedRoute;
 
-// Admin — nincs {lang} a URL-ben
-$routes->prefix('Admin', function (RouteBuilder $builder): void {
-    $builder->connect('/', ['controller' => 'Dashboard', 'action' => 'index']);
-    $builder->fallbacks(DashedRoute::class);
-});
-
-// Member — opcionális, de a locale middleware-hez illeszkedik
-$routes->scope('/{lang}', function (RouteBuilder $builder): void {
-    $builder->connect('/', ['prefix' => 'Member', 'controller' => 'Dashboard', 'action' => 'index']);
-    // vagy redirect → Member
-    $builder->prefix('Member', function (RouteBuilder $builder): void {
+// Szerepkör panelek — nincs {lang} a URL-ben (locale = session / user ország)
+$panelPrefixes = ['Admin', 'New', 'Member', 'Clubpresident', 'President'];
+foreach ($panelPrefixes as $prefix) {
+    $routes->prefix($prefix, function (RouteBuilder $builder): void {
+        $builder->connect('/', ['controller' => 'Dashboard', 'action' => 'index']);
         $builder->fallbacks(DashedRoute::class);
     });
+}
+
+$routes->scope('/', function (RouteBuilder $builder): void {
+    $builder->connect('/', ['controller' => 'Locales', 'action' => 'home']); // → login vagy role home
+    $builder->fallbacks(DashedRoute::class);
 });
 ```
 
-`{lang}` whitelist: `config/languages.php` + `Configure::read('App.languages')`.
+Részletek: [users-auth.md](users-auth.md) §2 (RoleHome), [struktura.md](struktura.md).  
+**Ne** állíts vissza `/{lang}/member` scope-ot, amíg a projekt külön nem kéri.
 
 Default locale: `config/app.php` → `App.defaultLocale` = `hu_HU`.  
-Admin locale: `App.adminLocale` = **`hu_HU`** (éles); teszt: `en_US` — [i18n.md](i18n.md), [minta-tanulsagok.md](minta-tanulsagok.md) §0.2.
+Panel locale bejelentkezés után: `BrowserLocale::forLoggedIn` (user ország / login session); `App.adminLocale` csak fallback — [i18n.md](i18n.md), [users-auth.md](users-auth.md).
 
 ### 2.3 Middleware + utility
 
@@ -113,13 +113,14 @@ Hozd létre (spec: [middleware.md](middleware.md)):
 
 | Osztály | Felelősség |
 |---------|------------|
-| `App\Middleware\LocaleMiddleware` | Admin → `App.adminLocale` (éles: `hu_HU`); Member → `{lang}`; auth → `BrowserLocale` |
+| `App\Middleware\LocaleMiddleware` | session / cookie / Accept-Language → `Countries.locale` (**nincs** URL `{lang}`) |
 | `App\Middleware\SanitizeAuthRedirectMiddleware` | `/login?redirect=/login…` loop ellen (CakeDC) |
 | `App\Middleware\NormalizeLocalizedDateMiddleware` | POST body dátum/idő → `Y-m-d` / `Y-m-d H:i:s` / `H:i:s` |
 | `App\Middleware\NormalizeLocalizedNumberMiddleware` | POST body szám → `1234.56` |
 | `App\Utility\LocaleDateParser` | parse logika |
 | `App\Utility\LocaleNumberParser` | parse logika |
-| `App\Utility\BrowserLocale` | Accept-Language → `countries.locale` |
+| `App\Utility\BrowserLocale` | resolve / persist / `forLoggedIn` |
+| `App\Auth\RoleHome` + `AppRoles` | role → panel URL (auth után) |
 | `App\Middleware\HostHeaderMiddleware` | (ha a környezet igényli) |
 
 `Application::middleware()` sorrend:
@@ -134,19 +135,18 @@ Dátum **előtt** a szám előtt (hogy `12.03.2024` ne legyen szám).
 ### 2.4 Controllerek alap
 
 ```
-src/Controller/Admin/AppController.php
+src/Controller/PanelAppController.php          # közös panel chrome (locale + admin layout)
+src/Controller/Admin/AppController.php         # CRUD helpers + panel vars
 src/Controller/Admin/DashboardController.php
-src/Controller/Member/AppController.php   # opcionális, ha van Member
-src/Controller/Member/DashboardController.php
+src/Controller/New/{App,Dashboard}Controller.php
+src/Controller/Member/{App,Dashboard}Controller.php
+src/Controller/Clubpresident/{App,Dashboard}Controller.php
+src/Controller/President/{App,Dashboard}Controller.php
+src/Controller/LocalesController.php           # / → login vagy RoleHome
 ```
 
-Admin `AppController::initialize()`:
-
-```php
-I18n::setLocale((string)Configure::read('App.adminLocale', 'hu_HU'));
-$this->viewBuilder()->setLayout('admin');
-```
-
+Admin / Panel `initialize()`: `BrowserLocale::forLoggedIn` + `viewBuilder()->setLayout('admin')` + `panelHomeUrl` / `panelSidebar` / `panelBrand`.  
+Részletek: [users-auth.md](users-auth.md).
 AppView (Admin Form hibák): `templates.errorClass` = `is-invalid` — [minta-tanulsagok.md](minta-tanulsagok.md) §6c.
 
 ### 2.5 Layout + elementek
@@ -284,21 +284,22 @@ $this->setLastVisitedForIndex('Things');
 
 Részletek: [admin-konvenciok.md](admin-konvenciok.md) → „Keresés” / „Index lista állapot” / „Utolsó rekord”.
 
-### 2.9 CakeDC Users — Auth UI (kötelező a bejelentkezéshez)
+### 2.9 CakeDC Users — Auth UI + role panelek
 
-Teljes spec + checklist: **[users-auth.md](users-auth.md)**. Cursor rule: `users-auth.mdc`.
+Teljes baseline + checklist: **[users-auth.md](users-auth.md)** (§0: mi stabil / mi képlékeny). Cursor rule: `users-auth.mdc`.
 
 Röviden:
 
-1. `composer require cakedc/users` + `Users.config` → `config/users.php` (`table`/`controller` = App `Users`)
-2. `config/permissions.php` — App Users: **ne** `'plugin' => false`; `bypassAuth` login/register/…
+1. `composer require cakedc/users` + `Users.config` → `config/users.php` (App `Users`; login = **email** ha a baseline kell)
+2. `config/permissions.php` — **ne** `'plugin' => false`; role→saját prefix; Search csak elnök+
 3. `SanitizeAuthRedirectMiddleware` (lásd §2.3)
-4. `App\Controller\UsersController` + `UsersTable` (+ `country_id`, OneTimeLogin wrappers)
-5. `templates/layout/login.php` (ValiAdmin, **nincs** box-logo, Simple Notify Flash)
-6. `templates/Users/{login,register,request_reset_password,profile,change_password}.php`
-7. Register: ország **első** mező (**Select2** kereshető); cookie ≥ 1 év; mentés `users.country_id`
-8. Header profil: Profile + Change password + Logout; széles `.profile-dropdown`
+4. `RoleHome` + `PanelAppController` + New/Member/Clubpresident/President Dashboardok
+5. `UsersController` + `UsersTable` (+ `country_id`, OneTimeLogin wrappers)
+6. `templates/layout/login.php` + `templates/Users/*` + users_auth CSS/JS
+7. afterLogin: **`$event->setResult(RoleHome::url($role))`** (ne `return`)
+8. Header: Belépve + Profile / Change password / Logout; search role-gated
 
+**Képlékeny:** más role-ok / más login-reg form / más auth provider → projektspecben leírni, majd frissíteni a `users-auth.md`-t.
 ### 2.10 Első CRUD modul
 
 Kövesd a [crud-utmutato.md](crud-utmutato.md)-t egy **valós** táblára (vagy ideiglenes teszt táblára).
