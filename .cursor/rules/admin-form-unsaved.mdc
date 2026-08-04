@@ -1,0 +1,41 @@
+---
+description: Admin add/edit form — unsaved changes → SweetAlert leave confirm (dirty check).
+globs: webroot/js/pages/form.js,templates/Admin/**/form.php,templates/layout/admin.php
+alwaysApply: true
+---
+
+# Admin form — mentetlen módosítások (kötelező)
+
+Minden Admin **add/edit** form (`#form-horizontal` + `pages/form.js`):
+
+1. Betöltés után (Select2 / Tempus / Trumbowyg settle) **baseline snapshot** a mezőértékekről.
+2. Ha a user **navigálni** akar (sidebar, breadcrumb Back, Cancel, Close, bármely `<a href>`), és a snapshot **eltér** → **`MyAdmin.confirmLeave`** (SweetAlert warning).
+3. Ha **semmi nem változott** → nincs kérdés, szabad navigáció.
+4. **Mentés (submit)** → nincs kérdés (`allowLeave`).
+5. Böngésző tab zárás / frissítés dirty állapotban → natív `beforeunload` (böngésző saját dialógusa, nem Swal).
+
+## Nem kérdez (kivételek)
+
+- `#` / `javascript:` / `mailto:` / `tel:` / `target=_blank` / `download`
+- `data-bs-toggle` = modal|tab|dropdown|collapse|…
+- Linkek `.modal` belül
+- `btn-row-delete`
+
+## API / i18n
+
+| Kulcs | Szöveg |
+|-------|--------|
+| `unsavedTitle` | Unsaved changes |
+| `unsavedConfirm` | You have unsaved changes… |
+| `leaveButton` | Leave |
+| `stayButton` | Stay |
+
+Layout: `templates/layout/admin.php` → `MyAdmin.messages.*`  
+JS: `MyAdmin.confirmLeave({ onConfirm })` — `webroot/js/app.js`  
+Logika: `webroot/js/pages/form.js`
+
+## Új form
+
+Ha a form `id="form-horizontal"` és betölti a `pages/form` scriptet → **automatikus**. Ne írj párhuzamos dirty-checket.
+
+Részlet: `doc/admin-konvenciok.md` → „Mentetlen form”.

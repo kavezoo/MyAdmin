@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 use App\Controller\AppController as BaseController;
 use App\Utility\AdminCountry;
 use App\Utility\AdminSearch;
+use App\Utility\AdminTranslate;
 use App\Utility\BrowserLocale;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
@@ -19,9 +20,8 @@ use Cake\ORM\Table;
  * Admin Application Controller
  *
  * Shared base for controllers under the Admin prefix.
- * Locale: same language as at login — Users.country_id → Countries.locale,
- * else session/cookie from the login screen, else App.adminLocale.
- * No language switcher in the UI.
+ * Locale: login-screen language (session/cookie), then Users.country_id → Countries.locale,
+ * else App.adminLocale. No language switcher in the UI.
  */
 class AppController extends BaseController
 {
@@ -103,6 +103,43 @@ class AppController extends BaseController
             'limit' => $this->indexLimit,
             'maxLimit' => $this->indexMaxLimit,
         ], $extra);
+    }
+
+    /**
+     * Like {@see indexPaginateOptions()} but remaps Translate fields for UI-locale ORDER BY.
+     *
+ * URL sort keys stay logical (`name`, `Continents.name`); SQL uses
+ * `Alias_field_translation.content` then `Alias.field` (no COALESCE — Paginator-safe).
+     *
+     * @param array<string, mixed> $extra Must include `sortableFields` (list of logical keys)
+     * @param array<string, \Cake\ORM\Table> $associationTables e.g. ['Continents' => $continentsTable]
+     * @return array<string, mixed>
+     */
+    protected function indexPaginateOptionsFor(Table $table, array $extra = [], array $associationTables = []): array
+    {
+        $opts = $this->indexPaginateOptions($extra);
+        AdminTranslate::applyLocale($table);
+        foreach ($associationTables as $assocTable) {
+            if ($assocTable instanceof Table) {
+                AdminTranslate::applyLocale($assocTable);
+            }
+        }
+
+        if (!empty($opts['sortableFields']) && is_array($opts['sortableFields'])) {
+            /** @var list<string> $fields */
+            $fields = array_values(array_filter(
+                $opts['sortableFields'],
+                static fn ($f) => is_string($f) && $f !== ''
+            ));
+            $opts['sortableFields'] = AdminTranslate::sortableFields($table, $fields, $associationTables);
+        }
+        if (!empty($opts['order']) && is_array($opts['order'])) {
+            /** @var array<string, string> $order */
+            $order = $opts['order'];
+            $opts['order'] = AdminTranslate::remapOrder($table, $order, $associationTables);
+        }
+
+        return $opts;
     }
 
     /**
@@ -698,19 +735,21 @@ class AppController extends BaseController
     }
 
     /**
-     * Language tabs for translatable Admin forms (visible countries, EN first).
+     * Language tabs for translatable Admin forms.
+     * Source: active country’s `country_visibilities` (own + additional languages).
      *
      * @return void
      */
     protected function setFormLanguageTabs(): void
     {
-        $this->set('formLanguageTabs', \App\Utility\FormLanguages::tabs());
-        $this->set('formDefaultLocale', 'en_GB');
+        $tabs = \App\Utility\FormLanguages::tabs();
+        $this->set('formLanguageTabs', $tabs);
+        $this->set('formDefaultLocale', \App\Utility\FormLanguages::defaultLocaleForForm());
     }
 
     /**
      * Load entity with all Translate EAV rows (edit form).
-     * Forces default locale on the root fields so EN tab maps to entity->name etc.
+     * Root fields use the form default locale (own language, or en_GB when that tab exists).
      *
      * @param \Cake\ORM\Table $table
      * @param mixed $id
@@ -723,8 +762,8 @@ class AppController extends BaseController
             return $table->get($id, contain: $contain);
         }
 
-        $defaultLocale = (string)($table->getBehavior('Translate')->getConfig('defaultLocale') ?: 'en_GB');
-        $table->setLocale($defaultLocale);
+        $defaultLocale = \App\Utility\FormLanguages::defaultLocaleForForm();
+        $table->getBehavior('Translate')->setLocale($defaultLocale);
 
         $pk = $table->aliasField($table->getPrimaryKey());
         $query = $table->find('translations')->where([$pk => $id]);

@@ -14,10 +14,11 @@ Kapcsolódó: [keretrendszer.md](keretrendszer.md), [crud-utmutato.md](crud-utmu
 Ha a felhasználó **valós táblákra** kér Admin CRUD-ot (vagy demó→éles átállást):
 
 1. Olvasd el a DB sémát (migration / `DESCRIBE` / Cake schema) — **ne** a demó Samples mezőket másold vakon.
-2. Ellenőrizd, hogy a **keretrendszer** megvan (layout, middleware, AppView, traits, `pages/*.js`) — hiányzó részek: [uj-projekt.md](uj-projekt.md) + alább **§0.1**.
-3. Kövesd a [crud-utmutato.md](crud-utmutato.md) lépéseit + **ebből** a fájlból a mintákat (CounterCache, delete UI, Flash, Tempus, szám, mezőhiba, view).
-4. Minden új modulnál másold a **viselkedést**, ne a demó domain neveket.
-5. Ellenőrizd a **§11 checklistet** modulonként + a **§0.2 konfig** értékeket.
+2. Kövesd a **[uj-projekt-sema-playbook.md](uj-projekt-sema-playbook.md)** mátrixot (oszlop + kapcsolat → megoldás) + rule `uj-projekt-sema.mdc`.
+3. Ellenőrizd, hogy a **keretrendszer** megvan (layout, middleware, AppView, traits, `pages/*.js`) — hiányzó részek: [uj-projekt.md](uj-projekt.md) + alább **§0.1**.
+4. Kövesd a [crud-utmutato.md](crud-utmutato.md) lépéseit + **ebből** a fájlból a mintákat (CounterCache, delete UI, Flash, Tempus, szám, mezőhiba, view).
+5. Minden új modulnál másold a **viselkedést**, ne a demó domain neveket.
+6. Ellenőrizd a **§11 checklistet** modulonként + a **§0.2 konfig** értékeket + a séma-playbook §2 checklistet.
 
 ### 0.1 Keretrendszer — kötelező fájlok (éles indulás előtt)
 
@@ -83,6 +84,7 @@ A Tempus naptár: `dateFormat.intl` + `Intl.Locale.weekInfo` (fallback: `dateFor
 | `Samples` ↔ `Cities` HABTM | Through + CounterCache; formon **mindkét** oldalon multiple Select2; üres `_ids` → `[]` |
 | `cities_samples` | Through: `UsesDatabaseColumnDefaultsTrait`; CounterCache; `cascadeCallbacks` + `saveStrategy: replace` |
 | Index (`Samples/index.php`) | Teljes lista-minta: `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`, `$indexLimit`, last-visited, modalok |
+| Countries index | Visible-only switch, oszlopsorrend, kötött `.iso2`/`.locale`/`.continent`, `.count` min-width — [countries-admin.md](countries-admin.md) |
 | `recordGet` / `parentGet` | Modal JSON + `can_delete` + kapcsolt névlisták |
 | Sidebar / Dashboard demó menü | Cseréld éles domain menüre |
 
@@ -339,8 +341,8 @@ Részlet: [middleware.md](middleware.md).
 - [ ] `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()` ha van gyerek
 - [ ] Controller: CRUD + `recordGet` (`can_delete`) + try/catch Flash + `setCanDeleteFlag` view/edit
 - [ ] Index: oszlopok, delete §3, modal config, last-visited + scroll, számformázás, **`admin/index_footer`** (counter + First…Last lapozó)
-- [ ] Keresés: `admin_search.php` mezők + `labelsKey`; `applyIndexListState` / `applyIndexSearch` / `resolveIndexPageForLastVisited`; `table_search` + header; clear → last-visited oldal; `redirectToIndexList`
-- [ ] Form: Select2, Tempus §6, szám §6b, mezőhiba §6c, schema defaults, üres `_ids`, `visible`→`pos`+hr
+- [ ] Keresés: `admin_search.php` mezők + `labelsKey`; `applyIndexListState` / `applyIndexSearch` / **`indexPaginateOptionsFor`** (Translate → UI locale); `resolveIndexPageForLastVisited`; `table_search` + header; clear → last-visited; `redirectToIndexList`
+- [ ] Form: Select2, Tempus §6, szám §6b, mezőhiba §6c, schema defaults, üres `_ids`, `visible`→`pos`+hr; **`#form-horizontal` + `pages/form.js`** (unsaved); ha Translate: **[form-i18n-tabs.md](form-i18n-tabs.md)** (`setFormLanguageTabs` + `getWithTranslations` + tooltip)
 - [ ] View: `dl` + related tabs + Edit `.record-view-footer-actions` + delete §3 + locale dátum/szám
 - [ ] Ha Setups kell: [setups.md](setups.md) — séma, `SetupValue`, slug `_`, típus widgetek, `admin_search`, sidebar
 - [ ] i18n: `__()` + `.po`; `App.adminLocale` = `hu_HU` élesben
@@ -356,7 +358,7 @@ Részlet: [middleware.md](middleware.md).
 3. Állítsd: `App.adminLocale` = **`hu_HU`** (és `APP_ADMIN_LOCALE` ha van .env).
 4. Demó Samples/Parents/Cities **ne** legyen kötelező — helyette a valós domain ([crud-utmutato.md](crud-utmutato.md) + **§0–11 itt**).
 5. Minden új modulnál: CounterCache + trait + modal 20/ABC + Delete UI + Flash + Tempus + szám MW + mezőhiba + **keresés/index állapot** ([uj-projekt.md](uj-projekt.md) §2.8) **ebből** a fájlból / a specekből.
-6. `valtozasok.md` az éles projektben újraindítható; ez a fájl + a többi spec **marad**. Másold a `.cursor/rules/` fájlokat is (`admin-kereses-index-allapot.mdc`, `admin-paginator.mdc`, `penznem-formatcurrency.mdc`, `pos-db-default.mdc`, `setups-eav.mdc`, `auto-dokumentalas.mdc`).
+6. `valtozasok.md` az éles projektben újraindítható; ez a fájl + a többi spec **marad**. Másold a `.cursor/rules/` fájlokat is (`admin-kereses-index-allapot.mdc`, `admin-paginator.mdc`, `penznem-formatcurrency.mdc`, `pos-db-default.mdc`, `setups-eav.mdc`, `admin-form-unsaved.mdc`, `admin-form-i18n-tabs.mdc`, `admin-translate-search-sort.mdc`, `admin-countries-index.mdc`, `auto-dokumentalas.mdc`).
 
 ---
 
@@ -367,6 +369,15 @@ Részlet: [middleware.md](middleware.md).
 | Élő `COUNT()` a törlésvédelemben | CounterCache `*_count` + `relatedChildrenCountField()` |
 | `*_count = count(_ids)` controllerben | CounterCache (+ üres `_ids` → `[]`) |
 | HABTM CounterCache a fő Table-en | Through Table + `cascadeCallbacks` |
+| Mentetlen form leave: saját confirm / `window.confirm` | `pages/form.js` dirty snapshot + `MyAdmin.confirmLeave` |
+| `$table->setLocale()` / `$table->translationField()` | `$table->getBehavior('Translate')->…` (Cake 5.3+) |
+| Form `'error' => true` (pl. `$isDefault`) | Ne; default tab: omit `error`; más tab: `'error' => false` |
+| ORDER BY `COALESCE(a.content, Alias.name)` | `*_translation.content` + másodlagos `Alias.field` (`AdminTranslate`) |
+| Index keresés/sort angol `name`-en hu UI mellett | `AdminSearch` + `indexPaginateOptionsFor` / `AdminTranslate` |
+| Nyelvi fülön nincs ország súgó | `FormLanguages` `country_name` + tooltip span — [form-i18n-tabs.md](form-i18n-tabs.md) |
+| `.count` oszlop fix `width`+`max-width` rem — mégsem szélesebb | `width:1%` + `min-width:15rem` + `pages/index.css`; sort link `max-content` |
+| Countries header: switch és kereső összenő | `.index-header-sep` (`\|`) nagy margóval |
+| Locale / Users angolul marad hu UI-n | `.po`: `Locale`→Nyelvi kód, `Number of users`→Felhasználók száma + cache clear |
 | Nem törölhető Delete = danger / kattintható blocked | `btn-secondary` + **disabled** + tooltip |
 | Linked delete a saját `#delete-form-{id}`-re megy | `deleteUrl` + `deleteFormPrefix` |
 | Modalban az összes gyerek ABC | Max 20 legutóbb módosított, majd ABC |

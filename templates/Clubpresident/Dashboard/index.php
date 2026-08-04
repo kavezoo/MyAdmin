@@ -13,7 +13,13 @@ $this->assign('title', __('Dashboard'));
 				<h3 class="fw-bold"><i class="fa fa-tachometer"></i> <?= __('Dashboard') ?></h3>
 			</div>
 			<div class="card-body">
-				<p class="mb-0"><?= __('Welcome. Content for the Club president role panel will be added later.') ?></p>
+				<p class="mb-2"><?= __('Welcome to the Club president panel.') ?></p>
+				<p class="mb-0">
+					<?= $this->Html->link(
+						__('Review membership applicants'),
+						['prefix' => 'Clubpresident', 'controller' => 'Applicants', 'action' => 'index']
+					) ?>
+				</p>
 			</div>
 		</div>
 	</div>

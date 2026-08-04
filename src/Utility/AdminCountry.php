@@ -61,6 +61,7 @@ class AdminCountry
 
     /**
      * Apply page locale to Countries (+ Continents) Translate behaviors.
+     * Also applies Samples / Parents via {@see AdminTranslate::applyLocales()}.
      */
     public static function applyTranslateLocale(?string $locale = null): void
     {
@@ -71,6 +72,7 @@ class AdminCountry
         if ($countries->hasAssociation('Continents') && $countries->Continents->hasBehavior('Translate')) {
             $countries->Continents->getBehavior('Translate')->setLocale($locale);
         }
+        AdminTranslate::applyLocales(['Samples', 'Parents'], $locale);
     }
 
     /**
@@ -163,10 +165,18 @@ class AdminCountry
     {
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
-        $rows = $countries->find()
-            ->select(['Countries.id', 'Countries.locale'])
-            ->where(['Countries.visible' => true])
-            ->all();
+        $ids = $countries->loginVisibleCountryIds();
+        if ($ids === []) {
+            $rows = $countries->find()
+                ->select(['Countries.id', 'Countries.locale'])
+                ->where(['Countries.visible' => true])
+                ->all();
+        } else {
+            $rows = $countries->find()
+                ->select(['Countries.id', 'Countries.locale'])
+                ->where(['Countries.id IN' => $ids])
+                ->all();
+        }
 
         $out = [];
         foreach ($rows as $row) {
@@ -190,7 +200,6 @@ class AdminCountry
             ->select(['Countries.locale'])
             ->where([
                 'Countries.id' => $countryId,
-                'Countries.visible' => true,
             ])
             ->first();
         if ($row === null) {
@@ -209,7 +218,7 @@ class AdminCountry
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
         $rows = $countries->find(
-            'visibleTranslated',
+            'loginVisible',
             locale: $locale ?? I18n::getLocale()
         )->all();
 
@@ -227,6 +236,57 @@ class AdminCountry
                 $label .= ' — ' . $countryLocale;
             }
             $out[$id] = $label;
+        }
+
+        return $out;
+    }
+
+    /**
+     * Options for “visible countries for this country” multi-select (Countries form).
+     * Master list: countries.visible = 1 (+ en_GB always). English first.
+     *
+     * @return array<int, string>
+     */
+    public static function masterVisibleOptions(?string $locale = null): array
+    {
+        /** @var \App\Model\Table\CountriesTable $countries */
+        $countries = (new self())->fetchTable('Countries');
+        $enId = $countries->englishDefaultCountryId();
+        $rows = $countries->find('visibleTranslated', locale: $locale ?? I18n::getLocale())
+            ->orderBy([
+                'CASE WHEN Countries.locale = \'en_GB\' THEN 0 WHEN Countries.locale LIKE \'en_%\' THEN 1 ELSE 2 END' => 'ASC',
+                'Countries.pos' => 'ASC',
+            ], true)
+            ->all();
+
+        $out = [];
+        if ($enId !== null) {
+            // Will be filled when row appears; ensure key exists after loop
+        }
+        foreach ($rows as $row) {
+            $id = (int)$row->get('id');
+            $name = trim((string)$row->get('name'));
+            $iso = (string)$row->get('iso2');
+            if ($name === '') {
+                $name = $iso;
+            }
+            $out[$id] = $name . ' (' . $iso . ')';
+        }
+        if ($enId !== null && !isset($out[$enId])) {
+            static::applyTranslateLocale($locale);
+            $en = $countries->find()
+                ->select(['Countries.id', 'Countries.iso2', 'Countries.name', 'Countries.locale'])
+                ->where(['Countries.id' => $enId])
+                ->first();
+            if ($en !== null) {
+                $name = trim((string)$en->get('name')) ?: (string)$en->get('iso2');
+                $prepend = [$enId => $name . ' (' . $en->get('iso2') . ')'];
+                $out = $prepend + $out;
+            }
+        } elseif ($enId !== null && isset($out[$enId])) {
+            $label = $out[$enId];
+            unset($out[$enId]);
+            $out = [$enId => $label] + $out;
         }
 
         return $out;
@@ -272,7 +332,12 @@ class AdminCountry
     {
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
-        $ids = $countries->find()
+        $ids = $countries->loginVisibleCountryIds();
+        if ($ids !== []) {
+            return $ids;
+        }
+
+        $fallback = $countries->find()
             ->select(['Countries.id'])
             ->where(['Countries.visible' => true])
             ->orderBy(['Countries.id' => 'ASC'])
@@ -280,7 +345,7 @@ class AdminCountry
             ->extract('id')
             ->toList();
 
-        return array_map('intval', $ids);
+        return $countries->ensureEnglishDefaultFirst(array_map('intval', $fallback));
     }
 
     public static function isValidCountryId(int $countryId): bool
@@ -290,8 +355,11 @@ class AdminCountry
         }
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
+        $ids = $countries->loginVisibleCountryIds();
+        if ($ids !== []) {
+            return in_array($countryId, $ids, true);
+        }
 
-        // Qualify columns: i18n also has `visible` (Translate join).
         return $countries->exists([
             'Countries.id' => $countryId,
             'Countries.visible' => true,

@@ -21,8 +21,11 @@ use App\Middleware\LocaleMiddleware;
 use App\Middleware\NormalizeLocalizedDateMiddleware;
 use App\Middleware\NormalizeLocalizedNumberMiddleware;
 use App\Middleware\SanitizeAuthRedirectMiddleware;
+use App\Auth\AppRoles;
 use App\Auth\CurrentUser;
+use App\Auth\MembershipProfile;
 use App\Auth\RoleHome;
+use App\Utility\EventLogger;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Datasource\FactoryLocator;
@@ -34,9 +37,11 @@ use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\CsrfProtectionMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\ORM\Locator\TableLocator;
+use Cake\ORM\Table;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use CakeDC\Users\UsersPlugin;
+use CakeDC\Users\Utility\UsersUrl;
 
 /**
  * Application setup class.
@@ -145,18 +150,94 @@ class Application extends BaseApplication
      */
     public function events(EventManagerInterface $eventManager): EventManagerInterface
     {
+        $eventManager->on('Model.initialize', function (EventInterface $event): void {
+            $table = $event->getSubject();
+            if (!$table instanceof Table) {
+                return;
+            }
+            if (!str_starts_with($table::class, 'App\\Model\\Table\\')) {
+                return;
+            }
+            if (
+                $table->getAlias() === 'EventLogs'
+                || $table->getAlias() === 'Languages'
+                || $table->getAlias() === 'I18n'
+                || $table->hasBehavior('EventLog')
+            ) {
+                return;
+            }
+            $table->addBehavior('EventLog');
+        });
+
         $eventManager->on(
             UsersPlugin::EVENT_AFTER_LOGIN,
             function (EventInterface $event): void {
                 $user = $event->getData('user');
                 $role = 'new';
+                $userId = null;
+                $countryId = 0;
                 if (is_array($user)) {
                     $role = strtolower(trim((string)($user['role'] ?? 'new')));
+                    $userId = $user['id'] ?? null;
+                    $countryId = (int)($user['country_id'] ?? 0);
                 } elseif (is_object($user) && method_exists($user, 'get')) {
                     $role = strtolower(trim((string)($user->get('role') ?? 'new')));
+                    $userId = $user->get('id');
+                    $countryId = (int)($user->get('country_id') ?? 0);
+                }
+
+                $controller = $event->getSubject();
+                $request = is_object($controller) && method_exists($controller, 'getRequest')
+                    ? $controller->getRequest()
+                    : null;
+
+                EventLogger::log([
+                    'module' => 'Auth',
+                    'action' => 'login',
+                    'entity' => 'Users',
+                    'entity_id' => $userId,
+                    'user_id' => $userId !== null ? (string)$userId : null,
+                    'actor_role' => $role,
+                    'country_id' => $countryId > 0 ? $countryId : null,
+                    'description' => __('User logged in'),
+                ], $request);
+
+                // Fresh `new` users must complete profile before anything else.
+                if ($role === AppRoles::NEW && MembershipProfile::needsProfileCompletion($user)) {
+                    $event->setResult(UsersUrl::actionUrl('completeProfile'));
+
+                    return;
                 }
 
                 $event->setResult(RoleHome::url($role !== '' ? $role : CurrentUser::role()));
+            },
+        );
+
+        $eventManager->on(
+            UsersPlugin::EVENT_BEFORE_LOGOUT,
+            function (EventInterface $event): void {
+                $controller = $event->getSubject();
+                $request = is_object($controller) && method_exists($controller, 'getRequest')
+                    ? $controller->getRequest()
+                    : null;
+                $user = $event->getData('user');
+                $userId = null;
+                if (is_array($user)) {
+                    $userId = $user['id'] ?? null;
+                } elseif (is_object($user) && method_exists($user, 'get')) {
+                    $userId = $user->get('id');
+                } elseif (is_object($user) && method_exists($user, 'getIdentifier')) {
+                    $userId = $user->getIdentifier();
+                }
+
+                EventLogger::log([
+                    'module' => 'Auth',
+                    'action' => 'logout',
+                    'entity' => 'Users',
+                    'entity_id' => $userId,
+                    'user_id' => $userId !== null ? (string)$userId : null,
+                    'description' => __('User logged out'),
+                ], $request);
             },
         );
 

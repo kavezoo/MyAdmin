@@ -3,6 +3,8 @@
 Ez a fájl **önálló**: ha csak a `doc/` mappát másolod egy üres / friss CakePHP 5 projektbe, az agent **ebből** építse fel a teljes Admin UI keretrendszert.  
 Nem kell a korábbi MyAdmin kód, és nem kötelező a teszt Samples/Parents/Cities modul — azok csak opcionális ellenőrző minták.
 
+**Séma + kapcsolatok szerint minden megoldás:** először olvasd a **[uj-projekt-sema-playbook.md](uj-projekt-sema-playbook.md)** mátrixot (rule: `uj-projekt-sema.mdc`).
+
 Kapcsolódó specifikációk (ugyanebben a `doc/`-ban):
 
 | Fájl | Mit ír le |
@@ -12,6 +14,7 @@ Kapcsolódó specifikációk (ugyanebben a `doc/`-ban):
 | [i18n.md](i18n.md) | `__()` + `hu_HU` .po |
 | [middleware.md](middleware.md) | Locale szám/dátum normalizálás |
 | [crud-utmutato.md](crud-utmutato.md) | Egy új CRUD modul lépései |
+| **[uj-projekt-sema-playbook.md](uj-projekt-sema-playbook.md)** | Séma → kötelező megoldások (oszlop/kapcsolat mátrix) |
 | [struktura.md](struktura.md) | Könyvtárak, routing, element lista |
 | [keretrendszer.md](keretrendszer.md) | Mi tartós / mi eldobható |
 | [minta-tanulsagok.md](minta-tanulsagok.md) | Demó → éles: CounterCache, modal, törlésvédelem |
@@ -105,7 +108,7 @@ Részletek: [users-auth.md](users-auth.md) §2 (RoleHome), [struktura.md](strukt
 **Ne** állíts vissza `/{lang}/member` scope-ot, amíg a projekt külön nem kéri.
 
 Default locale: `config/app.php` → `App.defaultLocale` = `hu_HU`.  
-Panel locale bejelentkezés után: `BrowserLocale::forLoggedIn` (user ország / login session); `App.adminLocale` csak fallback — [i18n.md](i18n.md), [users-auth.md](users-auth.md).
+Panel locale bejelentkezés után: `BrowserLocale::forLoggedIn` (login session/cookie, majd user ország); `App.adminLocale` csak fallback — [i18n.md](i18n.md), [users-auth.md](users-auth.md).
 
 ### 2.3 Middleware + utility
 

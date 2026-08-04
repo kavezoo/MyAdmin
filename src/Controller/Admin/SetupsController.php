@@ -92,7 +92,7 @@ class SetupsController extends AppController
             return $redirect;
         }
 
-        $paginateOptions = $this->indexPaginateOptions([
+        $paginateOptions = $this->indexPaginateOptionsFor($this->Setups, [
             'sortableFields' => [
                 'id',
                 'name',

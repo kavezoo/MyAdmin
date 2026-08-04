@@ -1,0 +1,49 @@
+---
+description: Admin form nyelvi TAB-ok — FormLanguages, tooltip országnév UI locale, Cake 5.3 Translate API, error bool tilos.
+globs: templates/element/admin/form_language_fields.php,src/Utility/FormLanguages.php,src/Controller/Admin/AppController.php,templates/Admin/**/form.php
+alwaysApply: false
+---
+
+# Form nyelvi TAB-ok (kötelező minta)
+
+Részlet: `doc/form-i18n-tabs.md`, `doc/i18n.md`, `doc/country-visibilities.md`.
+
+## Setup
+
+1. Controller add/edit: `$this->setFormLanguageTabs();` — TAB-ok = aktív ország `country_visibilities` (saját + Additional languages)
+2. Edit: `$entity = $this->getWithTranslations($this->Things, $id, $contain);` — root locale = `FormLanguages::defaultLocaleForForm()`
+3. Template: `admin/form_language_fields` + `i18nFields` lista
+
+## Tooltip
+
+Fülkód / gomb tooltip — **összes** partner az adott nyelven (`country_visibilities`: saját + extras), egymás alatt (`Name (ISO)<br>`), UI locale.  
+**Saját ország nyelve mindig első.** Csak a felvett nyelvek jelennek meg TAB-ként.
+Gomb marad `data-bs-toggle="tab"`.
+
+## TAB → name fókusz
+
+Tab gomb `data-name-target` = az adott nyelv name input id-ja (`name`, `name-hu-hu`, …).  
+Inline JS a `form_language_fields`-ben: `getElementById(data-name-target).focus()`.  
+Nem-default: `required => false` (rejtett required ne lopja a fókuszt).
+
+## Cake 5.3+
+
+```php
+// HELYES
+$table->getBehavior('Translate')->setLocale($locale);
+$table->getBehavior('Translate')->translationField('name');
+
+// TILOS (deprecation)
+$table->setLocale($locale);
+$table->translationField('name');
+```
+
+## Form `error` opció
+
+```php
+// TILOS — TypeError (bool true → FormHelper::error 2. arg)
+'error' => $isDefault,
+
+// HELYES — default fülön omit; más fülön:
+'error' => false,
+```

@@ -5,9 +5,8 @@ namespace App\Auth;
 
 /**
  * Countries Admin access:
- * - Users.role `superuser`: add, delete, full edit
- * - Users.role `admin`: edit visible + pos only
- * - CakeDC `is_superuser` flag is NOT used here
+ * - superuser (Users.role `superuser` OR CakeDC is_superuser=1): add, delete, full edit
+ * - admin: edit visible + pos only
  */
 class CountryAccess
 {

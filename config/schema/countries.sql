@@ -1,6 +1,7 @@
 -- Countries (ISO 3166-1) + primary locale + continent_id
 -- Seed continents: php tmp/seed_continents.php
 -- Translations: i18n (Countries.name, Continents.name)
+-- Per-active-country language visibility: country_visibilities.sql + seed_country_visibilities.php
 
 CREATE TABLE IF NOT EXISTS `countries` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

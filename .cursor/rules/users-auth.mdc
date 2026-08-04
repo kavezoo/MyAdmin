@@ -16,8 +16,10 @@ Teljes spec: **`doc/users-auth.md`** (§0 baseline / képlékeny). Greenfield: *
 5. Permissions: App Usersnél **ne** `'plugin' => false`.
 6. Panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös `admin` layout; `RoleHome` + afterLogin **`$event->setResult()`**.
 7. Regisztráció default role → **csak** `/new`. Header search: csak president+ (és admin/superuser).
-8. Login azonosító baseline: **email**. Ország Select2 + `users.country_id` + BrowserLocale.
-9. App ACL „superuser” = **`Users.role === superuser`**. A CakeDC `is_superuser` oszlop **csak** profil badge — nem ad Countries/Setups teljes jogot.
+8. Login: **nyelv** Select2 + BrowserLocale (böngésző); Register: **ország** + `users.country_id`. Belépés után UI = login nyelv (session/cookie).
+9. Belépés: CakeDC **`active`** + app **`enabled`** (`findActive`); session: `RequireUserEnabledMiddleware`.
+10. App ACL „superuser” = **`Users.role === superuser` VAGY** CakeDC **`is_superuser`** (szigorú 1/true). Flag `0` → nincs teljes Countries/Setups jog.
+11. Tagság: `new` → kötelező `/complete-profile` → clubpresident Approve → `member` — **`doc/membership.md`**.
 
 ## Képlékeny (projektenként)
 

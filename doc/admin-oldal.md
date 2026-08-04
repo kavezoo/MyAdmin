@@ -105,15 +105,18 @@ Ezeket tedd a `MyAdmin.config`-ba is (`rowDoubleClickAction`, URL-ek, `recordFie
 
 ### 4.3 Oszloptípusok és fix szélességek
 
-**Szabály:** szám, pénz, logikai, id, pos, count, dátum/idő → **fix**; szöveg (`string`) → **rugalmas**.
+**Szabály:** szám, pénz, logikai, id, pos, count, dátum/idő → **kötött / min-width**; szöveg (`string`) → **rugalmas** (kivéve domain-specifikus kötött stringek, pl. Countries).
 
 | Osztály(ok) | Tartalom | Szélesség | Megjegyzés |
 |-------------|----------|-----------|------------|
 | `string` | név, cím, … | rugalmas | kitölti a maradékot |
+| `string continent` | földrész (Countries) | `10.5rem` | [countries-admin.md](countries-admin.md) |
+| `string iso2` | ISO kód | `5rem` | Countries |
+| `string locale` | nyelvi kód | `8.5rem` | Countries |
 | `number id` | ID | `4.75rem` | ~7–8 jegy |
 | `number pos` | pozíció | `5.5rem` | max ~5 jegy + locale ezres |
 | `number` (+ pl. `.szam`) | általános szám | `6.5rem` | ne `id`/`pos`/`count` |
-| `number count` | `*_count` | `5.5rem` | minta; **0/null → üres** (`formatCount`) |
+| `number count` | `*_count` | `min-width: 15rem` (`width: 1%`) | hosszú címke + sort; **ne** sima `max-width` (tábla zsugorít); **0/null → üres** |
 | `currency` (+ pl. `.netto`) | összeg + pénznem | `12rem` | `.currency-amount` + `formatCurrency()` (HUF, ICU) |
 | `boolean` (+ `.logikai` / `.visible` / `.valid`) | FA pipa / X | `7.5rem` | minta `.visible`/`.valid` |
 | `date` | dátum | `8.5rem` | |
@@ -122,8 +125,11 @@ Ezeket tedd a `MyAdmin.config`-ba is (`rowDoubleClickAction`, URL-ek, `recordFie
 | `times` | időtartomány | `9rem` | |
 | `actions` | gombok | — | **nincs** sort link |
 
-CSS: `webroot/css/style.css`. Sort link `id`/`pos`/`number`/`currency`/`count`/`boolean` fejlécben: `width: 100%` (ne nyíljon szét a `max-content` miatt).
+CSS: `webroot/css/style.css` + `pages/index.css` (`.count` erősítés).  
+Sort link: `id`/`pos`/`number`/`currency`/`boolean` → `width: 100%`; **`.count` → `max-content`** (ne zsugorodjon a címke).
 
+Header szűrő + kereső: `.index-header-sep` (`|`) — [admin-konvenciok.md](admin-konvenciok.md).  
+Countries lista: [countries-admin.md](countries-admin.md).
 **Számkiírás** (index / view / modal JSON):
 
 ```php
@@ -188,6 +194,7 @@ Edit gomb a modalban a View details **előtt** (UX konvenció).
 - Lábléc: Save + Cancel (`offset-md-2`, form labelhez); Save a breadcrumbben is (`form="form-horizontal"`)
 - Select2 mező mellett **„+”** gomb (single **és** multiple), ha új kapcsolt rekord **egyszerűen** felvehető; HABTM multiple Select2 **mindkét** CRUD formon
 - **Fókusz:** **minden** Admin formon a `#name` (vagy első szöveges mező) azonnal fókuszt kap — `pages/form.js` kötelező asset + `autofocus`
+- **Mentetlen leave:** ha mező változott a betöltés óta → `confirmLeave` Swal; ha nem → szabad navigáció — [admin-konvenciok.md](admin-konvenciok.md); rule: `admin-form-unsaved.mdc`
 - **Locale:** `numberFormat` + `dateFormat` = parser `jsConfig()`; követi `App.adminLocale` (picker nyelv + hétkezdet is)
 
 ### Mentés hibakezelés
@@ -284,6 +291,7 @@ Kapcsolt lista sorrend: **ASC** név szerint.
 | API | Mikor |
 |-----|--------|
 | `MyAdmin.confirmDelete({ onConfirm })` | Törlés (`icon: 'question'`) |
+| `MyAdmin.confirmLeave({ onConfirm })` | Mentetlen form elhagyása (`icon: 'warning'`) — csak dirty |
 | `MyAdmin.alert({ icon, title, text })` | Info / warning / success |
 | `MyAdmin.alertError(text)` | Hiba (AJAX, validáció UI) |
 | `MyAdmin.flashSwal({ icon, title, html })` | Flash SWAL (queue) |
@@ -313,7 +321,7 @@ Részletek: [i18n.md](i18n.md).
 - [ ] Sidebar menüpont
 - [ ] `index`: `applyIndexListState` + `applyIndexSearch`; `admin/table_search`; config változók, `$indexLimit`/`$indexMaxLimit`, `setLastVisitedForIndex` + `.last-visited` + scroll, típusoszlopok, sort URL/session, modal, SweetAlert delete, `pages/index`
 - [ ] `admin_search.php`: model + szöveges mezők; save → `redirectToIndexList`
-- [ ] `form`: közös add/edit, `#name` autofocus + `pages/form.js`, Tempus ha kell, locale szám/dátum, Select2 „+” ahol kell; `newEntityWithSchemaDefaults()`
+- [ ] `form`: közös add/edit, `#name` autofocus + `pages/form.js`, Tempus ha kell, locale szám/dátum, Select2 „+” ahol kell; `newEntityWithSchemaDefaults()`; mentetlen leave automatikus (`#form-horizontal`)
 - [ ] `view`: `dl` + `view_related_tabs`; kapcsolt nevek `.record-modal-link` + modal; Delete §3; `$rowDoubleClickAction`; `pages/index` JS/CSS
 - [ ] `recordGet` (`can_delete` + kapcsolt listák) + `rememberLastVisited`; DashedRoute (`record-get`)
 - [ ] Flash: Notify alap; fontos üzenet → `flashSwal()`

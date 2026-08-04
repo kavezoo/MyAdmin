@@ -1,0 +1,40 @@
+---
+description: Countries Admin index — visible-only filter, column order/widths, header separator, i18n.
+globs: templates/Admin/Countries/**,src/Controller/Admin/CountriesController.php,webroot/css/style.css,webroot/css/pages/index.css
+alwaysApply: false
+---
+
+# Countries Admin index (kötelező)
+
+Részlet: `doc/countries-admin.md`, `doc/country-visibilities.md`.
+
+## Ország→ország láthatóság (form)
+
+Full edit: **Additional languages** Select2 → `country_visibilities` extras (saját nyelv mindig, listában nem).  
+Countries formon **nincs** nyelvi TAB a Name-hez (seedelt `i18n` fordítások).  
+Lásd `doc/country-visibilities.md`, `doc/countries-admin.md`.
+
+## Header
+
+1. Switch: `__('Only visible countries')` — session `Admin.countriesVisibleOnly`, query `visible_only=1|0`, default **on**
+2. Elválasztó: `<span class="index-header-sep">|</span>` (nagy margó) — **utána** kereső
+3. `table_search` + `index_pagination`
+
+`resolveCountriesVisibleOnly()` **előtt** hívandó, mint `applyIndexListState`.
+
+## Oszlopsorrend
+
+`continent` → `name` → `iso2` → `locale` → visible → pos → `user_count` (Number of users) → …
+
+Fix CSS: `.continent` 10.5rem, `.iso2` 5rem (közép), `.locale` 8.5rem (közép).  
+`.count`: `width:1%` + `min-width:15rem` (+ `pages/index.css` + opcionális inline) — **ne** sima fix `max-width` (tábla zsugorítja).
+
+## i18n (msgid angol)
+
+| Msgid | hu |
+|-------|-----|
+| Only visible countries | Csak a látható országok |
+| Number of users | Felhasználók száma |
+| Locale | Nyelvi kód |
+
+`.po` + `bin/cake cache clear _cake_translations_` új szöveg után.

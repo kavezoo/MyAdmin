@@ -13,7 +13,7 @@ use Cake\I18n\I18n;
  * Shared chrome for role panels (New, Member, Clubpresident, President):
  * same layout as Admin (header / sidebar / breadcrumb / content).
  *
- * Locale: logged-in Users.country_id → login session language.
+ * Locale: login session/cookie language, then Users.country_id fallback.
  */
 abstract class PanelAppController extends AppController
 {

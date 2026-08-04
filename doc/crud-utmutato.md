@@ -3,6 +3,7 @@
 Új tábla/controller felvételekor kövesd ezt a sorrendet.  
 Ha még **nincs** Admin layout / middleware / element a projektben: előbb [uj-projekt.md](uj-projekt.md).
 
+**Séma + kapcsolatok → melyik megoldás kell:** [uj-projekt-sema-playbook.md](uj-projekt-sema-playbook.md) (kötelező olvasmány új/éles táblánál).  
 **Célkép (kinézet + működés):** [admin-oldal.md](admin-oldal.md).  
 **Éles DB / demó → tartós minták:** [minta-tanulsagok.md](minta-tanulsagok.md) (**§0 playbook** + §11 checklist).  
 UI részletek: [admin-konvenciok.md](admin-konvenciok.md). Fordítás: [i18n.md](i18n.md).
@@ -60,7 +61,7 @@ A view tab / teljes lista továbbra is lehet ABC ASC limit nélkül.
 | Fájl | Tartalom |
 |------|----------|
 | `index.php` | **Teljes** lista-minta: `admin/table_search`, `admin/index_pagination` (First…Last), `admin/index_footer`, `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`, típusoszlopok, sort, `.last-visited`, modal/SweetAlert delete, `pages/index` JS/CSS + config |
-| `form.php` | Add/edit közös form; `#name` **autofocus**; HABTM: `related._ids` multiple Select2; „+” csak ha egyszerű create lehetséges |
+| `form.php` | Add/edit közös form; `#name` **autofocus**; HABTM: `related._ids` multiple Select2; „+” csak ha egyszerű create; Translate mezőknél: [form-i18n-tabs.md](form-i18n-tabs.md) |
 | `view.php` | Adatlap + related tabs; `$rowDoubleClickAction`; `.record-modal-link`; `pages/index` JS + linked modal |
 
 **Törlés (gyerekvédelem):** `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()` — a szám a **CounterCache** `*_count` mezőből jön (ne élő `COUNT()`). HABTM: through Table CounterCache + `cascadeCallbacks => true`. UI: törölhető = danger + Swal question; **nem törölhető** = `btn-secondary` + **disabled** + tooltip ([minta-tanulsagok.md](minta-tanulsagok.md) §3). Trait: `App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait`.

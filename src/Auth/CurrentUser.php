@@ -15,8 +15,9 @@ use Cake\Routing\Router;
  * 2. Configure AppRoles.devRole or App.devRole
  * 3. debug → superuser; otherwise → new
  *
- * App “superuser” powers = Users.role === `superuser` only.
- * CakeDC `users.is_superuser` is a separate profile badge — not used for ACL.
+ * Superuser powers (Countries full CRUD, Setups create/delete, …):
+ * - Users.role === `superuser`, OR
+ * - CakeDC users.is_superuser is strictly true (1 / true / "1")
  */
 class CurrentUser
 {
@@ -46,16 +47,20 @@ class CurrentUser
     }
 
     /**
-     * True only when Users.role is `superuser` (not CakeDC is_superuser flag).
+     * Superuser ACL: role `superuser` OR CakeDC `is_superuser` flag (strict).
      */
     public static function isSuperuser(?ServerRequest $request = null): bool
     {
-        return static::role($request) === AppRoles::SUPERUSER;
+        if (static::role($request) === AppRoles::SUPERUSER) {
+            return true;
+        }
+
+        return static::isSuperuserFlag($request);
     }
 
     /**
-     * CakeDC `users.is_superuser` flag from identity (profile badge only).
-     * Strict: only true/1/"1" count — never treat empty / "0" as true.
+     * CakeDC `users.is_superuser` from the login identity.
+     * Strict: only true / 1 / "1" — never "0", 0, false, null.
      */
     public static function isSuperuserFlag(?ServerRequest $request = null): bool
     {
@@ -73,6 +78,11 @@ class CurrentUser
     public static function truthyFlag(mixed $value): bool
     {
         if ($value === true || $value === 1 || $value === '1') {
+            return true;
+        }
+
+        // CakePHP BooleanType / PDO sometimes yields these after cast quirks
+        if ($value === 'true' || $value === 'on' || $value === 'yes') {
             return true;
         }
 
@@ -101,6 +111,23 @@ class CurrentUser
         }
 
         return null;
+    }
+
+    /**
+     * Logged-in user's Countries.id (`Users.country_id`), or 0.
+     */
+    public static function countryId(?ServerRequest $request = null): int
+    {
+        $request ??= Router::getRequest();
+        if ($request === null) {
+            return 0;
+        }
+        $raw = static::identityValue($request->getAttribute('identity'), 'country_id');
+        if (is_numeric($raw) && (int)$raw > 0) {
+            return (int)$raw;
+        }
+
+        return 0;
     }
 
     /**

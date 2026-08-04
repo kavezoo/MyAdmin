@@ -12,6 +12,8 @@ return [
         'table' => 'Users',
         // App controller (login layout, registration country / locale).
         'controller' => 'Users',
+        // After Authentication: kick session if users.enabled / active off.
+        'middlewareQueueLoader' => \App\Auth\UsersMiddlewareQueueLoader::class,
         'Registration' => [
             'active' => true,
             'defaultRole' => 'new',
@@ -31,6 +33,10 @@ return [
         ],
     ],
     'Auth' => [
+        'FormLoginFailure' => [
+            // App LoginComponent — distinct Flash when users.enabled = 0.
+            'component' => 'Login',
+        ],
         'Authenticators' => [
             'Form' => [
                 // Login with email (POST field + DB column), not username.
@@ -44,6 +50,11 @@ return [
                         'fields' => [
                             'username' => 'email',
                             'password' => 'password',
+                        ],
+                        // findActive on App UsersTable: active=1 AND enabled=1
+                        'resolver' => [
+                            'className' => 'Authentication.Orm',
+                            'finder' => 'active',
                         ],
                     ],
                 ],

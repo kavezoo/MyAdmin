@@ -340,6 +340,20 @@ img {
   gap: 0.35rem;
 }
 
+/* Card header: szűrő | kereső elválasztó */
+.index-header-sep {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin: 0 0.85rem;
+  padding: 0;
+  color: #adb5bd;
+  font-size: 1.15rem;
+  font-weight: 300;
+  line-height: 1;
+  user-select: none;
+}
+
 .table-search-input {
   width: 140px;
   height: 28px;
@@ -1738,6 +1752,15 @@ a.btn:focus {
   font-weight: 600;
 }
 
+/* Required field mark — from FormHelper::requiredMark / adminLabel */
+#form-horizontal .required,
+.modal-select2-add .required {
+  color: #dc3545;
+  font-weight: 700;
+  font-size: 1.15em;
+  line-height: 1;
+}
+
 #form-horizontal .col-form-label {
   text-align: left;
 }
@@ -2112,13 +2135,65 @@ a.record-modal-link:hover,
   white-space: nowrap;
 }
 
-/* MyPluginTemplate: .count */
+/* MyPluginTemplate: .count — hosszú címke (pl. Felhasználók száma) + sort ikon
+ * width:1% + min-width: tábla cellákban a sima width/max-width gyakran összezsugorodik. */
 .table th.count,
 .table td.count {
-  width: 5.5rem;
-  min-width: 5.5rem;
-  max-width: 5.5rem;
+  width: 1%;
+  min-width: 15rem;
+  max-width: none;
   white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.table th.count > a {
+  width: max-content !important;
+  max-width: none !important;
+  min-width: max-content;
+  flex-shrink: 0;
+}
+
+/* Countries: ISO (2 betű) + címke + sort */
+.table th.iso2,
+.table td.iso2 {
+  width: 5rem;
+  min-width: 5rem;
+  max-width: 5rem;
+  white-space: nowrap;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* Countries: locale (pl. hu_HU) + címke (Nyelvi kód) + sort */
+.table th.locale,
+.table td.locale {
+  width: 8.5rem;
+  min-width: 8.5rem;
+  max-width: 8.5rem;
+  white-space: nowrap;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.table th.locale > a {
+  justify-content: center;
+}
+
+/* Countries: földrész (Földrész / Észak-Amerika) + sort */
+.table th.continent,
+.table td.continent {
+  width: 10.5rem;
+  min-width: 10.5rem;
+  max-width: 10.5rem;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.table th.iso2 > a,
+.table th.locale > a,
+.table th.continent > a {
+  width: 100%;
+  max-width: 100%;
 }
 
 .table td.number,

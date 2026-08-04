@@ -19,9 +19,12 @@ Ez a dokumentum a **MyAdmin-ban összerakott** auth / regisztráció / szerepkö
 | Flash | Simple Notify toast (`usesFlashToast`) — Adminmal azonos |
 | App Users | `Users.controller` / `Users.table` = App; templatek `templates/Users/` |
 | Permissions | **ne** `'plugin' => false` App Usersre; `SanitizeAuthRedirectMiddleware` |
-| Ország + locale | Select2 login+register; cookie ≥ 1 év; `users.country_id`; `BrowserLocale` |
+| Ország + locale | Login: **nyelv** Select2 + BrowserLocale; Register: **ország** + `users.country_id` — [login-language.md](login-language.md) |
 | Login azonosító | **email** (nem username) — Form authenticator `fields.username` → `email` |
-| Profil | `admin` layout + view stílusú `dl`; header: Belépve / Profile / Change password / Logout |
+| Belépés kapu | CakeDC `active` **és** app `enabled` (`findActive`); session közben is |
+| Eseménynapló | `event_logs` — saját lista minden usernek; officer ország-kereső — [event-logs.md](event-logs.md) |
+| Profil | `admin` layout + view stílusú `dl`; header: Belépve / Profile / My event log / Change password / Logout |
+| Tagság onboarding | `new` → kötelező `/complete-profile` → clubpresident Approve → `member` — [membership.md](membership.md) |
 | URL nyelv | **nincs** `/{lang}/…` — locale session / user ország |
 | Panel chrome | ugyanaz az `admin` layout (header / sidebar / breadcrumb / content) minden szerepkör-prefixen |
 
@@ -42,10 +45,11 @@ Ez a dokumentum a **MyAdmin-ban összerakott** auth / regisztráció / szerepkö
 
 | Oldal | URL | Layout | Tartalom |
 |-------|-----|--------|----------|
-| Login | `/login` | `login` | ország (Select2) → **email** + jelszó + Remember me |
-| Regisztráció | `/register` | `login` | ország (első) → név → email → jelszó → confirm → role=`new` |
+| Login | `/login` | `login` | **nyelv** (Select2) → **email** + jelszó + Remember me |
+| Regisztráció | `/register` | `login` | **ország** (első) → név → email → jelszó → confirm → role=`new` |
 | Elfelejtett jelszó | `/request-reset-password` | `login` | reference |
 | Profil | `/profile` | **`admin`** | view-stílusú adatlap; vissza a role panel Dashboardjára |
+| Profil kiegészítés | `/complete-profile` | **`admin`** | kötelező `new` role-nak (first/last/phone/country/club) — [membership.md](membership.md) |
 | Jelszócsere | `/change-password` | `login` | current + new + confirm |
 
 Kinézet: **ValiAdmin** + `users_auth.css`. Minta: `login-box local-login` + `.local-login-form` (ne `.login-form` — ValiAdmin elrejti). Flash: Simple Notify.
@@ -128,11 +132,16 @@ foreach ($panelPrefixes as $prefix) {
 
 | Fájl | Szerep |
 |------|--------|
-| `src/Controller/UsersController.php` | login layout; ország/locale; profile panel home |
-| `src/Model/Table/UsersTable.php` | `country_id`; register validáció; OneTimeLogin wrappers |
+| `src/Controller/UsersController.php` | login layout; login nyelv / register ország; profile |
+| `src/Utility/AdminLanguage.php` | nyelvlista + i18n seed |
+| `src/Model/Table/UsersTable.php` | `country_id`; register validáció; **`findActive` = active+enabled**; OneTimeLogin wrappers |
+| `src/Controller/Component/LoginComponent.php` | disabled (`enabled=0`) login Flash |
+| `src/Auth/UsersMiddlewareQueueLoader.php` + `RequireUserEnabledMiddleware` | session kick ha `enabled`/`active` off |
+| `webroot/js/pages/users_auth_locale.js` | login nyelv Select2 |
+| `webroot/js/pages/users_auth_country.js` | register ország Select2 |
 | `src/Auth/AppRoles.php` | role lista + search/setups role listák |
 | `src/Auth/RoleHome.php` | role → panel URL / sidebar |
-| `src/Auth/CurrentUser.php` | identity **role**; `isSuperuser()` = `role===superuser` (nem CakeDC `is_superuser` flag) |
+| `src/Auth/CurrentUser.php` | identity role; `isSuperuser()` = `role===superuser` **vagy** `is_superuser` flag (1/true) |
 | `src/Controller/PanelAppController.php` | közös panel chrome |
 | `src/Controller/{New,Member,Clubpresident,President}/` | panelek |
 | `src/Utility/BrowserLocale.php` | resolve / persist / `forLoggedIn` / `localeFromUser` |
@@ -152,9 +161,20 @@ foreach ($panelPrefixes as $prefix) {
 
 ## 5. Login / register részletek
 
-- Login: email mező (`type=email`); ország a POST-on **kívül** (GET `?country_id=`).
-- Register: `normalizeRegistrationData` (username←email); `country_id` kötelező; **ne** duplikáld a `nonNegativeInteger` szabályt a `validationRegister`-ben.
-- Locale login után: user `country_id` → `Countries.locale`, különben login session nyelv → `BrowserLocale::persist` + panel `forLoggedIn`.
+- Login: **nyelv** Select2 a POST-on kívül (`?locale=`); feliratok a kiválasztott nyelven (`languages` + i18n); alap: böngésző Accept-Language. Részlet: [login-language.md](login-language.md).
+- Login: email mező (`type=email`).
+- Register: **ország** Select2; `normalizeRegistrationData` (username←email); `country_id` kötelező; **ne** duplikáld a `nonNegativeInteger` szabályt a `validationRegister`-ben.
+- Locale login után: **login session/cookie nyelv** (`?locale=`), fallback: user `country_id` → `Countries.locale` → `BrowserLocale::persist` + panel `forLoggedIn`.
+
+### 5.1 `active` vs `enabled`
+
+| Mező | Ki állítja tipikusan | Jelentés |
+|------|----------------------|----------|
+| `active` | CakeDC (email aktiváció / regisztráció) | Fiók aktiválva-e |
+| `enabled` | Admin / president | Belépés engedélyezve (kizárás) |
+
+Belépéshez **mindkettő** kell (`UsersTable::findActive`).  
+Session közben `RequireUserEnabledMiddleware` kidobja a usert, ha `enabled` (vagy `active`) kikapcsolódik.
 
 ---
 
@@ -173,6 +193,7 @@ foreach ($panelPrefixes as $prefix) {
 ```
 ErrorHandler → HostHeader → SanitizeAuthRedirect → Asset → Routing
 → Locale → BodyParser → NormalizeLocalizedDate → NormalizeLocalizedNumber → Csrf
+→ (CakeDC) Authentication → Authorization → RequireUserEnabled
 ```
 
 `LocaleMiddleware`: mindig `BrowserLocale::resolve` (+ cookie refresh); panel AppController finomít `forLoggedIn`-nel.
@@ -194,7 +215,7 @@ Részletek: [i18n.md](i18n.md).
 - [ ] Panel prefixek a `routes.php`-ban (**nincs** `/{lang}`)
 - [ ] `RoleHome` + `PanelAppController` + panel Dashboardok + sidebarek
 - [ ] afterLogin: **`setResult()`**, ne `return`
-- [ ] UsersController + UsersTable + country_id
+- [ ] UsersController + UsersTable + country_id + **enabled** belépéskapu
 - [ ] login layout + `templates/Users/*` + users_auth CSS/JS
 - [ ] Header profile + (opcionális) role-gated search
 - [ ] `.po` msgid-ek

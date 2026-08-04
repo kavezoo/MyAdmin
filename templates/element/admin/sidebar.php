@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  */
+use App\Auth\EventLogAccess;
 use App\Auth\SetupAccess;
 
 $controller = (string)$this->request->getParam('controller');
@@ -10,8 +11,10 @@ $isParents = $controller === 'Parents';
 $isCities = $controller === 'Cities';
 $isCountries = $controller === 'Countries';
 $isSetups = $controller === 'Setups';
+$isEventLogs = $controller === 'EventLogs';
 $isDashboard = $controller === 'Dashboard';
 $showSetupsMenu = SetupAccess::canAccessModule($this->request);
+$showEventLogsMenu = EventLogAccess::canSearch($this->request);
 ?>
 <!-- Left Sidebar -->
 <div class="left main-sidebar">
@@ -42,7 +45,7 @@ $showSetupsMenu = SetupAccess::canAccessModule($this->request);
 				</li>
 
 				<li class="submenu">
-					<a href="#"<?= (($showSetupsMenu && $isSetups) || $isCountries) ? ' class="active"' : '' ?>>
+					<a href="#"<?= (($showSetupsMenu && $isSetups) || $isCountries || ($showEventLogsMenu && $isEventLogs)) ? ' class="active"' : '' ?>>
 						<i class="fa fa-fw fa-cogs"></i> <span> <?= __('Settings') ?> </span> <span class="menu-arrow"></span>
 					</a>
 					<ul class="list-unstyled">
@@ -54,6 +57,11 @@ $showSetupsMenu = SetupAccess::canAccessModule($this->request);
 						<li<?= $isCountries ? ' class="active"' : '' ?>>
 							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Countries', 'action' => 'index']) ?>"><?= __('Countries') ?></a>
 						</li>
+						<?php if ($showEventLogsMenu): ?>
+							<li<?= $isEventLogs ? ' class="active"' : '' ?>>
+								<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'EventLogs', 'action' => 'index']) ?>"><?= __('Event logs') ?></a>
+							</li>
+						<?php endif; ?>
 					</ul>
 				</li>
 			</ul>

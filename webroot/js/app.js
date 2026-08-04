@@ -97,6 +97,34 @@
 	};
 
 	/**
+	 * SweetAlert2 leave confirmation (unsaved form changes).
+	 *
+	 * @param {object} options { title, text, confirmButtonText, cancelButtonText, onConfirm }
+	 * @returns {Promise}
+	 */
+	App.confirmLeave = function (options) {
+		options = options || {};
+
+		return App.swal({
+			icon: options.icon || 'warning',
+			title: options.title || t('unsavedTitle', 'Unsaved changes'),
+			text: options.text || t('unsavedConfirm', 'You have unsaved changes. Do you really want to leave this form?'),
+			showCancelButton: true,
+			focusCancel: true,
+			confirmButtonText: options.confirmButtonText || t('leaveButton', 'Leave'),
+			cancelButtonText: options.cancelButtonText || t('stayButton', 'Stay'),
+			confirmButtonColor: options.confirmButtonColor || '#dc3545',
+			cancelButtonColor: options.cancelButtonColor || '#6c757d',
+			reverseButtons: true
+		}).then(function (result) {
+			if (result.isConfirmed && typeof options.onConfirm === 'function') {
+				options.onConfirm();
+			}
+			return result;
+		});
+	};
+
+	/**
 	 * SweetAlert2 delete confirmation (question icon).
 	 */
 	App.confirmDelete = function (options) {

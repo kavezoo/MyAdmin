@@ -3,17 +3,21 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Auth\MembershipProfile;
 use Cake\Datasource\EntityInterface;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 use CakeDC\Users\Model\Entity\User;
 use CakeDC\Users\Model\Table\UsersTable as CakeDCUsersTable;
 
 /**
- * App Users table — CakeDC Users + country_id + CakePHP 5.3 OneTimeLogin wrappers.
+ * App Users table — CakeDC Users + country_id + club_id + membership onboarding.
  *
  * CounterCache: Countries.user_count (registration / country change / delete).
  *
+ * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
+ * @property \App\Model\Table\ClubsTable&\Cake\ORM\Association\BelongsTo $Clubs
  * @mixin \Cake\ORM\Behavior\CounterCacheBehavior
  */
 class UsersTable extends CakeDCUsersTable
@@ -28,6 +32,12 @@ class UsersTable extends CakeDCUsersTable
             'className' => 'Countries',
             'joinType' => 'LEFT',
         ]);
+        $this->belongsTo('Clubs', [
+            'foreignKey' => 'club_id',
+            'className' => 'Clubs',
+            'joinType' => 'LEFT',
+            'conditions' => ['Users.club_id >' => 0],
+        ]);
         // Countries.user_count — child (belongsTo) side CounterCache
         $this->addBehavior('CounterCache', [
             'Countries' => ['user_count'],
@@ -40,8 +50,101 @@ class UsersTable extends CakeDCUsersTable
         $validator
             ->allowEmptyString('country_id')
             ->nonNegativeInteger('country_id');
+        $validator
+            ->boolean('enabled')
+            ->allowEmptyString('enabled');
+        $validator
+            ->nonNegativeInteger('club_id')
+            ->allowEmptyString('club_id');
+        $validator
+            ->scalar('membership_status')
+            ->maxLength('membership_status', 20)
+            ->allowEmptyString('membership_status');
+        $validator
+            ->boolean('application_notified')
+            ->allowEmptyString('application_notified');
 
         return $validator;
+    }
+
+    /**
+     * Profile completion for role `new`.
+     */
+    public function validationProfileComplete(Validator $validator): Validator
+    {
+        $validator
+            ->requirePresence('first_name')
+            ->notEmptyString('first_name', __('Please enter your first name.'))
+            ->maxLength('first_name', 50)
+            ->requirePresence('last_name')
+            ->notEmptyString('last_name', __('Please enter your last name.'))
+            ->maxLength('last_name', 50)
+            ->requirePresence('phone')
+            ->notEmptyString('phone', __('Please enter your phone number.'))
+            ->maxLength('phone', 50)
+            ->requirePresence('country_id')
+            ->notEmptyString('country_id', __('Please select your country.'))
+            ->nonNegativeInteger('country_id')
+            ->requirePresence('club_id')
+            ->notEmptyString('club_id', __('Please select your club.'))
+            ->nonNegativeInteger('club_id')
+            ->greaterThan('club_id', 0, __('Please select your club.'));
+
+        return $validator;
+    }
+
+    /**
+     * Auth finder: CakeDC `active` (email/activation) **and** app `enabled`
+     * (admin/president can lock out a user without clearing activation).
+     *
+     * Used by Form / Cookie / Token / Social identifiers (`finder` => `active`).
+     *
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
+     */
+    public function findActive(SelectQuery $query): SelectQuery
+    {
+        return $query->where([
+            $this->aliasField('active') => 1,
+            $this->aliasField('enabled') => 1,
+        ]);
+    }
+
+    /**
+     * True when the account exists, is activated (`active`), but locked out (`enabled` = 0).
+     */
+    public function isDisabledForLogin(string $email): bool
+    {
+        $email = trim($email);
+        if ($email === '') {
+            return false;
+        }
+
+        $row = $this->find()
+            ->select(['Users.id', 'Users.active', 'Users.enabled'])
+            ->where(['Users.email' => $email])
+            ->first();
+        if ($row === null) {
+            return false;
+        }
+
+        return (int)$row->get('active') === 1 && !(bool)$row->get('enabled');
+    }
+
+    /**
+     * Whether the user id may keep an authenticated session.
+     */
+    public function isLoginAllowedForId(string $userId): bool
+    {
+        if ($userId === '') {
+            return false;
+        }
+
+        return $this->exists([
+            'id' => $userId,
+            'active' => 1,
+            'enabled' => 1,
+        ]);
     }
 
     public function validationRegister(Validator $validator): Validator
@@ -71,6 +174,35 @@ class UsersTable extends CakeDCUsersTable
             'errorField' => 'country_id',
             'allowNullableNulls' => true,
         ]);
+        $rules->add(function ($entity) {
+            $clubId = (int)($entity->get('club_id') ?? 0);
+            if ($clubId < 1) {
+                return true;
+            }
+
+            return $this->Clubs->exists(['Clubs.id' => $clubId]);
+        }, 'clubExists', [
+            'errorField' => 'club_id',
+            'message' => __('Please select a valid club.'),
+        ]);
+        $rules->add(function ($entity) {
+            $clubId = (int)($entity->get('club_id') ?? 0);
+            if ($clubId < 1) {
+                return true;
+            }
+            $countryId = (int)($entity->get('country_id') ?? 0);
+            if ($countryId < 1) {
+                return false;
+            }
+
+            return $this->Clubs->exists([
+                'Clubs.id' => $clubId,
+                'Clubs.country_id' => $countryId,
+            ]);
+        }, 'clubInCountry', [
+            'errorField' => 'club_id',
+            'message' => __('Please select a club in your country.'),
+        ]);
 
         return $rules;
     }
@@ -90,6 +222,13 @@ class UsersTable extends CakeDCUsersTable
         if (!empty($data['country_id'])) {
             $data['country_id'] = (int)$data['country_id'];
         }
+        // Admin/president lock-out flag — new accounts start allowed (DB DEFAULT 1).
+        if (!array_key_exists('enabled', $data) || $data['enabled'] === null || $data['enabled'] === '') {
+            $data['enabled'] = true;
+        }
+        $data['club_id'] = (int)($data['club_id'] ?? 0);
+        $data['membership_status'] = MembershipProfile::STATUS_INCOMPLETE;
+        $data['application_notified'] = false;
 
         return $data;
     }

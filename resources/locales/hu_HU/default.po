@@ -190,6 +190,10 @@ msgstr "Új rekord létrehozása."
 msgid "Name:"
 msgstr "Név:"
 
+#: ./templates/element/admin/form_language_fields.php:28
+msgid "Translations:"
+msgstr "Fordítások:"
+
 #: ./templates/Admin/Cities/form.php:31
 #: ./templates/Admin/Parents/form.php:31
 #: ./templates/Admin/Samples/form.php:219
@@ -698,9 +702,69 @@ msgstr "Helló, {0}"
 msgid "Logged in: {0}"
 msgstr "Belépve: {0}"
 
+msgid "Your account has been disabled. Please contact an administrator."
+msgstr "A fiókod le van tiltva. Kérjük, vedd fel a kapcsolatot egy adminisztrátorral."
+
 #: ./templates/element/admin/header_profile.php:10
 msgid "Profile"
 msgstr "Profil"
+
+msgid "My event log"
+msgstr "Saját eseménynapló"
+
+msgid "Event logs"
+msgstr "Eseménynapló"
+
+msgid "Browse all event logs"
+msgstr "Összes esemény böngészése"
+
+msgid "Only your own activity is listed here."
+msgstr "Itt csak a saját tevékenységeid jelennek meg."
+
+msgid "No event log records found."
+msgstr "Nincs megjeleníthető eseménynapló-rekord."
+
+msgid "Showing events for {0}"
+msgstr "Események: {0}"
+
+msgid "All modules"
+msgstr "Minden modul"
+
+msgid "All actions"
+msgstr "Minden művelet"
+
+msgid "Filter"
+msgstr "Szűrés"
+
+msgid "Module"
+msgstr "Modul"
+
+msgid "Action"
+msgstr "Művelet"
+
+msgid "Request data"
+msgstr "Kérés adatai"
+
+msgid "HTTP method"
+msgstr "HTTP metódus"
+
+msgid "User agent"
+msgstr "Böngésző"
+
+msgid "User logged in"
+msgstr "Felhasználó bejelentkezett"
+
+msgid "User logged out"
+msgstr "Felhasználó kijelentkezett"
+
+msgid "You are not allowed to browse event logs."
+msgstr "Nincs jogosultságod az eseménynapló böngészéséhez."
+
+msgid "You are not allowed to view this event."
+msgstr "Nincs jogosultságod ennek az eseménynek a megtekintéséhez."
+
+msgid "No active country is set for event log filtering."
+msgstr "Nincs aktív ország az eseménynapló szűréséhez."
 
 msgid "Role"
 msgstr "Szerepkör"
@@ -857,6 +921,9 @@ msgstr "Név (angol):"
 msgid "Primary locale"
 msgstr "Elsődleges locale"
 
+msgid "Locale"
+msgstr "Nyelvi kód"
+
 msgid "Primary locale:"
 msgstr "Elsődleges locale:"
 
@@ -865,6 +932,12 @@ msgstr "Földrész"
 
 msgid "Continent:"
 msgstr "Földrész:"
+
+msgid "Visible countries:"
+msgstr "Látható országok:"
+
+msgid "Countries listed here appear on language tabs when this country is the active login country. English (en_GB) is always included and cannot be removed."
+msgstr "Az itt felsorolt országok jelennek meg a nyelvi füleken, ha ez az ország az aktív (bejelentkezési) ország. Az angol (en_GB) mindig szerepel, és nem távolítható el."
 
 msgid "Translations"
 msgstr "Fordítások"
@@ -1031,6 +1104,12 @@ msgstr "Aktuális ország"
 msgid "Select country..."
 msgstr "Ország választása..."
 
+msgid "Select language..."
+msgstr "Válassz nyelvet..."
+
+msgid "Selected language: {0}"
+msgstr "Kiválasztott nyelv: {0}"
+
 msgid "A matching record will be created for every visible country."
 msgstr "Minden látható országhoz létrejön egy rekord ugyanezzel a sluggal."
 
@@ -1193,3 +1272,189 @@ msgstr "Üdvözöljük. A Klubelnök szerepkör panel tartalma később kerül k
 
 msgid "Welcome. Content for the President role panel will be added later."
 msgstr "Üdvözöljük. Az Elnök szerepkör panel tartalma később kerül kialakításra."
+
+msgid "Only visible countries"
+msgstr "Csak a látható országok"
+
+msgid "Number of users"
+msgstr "Felhasználók száma"
+
+msgid "Unsaved changes"
+msgstr "Mentetlen módosítások"
+
+msgid "You have unsaved changes. Do you really want to leave this form?"
+msgstr "Mentetlen módosítások vannak. Biztosan elhagyod az űrlapot?"
+
+msgid "Leave"
+msgstr "Elhagyás"
+
+msgid "Stay"
+msgstr "Maradás"
+
+msgid "Complete your profile"
+msgstr "Profil kiegészítése"
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Töltsd ki a hiányzó adatokat, hogy elküldhessük a tagsági jelentkezésedet a klubelnöknek."
+
+msgid "First name"
+msgstr "Keresztnév"
+
+msgid "Last name"
+msgstr "Vezetéknév"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Club"
+msgstr "Klub"
+
+msgid "Select club..."
+msgstr "Válassz klubot..."
+
+msgid "Submit application"
+msgstr "Jelentkezés elküldése"
+
+msgid "Your profile has been saved. The club president will review your application."
+msgstr "A profilod mentve. A klubelnök át fogja nézni a jelentkezésedet."
+
+msgid "Please correct the errors below."
+msgstr "Kérjük, javítsd az alábbi hibákat."
+
+msgid "Please enter your first name."
+msgstr "Add meg a keresztneved."
+
+msgid "Please enter your last name."
+msgstr "Add meg a vezetékneved."
+
+msgid "Please enter your phone number."
+msgstr "Add meg a telefonszámod."
+
+msgid "Please select your club."
+msgstr "Válaszd ki a klubodat."
+
+msgid "Please select a valid club."
+msgstr "Érvényes klubot válassz."
+
+msgid "Please select a club in your country."
+msgstr "Az országodhoz tartozó klubot válassz."
+
+msgid "Application submitted"
+msgstr "Jelentkezés elküldve"
+
+msgid "Your profile is complete. The club president has been notified and will review your membership application. You will receive an email when you are approved."
+msgstr "A profilod kész. A klubelnök értesítést kapott, és átnézi a tagsági jelentkezésedet. Engedélyezéskor emailt kapsz."
+
+msgid "Welcome. Please complete your profile to apply for membership."
+msgstr "Üdvözöljük. A tagsági jelentkezéshez egészítsd ki a profilodat."
+
+msgid "Applicants"
+msgstr "Jelentkezők"
+
+msgid "Pending membership applications for {0}"
+msgstr "Függő tagsági jelentkezések: {0}"
+
+msgid "Submitted"
+msgstr "Beküldve"
+
+msgid "Approve"
+msgstr "Engedélyezés"
+
+msgid "Approve this applicant as a full member?"
+msgstr "Engedélyezed ezt a jelentkezőt teljes jogú tagként?"
+
+msgid "No pending applicants."
+msgstr "Nincs függő jelentkező."
+
+msgid "Membership approved. The new member has been notified by email."
+msgstr "Tagság engedélyezve. Az új tagot emailben értesítettük."
+
+msgid "Could not approve this application."
+msgstr "A jelentkezést nem sikerült engedélyezni."
+
+msgid "Applicant not found."
+msgstr "A jelentkező nem található."
+
+msgid "Your account is not assigned to a club yet. Contact an administrator."
+msgstr "A fiókodhoz még nincs klub rendelve. Lépj kapcsolatba egy adminisztrátorral."
+
+msgid "Your account is not assigned to a club yet."
+msgstr "A fiókodhoz még nincs klub rendelve."
+
+msgid "Welcome to the Club president panel."
+msgstr "Üdvözöljük a Klubelnök panelen."
+
+msgid "Review membership applicants"
+msgstr "Tagsági jelentkezők áttekintése"
+
+msgid "New membership application: {0}"
+msgstr "Új tagsági jelentkezés: {0}"
+
+msgid "Your membership has been approved"
+msgstr "A tagságodat engedélyezték"
+
+msgid "A new user has completed their profile and applied for membership in {0}."
+msgstr "Egy új felhasználó kitöltötte a profilját, és tagságot kér a(z) {0} klubba."
+
+msgid "Open applicants list"
+msgstr "Jelentkezők lista megnyitása"
+
+msgid "Please review the application and approve membership if appropriate."
+msgstr "Nézd át a jelentkezést, és ha megfelelő, engedélyezd a tagságot."
+
+msgid "The club president has approved your membership in {0}."
+msgstr "A klubelnök engedélyezte a tagságodat a(z) {0} klubban."
+
+msgid "You are now a full member and can sign in to the site."
+msgstr "Mostantól teljes jogú tag vagy, és bejelentkezhetsz az oldalra."
+
+msgid "Sign in"
+msgstr "Bejelentkezés"
+
+msgid "Hello{0},"
+msgstr "Helló{0},"
+
+msgid "User"
+msgstr "Felhasználó"
+
+msgid "All users"
+msgstr "Minden felhasználó"
+
+msgid "Please enter {0} or more characters"
+msgstr "Írj be legalább {0} karaktert"
+
+msgid "Changed fields"
+msgstr "Változott mezők"
+
+msgid "Field"
+msgstr "Mező"
+
+msgid "From"
+msgstr "Előtte"
+
+msgid "To"
+msgstr "Utána"
+
+msgid "Secret"
+msgstr "Titkos"
+
+msgid "Deleted snapshot"
+msgstr "Törölt rekord mentése"
+
+msgid "Data changes"
+msgstr "Adatváltozások"
+
+msgid "Which fields changed and to what values."
+msgstr "Mely mezők változtak, és milyen új értékre."
+
+msgid "Additional languages:"
+msgstr "További nyelvek:"
+
+msgid "Additional languages"
+msgstr "További nyelvek"
+
+msgid "Select additional languages..."
+msgstr "Válassz további nyelveket..."
+
+msgid "Your own country language is always available on form tabs and is not listed here. Pick other countries whose languages should also appear as translation tabs when this country is active."
+msgstr "A saját ország nyelve mindig elérhető a form TAB-okon, és itt nem jelenik meg. Válaszd ki a többi országot, amelyek nyelvén a tartalmakat is közzé szeretnéd tenni ezen ország aktív állapota mellett."

@@ -13,6 +13,9 @@ declare(strict_types=1);
  * 6. `labelsKey`: `entityFieldLabels` kulcs a Search modalhoz (sample / parent / city / country).
  *
  * Az index kereső csak az adott model `fields` mezőiben keres (saját oszlopok).
+ * Translate-es mezőknél (Countries/Samples/Parents `name`, …) a keresés és a
+ * rendezés az **UI locale** fordításán fut (`AdminTranslate` / `translationField`),
+ * plusz fallback a kanonikus (angol) oszlopra.
  * A header (globális) kereső végigmegy az összes itt felsorolt modelen;
  * `/admin/search`: Google-szerű UI + lapozás (`globalPageLimit` …).
  * Clear search → szűretlen lista + last-visited rekord oldala (AppController).
@@ -90,6 +93,22 @@ return [
                 'fields' => [
                     'name',
                     'slug',
+                ],
+            ],
+            'EventLogs' => [
+                'label' => 'Event logs',
+                'controller' => 'EventLogs',
+                'titleField' => 'description',
+                'labelsKey' => 'event_log',
+                'fields' => [
+                    'module',
+                    'action',
+                    'entity',
+                    'entity_id',
+                    'description',
+                    'url',
+                    'ip',
+                    'actor_role',
                 ],
             ],
             // Continents: nincs külön Admin CRUD index — globális kereséshez később felvehető:

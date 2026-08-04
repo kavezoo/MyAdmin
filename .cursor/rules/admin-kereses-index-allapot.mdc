@@ -16,8 +16,8 @@ Másold / hozd létre:
 | Elem | Hol |
 |------|-----|
 | Config | `config/admin_search.php` + `Configure::load('admin_search')` a bootstrapban |
-| Helper | `src/Utility/AdminSearch.php` |
-| AppController | `applyIndexListState`, `applyIndexSearch`, `resolveIndexPageForLastVisited`, `redirectToIndexList`, `rememberLastVisited`, `setLastVisitedForIndex`, `indexListUrl` |
+| Helper | `src/Utility/AdminSearch.php`, `src/Utility/AdminTranslate.php` |
+| AppController | `applyIndexListState`, `applyIndexSearch`, `indexPaginateOptionsFor`, `resolveIndexPageForLastVisited`, … |
 | Search | `Admin\SearchController` + `templates/Admin/Search/index.php` + `css/pages/search.css` |
 | UI | `element/admin/table_search.php`, `header_search.php` (headerben behúzva) |
 | Lapozó | `index_pagination`, `index_counter`, `index_footer` (lásd `admin-paginator.mdc`) |
@@ -71,7 +71,11 @@ $redirect = $this->applyIndexListState('Things');
 if ($redirect !== null) {
     return $redirect;
 }
-$paginateOptions = $this->indexPaginateOptions(['sortableFields' => [/* … */]]);
+$paginateOptions = $this->indexPaginateOptionsFor($this->Things, [
+    'sortableFields' => [/* … */],
+], [
+    // 'Parents' => $this->Things->Parents->getTarget(), // ha belongsTo Translate
+]);
 $query = $this->applyIndexSearch($this->Things->find(), $this->Things);
 $redirect = $this->resolveIndexPageForLastVisited('Things', $query, $paginateOptions);
 if ($redirect !== null) {
@@ -90,8 +94,9 @@ Template: `<?= $this->element('admin/table_search') ?>` + fejlécben `admin/inde
 
 | Esemény | Viselkedés |
 |---------|------------|
-| Index `q` | Szűrés az adott tábla szöveges mezőin; session `Admin.indexState` |
-| Header kereső | Összes model szöveges mezői |
+| Index `q` | Szűrés az adott tábla szöveges mezőin (**Translate → UI locale**); session `Admin.indexState` |
+| Header kereső | Összes model szöveges mezői (Translate-aware) |
+| Sort | `indexPaginateOptionsFor` — fordított mező: `*_translation.content` + kanonikus fallback |
 | Sort / page / `q` | URL-ben (+ session tükör); üres index → redirect kanonikus URL-re |
 | Clear search (`?clear_search=1`) | `q` törölve; last-visited oldal + redirect; scroll `.last-visited`. **Üres `q` → törlés gomb nincs** |
 | Keresés submit (csak `q`) | Mindig **page=1** (+ URL) |

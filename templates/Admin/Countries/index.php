@@ -5,13 +5,20 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Country> $countries
  * @var bool $canDeleteCountry
+ * @var bool $countriesVisibleOnly
  * @var array<int, true> $deletableCountryIds
  */
 $canDeleteCountry = (bool)$this->get('canDeleteCountry', false);
+$countriesVisibleOnly = (bool)$this->get('countriesVisibleOnly', true);
 $deletableCountryIds = $deletableCountryIds ?? [];
 $this->Html->css(['pages/index'], ['block' => true]);
 
-$rowDoubleClickAction = 'modal';
+// Preserve current list query when toggling visible_only (page → 1).
+$visibleFilterQuery = $this->request->getQueryParams();
+unset($visibleFilterQuery['visible_only']);
+$visibleFilterQuery['page'] = '1';
+
+$rowDoubleClickAction = 'modal'; // 'modal' | 'edit' | 'none'
 
 $numberDecimals = [
 	'integer' => 0,
@@ -25,7 +32,7 @@ $showCreatedColumn = true;
 $showModifiedColumn = true;
 
 $showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
-$indexColspan = 6; // iso2, name, locale, continent, pos, actions
+$indexColspan = 6; // continent, name, iso2, locale, pos, actions
 if ($showIdColumn) {
 	$indexColspan++;
 }
@@ -69,11 +76,22 @@ $config = [
 		'continent' => __('Continent'),
 		'visible' => __('Visible'),
 		'pos' => __('Position'),
-		'user_count' => __('Users'),
+		'user_count' => __('Number of users'),
+		'additional_languages' => __('Additional languages'),
 		'created' => __('Created'),
 		'modified' => __('Modified'),
 	],
-	'relatedLinkFields' => [],
+	'relatedLinkFields' => [
+		'additional_languages' => [
+			'getUrl' => $this->Url->build(['action' => 'recordGet']),
+			'editUrl' => $this->Url->build(['action' => 'edit']),
+			'viewUrl' => $this->Url->build(['action' => 'view']),
+			'deleteUrl' => $canDeleteCountry ? $this->Url->build(['action' => 'delete']) : '',
+			'deleteFormPrefix' => 'country',
+			'labels' => 'country',
+			'title' => __('Country details'),
+		],
+	],
 	'entityFieldLabels' => [
 		'country' => [
 			'id' => __('ID'),
@@ -83,7 +101,8 @@ $config = [
 			'continent' => __('Continent'),
 			'visible' => __('Visible'),
 			'pos' => __('Position'),
-			'user_count' => __('Users'),
+			'user_count' => __('Number of users'),
+			'additional_languages' => __('Additional languages'),
 			'created' => __('Created'),
 			'modified' => __('Modified'),
 		],
@@ -107,7 +126,30 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 						<?= h($rowDoubleClickHint) ?>
 					<?php endif; ?>
 				</div>
-				<div class="float-right d-flex align-items-center gap-2">
+				<div class="float-right d-flex align-items-center gap-2 flex-wrap justify-content-end">
+					<form method="get" action="<?= h($this->Url->build(['action' => 'index'])) ?>"
+						class="countries-visible-filter mb-0"
+						id="countries-visible-filter">
+						<?php foreach ($visibleFilterQuery as $name => $value): ?>
+							<?php if (!is_scalar($value)) {
+								continue;
+							} ?>
+							<input type="hidden" name="<?= h((string)$name) ?>" value="<?= h((string)$value) ?>">
+						<?php endforeach; ?>
+						<input type="hidden" name="visible_only" value="0" id="countries-visible-only-off"
+							<?= $countriesVisibleOnly ? 'disabled' : '' ?>>
+						<div class="form-check form-switch mb-0">
+							<input type="checkbox"
+								class="form-check-input"
+								id="countries-visible-only"
+								name="visible_only"
+								value="1"
+								<?= $countriesVisibleOnly ? 'checked' : '' ?>
+								onchange="document.getElementById('countries-visible-only-off').disabled = this.checked; this.form.submit();">
+							<label class="form-check-label text-nowrap" for="countries-visible-only"><?= __('Only visible countries') ?></label>
+						</div>
+					</form>
+					<span class="index-header-sep" aria-hidden="true">|</span>
 					<?= $this->element('admin/table_search') ?>
 					<?= $this->element('admin/index_pagination') ?>
 				</div>
@@ -121,16 +163,16 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 								<?php if ($showIdColumn): ?>
 									<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
 								<?php endif; ?>
-								<th scope="col" class="string iso2"><?= $this->Paginator->sort('iso2', __('ISO')) ?></th>
-								<th scope="col" class="string name"><?= $this->Paginator->sort('name', __('Name')) ?></th>
-								<th scope="col" class="string locale"><?= $this->Paginator->sort('locale', __('Locale')) ?></th>
 								<th scope="col" class="string continent"><?= $this->Paginator->sort('Continents.name', __('Continent')) ?></th>
+								<th scope="col" class="string name"><?= $this->Paginator->sort('name', __('Name')) ?></th>
+								<th scope="col" class="string iso2"><?= $this->Paginator->sort('iso2', __('ISO')) ?></th>
+								<th scope="col" class="string locale"><?= $this->Paginator->sort('locale', __('Locale')) ?></th>
 								<?php if ($showVisibleColumn): ?>
 									<th scope="col" class="boolean visible"><?= $this->Paginator->sort('visible', __('Visible')) ?></th>
 								<?php endif; ?>
 								<th scope="col" class="number pos"><?= $this->Paginator->sort('pos', __('Position')) ?></th>
 								<?php if ($showCountColumn): ?>
-									<th scope="col" class="number count"><?= $this->Paginator->sort('user_count', __('Users')) ?></th>
+									<th scope="col" class="number count" style="min-width: 15rem"><?= $this->Paginator->sort('user_count', __('Number of users')) ?></th>
 								<?php endif; ?>
 								<?php if ($showTimestampColumn): ?>
 									<th scope="col" class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
@@ -155,10 +197,10 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 									<?php if ($showIdColumn): ?>
 										<td class="number id"><?= h($country->id) ?></td>
 									<?php endif; ?>
-									<td class="string iso2"><code><?= h($country->iso2) ?></code></td>
-									<td class="string name"><?= h($country->name) ?></td>
-									<td class="string locale"><code><?= h($country->locale) ?></code></td>
 									<td class="string continent"><?= h($country->continent->name ?? '') ?></td>
+									<td class="string name"><?= h($country->name) ?></td>
+									<td class="string iso2"><code><?= h($country->iso2) ?></code></td>
+									<td class="string locale"><code><?= h($country->locale) ?></code></td>
 									<?php if ($showVisibleColumn): ?>
 										<td class="boolean visible">
 											<?= $country->visible
@@ -168,7 +210,7 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 									<?php endif; ?>
 									<td class="number pos text-end"><?= h(\App\Utility\LocaleNumberParser::format($country->pos, decimals: $numberDecimals['integer'])) ?></td>
 									<?php if ($showCountColumn): ?>
-										<td class="number count text-end"><?= h(\App\Utility\LocaleNumberParser::formatCount($country->user_count, decimals: $numberDecimals['integer'])) ?></td>
+										<td class="number count text-end" style="min-width: 15rem"><?= h(\App\Utility\LocaleNumberParser::formatCount($country->user_count, decimals: $numberDecimals['integer'])) ?></td>
 									<?php endif; ?>
 									<?php if ($showTimestampColumn): ?>
 										<td class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">

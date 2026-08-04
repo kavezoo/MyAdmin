@@ -5,6 +5,458 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-04 — UI nyelv = login nyelv
+
+### Mi változott / miért
+A bejelentkezés utáni felület nyelve a login képernyőn választott nyelv (session/cookie), nem a user `country_id` locale. Az ország locale csak fallback, ha nincs session/cookie.
+
+### Érintett
+- `BrowserLocale::forLoggedIn` — sorrend: session → cookie → user country → detect
+- `UsersController::applyStoredUserLocalePreferences`
+- Doc: `login-language.md`, `users-auth.md`, `i18n.md`
+
+---
+
+## 2026-07-31 — Countries modal: további nyelvek linkelve
+
+### Mi változott / miért
+Az ország részletek modalban megjelennek a felvett Additional languages, klikkelhető kapcsolt rekordként (mint a Cities→Samples).
+
+### Érintett
+- `CountriesController::recordGet` + `relatedAdditionalLanguagesForModal`
+- `templates/Admin/Countries/index.php` `relatedLinkFields`
+
+---
+
+## 2026-07-31 — Form TAB-ok = country_visibilities nyelvek
+
+### Mi változott / miért
+A fordítási fülek kizárólag az aktív országhoz felvett nyelvek (saját + Additional languages). A form default locale nem fix en_GB, hanem a lista szerinti.
+
+### Érintett
+- `FormLanguages::defaultLocaleForForm()`, `setFormLanguageTabs`, `getWithTranslations`
+- Doc: `form-i18n-tabs.md`, `country-visibilities.md`
+
+---
+
+## 2026-07-31 — Countries form: nincs nyelvi TAB
+
+### Mi változott / miért
+Országnevek fordításai seedelve vannak; a Countries add/edit formon nincs `form_language_fields` — egyetlen Name mező.
+
+### Érintett
+- `templates/Admin/Countries/form.php`, `CountriesController` (nincs `setFormLanguageTabs` / `_translations`)
+- Doc: `countries-admin.md`
+
+---
+
+## 2026-07-31 — country_visibilities: saját + plusz nyelvek
+
+### Mi változott / miért
+Junction újraértelmezés: minden országhoz kötelező self (saját TAB nyelv); a formon csak **Additional languages** (extras). en_GB lock eltávolítva a visibility listából.
+
+### Érintett
+- `tmp/seed_country_visibilities.php` — TRUNCATE + self-only
+- `CountriesTable::ensureSelfFirst`, `visibleCountryIdsFor`, `seedDefaultVisibilitiesForCountry`
+- Countries form Select2; `FormLanguages` — saját nyelv első
+- Doc: `country-visibilities.md`, `form-i18n-tabs.md`
+
+---
+
+## 2026-07-31 — Event logs: adatváltozás megjelenítés (from → to)
+
+### Mi változott / miért
+Lista és részletező egyértelműen mutatja: melyik mező miről mire változott.
+
+### Érintett
+- `EventLogChanges` utility; `element/admin/event_log_changes`
+- Admin + saját event log index: **Adatváltozások** oszlop
+- View: kiemelt Data changes kártya
+
+---
+
+## 2026-07-31 — Event logs: nincs oldalnézet napló
+
+### Mi változott / miért
+Megtekintés / böngészés nem kerül az `event_logs`-ba — csak login/logout + entity CRUD (from→to).
+
+### Érintett
+- `EventLogRequestMiddleware` eltávolítva a middleware queue-ból (és a fájl)
+- Doc: `event-logs.md`
+
+---
+
+## 2026-07-31 — Event logs: mező diff (from → to)
+
+### Mi változott / miért
+Entity mentéskor a dirty mezők régi és új értéke bekerül a naplóba; jelszó/token csak „változott” jelzéssel.
+
+### Érintett
+- `EventLogBehavior` — `changes[field]={from,to}`; description összefoglaló
+- `EventLogger::isSecretField`; view: Changed fields tábla
+- Doc: `event-logs.md`
+
+---
+
+## 2026-07-31 — Event logs: user szűrő + kevesebb zaj
+
+### Mi változott / miért
+Officer event log indexen user Select2 AJAX szűrő; nyelvi táblák és olvasási HTTP zaj kikerül a naplóból (csak adatváltozás).
+
+### Érintett
+- `Admin\EventLogsController::userOptions` + index `user_id` filter; `event_logs_index.js`
+- `EventLogBehavior` skip: Languages, I18n
+- `EventLogRequestMiddleware`: csak POST/PUT/PATCH/DELETE; skip Dashboard/Locales/Pages/Search
+- Doc: `event-logs.md`
+
+---
+
+## 2026-07-31 — Tagság: new → profil → clubpresident → member
+
+### Mi változott / miért
+Frissen regisztrált (`new`) userek kötelező profilkiegészítése login után; kész profil → email a clubpresidentnek; jelentkezők lista + Approve → `member` + email login linkkel.
+
+### Érintett
+- Séma: `config/schema/clubs.sql`, `users_membership.sql`; seed: `tmp/seed_membership.php`
+- `MembershipProfile`, `MembershipService`, `MembershipMailer` + email templatek
+- `UsersController::completeProfile`, `New\AppController` gate, afterLogin redirect
+- `Clubpresident\ApplicantsController` + sidebar
+- Permissions: `completeProfile`
+- Doc: `membership.md`, `users-auth.md`
+
+---
+
+## 2026-08-04 — Login: nyelv választó (nem ország)
+
+### Mi változott / miért
+Login képernyőn nyelv Select2 (böngésző felismerés + i18n nyelvnevek); regisztrációnál marad az ország.
+
+### Érintett
+- `languages` tábla + Translate `name` → `i18n`; `AdminLanguage`, `tmp/seed_languages.php`
+- `UsersController` login/register szétválasztás; `templates/Users/login.php`; `users_auth_locale.js`
+- Doc: `login-language.md`, `users-auth.md`
+
+---
+
+## 2026-08-04 — event_logs: felhasználói eseménynapló
+
+### Mi változott / miért
+Minden auth + HTTP + adatváltozás naplózása ország szerint; officer kereső; saját napló minden usernek.
+
+### Érintett
+- `config/schema/event_logs.sql`, migráció `CreateEventLogs`
+- `EventLogsTable` / Entity, `EventLogger`, `EventLogBehavior`, `EventLogRequestMiddleware`
+- `Admin\EventLogsController`, `UsersController::eventLog`, sidebars, permissions
+- Doc: `event-logs.md`, `README.md`, `users-auth.md`
+
+---
+
+## 2026-08-04 — users.enabled: belépés tiltás / engedély
+
+### Mi változott / miért
+CakeDC `active` mellett az app `enabled` mező is kapu: admin/president kizárhat usert. Login + session közben érvényes.
+
+### Érintett
+- `UsersTable::findActive` (`active=1` **és** `enabled=1`)
+- `App\Controller\Component\LoginComponent` — disabled Flash
+- `UsersMiddlewareQueueLoader` + `RequireUserEnabledMiddleware`
+- `config/users.php`, migráció `AddEnabledToUsers`
+- Doc/rule: `users-auth.md`, `users-auth.mdc`
+
+---
+
+## 2026-08-04 — country_visibilities: országonkénti láthatóság
+
+### Mi változott / miért
+Form nyelvi TAB-ok és login országlista ország→ország kapcsolótáblából; Countries formon állítható. **en_GB** mindig első és nem kapcsolható ki.
+
+### Érintett
+- `config/schema/country_visibilities.sql`, `tmp/seed_country_visibilities.php`
+- `CountryVisibilitiesTable`, `CountriesTable` finderek / HABTM `VisibleCountries`
+- `FormLanguages`, `AdminCountry`, `BrowserLocale`, `CurrentUser::countryId()`
+- `CountriesController` + `Countries/form.php` Select2 + en_GB/self lock
+- Doc/rule: `country-visibilities.md`, `countries-admin.md`, `form-i18n-tabs.md`, `README.md`, `uj-projekt-sema-playbook.md`, `admin-form-i18n-tabs.mdc`, `admin-countries-index.mdc`
+
+---
+
+## 2026-08-04 — Agent playbook: új projekt = séma + minden megoldás
+
+### Mi változott / miért
+Új / éles projektnél az agent a **DB séma és táblakapcsolatok** alapján építse be az összes eddigi Admin megoldást (ne demó mezőket másoljon).
+
+### Érintett
+- **`doc/uj-projekt-sema-playbook.md`** — oszlop/kapcsolat mátrix + checklist
+- **`.cursor/rules/uj-projekt-sema.mdc`** — `alwaysApply`
+- Index: `README.md`, `uj-projekt.md`, `minta-tanulsagok.md` §0, `auto-dokumentalas.mdc`
+
+---
+
+## 2026-08-04 — Parents TAB → name fókusz (inline script)
+
+### Mi változott / miért
+Parents editnél a fülváltás után nem ment a fókusz a name-re (`fade` + tooltip focus + form.js cache).
+
+### Javítás
+- `form_language_fields`: inline JS (shown.bs.tab + capture click); tab-pane **fade nélkül**
+- Tooltip: csak `hover` (`form.js`)
+
+### Érintett
+- `templates/element/admin/form_language_fields.php`, `webroot/js/pages/form.js`
+
+---
+
+## 2026-08-04 — Parents TAB fókusz javítás
+
+### Mi változott / miért
+`/admin/parents/edit/…` TAB váltáskor nem ment a name fókusz: a tooltip belső `span` (`data-bs-toggle=tooltip`) + a fókusz a tab gombon maradt.
+
+### Javítás
+- Tooltip a tab **gombon**; `js-i18n-name` osztály
+- jQuery `shown.bs.tab` + click fallback; focus 0/50/200 ms
+- Pane `tabindex="-1"`
+
+### Érintett
+- `templates/element/admin/form_language_fields.php`, `webroot/js/pages/form.js`
+- Doc/rule: `form-i18n-tabs.md`, `admin-form-i18n-tabs.mdc`
+
+---
+
+## 2026-08-04 — Session zárás: kötelező csillag, TAB tooltip, name fókusz
+
+### Mi változott / miért
+Admin form UX kör lezárása: kötelező mező jelölés, nyelvi TAB tooltip (visible országok), TAB váltáskor name fókusz.
+
+### Funkciók
+1. **Kötelező `*`** — piros, a label **előtt**, szóköz nélkül (`FormHelper::adminLabel` / `requiredMark`; validator alapján).
+2. **„Translations:”** → hu: *Fordítások:*
+3. **Nyelvi TAB tooltip** — adott nyelv összes `visible` országa egymás alatt; live `find('visibleTranslated')`.
+4. **TAB váltás → name fókusz** — natív BS5 `shown.bs.tab` + `[data-i18n-name]` (Samples, Parents, Countries full edit). jQuery `.on('shown.bs.tab')` nem megbízható Bootstrap 5-tel.
+5. **Countries** full edit: nyelvi TAB-ok a `name` fordításához (`setFormLanguageTabs` + `getWithTranslations`).
+
+### Érintett (fő)
+- `src/View/Helper/FormHelper.php`, `templates/Admin/**/form.php`, `form_language_fields.php`
+- `src/Utility/FormLanguages.php`, `webroot/js/pages/form.js`, `webroot/css/style.css`
+- `CountriesController`, `Country` entity `_translations`
+- `resources/locales/hu_HU/default.po`
+- Doc/rule: `admin-konvenciok.md`, `form-i18n-tabs.md`, `admin-form-required.mdc`, `admin-form-i18n-tabs.mdc`
+
+---
+
+## 2026-08-04 — Form nyelvi TAB: váltáskor name fókusz (javítás + Countries)
+
+### Mi változott / miért
+TAB → name fókusz **minden** nyelvi fülös formon: natív Bootstrap 5 esemény (a jQuery binding nem mindig futott). Countries full edit is kapott nyelvi TAB-okat.
+
+### Érintett
+- `webroot/js/pages/form.js` — `addEventListener('shown.bs.tab')` + `data-i18n-name`
+- `templates/element/admin/form_language_fields.php`
+- `templates/Admin/Countries/form.php`, `CountriesController`, `Country` entity
+- Doc: `form-i18n-tabs.md`, `admin-form-i18n-tabs.mdc`
+
+---
+
+## 2026-08-04 — Form nyelvi TAB tooltip: összes visible ország
+
+### Mi változott / miért
+Nyelvi fül tooltip: az adott nyelvet beszélő **összes** `visible` ország egymás alatt (UI locale név + ISO), nem csak a „nyertes” ország.
+
+### Érintett
+- `src/Utility/FormLanguages.php` — `countries[]` lista
+- `templates/element/admin/form_language_fields.php` — `data-bs-html` + `<br>`
+- Doc/rule: `form-i18n-tabs.md`, `admin-form-i18n-tabs.mdc`
+
+---
+
+## 2026-08-04 — Kötelező mező: piros csillag a labelnél
+
+### Mi változott / miért
+Admin formokon a kötelező mezők címkéjén automatikus piros `*` (validator alapján); opcionálisnál nincs.
+
+### Érintett
+- `src/View/Helper/FormHelper.php` — `adminLabel()`, `requiredMark()`, `isFieldRequired()`
+- `templates/Admin/**/form.php`, `templates/element/admin/form_language_fields.php`
+- `webroot/css/style.css` — `.required`
+- Doc: `admin-konvenciok.md`
+
+---
+
+## 2026-08-04 — Session napló: tartós playbookok (agent)
+
+### Miért
+A mai kör (Countries UI, mentetlen form, locale keresés/sort, nyelvi TAB tooltip, Cake 5.3 hibák) **chat nélkül** újraépíthető legyen.
+
+### Tartós specek / rules (olvasd ezeket először)
+
+| Téma | Doc | Rule |
+|------|-----|------|
+| Countries index (visible-only, oszlopok, CSS) | [countries-admin.md](countries-admin.md) | `admin-countries-index.mdc` |
+| Form nyelvi TAB + ország tooltip + error/setLocale buktatók | [form-i18n-tabs.md](form-i18n-tabs.md) | `admin-form-i18n-tabs.mdc` |
+| Index keresés/sort UI locale | [i18n.md](i18n.md) | `admin-translate-search-sort.mdc` (+ `admin-kereses-index-allapot.mdc`) |
+| Mentetlen form leave Swal | [admin-konvenciok.md](admin-konvenciok.md) | `admin-form-unsaved.mdc` |
+| Gyakori hibák | [minta-tanulsagok.md](minta-tanulsagok.md) §13 | — |
+
+### Agent checklist új Translate-es CRUD-nál
+
+1. `admin_search.php` fields + `indexPaginateOptionsFor` (+ assoc Translate táblák)
+2. Form: `setFormLanguageTabs` + `getWithTranslations` + `form_language_fields`
+3. `#form-horizontal` + `pages/form.js` (unsaved leave)
+4. `getBehavior('Translate')->setLocale` — soha Table proxy
+5. `.po` msgid-ek + `cache clear _cake_translations_`
+6. Doc/rule frissítés (`auto-dokumentalas.mdc`)
+
+---
+
+## 2026-08-04 — Form nyelvi TAB: ország tooltip (UI locale)
+
+### Mi változott / miért
+- Nyelvi fülek (EN/HU/…): hover tooltip = ország neve az **oldal nyelvén** + ISO (pl. „Magyarország (HU)”).
+- `FormLanguages::tabs()` betölti a Translate `name`-et; tooltip a tab felirat `<span>`-jén (`data-bs-toggle=tooltip`, a tab gomb `data-bs-toggle=tab` marad).
+
+### Érintett
+- `src/Utility/FormLanguages.php`
+- `templates/element/admin/form_language_fields.php`
+
+---
+
+## 2026-08-04 — Countries index ORDER BY: ne COALESCE (Paginator _prefix)
+
+### Mi változott / miért
+- `COALESCE(Alias_x.content, Alias.name)` order key → Cake `_prefix()` az első `.`-nál vág → SQL syntax error.
+- `AdminTranslate`: rendezés = `*_translation.content` + másodlagos kanonikus `Alias.field`.
+
+### Érintett
+- `src/Utility/AdminTranslate.php`, `CountriesTable::findVisibleTranslated`, docs
+
+---
+
+## 2026-08-04 — Samples edit: Cake 5.3 setLocale deprecation + form error bool
+
+### Mi változott / miért
+- `getWithTranslations`: `$table->setLocale()` → `getBehavior('Translate')->setLocale()` (Cake 5.3 deprecation).
+- `AdminTranslate` / `AdminSearch`: `translationField()` ugyanez a path.
+- `form_language_fields`: `'error' => $isDefault` (bool `true`) → FormHelper TypeError; csak nem-default tabon `error => false`.
+
+### Érintett
+- `src/Controller/Admin/AppController.php`
+- `src/Utility/AdminTranslate.php`, `src/Utility/AdminSearch.php`
+- `templates/element/admin/form_language_fields.php`
+
+---
+
+## 2026-08-04 — Index keresés / rendezés UI locale szerint (Translate)
+
+### Mi változott / miért
+- Keresés és ABC rendezés eddig a **kanonikus angol** `name` oszlopon ment; megjelenítés viszont Translate-elt.
+- Most: `AdminTranslate` + `AdminSearch` → LIKE / ORDER a UI locale fordításán (`translationField` + kanonikus másodlagos sort).
+- Controllers: `indexPaginateOptionsFor()` (Countries, Samples, Parents, Cities, Setups).
+- Cities / Setups (nincs Translate): viselkedés változatlan.
+
+### Érintett
+- `src/Utility/AdminTranslate.php` (új)
+- `src/Utility/AdminSearch.php`, `src/Utility/AdminCountry.php`
+- `src/Controller/Admin/AppController.php` (`indexPaginateOptionsFor`)
+- `CountriesController`, `SamplesController`, `ParentsController`, `CitiesController`, `SetupsController`
+- `CountriesTable::findVisibleTranslated`
+- `config/admin_search.php`, `doc/i18n.md`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-04 — Countries index UI (összefoglaló dokumentáció)
+
+### Mi változott / miért
+Teljes Countries lista UX + tartós spec (agent playbook):
+
+1. **Visible-only switch** — `__('Only visible countries')` / hu: *Csak a látható országok*; session `Admin.countriesVisibleOnly`; default be.
+2. **Header elválasztó** — `|` (`.index-header-sep`, nagy margó) a switch és a kereső között.
+3. **Oszlopsorrend** — Continent → Name → ISO → Locale → …
+4. **Kötött szélességek** — `.continent` 10.5rem, `.iso2` 5rem, `.locale` 8.5rem.
+5. **user_count** — címke `__('Number of users')` / *Felhasználók száma*; `.count` = `width:1%` + `min-width:15rem` (+ `pages/index.css`, inline) — tábla cella nem zsugorítja.
+6. **i18n** — `Locale` → *Nyelvi kód*; leave-Swal msgid-ek a `.po`-ban.
+7. **Mentetlen form** — `#form-horizontal` dirty → `MyAdmin.confirmLeave` (korábbi kör).
+
+### Spec / rule
+- **[countries-admin.md](countries-admin.md)** — tartós playbook
+- `.cursor/rules/admin-countries-index.mdc`
+- [admin-konvenciok.md](admin-konvenciok.md), [i18n.md](i18n.md), [admin-oldal.md](admin-oldal.md)
+
+### Érintett kód
+- `src/Controller/Admin/CountriesController.php`
+- `templates/Admin/Countries/index.php`
+- `webroot/css/style.css`, `webroot/css/pages/index.css`
+- `webroot/js/pages/form.js`, `webroot/js/app.js`, `templates/layout/admin.php`
+- `resources/locales/hu_HU/default.po`, `resources/locales/default.pot`
+
+---
+
+## 2026-08-04 — Countries index oszlopsorrend / szélesség
+
+### Mi változott / miért
+- Sorrend: **Continent → Name → ISO → Locale** (ISO a név után; földrész a név előtt).
+- Fix CSS: `.iso2` / `.locale` / `.continent` (lásd countries-admin.md; count: min-width 15rem).
+
+### Érintett
+- `templates/Admin/Countries/index.php`, `webroot/css/style.css`
+
+---
+
+## 2026-08-04 — Countries Visible only: elválasztó + hu fordítás
+
+### Mi változott / miért
+- Switch és kereső között `.index-header-sep` (`|`).
+- `Only visible countries` → `Csak a látható országok` (`hu_HU/default.po`).
+
+### Érintett
+- `templates/Admin/Countries/index.php`, `webroot/css/style.css`
+- `resources/locales/hu_HU/default.po`, `resources/locales/default.pot`, `doc/i18n.md`
+
+---
+
+## 2026-08-04 — Index `.count` oszlop szélesebb
+
+### Mi változott / miért
+- `.count`: nem elég a fix rem — **`width:1%` + `min-width:15rem`** (+ `pages/index.css`); Countries címke: *Felhasználók száma*.
+
+### Érintett
+- `webroot/css/style.css`, `webroot/css/pages/index.css`, `doc/admin-oldal.md`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-04 — Countries index: Visible only szűrő
+
+### Mi változott / miért
+- Országlista fejléc switch; session `Admin.countriesVisibleOnly`; query `visible_only=1|0`; default on.
+
+### Érintett
+- `src/Controller/Admin/CountriesController.php`
+- `templates/Admin/Countries/index.php`
+
+---
+
+## 2026-08-04 — Mentetlen form: Swal leave confirm
+
+### Mi változott / miért
+- Add/edit (`#form-horizontal` + `pages/form.js`): ha mező változott a betöltés óta, navigáláskor `MyAdmin.confirmLeave` (Swal); ha nem dirty → szabad elmenni.
+- Submit → nincs kérdés; tab zárás dirty-nál → natív `beforeunload`.
+
+### Érintett
+- `webroot/js/pages/form.js`, `webroot/js/app.js` (`confirmLeave`)
+- `templates/layout/admin.php` (unsaved* messages)
+- `doc/admin-konvenciok.md`, `doc/minta-tanulsagok.md`, `doc/README.md`
+- `.cursor/rules/admin-form-unsaved.mdc`
+
+---
+
+## 2026-08-04 — is_superuser flag újra ACL-ben
+
+### Mi változott / miért
+- `CurrentUser::isSuperuser()`: `role===superuser` **vagy** CakeDC `is_superuser` (szigorú 1/true/"1").
+- Flag `0` → nem superuser; flag `1` + logout/login → igen (Countries teljes jog, profil badge).
+
+### Érintett
+- `src/Auth/CurrentUser.php`, `src/Auth/CountryAccess.php`, `doc/users-auth.md`, `.cursor/rules/users-auth.mdc`
+
+---
+
 ## 2026-08-04 — Superuser ACL = Users.role (nem CakeDC flag)
 
 ### Mi változott / miért

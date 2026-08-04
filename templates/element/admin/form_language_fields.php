@@ -1,19 +1,19 @@
 <?php
 /**
- * Language tabs for translatable text fields (visible countries by pos, EN first).
+ * Language tabs for translatable text fields.
  *
- * Tab label = short language code (EN, HU, DE, …).
+ * Tabs come from the active country’s `country_visibilities` (own + additional languages).
  * Default locale fields map to the entity root; other locales to `_translations.{locale}.*`.
  *
  * @var \App\View\AppView $this
  * @var \Cake\Datasource\EntityInterface $entity
- * @var list<array{locale: string, code: string, iso2: string, country_id: int}> $formLanguageTabs
+ * @var list<array{locale: string, code: string, iso2: string, country_id: int, country_name: string, countries?: list<array{iso2: string, name: string, country_id: int}>}> $formLanguageTabs
  * @var list<array{name: string, label: string, type?: string, rows?: int, class?: string}> $i18nFields
  * @var string $defaultLocale
  */
 $formLanguageTabs = $formLanguageTabs ?? [];
 $i18nFields = $i18nFields ?? [];
-$defaultLocale = $defaultLocale ?? 'en_GB';
+$defaultLocale = $defaultLocale ?? \App\Utility\FormLanguages::defaultLocaleForForm();
 $entity = $entity ?? null;
 
 if ($formLanguageTabs === [] || $i18nFields === [] || $entity === null) {
@@ -30,10 +30,41 @@ $slug = static function (string $locale): string {
 		<ul class="nav nav-tabs form-language-tabs" id="formLanguageTabs" role="tablist">
 			<?php foreach ($formLanguageTabs as $i => $tab): ?>
 				<?php
-				$localeSlug = $slug($tab['locale']);
+				$locale = $tab['locale'];
+				$localeSlug = $slug($locale);
 				$tabId = 'form-lang-' . $localeSlug . '-tab';
 				$paneId = 'form-lang-' . $localeSlug;
 				$isFirst = $i === 0;
+				$isDefault = $locale === $defaultLocale
+					|| (
+						\App\Utility\FormLanguages::isEnglish($locale)
+						&& \App\Utility\FormLanguages::isEnglish($defaultLocale)
+					);
+				$nameInputId = ($isDefault ? 'name' : 'name-' . $localeSlug);
+				$countryLines = [];
+				$countriesList = $tab['countries'] ?? null;
+				if (is_array($countriesList) && $countriesList !== []) {
+					foreach ($countriesList as $c) {
+						$cName = trim((string)($c['name'] ?? ''));
+						$cIso = trim((string)($c['iso2'] ?? ''));
+						if ($cName === '') {
+							$cName = $cIso !== '' ? $cIso : (string)($tab['code'] ?? '');
+						}
+						$countryLines[] = $cIso !== '' && !str_contains($cName, '(' . $cIso . ')')
+							? $cName . ' (' . $cIso . ')'
+							: $cName;
+					}
+				} else {
+					$countryName = trim((string)($tab['country_name'] ?? ''));
+					$iso2 = trim((string)($tab['iso2'] ?? ''));
+					if ($countryName === '') {
+						$countryName = $iso2 !== '' ? $iso2 : (string)($tab['code'] ?? '');
+					}
+					$countryLines[] = $iso2 !== '' && !str_contains($countryName, '(' . $iso2 . ')')
+						? $countryName . ' (' . $iso2 . ')'
+						: $countryName;
+				}
+				$tabTooltipHtml = implode('<br>', array_map('h', $countryLines));
 				?>
 				<li class="nav-item" role="presentation">
 					<button
@@ -41,10 +72,14 @@ $slug = static function (string $locale): string {
 						id="<?= h($tabId) ?>"
 						data-bs-toggle="tab"
 						data-bs-target="#<?= h($paneId) ?>"
+						data-name-target="<?= h($nameInputId) ?>"
 						type="button"
 						role="tab"
 						aria-controls="<?= h($paneId) ?>"
 						aria-selected="<?= $isFirst ? 'true' : 'false' ?>"
+						data-bs-placement="top"
+						data-bs-html="true"
+						title="<?= $tabTooltipHtml ?>"
 					><?= h($tab['code']) ?></button>
 				</li>
 			<?php endforeach; ?>
@@ -64,11 +99,11 @@ $slug = static function (string $locale): string {
 					);
 				?>
 				<div
-					class="tab-pane fade<?= $isFirst ? ' show active' : '' ?>"
+					class="tab-pane<?= $isFirst ? ' show active' : '' ?>"
 					id="<?= h($paneId) ?>"
 					role="tabpanel"
 					aria-labelledby="<?= h($tabId) ?>"
-					tabindex="0"
+					tabindex="-1"
 				>
 					<?php foreach ($i18nFields as $field): ?>
 						<?php
@@ -104,22 +139,34 @@ $slug = static function (string $locale): string {
 							'label' => false,
 							'id' => $inputId,
 							'value' => $value,
-							'error' => $isDefault,
 						];
+						if ($fieldName === 'name') {
+							$controlOptions['data-i18n-name'] = '1';
+							$controlOptions['data-i18n-locale'] = $locale;
+						}
+						// HTML5 required only on default locale — hidden tab required fields steal focus
+						if (!$isDefault) {
+							$controlOptions['error'] = false;
+							$controlOptions['required'] = false;
+						}
 						if ($fieldType === 'editor') {
 							$controlOptions['type'] = 'textarea';
 							$controlOptions['rows'] = $rows;
 							$controlOptions['class'] = trim('form-control editor ' . ($field['class'] ?? ''));
 						} else {
 							$controlOptions['type'] = 'text';
-							$controlOptions['class'] = trim('form-control mb-3 ' . ($field['class'] ?? ''));
+							$class = 'form-control mb-3';
+							if ($fieldName === 'name') {
+								$class .= ' js-i18n-name';
+							}
+							$controlOptions['class'] = trim($class . ' ' . ($field['class'] ?? ''));
 							$controlOptions['autocomplete'] = 'off';
 							if ($isFirst && $fieldName === 'name') {
 								$controlOptions['autofocus'] = true;
 							}
 						}
 						?>
-						<label for="<?= h($inputId) ?>" class="form-label"><?= h($fieldLabel) ?></label>
+						<label for="<?= h($inputId) ?>" class="form-label"><?= $this->Form->requiredMark($fieldName) ?><?= h($fieldLabel) ?></label>
 						<?= $this->Form->control($formName, $controlOptions) ?>
 						<?php if ($isDefault): ?>
 							<?= $this->element('admin/field_error', ['field' => $fieldName]) ?>
@@ -130,3 +177,79 @@ $slug = static function (string $locale): string {
 		</div>
 	</div>
 </div>
+<?php
+// Inline: TAB → focus that locale's name (#name / #name-hu-hu / …)
+$this->Html->scriptBlock(
+	<<<'JS'
+(function () {
+	function focusLanguageName(btn) {
+		if (!btn) {
+			return;
+		}
+		var nameId = btn.getAttribute('data-name-target');
+		var paneSel = btn.getAttribute('data-bs-target');
+		var pane = paneSel ? document.querySelector(paneSel) : null;
+
+		if (pane && window.jQuery) {
+			window.jQuery(pane).find('.editor').each(function () {
+				var $editor = window.jQuery(this);
+				if ($editor.data('trumbowyg')) {
+					$editor.trumbowyg('html', $editor.trumbowyg('html'));
+				}
+			});
+		}
+
+		var input = null;
+		if (nameId) {
+			input = document.getElementById(nameId);
+		}
+		if (!input && pane) {
+			input = pane.querySelector('input.js-i18n-name')
+				|| pane.querySelector('input[data-i18n-name="1"]')
+				|| pane.querySelector('input.form-control');
+		}
+		if (!input || input.disabled) {
+			return;
+		}
+		input.focus();
+		if (typeof input.select === 'function') {
+			try { input.select(); } catch (err) { /* ignore */ }
+		}
+	}
+
+	function bindLanguageTabFocus() {
+		var root = document.getElementById('formLanguageTabs');
+		if (!root || root.getAttribute('data-name-focus-bound') === '1') {
+			return;
+		}
+		root.setAttribute('data-name-focus-bound', '1');
+
+		root.querySelectorAll('[data-bs-toggle="tab"]').forEach(function (btn) {
+			btn.addEventListener('shown.bs.tab', function () {
+				focusLanguageName(btn);
+			});
+		});
+
+		root.addEventListener('click', function (e) {
+			var btn = e.target.closest('[data-bs-toggle="tab"]');
+			if (!btn || !root.contains(btn)) {
+				return;
+			}
+			window.requestAnimationFrame(function () {
+				focusLanguageName(btn);
+				window.setTimeout(function () { focusLanguageName(btn); }, 0);
+				window.setTimeout(function () { focusLanguageName(btn); }, 50);
+			});
+		}, true);
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', bindLanguageTabFocus);
+	} else {
+		bindLanguageTabFocus();
+	}
+})();
+JS,
+	['block' => 'scriptBottom']
+);
+?>

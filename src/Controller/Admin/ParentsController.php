@@ -39,7 +39,7 @@ class ParentsController extends AppController
             return $redirect;
         }
 
-        $paginateOptions = $this->indexPaginateOptions([
+        $paginateOptions = $this->indexPaginateOptionsFor($this->Parents, [
             'sortableFields' => [
                 'id',
                 'name',

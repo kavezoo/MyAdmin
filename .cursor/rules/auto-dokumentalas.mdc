@@ -16,11 +16,12 @@ A felhasználónak **soha ne kelljen külön kérnie** a dokumentálást. Minden
 | Setups EAV / típus / slug | `doc/setups.md` (+ `setups-eav.mdc`) |
 | CakeDC auth (login / register / profile / role panelek) | `doc/users-auth.md` (+ `users-auth.mdc`) |
 | Demó→éles / tartós minta-viselkedés | `doc/minta-tanulsagok.md` (checklist, gyakori hibák, §0 playbook) |
-| Locale / `__()` / Admin nyelv | `doc/i18n.md` |
+| Locale / `__()` / Admin nyelv / Translate form TAB / index sort | `doc/i18n.md`, `doc/form-i18n-tabs.md`, `doc/countries-admin.md` |
 | Szám / dátum middleware, parser | `doc/middleware.md` |
 | Keretrendszer fájlok, middleware sorrend | `doc/keretrendszer.md` |
 | Új element / könyvtár | `doc/struktura.md` |
 | Greenfield lépés | `doc/uj-projekt.md` |
+| Új/éles projekt séma szerint | `doc/uj-projekt-sema-playbook.md` (+ `uj-projekt-sema.mdc`) |
 | Rögzített döntés változott | `doc/README.md` „Rögzített döntések” |
 | Tartós agent-viselkedés (playbook) | `.cursor/rules/*.mdc` is — ha új kötelező minta, **rule + doc** együtt |
 

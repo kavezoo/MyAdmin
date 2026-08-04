@@ -25,6 +25,11 @@ class CountriesController extends AppController
     protected int $indexMaxLimit = 1000;
 
     /**
+     * Session key: Countries index „visible only” filter.
+     */
+    protected const COUNTRIES_VISIBLE_ONLY_SESSION_KEY = 'Admin.countriesVisibleOnly';
+
+    /**
      * Apply UI locale to Countries + Continents Translate behaviors.
      *
      * @return void
@@ -32,6 +37,37 @@ class CountriesController extends AppController
     protected function setTranslateLocales(): void
     {
         AdminCountry::applyTranslateLocale(I18n::getLocale());
+    }
+
+    /**
+     * Countries index filter: only `visible=1` rows (default) or all.
+     *
+     * Query: `visible_only=1|0` → session; otherwise last session value; first visit → true.
+     *
+     * @return bool
+     */
+    protected function resolveCountriesVisibleOnly(): bool
+    {
+        $session = $this->request->getSession();
+        $query = $this->request->getQueryParams();
+
+        if (array_key_exists('visible_only', $query)) {
+            $raw = $query['visible_only'];
+            if (is_array($raw)) {
+                $raw = end($raw);
+            }
+            $visibleOnly = in_array((string)$raw, ['1', 'true', 'on'], true);
+            $session->write(self::COUNTRIES_VISIBLE_ONLY_SESSION_KEY, $visibleOnly);
+
+            return $visibleOnly;
+        }
+
+        $saved = $session->read(self::COUNTRIES_VISIBLE_ONLY_SESSION_KEY);
+        if ($saved === null) {
+            return true;
+        }
+
+        return (bool)$saved;
     }
 
     /**
@@ -67,12 +103,17 @@ class CountriesController extends AppController
         $this->setCountryAccessFlags();
 
         $this->setTranslateLocales();
+
+        // Read `visible_only` before list-state rewrite (that query key is not persisted in index URL).
+        $countriesVisibleOnly = $this->resolveCountriesVisibleOnly();
+        $this->set(compact('countriesVisibleOnly'));
+
         $redirect = $this->applyIndexListState('Countries');
         if ($redirect !== null) {
             return $redirect;
         }
 
-        $paginateOptions = $this->indexPaginateOptions([
+        $paginateOptions = $this->indexPaginateOptionsFor($this->Countries, [
             'sortableFields' => [
                 'id',
                 'iso2',
@@ -90,12 +131,17 @@ class CountriesController extends AppController
                 'Continents.name' => 'ASC',
                 'Countries.name' => 'ASC',
             ],
+        ], [
+            'Continents' => $this->Countries->Continents->getTarget(),
         ]);
 
         $query = $this->applyIndexSearch(
             $this->Countries->find()->contain(['Continents']),
             $this->Countries
         );
+        if ($countriesVisibleOnly) {
+            $query->where(['Countries.visible' => true]);
+        }
         $redirect = $this->resolveIndexPageForLastVisited('Countries', $query, $paginateOptions);
         if ($redirect !== null) {
             return $redirect;
@@ -134,9 +180,10 @@ class CountriesController extends AppController
 
         if ($this->request->is('post')) {
             try {
-                $data = $this->request->getData();
+                $data = $this->normalizeVisibleCountriesData($this->request->getData());
                 $country = $this->Countries->patchEntity($country, $data, [
-                    'fields' => ['iso2', 'name', 'locale', 'continent_id', 'visible', 'pos', 'user_count'],
+                    'fields' => ['iso2', 'name', 'locale', 'continent_id', 'visible', 'pos', 'user_count', 'visible_countries'],
+                    'associated' => ['VisibleCountries'],
                     'accessibleFields' => [
                         'iso2' => true,
                         'name' => true,
@@ -145,12 +192,16 @@ class CountriesController extends AppController
                         'visible' => true,
                         'pos' => true,
                         'user_count' => true,
+                        'visible_countries' => true,
+                        'visible_countries._ids' => true,
                     ],
                 ]);
                 if ($country->get('user_count') === null) {
                     $country->set('user_count', 0);
                 }
                 if ($this->Countries->save($country)) {
+                    $newId = (int)$country->id;
+                    $this->Countries->ensureSelfVisibility($newId);
                     $this->rememberLastVisited('Countries', $country->id);
                     $this->Flash->success(__('The country has been saved.'));
 
@@ -181,15 +232,17 @@ class CountriesController extends AppController
         }
 
         $this->setTranslateLocales();
-        $country = $this->Countries->get($id, contain: ['Continents']);
+        $country = $this->Countries->get($id, contain: ['Continents', 'VisibleCountries']);
         $this->rememberLastVisited('Countries', $country->id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             try {
                 $data = $this->request->getData();
                 if (CountryAccess::canEditFully()) {
+                    $data = $this->normalizeVisibleCountriesData($data, (int)$country->id);
                     $country = $this->Countries->patchEntity($country, $data, [
-                        'fields' => ['iso2', 'name', 'locale', 'continent_id', 'visible', 'pos'],
+                        'fields' => ['iso2', 'name', 'locale', 'continent_id', 'visible', 'pos', 'visible_countries'],
+                        'associated' => ['VisibleCountries'],
                         'accessibleFields' => [
                             'iso2' => true,
                             'name' => true,
@@ -197,6 +250,8 @@ class CountriesController extends AppController
                             'continent_id' => true,
                             'visible' => true,
                             'pos' => true,
+                            'visible_countries' => true,
+                            'visible_countries._ids' => true,
                         ],
                     ]);
                 } else {
@@ -208,6 +263,9 @@ class CountriesController extends AppController
                     ]);
                 }
                 if ($this->Countries->save($country)) {
+                    if (CountryAccess::canEditFully()) {
+                        $this->Countries->ensureSelfVisibility((int)$country->id);
+                    }
                     $this->rememberLastVisited('Countries', $country->id);
                     $this->Flash->success(__('The country has been saved.'));
 
@@ -290,7 +348,10 @@ class CountriesController extends AppController
 
         try {
             $this->setTranslateLocales();
-            $country = $this->Countries->get($id, contain: ['Continents']);
+            $country = $this->Countries->get($id, contain: [
+                'Continents',
+                'VisibleCountries' => $this->containRelatedForModal('VisibleCountries'),
+            ]);
         } catch (\Throwable $e) {
             return $this->response
                 ->withStatus(404)
@@ -302,6 +363,15 @@ class CountriesController extends AppController
         }
 
         $this->rememberLastVisited('Countries', $country->id);
+
+        $selfId = (int)$country->id;
+        $extras = [];
+        foreach ($country->visible_countries ?? [] as $partner) {
+            if ((int)$partner->get('id') === $selfId) {
+                continue;
+            }
+            $extras[] = $partner;
+        }
 
         return $this->response
             ->withType('application/json')
@@ -316,11 +386,41 @@ class CountriesController extends AppController
                     'visible' => (bool)$country->visible,
                     'pos' => \App\Utility\LocaleNumberParser::format($country->pos, decimals: 0),
                     'user_count' => \App\Utility\LocaleNumberParser::formatCount($country->user_count, decimals: 0),
+                    'additional_languages' => $this->relatedAdditionalLanguagesForModal($extras),
                     'created' => $country->created ? \App\Utility\LocaleDateParser::format($country->created, 'datetime_short') : '',
                     'modified' => $country->modified ? \App\Utility\LocaleDateParser::format($country->modified, 'datetime_short') : '',
                     'can_delete' => CountryAccess::canDelete() && $this->Countries->canDelete($country),
                 ],
             ], JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * Modal list for Additional languages (exclude self; name + ISO).
+     *
+     * @param iterable<\Cake\Datasource\EntityInterface> $partners
+     * @return list<array{id: mixed, name: string}>
+     */
+    protected function relatedAdditionalLanguagesForModal(iterable $partners): array
+    {
+        $items = [];
+        foreach ($partners as $partner) {
+            $name = trim((string)$partner->get('name'));
+            $iso = strtoupper(trim((string)$partner->get('iso2')));
+            if ($name === '') {
+                $name = $iso !== '' ? $iso : (string)$partner->get('id');
+            } elseif ($iso !== '' && !str_contains($name, '(' . $iso . ')')) {
+                $name .= ' (' . $iso . ')';
+            }
+            $items[] = [
+                'id' => $partner->get('id'),
+                'name' => $name,
+            ];
+        }
+        usort($items, static function (array $a, array $b): int {
+            return strcasecmp($a['name'], $b['name']);
+        });
+
+        return $items;
     }
 
     /**
@@ -332,6 +432,45 @@ class CountriesController extends AppController
             ->orderBy(['Continents.name' => 'ASC'])
             ->toArray();
 
-        $this->set(compact('continents'));
+        // Extra languages only — own country is stored but not listed in the Select2.
+        $visibleCountryOptions = \App\Utility\AdminCountry::masterVisibleOptions();
+        $selfCountryId = 0;
+        $idParam = $this->request->getParam('pass.0') ?? $this->request->getParam('id');
+        if (is_numeric($idParam) && (int)$idParam > 0) {
+            $selfCountryId = (int)$idParam;
+        }
+        if ($selfCountryId > 0) {
+            unset($visibleCountryOptions[$selfCountryId]);
+        }
+
+        $this->set(compact('continents', 'visibleCountryOptions', 'selfCountryId'));
+    }
+
+    /**
+     * Merge posted extra languages with mandatory self (own language always on tabs).
+     *
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    protected function normalizeVisibleCountriesData(array $data, ?int $selfCountryId = null): array
+    {
+        $ids = $data['visible_countries']['_ids'] ?? [];
+        if (!is_array($ids)) {
+            $ids = [];
+        }
+        $ids = array_map('intval', $ids);
+        if ($selfCountryId !== null && $selfCountryId > 0) {
+            // Never allow removing self from the posted extras list.
+            $ids = array_values(array_filter($ids, static fn(int $id): bool => $id !== $selfCountryId));
+            $data['visible_countries']['_ids'] = $this->Countries->ensureSelfFirst($ids, $selfCountryId);
+        } else {
+            // Add: self is attached after save via ensureSelfVisibility.
+            $data['visible_countries']['_ids'] = array_values(array_unique(array_filter(
+                $ids,
+                static fn(int $id): bool => $id > 0
+            )));
+        }
+
+        return $data;
     }
 }

@@ -1,10 +1,11 @@
 <?php
 /**
- * App Users — Login (App\Controller\UsersController).
+ * App Users — Login (language select for UI locale).
  *
  * @var \App\View\AppView $this
- * @var array<int, string> $countryOptions
- * @var int $selectedCountryId
+ * @var array<string, string> $languageOptions
+ * @var string $selectedLocale
+ * @var string $selectedLanguageLabel
  */
 use Cake\Core\Configure;
 use CakeDC\Users\Utility\UsersUrl;
@@ -13,8 +14,9 @@ $this->assign('title', __('Login'));
 
 $socialEnabled = (bool)Configure::read('Users.Social.login');
 $registrationActive = (bool)Configure::read('Users.Registration.active');
-$countryOptions = $countryOptions ?? [];
-$selectedCountryId = (int)($selectedCountryId ?? 0);
+$languageOptions = $languageOptions ?? [];
+$selectedLocale = (string)($selectedLocale ?? '');
+$selectedLanguageLabel = (string)($selectedLanguageLabel ?? '');
 $loginUrl = $this->Url->build(UsersUrl::actionUrl('login'));
 
 $this->Html->css([
@@ -26,17 +28,25 @@ $this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => tr
 <div class="local-login-form users-auth-form">
 	<h3 class="login-head"><i class="bi bi-person me-2"></i><?= __('Login') ?></h3>
 
-	<?php // Country is outside the login POST (only switches UI locale via GET). ?>
+	<?php // Language is outside the login POST (switches UI locale via GET ?locale=). ?>
 	<div class="mb-3">
-		<label class="form-label" for="country-id"><?= __('Country') ?></label>
-		<?= $this->Form->select('country_id', $countryOptions, [
-			'empty' => __('Select country...'),
-			'class' => 'form-select js-country-select',
-			'id' => 'country-id',
-			'value' => $selectedCountryId > 0 ? $selectedCountryId : null,
+		<label class="form-label" for="locale"><?= __('Language') ?></label>
+		<?= $this->Form->select('locale', $languageOptions, [
+			'empty' => false,
+			'class' => 'form-select js-locale-select',
+			'id' => 'locale',
+			'value' => $selectedLocale !== '' ? $selectedLocale : null,
 			'data-reload-url' => $loginUrl,
-			'data-placeholder' => __('Select country...'),
+			'data-placeholder' => __('Select language...'),
 		]) ?>
+		<?php if ($selectedLanguageLabel !== ''): ?>
+			<div class="form-text">
+				<?= h(__('Selected language: {0}', $selectedLanguageLabel)) ?>
+				<?php if ($selectedLocale !== ''): ?>
+					<code class="ms-1"><?= h($selectedLocale) ?></code>
+				<?php endif; ?>
+			</div>
+		<?php endif; ?>
 	</div>
 
 	<?= $this->Form->create(null, [
@@ -117,7 +127,7 @@ $this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => tr
 <?php
 $this->Html->scriptBlock(
 	sprintf(
-		'window.UsersAuthCountry = %s;',
+		'window.UsersAuthLocale = %s;',
 		json_encode([
 			'reloadUrl' => $loginUrl,
 			'searchPlaceholder' => __('Search...'),
@@ -126,5 +136,5 @@ $this->Html->scriptBlock(
 	),
 	['block' => true]
 );
-$this->Html->script('pages/users_auth_country', ['block' => true]);
+$this->Html->script('pages/users_auth_locale', ['block' => true]);
 ?>

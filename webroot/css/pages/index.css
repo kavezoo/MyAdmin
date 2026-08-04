@@ -18,3 +18,19 @@
 .view-related-tab-content .index-data-table {
 	margin-bottom: 0;
 }
+
+/* Count oszlop: címke + sort — ne zsugorodjon (table cell quirks) */
+.index-data-table th.count,
+.index-data-table td.count {
+	width: 1% !important;
+	min-width: 15rem !important;
+	max-width: none !important;
+	white-space: nowrap !important;
+}
+
+.index-data-table th.count > a {
+	width: max-content !important;
+	max-width: none !important;
+	min-width: max-content;
+	flex-shrink: 0;
+}

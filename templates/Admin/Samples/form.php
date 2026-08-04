@@ -88,7 +88,7 @@ $isEdit = !$sample->isNew();
 				]) ?>
 
 					<div class="form-group row">
-						<label for="parent-id" class="col-sm-3 col-md-2 col-form-label"><?= __('Parent:') ?></label>
+						<?= $this->Form->adminLabel('parent_id', __('Parent:'), ['for' => 'parent-id']) ?>
 						<div class="col-12 col-md-10 col-xl-5">
 							<div class="select2-with-add">
 								<div class="select2-with-add-field">
@@ -137,7 +137,7 @@ $isEdit = !$sample->isNew();
 					]) ?>
 
 					<div class="form-group row">
-						<label for="szam" class="col-sm-3 col-md-2 col-form-label"><?= __('Number:') ?></label>
+						<?= $this->Form->adminLabel('szam', __('Number:'), ['for' => 'szam']) ?>
 						<div class="col-12 col-md-10 col-xl-5">
 							<?= $this->Form->control('szam', \App\Utility\LocaleNumberParser::formIntegerOptions(
 								$sample->szam,
@@ -147,7 +147,7 @@ $isEdit = !$sample->isNew();
 					</div>
 
 					<div class="form-group row">
-						<label for="netto" class="col-sm-3 col-md-2 col-form-label"><?= __('Net:') ?></label>
+						<?= $this->Form->adminLabel('netto', __('Net:'), ['for' => 'netto']) ?>
 						<div class="col-12 col-md-10 col-xl-5">
 							<?= $this->Form->control('netto', \App\Utility\LocaleNumberParser::formDecimalOptions(
 								$sample->netto,
@@ -158,7 +158,7 @@ $isEdit = !$sample->isNew();
 					</div>
 
 					<div class="form-group row">
-						<label for="datum" class="col-sm-3 col-md-2 col-form-label"><?= __('Date:') ?></label>
+						<?= $this->Form->adminLabel('datum', __('Date:'), ['for' => 'datum']) ?>
 						<div class="col-12 col-md-10 col-xl-4">
 							<div class="form-group date mb-0">
 								<div
@@ -190,7 +190,7 @@ $isEdit = !$sample->isNew();
 					</div>
 
 					<div class="form-group row">
-						<label for="ido" class="col-sm-3 col-md-2 col-form-label"><?= __('Time:') ?></label>
+						<?= $this->Form->adminLabel('ido', __('Time:'), ['for' => 'ido']) ?>
 						<div class="col-12 col-md-10 col-xl-4">
 							<div class="form-group time mb-0">
 								<div
@@ -222,7 +222,7 @@ $isEdit = !$sample->isNew();
 					</div>
 
 					<div class="form-group row">
-						<label for="datumido" class="col-sm-3 col-md-2 col-form-label"><?= __('Date and time:') ?></label>
+						<?= $this->Form->adminLabel('datumido', __('Date and time:'), ['for' => 'datumido']) ?>
 						<div class="col-12 col-md-10 col-xl-4">
 							<div class="form-group datetime mb-0">
 								<div
@@ -254,7 +254,7 @@ $isEdit = !$sample->isNew();
 					</div>
 
 					<div class="form-group row">
-						<label for="cities-ids" class="col-sm-3 col-md-2 col-form-label"><?= __('Cities:') ?></label>
+						<?= $this->Form->adminLabel('cities._ids', __('Cities:'), ['for' => 'cities-ids']) ?>
 						<div class="col-12 col-md-10 col-xl-10 col-xxl-9">
 							<div class="select2-with-add">
 								<div class="select2-with-add-field">
@@ -292,7 +292,10 @@ $isEdit = !$sample->isNew();
 									'class' => 'form-check-input',
 									'id' => 'logikai',
 								]) ?>
-								<label class="form-check-label" for="logikai"><?= __('Boolean') ?></label>
+								<?= $this->Form->adminLabel('logikai', __('Boolean'), [
+									'for' => 'logikai',
+									'class' => 'form-check-label',
+								]) ?>
 							</div>
 							<?= $this->element('admin/field_error', ['field' => 'logikai']) ?>
 						</div>
@@ -311,14 +314,17 @@ $isEdit = !$sample->isNew();
 									'class' => 'form-check-input',
 									'id' => 'visible',
 								]) ?>
-								<label class="form-check-label" for="visible"><?= __('Visible') ?></label>
+								<?= $this->Form->adminLabel('visible', __('Visible'), [
+									'for' => 'visible',
+									'class' => 'form-check-label',
+								]) ?>
 							</div>
 							<?= $this->element('admin/field_error', ['field' => 'visible']) ?>
 						</div>
 					</div>
 
 					<div class="form-group row">
-						<label for="pos" class="col-sm-3 col-md-2 col-form-label"><?= __('Position:') ?></label>
+						<?= $this->Form->adminLabel('pos', __('Position:'), ['for' => 'pos']) ?>
 						<div class="col-12 col-md-10 col-xl-3">
 							<?= $this->Form->control('pos', \App\Utility\LocaleNumberParser::formIntegerOptions(
 								$sample->pos,
@@ -363,7 +369,7 @@ $isEdit = !$sample->isNew();
 			<div class="modal-body">
 				<form class="select2-add-form" id="formSelect2AddParent" onsubmit="return false;">
 					<div class="mb-0">
-						<label for="inputSelect2ParentName" class="form-label"><?= __('Name') ?></label>
+						<label for="inputSelect2ParentName" class="form-label"><span class="required" aria-hidden="true">*</span><?= __('Name') ?></label>
 						<input type="text" class="form-control" id="inputSelect2ParentName" name="name" data-select2-text="1" required autofocus placeholder="<?= h(__('Enter a new value...')) ?>" autocomplete="off">
 						<div class="invalid-feedback"><?= __('Please enter a value.') ?></div>
 					</div>
@@ -387,7 +393,7 @@ $isEdit = !$sample->isNew();
 			<div class="modal-body">
 				<form class="select2-add-form" id="formSelect2AddCity" onsubmit="return false;">
 					<div class="mb-0">
-						<label for="inputSelect2CityName" class="form-label"><?= __('Name') ?></label>
+						<label for="inputSelect2CityName" class="form-label"><span class="required" aria-hidden="true">*</span><?= __('Name') ?></label>
 						<input type="text" class="form-control" id="inputSelect2CityName" name="name" data-select2-text="1" required autofocus placeholder="<?= h(__('Enter a new value...')) ?>" autocomplete="off">
 						<div class="invalid-feedback"><?= __('Please enter a value.') ?></div>
 					</div>

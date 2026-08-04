@@ -8,7 +8,7 @@ $this->Html->css(['pages/index'], ['block' => true]);
 /**
  * Row double-click: 'modal' | 'edit' | 'none'
  */
-$rowDoubleClickAction = 'modal';
+$rowDoubleClickAction = 'modal'; // 'modal' | 'edit' | 'none'
 
 /**
  * Hány tizedesjeggyel jelenjenek meg a számok az index listában (locale szerint).

@@ -57,6 +57,7 @@ MyAdmin.config = { /* oldal tölti fel */ };
 MyAdmin.initTooltips();
 MyAdmin.initScrollTop(); // layout: #btn-scroll-top (görgetés után látszik)
 MyAdmin.confirmDelete({ onConfirm: fn });
+MyAdmin.confirmLeave({ onConfirm: fn }); // mentetlen form
 MyAdmin.alert({ icon: 'error', text: '…' });
 MyAdmin.alertError('…');
 MyAdmin.flashSwal({ icon, title, html }); // Flash SWAL sorban
@@ -84,6 +85,7 @@ Server-side flash alapból **Notify** toast; modal flashhez `flashSwal()`.
 |---------------------------|--------|
 | `MyAdmin.swal({…})` | Alacsony szintű Swal; Bootstrap modal FocusTrap pause + z-index 20000 |
 | `MyAdmin.confirmDelete({ onConfirm })` | Törlés megerősítés (index sor, breadcrumb, record/linked modal, …) |
+| `MyAdmin.confirmLeave({ onConfirm })` | Mentetlen form elhagyása (warning); csak ha mező változott a betöltés óta |
 | `MyAdmin.alert({ icon, title, text })` | Általános üzenet (`icon`: `error` / `success` / `info` / `warning`) |
 | `MyAdmin.alertError(text)` | Rövid hiba (Select2 mentés sikertelen, hiányzó URL, tiltott törlés, …) |
 | `MyAdmin.flashSwal({ icon, title, html })` | Flash SWAL (queue) |
@@ -99,6 +101,7 @@ Layout `MyAdmin.messages` kötelező kulcsok (mind `__()`-zel):
 
 - `errorTitle`, `successTitle`, `infoTitle`, `okButton`
 - `deleteTitle`, `deleteConfirm`, `deleteButton`, `cancelButton`
+- `unsavedTitle`, `unsavedConfirm`, `leaveButton`, `stayButton` — mentetlen form elhagyás
 - `failedToSave` / `saveNewValueFailed`, `noServerResponseSaveFailed`, …
 
 Új JS hibajelzésnél: hívd `MyAdmin.alertError(üzenet)`-t (vagy `MyAdmin.alert`), és ha új szöveg, tedd a layout messages + `.po` fájlba.
@@ -109,6 +112,57 @@ Példa (form / AJAX hiba):
 MyAdmin.alertError(message || MyAdmin.messages.failedToSave);
 // NE: window.alert(message);
 ```
+
+### Mentetlen form — dirty check (kötelező add/edit)
+
+Minden hagyományos Admin **add/edit** form (`#form-horizontal` + `pages/form.js`):
+
+| Viselkedés | Feltétel |
+|------------|----------|
+| **Swal figyelmeztetés** | Bármely tracked mező értéke **eltér** a betöltés utáni baseline-tól, és a user elnavigálna |
+| **Nincs kérdés** | Semmi nem változott, vagy mentés (`submit`) történik |
+| **Natív `beforeunload`** | Dirty + böngésző tab zárás / frissítés (Swal itt nem használható) |
+
+**Trigger navigáció:** Cancel / Close gombok, breadcrumb Back, sidebar linkek, bármely `<a href>` (kivéve `#`, `javascript:`, `mailto:`, `tel:`, `target=_blank`, `download`, Bootstrap toggle, `.modal` belüli link, `btn-row-delete`).
+
+**Baseline:** form ready után ~400 ms (Select2 / Tempus / Trumbowyg settle). Snapshot: input / select / textarea értékek (checkbox/radio: checked).
+
+**API:**
+
+```js
+MyAdmin.confirmLeave({
+	onConfirm: function () { window.location.href = url; }
+});
+```
+
+**Új form:** ha `id="form-horizontal"` + `pages/form` script → automatikus. Ne írj párhuzamos dirty-checket.
+
+Rule: `.cursor/rules/admin-form-unsaved.mdc`  
+JS: `webroot/js/pages/form.js`, `webroot/js/app.js` → `confirmLeave`
+
+### Form nyelvi TAB-ok (Translate)
+
+Ha van Translate behavior: [form-i18n-tabs.md](form-i18n-tabs.md); rule: `admin-form-i18n-tabs.mdc`.  
+`setFormLanguageTabs()` + `getWithTranslations()` + `form_language_fields`; tooltip = összes visible ország UI locale-ben; **TAB váltás → name fókusz** (`form.js`).
+
+### Index card header — szűrő + kereső elválasztó
+
+Ha a fejlécben van lista-szűrő (pl. switch) a kereső **előtt**:
+
+```html
+<!-- szűrő form -->
+<span class="index-header-sep" aria-hidden="true">|</span>
+<?= $this->element('admin/table_search') ?>
+```
+
+CSS (`.index-header-sep`): `|` + `margin: 0 0.85rem`, muted szín — ne olvadjon össze a keresővel.
+
+### Countries index (referencia)
+
+Teljes playbook: **[countries-admin.md](countries-admin.md)**; rule: `admin-countries-index.mdc`.
+
+- Visible-only switch + session; oszlop: Continent → Name → ISO → Locale
+- Kötött: `.continent` / `.iso2` / `.locale`; `.count` → `width:1%` + `min-width:15rem`
 
 ### Index config (kötelező / opcionális kulcsok)
 
@@ -255,6 +309,16 @@ Config: **`config/admin_search.php`** → `Configure::read('AdminSearch')` (boot
 Új CRUD / új projekt: sorold fel a modelt + **minden szöveges** mezőt a configban (lásd [uj-projekt.md](uj-projekt.md)).  
 Helper: `App\Utility\AdminSearch`; controller: `applyIndexSearch($query, $table)`.
 
+**Translate / UI locale (kötelező):** ha a Table-en van Translate behavior, a keresés a **fordított** tartalmon megy (`translationField` LIKE + kanonikus fallback), a rendezés pedig `indexPaginateOptionsFor($table, …)`-tal. Részlet: [i18n.md](i18n.md) „Index keresés / rendezés”; `AdminTranslate`; rule: `admin-translate-search-sort.mdc`. **Tilos:** `COALESCE` az ORDER BY kulcsban.
+
+```php
+$paginateOptions = $this->indexPaginateOptionsFor($this->Things, [
+    'sortableFields' => ['id', 'name', 'Parents.name', /* … */],
+], [
+    'Parents' => $this->Things->Parents->getTarget(), // ha a belongsTo is Translate
+]);
+```
+
 UI: mindkét kereső mellett nagyító (`__('Start search')` + hol keres) és **törlés** gomb (`__('Clear search')`) — HTML tooltip; indexen `?clear_search=1`; **üres keresésnél a törlés gomb nem jelenik meg**.
 
 **Keresés után:** ha a mezőben van szöveg, a fókusz a keresőmezőn marad, kurzor a **szöveg végén** (`MyAdmin.focusActiveSearchField` — index: `#table-search-input`; globális oldal: `.search-page-input`).
@@ -340,7 +404,7 @@ $query->orderBy(['Model.id' => 'ASC']);
 | `pos` | pozíció (max ~5 jegy + locale ezres) | `5.5rem` | MyAdmin; érték = **DB DEFAULT** (`UsesDatabaseColumnDefaultsTrait`) |
 | `number` (pl. `.szam`, nem id/pos/count) | általános szám | `6.5rem` | MyAdmin (minta: csak `nowrap`) |
 | `currency` / `netto` | pénz (összeg + pénznem) | `12rem` | MyAdmin; **`formatCurrency()`** (HUF, ICU pozíció) |
-| `count` | `*_count` | `5.5rem` | **MyPluginTemplate**; **0 / null → üres cella** (`LocaleNumberParser::formatCount`) |
+| `count` | `*_count` | `min-width: 15rem` (`width: 1%`) | **MyPluginTemplate**; hosszú címke + sort; tábla cellában a fix `width`/`max-width` gyakran nem tart; **0 / null → üres** (`formatCount`) |
 | `boolean` / `logikai` / `visible` / `valid` | logikai | `7.5rem` | **MyPluginTemplate** (`.visible`/`.valid`) |
 | `date` | dátum | `8.5rem` | **MyPluginTemplate** |
 | `datetime` | dátum+idő | `10.5rem` | **MyPluginTemplate** |
@@ -348,11 +412,14 @@ $query->orderBy(['Model.id' => 'ASC']);
 | `times` | időtartomány | `9rem` | **MyPluginTemplate** |
 | `actions` | gombok | — | — |
 
-Szabály: **szám / pénz / logikai / id / pos / count / dátum-idő** oszlopok fix szélességűek; **szöveges** (`string`) oszlopok szabadon nyúlhatnak.  
-CSS: `webroot/css/style.css` — minta forrás: `MyPluginTemplate/assets/css/style.css` (ahol van `width`).
+Szabály: **szám / pénz / logikai / id / pos / count / dátum-idő** oszlopok kötött / min szélességűek; **szöveges** (`string`) oszlopok általában rugalmasak — kivétel pl. Countries `.iso2` / `.locale` / `.continent` ([countries-admin.md](countries-admin.md)).
+
+**`.count` tanulság:** tábla cellán a sima `width`+`max-width` rem **összezsugorodhat**. Használd: `width: 1%` + `min-width: 15rem` + `max-width: none`; erősítsd `pages/index.css` `.index-data-table th.count`-tal; hosszú címkénél (Felhasználók száma) inline `min-width` OK. A sort link: `width: max-content`, ne `width: 100%` zsugorítással.
+
+CSS: `webroot/css/style.css` (+ index: `webroot/css/pages/index.css`). Minta forrás: `MyPluginTemplate/assets/css/style.css` (ahol van `width`).
 
 Számok **megjelenítése**: `LocaleNumberParser::format(..., decimals: $numberDecimals['integer'|'decimal'])`.  
-`*_count` oszlopok: `LocaleNumberParser::formatCount(...)` — **0 vagy null esetén üres** (ne írjon `0`-t). Címkék: `__('English')`.
+`*_count` oszlopok: `LocaleNumberParser::formatCount(...)` — **0 vagy null esetén üres** (ne írjon `0`-t). Címkék: `__('English')` (Countries: `__('Number of users')`).
 
 ```php
 <td class="number pos text-end"><?= h(\App\Utility\LocaleNumberParser::format($row->pos, decimals: $numberDecimals['integer'])) ?></td>
@@ -642,6 +709,7 @@ Delete után a controller **referer**-re irányít (`referer(['action' => 'index
 - Add és edit **ugyanaz** a `form.php`; controller `render('form')`
 - Card: cím, Created/Modified (edit), bezáró gomb
 - Bootstrap rács: label `col-md-2`, mező jobbra; címkék félkövérek (`style.css`)
+- **Kötelező mező csillag (automatikus):** külső label mindig `$this->Form->adminLabel('field', __('Label:'))` (vagy `requiredMark('field')` a szöveg **előtt**). Piros `*` közvetlenül a név előtt, szóköz nélkül — validatorból (`notEmpty*` / `requirePresence`). Opcionálisnál nincs. CSS: `#form-horizontal .required`. i18n TAB: `form_language_fields` a gyökér mezőnévre.
 - Lábléc: Save + Cancel; Save a breadcrumbben is (`form="form-horizontal"`); gombok: `col-12 col-md-10 col-xxl-9 offset-md-2` (mezősorral egy vonalban)
 - **Mezőhiba:** a beviteli mező **alatt**, piros félkövér (`.error-message`); Admin Form: `errorClass=is-invalid`, `inputContainerError={{content}}{{error}}` — `AppView` + `style.css`
   - Egyszerű `Form->control`: a hiba automatikusan a mező alatt

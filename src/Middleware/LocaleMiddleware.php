@@ -18,7 +18,8 @@ use Psr\Http\Server\RequestHandlerInterface;
  * Sets the application locale from session / cookie / Accept-Language
  * (matched to visible Countries.locale). No URL language prefix.
  *
- * Panel AppControllers may refine from Users.country_id after Auth.
+ * Panel AppControllers may refine from login session language after Auth
+ * (Users.country_id only as fallback).
  * Responses refresh the locale cookie from session (≥1 year).
  */
 class LocaleMiddleware implements MiddlewareInterface

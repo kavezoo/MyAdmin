@@ -1030,3 +1030,24 @@ msgstr ""
 
 msgid "Message"
 msgstr ""
+
+msgid "Only visible countries"
+msgstr ""
+
+msgid "Number of users"
+msgstr ""
+
+msgid "Locale"
+msgstr ""
+
+msgid "Unsaved changes"
+msgstr ""
+
+msgid "You have unsaved changes. Do you really want to leave this form?"
+msgstr ""
+
+msgid "Leave"
+msgstr ""
+
+msgid "Stay"
+msgstr ""

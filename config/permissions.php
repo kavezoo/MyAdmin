@@ -71,13 +71,20 @@ return [
         [
             'role' => '*',
             'controller' => 'Users',
-            'action' => ['profile', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword'],
+            'action' => ['profile', 'completeProfile', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword', 'eventLog', 'eventLogView'],
         ],
         // Global header search (Admin\Search) — president / vicepresident and above
         [
             'role' => ['superuser', 'admin', 'president', 'vicepresident'],
             'prefix' => 'Admin',
             'controller' => 'Search',
+            'action' => '*',
+        ],
+        // Event logs browse (country-scoped) — same roles as global search
+        [
+            'role' => ['superuser', 'admin', 'president', 'vicepresident'],
+            'prefix' => 'Admin',
+            'controller' => 'EventLogs',
             'action' => '*',
         ],
         // Role → own panel only

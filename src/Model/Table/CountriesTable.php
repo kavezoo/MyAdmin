@@ -5,6 +5,7 @@ namespace App\Model\Table;
 
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
 use App\Utility\AdminCountry;
+use App\Utility\AdminTranslate;
 use ArrayObject;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -28,6 +29,8 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\ContinentsTable&\Cake\ORM\Association\BelongsTo $Continents
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
  * @property \App\Model\Table\SetupsTable&\Cake\ORM\Association\HasMany $Setups
+ * @property \App\Model\Table\CountryVisibilitiesTable&\Cake\ORM\Association\HasMany $CountryVisibilities
+ * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsToMany $VisibleCountries
  *
  * @method \App\Model\Entity\Country newEmptyEntity()
  * @method \App\Model\Entity\Country newEntity(array $data, array $options = [])
@@ -83,6 +86,194 @@ class CountriesTable extends Table
             'foreignKey' => 'country_id',
             'dependent' => false,
         ]);
+
+        $this->hasMany('CountryVisibilities', [
+            'foreignKey' => 'country_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+
+        $this->belongsToMany('VisibleCountries', [
+            'className' => 'Countries',
+            'through' => 'CountryVisibilities',
+            'foreignKey' => 'country_id',
+            'targetForeignKey' => 'visible_country_id',
+            'saveStrategy' => 'replace',
+            'sort' => [
+                'CountryVisibilities.pos' => 'ASC',
+                'VisibleCountries.id' => 'ASC',
+            ],
+        ]);
+    }
+
+    /**
+     * Country id whose locale is en_GB (canonical English for Translate/UI fallback).
+     */
+    public function englishDefaultCountryId(): ?int
+    {
+        $row = $this->find()
+            ->select(['Countries.id'])
+            ->where(['Countries.locale' => 'en_GB'])
+            ->first();
+        if ($row !== null) {
+            return (int)$row->get('id');
+        }
+        // Fallback: any English primary locale
+        $row = $this->find()
+            ->select(['Countries.id', 'Countries.locale'])
+            ->where(['Countries.locale LIKE' => 'en_%'])
+            ->orderBy(['Countries.id' => 'ASC'])
+            ->first();
+
+        return $row !== null ? (int)$row->get('id') : null;
+    }
+
+    /**
+     * Ensure self country id is in the list and first (own language always on tabs).
+     *
+     * @param list<int> $ids
+     * @return list<int>
+     */
+    public function ensureSelfFirst(array $ids, int $selfCountryId): array
+    {
+        $ids = array_values(array_unique(array_map('intval', $ids)));
+        $ids = array_values(array_filter($ids, static fn(int $id): bool => $id > 0));
+        if ($selfCountryId < 1) {
+            return $ids;
+        }
+        $ids = array_values(array_filter($ids, static fn(int $id): bool => $id !== $selfCountryId));
+        array_unshift($ids, $selfCountryId);
+
+        return $ids;
+    }
+
+    /**
+     * Display helper: put en_GB first in option lists (login/master selects) — not a visibility lock.
+     *
+     * @param list<int> $ids
+     * @return list<int>
+     */
+    public function ensureEnglishDefaultFirst(array $ids): array
+    {
+        $enId = $this->englishDefaultCountryId();
+        $ids = array_values(array_unique(array_map('intval', $ids)));
+        $ids = array_values(array_filter($ids, static fn(int $id): bool => $id > 0));
+        if ($enId === null) {
+            return $ids;
+        }
+        $ids = array_values(array_filter($ids, static fn(int $id): bool => $id !== $enId));
+        array_unshift($ids, $enId);
+
+        return $ids;
+    }
+
+    /**
+     * Visible partner country ids for an active (viewer) country.
+     * Always includes self first; extras are optional additional languages.
+     *
+     * @return list<int>
+     */
+    public function visibleCountryIdsFor(int $activeCountryId): array
+    {
+        if ($activeCountryId < 1) {
+            return $this->loginVisibleCountryIds();
+        }
+
+        /** @var \App\Model\Table\CountryVisibilitiesTable $junction */
+        $junction = $this->fetchTable('CountryVisibilities');
+        $ids = $junction->find()
+            ->select(['visible_country_id'])
+            ->where([
+                'CountryVisibilities.country_id' => $activeCountryId,
+                'CountryVisibilities.visible' => true,
+            ])
+            ->orderBy(['CountryVisibilities.pos' => 'ASC', 'CountryVisibilities.id' => 'ASC'])
+            ->all()
+            ->extract('visible_country_id')
+            ->toList();
+
+        return $this->ensureSelfFirst(array_map('intval', $ids), $activeCountryId);
+    }
+
+    /**
+     * Login / global select ids: DISTINCT visible_country_id where visible=1.
+     * (Self-edges mean every country can appear; extras add partners to the union.)
+     *
+     * @return list<int>
+     */
+    public function loginVisibleCountryIds(): array
+    {
+        /** @var \App\Model\Table\CountryVisibilitiesTable $junction */
+        $junction = $this->fetchTable('CountryVisibilities');
+        $ids = $junction->find()
+            ->select(['visible_country_id'])
+            ->distinct(['visible_country_id'])
+            ->where(['CountryVisibilities.visible' => true])
+            ->all()
+            ->extract('visible_country_id')
+            ->toList();
+
+        return array_values(array_unique(array_map('intval', $ids)));
+    }
+
+    /**
+     * Countries visible for an active (viewer) country — junction + Translate names.
+     * Own country first, then extras by junction pos.
+     *
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
+     */
+    public function findVisibleForCountry(SelectQuery $query, int $activeCountryId = 0, ?string $locale = null): SelectQuery
+    {
+        $locale = AdminCountry::normalizeTranslateLocale(
+            ($locale !== null && $locale !== '') ? $locale : I18n::getLocale()
+        );
+        $this->getBehavior('Translate')->setLocale($locale);
+
+        $ids = $this->visibleCountryIdsFor($activeCountryId);
+        if ($ids === []) {
+            return $query->where(['Countries.id' => 0]);
+        }
+
+        $order = [];
+        if ($activeCountryId > 0) {
+            $order['CASE WHEN Countries.id = ' . (int)$activeCountryId . ' THEN 0 ELSE 1 END'] = 'ASC';
+        }
+        $order['FIELD(Countries.id, ' . implode(',', $ids) . ')'] = 'ASC';
+
+        return $query
+            ->where(['Countries.id IN' => $ids])
+            ->orderBy($order);
+    }
+
+    /**
+     * Login / global select: DISTINCT countries that appear as visible_country anywhere.
+     *
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
+     */
+    public function findLoginVisible(SelectQuery $query, ?string $locale = null): SelectQuery
+    {
+        $locale = AdminCountry::normalizeTranslateLocale(
+            ($locale !== null && $locale !== '') ? $locale : I18n::getLocale()
+        );
+        $this->getBehavior('Translate')->setLocale($locale);
+
+        $ids = $this->loginVisibleCountryIds();
+        if ($ids === []) {
+            // Fallback before seed: master visible flag + en_GB
+            return $this->findVisibleTranslated($query, $locale)->orderBy([
+                'CASE WHEN Countries.locale = \'en_GB\' THEN 0 WHEN Countries.locale LIKE \'en_%\' THEN 1 ELSE 2 END' => 'ASC',
+                'Countries.pos' => 'ASC',
+            ], true);
+        }
+
+        return $query
+            ->where(['Countries.id IN' => $ids])
+            ->orderBy([
+                'CASE WHEN Countries.locale = \'en_GB\' THEN 0 WHEN Countries.locale LIKE \'en_%\' THEN 1 ELSE 2 END' => 'ASC',
+                'FIELD(Countries.id, ' . implode(',', $ids) . ')' => 'ASC',
+            ]);
     }
 
     /**
@@ -216,8 +407,66 @@ class CountriesTable extends Table
         );
         $this->getBehavior('Translate')->setLocale($locale);
 
+        $order = [];
+        foreach (AdminTranslate::orderFieldList($this, 'name') as $sqlField) {
+            $order[$sqlField] = 'ASC';
+        }
+
         return $query
             ->where(['Countries.visible' => true])
-            ->orderBy(['Countries.name' => 'ASC']);
+            ->orderBy($order);
+    }
+
+    /**
+     * Ensure junction row: country always sees itself (visible=1, pos=1).
+     */
+    public function ensureSelfVisibility(int $countryId): void
+    {
+        $this->ensurePartnerVisibility($countryId, $countryId, preferredPos: 1);
+    }
+
+    /**
+     * Insert or re-enable a single visibility edge.
+     */
+    public function ensurePartnerVisibility(int $countryId, int $visibleCountryId, ?int $preferredPos = null): void
+    {
+        if ($countryId < 1 || $visibleCountryId < 1) {
+            return;
+        }
+
+        /** @var \App\Model\Table\CountryVisibilitiesTable $junction */
+        $junction = $this->fetchTable('CountryVisibilities');
+        if ($junction->exists([
+            'country_id' => $countryId,
+            'visible_country_id' => $visibleCountryId,
+        ])) {
+            $fields = ['visible' => true];
+            if ($preferredPos !== null) {
+                $fields['pos'] = $preferredPos;
+            }
+            $junction->updateAll($fields, [
+                'country_id' => $countryId,
+                'visible_country_id' => $visibleCountryId,
+            ]);
+
+            return;
+        }
+
+        $entity = $junction->newEntity([
+            'country_id' => $countryId,
+            'visible_country_id' => $visibleCountryId,
+            'visible' => true,
+            'pos' => $preferredPos ?? ($countryId === $visibleCountryId ? 1 : 1000),
+        ]);
+        $junction->save($entity);
+    }
+
+    /**
+     * After creating a country: only self-visibility (own language on tabs).
+     * Extra languages are chosen later on the Countries form.
+     */
+    public function seedDefaultVisibilitiesForCountry(int $countryId): void
+    {
+        $this->ensureSelfVisibility($countryId);
     }
 }

@@ -9,12 +9,16 @@ use CakeDC\Users\Utility\UsersUrl;
 $identity = $this->request->getAttribute('identity');
 $displayName = 'admin';
 if ($identity !== null) {
-	$displayName = (string)(
-		$identity->get('first_name')
-		?: $identity->get('username')
-		?: $identity->get('email')
-		?: 'admin'
+	$displayName = trim(
+		(string)($identity->get('first_name') ?? '') . ' ' . (string)($identity->get('last_name') ?? '')
 	);
+	if ($displayName === '') {
+		$displayName = (string)(
+			$identity->get('username')
+			?: $identity->get('email')
+			?: 'admin'
+		);
+	}
 }
 ?>
 			<li class="list-inline-item dropdown notif">
@@ -28,6 +32,11 @@ if ($identity !== null) {
 					<?= $this->Html->link(
 						'<i class="fa fa-fw fa-user"></i> ' . h(__('Profile')),
 						UsersUrl::actionUrl('profile'),
+						['escape' => false, 'class' => 'dropdown-item notify-item']
+					) ?>
+					<?= $this->Html->link(
+						'<i class="fa fa-fw fa-list-alt"></i> ' . h(__('My event log')),
+						UsersUrl::actionUrl('eventLog'),
 						['escape' => false, 'class' => 'dropdown-item notify-item']
 					) ?>
 					<?= $this->Html->link(

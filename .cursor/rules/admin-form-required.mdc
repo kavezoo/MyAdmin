@@ -1,0 +1,15 @@
+---
+description: Admin form kötelező mező csillag (validator → piros *)
+globs: templates/Admin/**/form.php,templates/element/admin/form_language_fields.php,src/View/Helper/FormHelper.php
+alwaysApply: false
+---
+
+# Kötelező mező csillag
+
+Külső Admin label **ne** legyen nyers `<label>…</label>` szerkeszthető mezőnél.
+
+- Használd: `$this->Form->adminLabel('field', __('Label:'), ['for' => '…'])`
+- i18n / egyedi label: `<?= $this->Form->requiredMark('field') ?><?= h($label) ?>`
+- A `*` a mezőnév **előtt**, szóköz nélkül, piros (`#form-horizontal .required`)
+- A `*` a Table validatorból jön (`isRequired`); `allowEmpty*` → nincs csillag
+- Readonly / plaintext megjelenítésnél ne hívj `adminLabel`-t (nincs szerkesztés)

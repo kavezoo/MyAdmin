@@ -14,7 +14,7 @@ $this->Html->css(['pages/index'], ['block' => true]);
  * - 'edit'  → open edit form (same as Edit button)
  * - 'none'  → no action
  */
-$rowDoubleClickAction = 'modal';
+$rowDoubleClickAction = 'modal'; // 'modal' | 'edit' | 'none'
 
 /**
  * Hány tizedesjeggyel jelenjenek meg a számok az index listában (locale szerint).

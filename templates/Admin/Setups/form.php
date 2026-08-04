@@ -75,7 +75,7 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 					</div>
 
 					<div class="form-group row mb-3">
-						<label for="name" class="col-sm-3 col-md-2 col-form-label"><?= __('Name:') ?></label>
+						<?= $this->Form->adminLabel('name', __('Name:'), ['for' => 'name']) ?>
 						<div class="col-12 col-md-10 col-xl-5">
 							<?= $this->Form->control('name', [
 								'label' => false,
@@ -88,7 +88,7 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 					</div>
 
 					<div class="form-group row mb-3">
-						<label for="slug" class="col-sm-3 col-md-2 col-form-label"><?= __('Slug:') ?></label>
+						<?= $this->Form->adminLabel('slug', __('Slug:'), ['for' => 'slug']) ?>
 						<div class="col-12 col-md-10 col-xl-5">
 							<?= $this->Form->control('slug', [
 								'label' => false,
@@ -104,7 +104,7 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 					</div>
 
 					<div class="form-group row mb-3">
-						<label for="type" class="col-sm-3 col-md-2 col-form-label"><?= __('Type:') ?></label>
+						<?= $this->Form->adminLabel('type', __('Type:'), ['for' => 'type']) ?>
 						<div class="col-12 col-md-10 col-xl-4">
 							<?= $this->Form->control('type', [
 								'label' => false,
@@ -121,7 +121,7 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 					</div>
 
 					<div class="form-group row mb-3">
-						<label for="edit-by" class="col-sm-3 col-md-2 col-form-label"><?= __('Editable by:') ?></label>
+						<?= $this->Form->adminLabel('edit_by', __('Editable by:'), ['for' => 'edit-by']) ?>
 						<div class="col-12 col-md-10 col-xl-7">
 							<?= $this->Form->control('edit_by', [
 								'label' => false,
@@ -140,7 +140,7 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 					</div>
 
 					<div class="form-group row mb-3" id="setup-value-row">
-						<label class="col-sm-3 col-md-2 col-form-label"><?= __('Value:') ?></label>
+						<?= $this->Form->adminLabel('value', __('Value:')) ?>
 						<div class="col-12 col-md-10 col-xl-7" id="setup-value-widgets">
 
 							<div class="setup-value-panel" data-setup-type="<?= h(SetupValue::TYPE_STRING) ?>">
@@ -253,7 +253,10 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 									'id' => 'visible',
 									'disabled' => $metaReadonly,
 								]) ?>
-								<label class="form-check-label" for="visible"><?= __('Visible') ?></label>
+								<?= $this->Form->adminLabel('visible', __('Visible'), [
+									'for' => 'visible',
+									'class' => 'form-check-label',
+								]) ?>
 							</div>
 							<?php if ($metaReadonly): ?>
 								<?= $this->Form->hidden('visible') ?>
@@ -262,7 +265,7 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 						</div>
 					</div>
 					<div class="form-group row mb-3">
-						<label for="pos" class="col-sm-3 col-md-2 col-form-label"><?= __('Position:') ?></label>
+						<?= $this->Form->adminLabel('pos', __('Position:'), ['for' => 'pos']) ?>
 						<div class="col-12 col-md-10 col-xl-3">
 							<?= $this->Form->control('pos', \App\Utility\LocaleNumberParser::formIntegerOptions(
 								$setup->pos,

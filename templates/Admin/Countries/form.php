@@ -7,7 +7,11 @@
  * @var array<int, string> $continents
  * @var bool $canEditFully
  */
-$this->Html->css(['pages/form'], ['block' => true]);
+$this->Html->css([
+	'/plugins/select2-4.1.0/css/select2.min',
+	'/plugins/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min',
+	'pages/form',
+], ['block' => true]);
 
 $config = [
 	'indexUrl' => $this->Url->build(['action' => 'index']),
@@ -20,6 +24,7 @@ $this->Html->scriptBlock(
 	['block' => 'script']
 );
 $this->Html->script([
+	'/plugins/select2-4.1.0/js/select2.full.min',
 	'/plugins/inputmask/jquery.inputmask.min',
 	'pages/form',
 ], ['block' => 'scriptBottom']);
@@ -27,6 +32,31 @@ $this->Html->script([
 $isEdit = !$country->isNew();
 $canEditFully = (bool)$this->get('canEditFully', false);
 $continents = $continents ?? [];
+$visibleCountryOptions = $visibleCountryOptions ?? [];
+$selfCountryId = (int)($selfCountryId ?? ($isEdit ? (int)$country->id : 0));
+
+// Options: every other country (own language is always stored, never listed).
+$visibleCountrySelectOptions = [];
+foreach ($visibleCountryOptions as $optId => $optLabel) {
+	$optId = (int)$optId;
+	if ($selfCountryId > 0 && $optId === $selfCountryId) {
+		continue;
+	}
+	$visibleCountrySelectOptions[$optId] = $optLabel;
+}
+
+// Selected extras only (exclude self).
+$selectedVisibleIds = [];
+if ($isEdit && !empty($country->visible_countries)) {
+	foreach ($country->visible_countries as $vc) {
+		$id = (int)$vc->id;
+		if ($selfCountryId > 0 && $id === $selfCountryId) {
+			continue;
+		}
+		$selectedVisibleIds[] = $id;
+	}
+}
+$selectedVisibleIds = array_values(array_unique($selectedVisibleIds));
 ?>
 <div class="row">
 	<div class="col-12 col-xxl-11 p-2 pt-3">
@@ -58,20 +88,19 @@ $continents = $continents ?? [];
 				]) ?>
 					<?php if ($canEditFully): ?>
 						<div class="form-group row mb-3">
-							<label for="iso2" class="col-sm-3 col-md-2 col-form-label"><?= __('ISO:') ?></label>
+							<?= $this->Form->adminLabel('iso2', __('ISO:'), ['for' => 'iso2']) ?>
 							<div class="col-12 col-md-10 col-xl-2">
 								<?= $this->Form->control('iso2', [
 									'label' => false,
 									'class' => 'form-control text-uppercase',
 									'id' => 'iso2',
 									'maxlength' => 2,
-									'autofocus' => true,
 								]) ?>
 							</div>
 						</div>
 
 						<div class="form-group row mb-3">
-							<label for="name" class="col-sm-3 col-md-2 col-form-label"><?= __('Name:') ?></label>
+							<?= $this->Form->adminLabel('name', __('Name:'), ['for' => 'name']) ?>
 							<div class="col-12 col-md-10 col-xl-5">
 								<?= $this->Form->control('name', [
 									'label' => false,
@@ -82,7 +111,7 @@ $continents = $continents ?? [];
 						</div>
 
 						<div class="form-group row mb-3">
-							<label for="locale" class="col-sm-3 col-md-2 col-form-label"><?= __('Primary locale:') ?></label>
+							<?= $this->Form->adminLabel('locale', __('Primary locale:'), ['for' => 'locale']) ?>
 							<div class="col-12 col-md-10 col-xl-4">
 								<?= $this->Form->control('locale', [
 									'label' => false,
@@ -94,7 +123,7 @@ $continents = $continents ?? [];
 						</div>
 
 						<div class="form-group row mb-3">
-							<label for="continent-id" class="col-sm-3 col-md-2 col-form-label"><?= __('Continent:') ?></label>
+							<?= $this->Form->adminLabel('continent_id', __('Continent:'), ['for' => 'continent-id']) ?>
 							<div class="col-12 col-md-10 col-xl-5">
 								<?= $this->Form->control('continent_id', [
 									'label' => false,
@@ -103,6 +132,24 @@ $continents = $continents ?? [];
 									'class' => 'form-select',
 									'id' => 'continent-id',
 								]) ?>
+							</div>
+						</div>
+
+						<div class="form-group row mb-3">
+							<label for="visible-countries-ids" class="col-sm-3 col-md-2 col-form-label"><?= __('Additional languages:') ?></label>
+							<div class="col-12 col-md-10 col-xl-10 col-xxl-9">
+								<?= $this->Form->control('visible_countries._ids', [
+									'label' => false,
+									'options' => $visibleCountrySelectOptions,
+									'multiple' => true,
+									'class' => 'js-example-basic-multiple form-select',
+									'id' => 'visible-countries-ids',
+									'value' => $selectedVisibleIds,
+									'data-placeholder' => __('Select additional languages...'),
+								]) ?>
+								<div class="form-text">
+									<?= __('Your own country language is always available on form tabs and is not listed here. Pick other countries whose languages should also appear as translation tabs when this country is active.') ?>
+								</div>
 							</div>
 						</div>
 					<?php else: ?>
@@ -145,14 +192,17 @@ $continents = $continents ?? [];
 						<div class="col-12 col-md-10">
 							<div class="form-check form-switch">
 								<?= $this->Form->checkbox('visible', ['class' => 'form-check-input', 'id' => 'visible']) ?>
-								<label class="form-check-label" for="visible"><?= __('Visible') ?></label>
+								<?= $this->Form->adminLabel('visible', __('Visible'), [
+									'for' => 'visible',
+									'class' => 'form-check-label',
+								]) ?>
 							</div>
 							<?= $this->element('admin/field_error', ['field' => 'visible']) ?>
 						</div>
 					</div>
 
 					<div class="form-group row mb-3">
-						<label for="pos" class="col-sm-3 col-md-2 col-form-label"><?= __('Position:') ?></label>
+						<?= $this->Form->adminLabel('pos', __('Position:'), ['for' => 'pos']) ?>
 						<div class="col-12 col-md-10 col-xl-3">
 							<?= $this->Form->control('pos', \App\Utility\LocaleNumberParser::formIntegerOptions(
 								$country->pos,

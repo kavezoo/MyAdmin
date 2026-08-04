@@ -57,7 +57,7 @@ $samples = $samples ?? [];
 					'autocomplete' => 'off',
 				]) ?>
 					<div class="form-group row mb-3">
-						<label for="name" class="col-sm-3 col-md-2 col-form-label"><?= __('Name:') ?></label>
+						<?= $this->Form->adminLabel('name', __('Name:'), ['for' => 'name']) ?>
 						<div class="col-12 col-md-10 col-xl-5">
 							<?= $this->Form->control('name', [
 								'label' => false,
@@ -69,7 +69,7 @@ $samples = $samples ?? [];
 					</div>
 
 					<div class="form-group row mb-3">
-						<label for="samples-ids" class="col-sm-3 col-md-2 col-form-label"><?= __('Samples:') ?></label>
+						<?= $this->Form->adminLabel('samples._ids', __('Samples:'), ['for' => 'samples-ids']) ?>
 						<div class="col-12 col-md-10 col-xl-10 col-xxl-9">
 							<?= $this->Form->control('samples._ids', [
 								'label' => false,
@@ -92,14 +92,17 @@ $samples = $samples ?? [];
 						<div class="col-12 col-md-10">
 							<div class="form-check form-switch">
 								<?= $this->Form->checkbox('visible', ['class' => 'form-check-input', 'id' => 'visible']) ?>
-								<label class="form-check-label" for="visible"><?= __('Visible') ?></label>
+								<?= $this->Form->adminLabel('visible', __('Visible'), [
+									'for' => 'visible',
+									'class' => 'form-check-label',
+								]) ?>
 							</div>
 							<?= $this->element('admin/field_error', ['field' => 'visible']) ?>
 						</div>
 					</div>
 
 					<div class="form-group row mb-3">
-						<label for="pos" class="col-sm-3 col-md-2 col-form-label"><?= __('Position:') ?></label>
+						<?= $this->Form->adminLabel('pos', __('Position:'), ['for' => 'pos']) ?>
 						<div class="col-12 col-md-10 col-xl-3">
 							<?= $this->Form->control('pos', \App\Utility\LocaleNumberParser::formIntegerOptions(
 								$city->pos,

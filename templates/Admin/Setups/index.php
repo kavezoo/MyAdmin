@@ -20,7 +20,7 @@ $this->Html->css([
 	'pages/setups_index',
 ], ['block' => true]);
 
-$rowDoubleClickAction = 'modal';
+$rowDoubleClickAction = 'modal'; // 'modal' | 'edit' | 'none'
 $numberDecimals = ['integer' => 0, 'decimal' => 2];
 $showIdColumn = true;
 $showVisibleColumn = true;

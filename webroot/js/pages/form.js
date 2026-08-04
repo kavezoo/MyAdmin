@@ -26,6 +26,9 @@
  *   MyAdmin.config.dateFormat = { locale, intl, moment, startOfTheWeek, useTwentyFourHour, date, datetime, time }
  *   MyAdmin.config.trumbowygSvgPath
  *   MyAdmin.config.trumbowygUploadPath
+ *
+ * Unsaved changes: snapshot of #form-horizontal after widget init; leave via <a>/cancel
+ * → MyAdmin.confirmLeave (Swal) only when a field value changed since load.
  */
 (function (window, $) {
 	'use strict';
@@ -96,13 +99,112 @@
 			return;
 		}
 
+		var $form = $('#form-horizontal');
+		var formBaseline = '';
+		var allowLeave = false;
+		var skipFieldNames = {
+			_method: true,
+			_csrfToken: true
+		};
+
+		/**
+		 * Snapshot of meaningful form fields (after Select2 / Tempus / Trumbowyg init).
+		 * @returns {string}
+		 */
+		var snapshotForm = function () {
+			var data = {};
+			$form.find('input, select, textarea').each(function () {
+				var $el = $(this);
+				var name = $el.attr('name');
+				if (!name || skipFieldNames[name] || $el.is(':disabled')) {
+					return;
+				}
+				// Select2 „+” modals sit outside #form-horizontal — ignore nested modals if any
+				if ($el.closest('.modal').length) {
+					return;
+				}
+				var type = ($el.attr('type') || '').toLowerCase();
+				if (type === 'file' || type === 'submit' || type === 'button' || type === 'image') {
+					return;
+				}
+				if (type === 'checkbox') {
+					if (!Object.prototype.hasOwnProperty.call(data, name)) {
+						data[name] = [];
+					}
+					if ($el.prop('checked')) {
+						data[name].push(String($el.val() || '1'));
+					}
+					return;
+				}
+				if (type === 'radio') {
+					if ($el.prop('checked')) {
+						data[name] = String($el.val());
+					} else if (!Object.prototype.hasOwnProperty.call(data, name)) {
+						data[name] = '';
+					}
+					return;
+				}
+				if ($el.hasClass('editor') && $el.data('trumbowyg')) {
+					data[name] = String($el.trumbowyg('html') || '');
+					return;
+				}
+				var val = $el.val();
+				if ($.isArray(val)) {
+					data[name] = val.map(String).join('\u0001');
+				} else {
+					data[name] = val == null ? '' : String(val);
+				}
+			});
+			return JSON.stringify(data);
+		};
+
+		var captureBaseline = function () {
+			formBaseline = snapshotForm();
+		};
+
+		var isFormDirty = function () {
+			if (allowLeave || formBaseline === '') {
+				return false;
+			}
+			return snapshotForm() !== formBaseline;
+		};
+
+		var shouldGuardNavigationLink = function ($a, href) {
+			if (!href || href === '#' || href.indexOf('#') === 0) {
+				return false;
+			}
+			if (/^(javascript:|mailto:|tel:)/i.test(href)) {
+				return false;
+			}
+			if ($a.attr('target') === '_blank' || $a.is('[download]')) {
+				return false;
+			}
+			var toggle = $a.attr('data-bs-toggle') || '';
+			if (toggle === 'modal' || toggle === 'tab' || toggle === 'dropdown'
+				|| toggle === 'collapse' || toggle === 'offcanvas' || toggle === 'tooltip'
+				|| toggle === 'popover') {
+				return false;
+			}
+			if ($a.attr('data-bs-dismiss') || $a.hasClass('btn-row-delete')) {
+				return false;
+			}
+			if ($a.closest('.modal').length) {
+				return false;
+			}
+			return true;
+		};
+
+		var leaveTo = function (href) {
+			allowLeave = true;
+			window.location.href = href;
+		};
+
 		/**
 		 * Primary field focus on every Admin form (#form-horizontal).
 		 * Prefer #name; otherwise first visible text-like .form-control.
 		 * Call after Select2/inputmask init — plugins can steal early focus.
 		 */
 		var focusPrimaryFormField = function () {
-			var $form = $('#form-horizontal');
 			var $field = $form.find('#name').first();
 			if (!$field.length) {
 				$field = $form.find('input.form-control, textarea.form-control')
@@ -438,6 +540,28 @@
 				tags: hasCreate,
 				createTag: hasCreate ? select2CreateTag : undefined
 			});
+
+			// Locked option (e.g. en_GB country) — cannot unselect
+			var lockedId = String($el.attr('data-locked-id') || $el.data('locked-id') || '');
+			if (lockedId !== '') {
+				$el.on('select2:unselecting', function (e) {
+					var id = e.params && e.params.args && e.params.args.data
+						? String(e.params.args.data.id)
+						: '';
+					if (id === lockedId) {
+						e.preventDefault();
+					}
+				});
+				var vals = $el.val() || [];
+				if (!Array.isArray(vals)) {
+					vals = [vals];
+				}
+				vals = vals.map(String);
+				if (vals.indexOf(lockedId) === -1) {
+					vals.unshift(lockedId);
+					$el.val(vals).trigger('change');
+				}
+			}
 		});
 
 		/**
@@ -674,13 +798,26 @@
 		});
 
 		$('#btn-cancel, #btn-close-form').on('click', function (e) {
-			if ($(this).attr('href') && $(this).attr('href') !== '#') {
+			var $btn = $(this);
+			var href = $btn.attr('href') || '';
+			var navigate = function () {
+				allowLeave = true;
+				if (href && href !== '#') {
+					window.location.href = href;
+				} else if (indexUrl) {
+					window.location.href = indexUrl;
+				}
+			};
+			if (!isFormDirty()) {
+				if (href && href !== '#') {
+					return;
+				}
+				e.preventDefault();
+				navigate();
 				return;
 			}
 			e.preventDefault();
-			if (indexUrl) {
-				window.location.href = indexUrl;
-			}
+			App.confirmLeave({ onConfirm: navigate });
 		});
 
 		if ($.fn.trumbowyg && $('.editor').length) {
@@ -717,17 +854,20 @@
 			};
 
 			$('.editor').trumbowyg(trumbowygOptions);
+		}
 
-			$('#formLanguageTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-				var target = e.target.getAttribute('data-bs-target');
-				if (!target) {
-					return;
-				}
-				$(target).find('.editor').each(function () {
-					var $editor = $(this);
-					if ($editor.data('trumbowyg')) {
-						$editor.trumbowyg('html', $editor.trumbowyg('html'));
-					}
+		/**
+		 * Language tabs: tooltip on tab buttons (hover only — focus would keep caret on the tab).
+		 * Name focus is handled by inline script in form_language_fields (always present with tabs).
+		 */
+		var $langTabs = $('#formLanguageTabs');
+		if ($langTabs.length && typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+			$langTabs.find('[data-bs-toggle="tab"]').each(function () {
+				bootstrap.Tooltip.getOrCreateInstance(this, {
+					html: true,
+					placement: 'top',
+					container: 'body',
+					trigger: 'hover'
 				});
 			});
 		}
@@ -735,5 +875,40 @@
 		// After Select2 (and other plugins) — every form starts ready to type
 		focusPrimaryFormField();
 		window.setTimeout(focusPrimaryFormField, 0);
+
+		// Baseline after widgets settle (Select2 / Tempus / Trumbowyg / inputmask)
+		window.setTimeout(captureBaseline, 50);
+		window.setTimeout(captureBaseline, 300);
+
+		$form.on('submit', function () {
+			allowLeave = true;
+		});
+
+		$(document).on('click.formUnsaved', 'a[href]', function (e) {
+			if (allowLeave || !isFormDirty()) {
+				return;
+			}
+			var $a = $(this);
+			var href = $a.attr('href') || '';
+			if (!shouldGuardNavigationLink($a, href)) {
+				return;
+			}
+			e.preventDefault();
+			e.stopPropagation();
+			App.confirmLeave({
+				onConfirm: function () {
+					leaveTo(href);
+				}
+			});
+		});
+
+		$(window).on('beforeunload.formUnsaved', function (e) {
+			if (allowLeave || !isFormDirty()) {
+				return;
+			}
+			e.preventDefault();
+			e.returnValue = '';
+			return '';
+		});
 	});
 })(window, jQuery);

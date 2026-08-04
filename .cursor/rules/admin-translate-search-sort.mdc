@@ -1,0 +1,41 @@
+---
+description: Translate-aware Admin index search/sort — AdminTranslate, indexPaginateOptionsFor, no COALESCE in ORDER BY.
+globs: src/Utility/AdminTranslate.php,src/Utility/AdminSearch.php,src/Controller/Admin/**/*Controller.php,config/admin_search.php
+alwaysApply: false
+---
+
+# Index keresés / rendezés — UI locale (Translate)
+
+Részlet: `doc/i18n.md` „Index keresés / rendezés”; rule keresés: `admin-kereses-index-allapot.mdc`.
+
+## Kötelező index()
+
+```php
+$paginateOptions = $this->indexPaginateOptionsFor($this->Things, [
+    'sortableFields' => ['id', 'name', 'Parents.name', /* … */],
+    'order' => ['name' => 'ASC'], // opcionális
+], [
+    'Parents' => $this->Things->Parents->getTarget(), // belongsTo Translate
+]);
+$query = $this->applyIndexSearch($this->Things->find()->contain(['Parents']), $this->Things);
+```
+
+- Keresés: `AdminSearch` → `translationField` LIKE + kanonikus fallback
+- Sort: map → `Alias_field_translation.content`, majd `Alias.field`
+- Nincs Translate (Cities, Setups): `indexPaginateOptionsFor` no-op a fordított mezőkre
+
+## TILOS
+
+```php
+// SQL syntax error — Paginator::_prefix() szétvágja a pontoknál
+'COALESCE(Countries_name_translation.content, Countries.name)' => 'ASC'
+
+// Angol oszlop hu UI mellett
+->orderBy(['Countries.name' => 'ASC']);
+$or['Countries.name LIKE'] = $like; // Translate mezőnél — használd AdminSearch-t
+```
+
+## API
+
+`src/Utility/AdminTranslate.php` — `applyLocale`, `orderFieldList`, `sortableFields`, `remapOrder`  
+Cake 5.3: mindig `getBehavior('Translate')->…`

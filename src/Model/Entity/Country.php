@@ -25,6 +25,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Continent $continent
  * @property \CakeDC\Users\Model\Entity\User[] $users
  * @property \App\Model\Entity\Setup[] $setups
+ * @property \App\Model\Entity\Country[] $visible_countries
  */
 class Country extends Entity
 {
@@ -39,5 +40,8 @@ class Country extends Entity
         'continent' => true,
         'users' => true,
         'setups' => true,
+        '_translations' => true,
+        'visible_countries' => true,
+        'visible_countries._ids' => true,
     ];
 }

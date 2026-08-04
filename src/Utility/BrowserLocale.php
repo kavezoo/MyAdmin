@@ -20,8 +20,8 @@ use Cake\ORM\Locator\LocatorAwareTrait;
  * 3. Browser Accept-Language
  * 4. App.defaultLocale / hu_HU / first available
  *
- * After login: {@see forLoggedIn()} — Users.country_id locale when set,
- * otherwise the login-screen session/cookie language for the whole Admin UI.
+ * After login: {@see forLoggedIn()} — login-screen session/cookie language first,
+ * then Users.country_id → Countries.locale as fallback for the whole Admin UI.
  */
 class BrowserLocale
 {
@@ -45,15 +45,24 @@ class BrowserLocale
 
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
-        $rows = $countries->find()
+        $ids = $countries->loginVisibleCountryIds();
+        $query = $countries->find()
             ->select(['Countries.locale'])
             ->where([
-                'Countries.visible' => true,
                 'Countries.locale IS NOT' => null,
                 'Countries.locale !=' => '',
             ])
-            ->distinct(['Countries.locale'])
-            ->orderBy(['Countries.locale' => 'ASC'])
+            ->distinct(['Countries.locale']);
+        if ($ids !== []) {
+            $query->where(['Countries.id IN' => $ids]);
+        } else {
+            $query->where(['Countries.visible' => true]);
+        }
+        $rows = $query
+            ->orderBy([
+                'CASE WHEN Countries.locale = \'en_GB\' THEN 0 WHEN Countries.locale LIKE \'en_%\' THEN 1 ELSE 2 END' => 'ASC',
+                'Countries.locale' => 'ASC',
+            ])
             ->all();
 
         $out = [];
@@ -64,7 +73,7 @@ class BrowserLocale
             }
         }
 
-        $cache = $out;
+        $cache = array_values(array_unique($out));
 
         return $cache;
     }
@@ -265,14 +274,31 @@ class BrowserLocale
     /**
      * Locale for a logged-in request (Admin / profile / whole UI).
      *
-     * 1. Users.country_id → Countries.locale (account language from login)
-     * 2. Session / cookie (language active on the login screen)
-     * 3. App.adminLocale / App.defaultLocale when still unknown
+     * 1. Session App.uiLocale (language chosen on the login screen)
+     * 2. Cookie AppUiLocale
+     * 3. Users.country_id → Countries.locale (account country fallback)
+     * 4. Browser Accept-Language / App.adminLocale / App.defaultLocale
      *
      * @param mixed $identity Request identity attribute
      */
     public static function forLoggedIn(ServerRequest $request, mixed $identity = null): string
     {
+        $fromSession = $request->getSession()->read(self::SESSION_KEY);
+        if (is_string($fromSession)) {
+            $canonical = static::canonicalize($fromSession);
+            if ($canonical !== null) {
+                return $canonical;
+            }
+        }
+
+        $fromCookie = $request->getCookie(self::COOKIE_NAME);
+        if (is_string($fromCookie)) {
+            $canonical = static::canonicalize($fromCookie);
+            if ($canonical !== null) {
+                return $canonical;
+            }
+        }
+
         $fromUser = static::localeFromUser($identity);
         if ($fromUser !== null) {
             return $fromUser;

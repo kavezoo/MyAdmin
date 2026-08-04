@@ -39,7 +39,7 @@ class CitiesController extends AppController
             return $redirect;
         }
 
-        $paginateOptions = $this->indexPaginateOptions([
+        $paginateOptions = $this->indexPaginateOptionsFor($this->Cities, [
             'sortableFields' => [
                 'id',
                 'name',

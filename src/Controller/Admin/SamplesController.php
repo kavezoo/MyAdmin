@@ -39,7 +39,7 @@ class SamplesController extends AppController
             return $redirect;
         }
 
-        $paginateOptions = $this->indexPaginateOptions([
+        $paginateOptions = $this->indexPaginateOptionsFor($this->Samples, [
             'sortableFields' => [
                 'id',
                 'Parents.name',
@@ -56,6 +56,8 @@ class SamplesController extends AppController
                 'created',
                 'modified',
             ],
+        ], [
+            'Parents' => $this->Samples->Parents->getTarget(),
         ]);
 
         $query = $this->applyIndexSearch(

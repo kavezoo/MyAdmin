@@ -1,0 +1,31 @@
+---
+description: Új projekt / éles DB — minden keretrendszer-megoldást a séma és a táblakapcsolatok szerint építs be (ne demó mezőket másolj).
+alwaysApply: true
+---
+
+# Új projekt — séma + kapcsolatok (kötelező)
+
+Ha **új projektet** indítunk, **éles DB**-re építünk, vagy **új CRUD** modult kérnek:
+
+1. Olvasd a **DB sémát** és a **kapcsolatokat** (FK / hasMany / HABTM).
+2. Minden eddigi Admin megoldást a séma szerint tedd be — playbook: `doc/uj-projekt-sema-playbook.md`.
+3. **Ne** a demó Samples/Parents/Cities mezőneveket másold vakon.
+
+## Séma → megoldás (rövid)
+
+| Séma / kapcsolat | Kötelező megoldás |
+|------------------|-------------------|
+| Translate szöveg | Form nyelvi TAB + `data-name-target` fókusz; index `AdminTranslate` (tilos COALESCE) |
+| date/time/datetime | Tempus + dátum middleware |
+| int/decimal | inputmask + szám middleware; pénz → `formatCurrency` |
+| `pos` | DB DEFAULT only |
+| `*_count` / gyerek | CounterCache + Delete disabled ha > 0 |
+| belongsTo | Select2 visible+pos/name; opcionális „+” |
+| HABTM | Mindkét form multiple Select2 + through CounterCache |
+| Ország→ország láthatóság | `country_visibilities`; TAB = saját + extras; **self lock** — `country-visibilities.md` |
+| Eseménynapló | `event_logs` append-only; login/HTTP/CRUD; ország ACL — `event-logs.md` |
+| Minden form | `#form-horizontal`, `adminLabel` kötelező `*`, unsaved leave |
+| Countries-szerű ref | visible-only, oszlopszabályok — `countries-admin.md` |
+
+Részletes mátrix + checklist: **`doc/uj-projekt-sema-playbook.md`**.  
+Greenfield lépések: `doc/uj-projekt.md`. Demó→éles: `doc/minta-tanulsagok.md` §0.

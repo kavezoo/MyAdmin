@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use Cake\Core\Configure;
-use Cake\I18n\I18n;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -12,6 +11,9 @@ use Cake\ORM\TableRegistry;
 /**
  * Admin text search helpers (index + global header).
  * Field map: config/admin_search.php → Configure key AdminSearch.
+ *
+ * Translate-aware: for tables with Translate behavior, LIKE runs on
+ * `translationField()` (UI locale) and also the canonical column (fallback).
  */
 class AdminSearch
 {
@@ -58,6 +60,7 @@ class AdminSearch
 
     /**
      * Apply OR LIKE filters on the model's configured text fields.
+     * Translated fields: UI locale content (+ canonical fallback).
      *
      * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
      * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
@@ -75,14 +78,25 @@ class AdminSearch
             return $query;
         }
 
+        AdminTranslate::applyLocale($table);
+
         $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $term) . '%';
         $or = [];
         foreach ($fields as $field) {
             if (str_contains($field, '.')) {
                 $or[$field . ' LIKE'] = $like;
-            } else {
-                $or[$alias . '.' . $field . ' LIKE'] = $like;
+                continue;
             }
+            if (AdminTranslate::isTranslatedField($table, $field)) {
+                $translated = $table->getBehavior('Translate')->translationField($field);
+                $canonical = $table->aliasField($field);
+                $or[$translated . ' LIKE'] = $like;
+                if ($translated !== $canonical) {
+                    $or[$canonical . ' LIKE'] = $like;
+                }
+                continue;
+            }
+            $or[$alias . '.' . $field . ' LIKE'] = $like;
         }
 
         return $query->where(['OR' => $or]);
@@ -124,7 +138,7 @@ class AdminSearch
             }
 
             if ($table->hasBehavior('Translate')) {
-                $table->getBehavior('Translate')->setLocale(I18n::getLocale());
+                AdminTranslate::applyLocale($table);
             }
 
             $query = static::applyToQuery($table->find(), $table, $term);
