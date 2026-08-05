@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Har du allerede en konto? Logg inn"
+
+msgid "Back to admin"
+msgstr "Tilbake til admin"
+
+msgid "Back to login"
+msgstr "Tilbake til innlogging"
+
+msgid "Back to profile"
+msgstr "Tilbake til profil"
+
+msgid "Change password"
+msgstr "Endre passord"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Velg land etter lokalt navn. Landets språk blir språket for kontoen din."
+
+msgid "Club"
+msgstr "Klubb"
+
+msgid "Complete your profile"
+msgstr "Fullfør profilen"
+
+msgid "Confirm password"
+msgstr "Bekreft passord"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Current password"
+msgstr "Nåværende passord"
+
+msgid "Email"
+msgstr "E-post"
+
+msgid "Email or username"
+msgstr "E-post eller brukernavn"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Skriv inn e-post eller brukernavn, så sender vi en lenke for å tilbakestille passordet."
+
+msgid "Error"
+msgstr "Feil"
+
+msgid "First name"
+msgstr "Fornavn"
+
+msgid "Forgot password?"
+msgstr "Glemt passord?"
+
+msgid "I accept the terms of service"
+msgstr "Jeg godtar vilkårene"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Språk"
+
+msgid "Last name"
+msgstr "Etternavn"
+
+msgid "Log out"
+msgstr "Logg ut"
+
+msgid "Login"
+msgstr "Logg inn"
+
+msgid "Message"
+msgstr "Melding"
+
+msgid "Name"
+msgstr "Navn"
+
+msgid "New password"
+msgstr "Nytt passord"
+
+msgid "No results found."
+msgstr "Ingen resultater."
+
+msgid "Password"
+msgstr "Passord"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Rett feilene nedenfor."
+
+msgid "Please enter a valid email."
+msgstr "Skriv inn en gyldig e-postadresse."
+
+msgid "Please enter your email."
+msgstr "Skriv inn e-postadressen din."
+
+msgid "Please enter your first name."
+msgstr "Skriv inn fornavnet ditt."
+
+msgid "Please enter your last name."
+msgstr "Skriv inn etternavnet ditt."
+
+msgid "Please enter your name."
+msgstr "Skriv inn navnet ditt."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Fyll inn manglende opplysninger slik at vi kan sende medlemsøknaden til klubbpresidenten."
+
+msgid "Please select your country."
+msgstr "Velg landet ditt."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Registrer"
+
+msgid "Remember me"
+msgstr "Husk meg"
+
+msgid "Search..."
+msgstr "Søk..."
+
+msgid "Select club..."
+msgstr "Velg klubb..."
+
+msgid "Select country"
+msgstr "Velg land"
+
+msgid "Select country..."
+msgstr "Velg land..."
+
+msgid "Select language..."
+msgstr "Velg språk..."
+
+msgid "Selected language: {0}"
+msgstr "Valgt språk: {0}"
+
+msgid "Send reset link"
+msgstr "Send tilbakestillingslenke"
+
+msgid "Social accounts"
+msgstr "Sosiale kontoer"
+
+msgid "Submit application"
+msgstr "Send søknad"
+
+msgid "Success"
+msgstr "Vellykket"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Landets språk (locale) blir språket for kontoen din."
+
+msgid "Username"
+msgstr "Brukernavn"
+
+msgid "Warning"
+msgstr "Advarsel"
+

@@ -20,7 +20,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * Panel AppControllers may refine from login session language after Auth
  * (Users.country_id only as fallback).
- * Responses refresh the locale cookie from session (≥1 year).
+ * Responses renew the AppUiLocale cookie from session / current locale (≥ 1 year).
  */
 class LocaleMiddleware implements MiddlewareInterface
 {
@@ -33,9 +33,15 @@ class LocaleMiddleware implements MiddlewareInterface
         $response = $handler->handle($request);
 
         if ($request instanceof ServerRequest && $response instanceof Response) {
+            // Renew AppUiLocale (≥ 1 year) from session, else from the locale applied this request.
             $sessionLocale = $request->getSession()->read(BrowserLocale::SESSION_KEY);
             if (is_string($sessionLocale) && BrowserLocale::isKnownLocale($sessionLocale)) {
                 return BrowserLocale::persist($request, $response, $sessionLocale);
+            }
+
+            $current = I18n::getLocale();
+            if (BrowserLocale::isKnownLocale($current)) {
+                return BrowserLocale::persist($request, $response, $current);
             }
         }
 

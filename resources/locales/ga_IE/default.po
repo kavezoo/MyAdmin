@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: ga_IE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "An bhfuil cuntas agat cheana? Logáil isteach"
+
+msgid "Back to admin"
+msgstr "Ar ais chuig an riarachán"
+
+msgid "Back to login"
+msgstr "Ar ais chuig logáil isteach"
+
+msgid "Back to profile"
+msgstr "Ar ais chuig an bpróifíl"
+
+msgid "Change password"
+msgstr "Athraigh an pasfhocal"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Roghnaigh do thír de réir an ainm áitiúil. Beidh teanga na tíre mar theanga do chuntais."
+
+msgid "Club"
+msgstr "Club"
+
+msgid "Complete your profile"
+msgstr "Comhlánaigh do phróifíl"
+
+msgid "Confirm password"
+msgstr "Deimhnigh an pasfhocal"
+
+msgid "Country"
+msgstr "Tír"
+
+msgid "Current password"
+msgstr "Pasfhocal reatha"
+
+msgid "Email"
+msgstr "Ríomhphost"
+
+msgid "Email or username"
+msgstr "Ríomhphost nó ainm úsáideora"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Cuir isteach do ríomhphost nó ainm úsáideora agus seolfaimid nasc chun do phasfhocal a athshocrú."
+
+msgid "Error"
+msgstr "Earráid"
+
+msgid "First name"
+msgstr "Céadainm"
+
+msgid "Forgot password?"
+msgstr "Pasfhocal dearmadta?"
+
+msgid "I accept the terms of service"
+msgstr "Glacaim le téarmaí an tseirbhís"
+
+msgid "Info"
+msgstr "Eolas"
+
+msgid "Language"
+msgstr "Teanga"
+
+msgid "Last name"
+msgstr "Sloinne"
+
+msgid "Log out"
+msgstr "Logáil amach"
+
+msgid "Login"
+msgstr "Logáil isteach"
+
+msgid "Message"
+msgstr "Teachtaireacht"
+
+msgid "Name"
+msgstr "Ainm"
+
+msgid "New password"
+msgstr "Pasfhocal nua"
+
+msgid "No results found."
+msgstr "Níor aimsíodh torthaí."
+
+msgid "Password"
+msgstr "Pasfhocal"
+
+msgid "Phone"
+msgstr "Teileafón"
+
+msgid "Please correct the errors below."
+msgstr "Ceartaigh na hearráidí thíos."
+
+msgid "Please enter a valid email."
+msgstr "Cuir isteach ríomhphost bailí."
+
+msgid "Please enter your email."
+msgstr "Cuir isteach do ríomhphost."
+
+msgid "Please enter your first name."
+msgstr "Cuir isteach do chéadainm."
+
+msgid "Please enter your last name."
+msgstr "Cuir isteach do shloinne."
+
+msgid "Please enter your name."
+msgstr "Cuir isteach d’ainm."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Líon isteach na sonraí atá in easnamh ionas gur féidir linn d’iarratas ballraíochta a sheoladh chuig uachtarán an chlub."
+
+msgid "Please select your country."
+msgstr "Roghnaigh do thír."
+
+msgid "Profile"
+msgstr "Próifíl"
+
+msgid "Register"
+msgstr "Cláraigh"
+
+msgid "Remember me"
+msgstr "Cuimhnigh orm"
+
+msgid "Search..."
+msgstr "Cuardaigh..."
+
+msgid "Select club..."
+msgstr "Roghnaigh club..."
+
+msgid "Select country"
+msgstr "Roghnaigh tír"
+
+msgid "Select country..."
+msgstr "Roghnaigh tír..."
+
+msgid "Select language..."
+msgstr "Roghnaigh teanga..."
+
+msgid "Selected language: {0}"
+msgstr "Teanga roghnaithe: {0}"
+
+msgid "Send reset link"
+msgstr "Seol nasc athshocraithe"
+
+msgid "Social accounts"
+msgstr "Cuntais shóisialta"
+
+msgid "Submit application"
+msgstr "Seol an t-iarratas"
+
+msgid "Success"
+msgstr "D’éirigh leis"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Beidh teanga na tíre (locale) mar theanga do chuntais."
+
+msgid "Username"
+msgstr "Ainm úsáideora"
+
+msgid "Warning"
+msgstr "Rabhadh"
+

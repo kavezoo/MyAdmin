@@ -1051,3 +1051,45 @@ msgstr ""
 
 msgid "Stay"
 msgstr ""
+
+msgid "Select language..."
+msgstr ""
+
+msgid "Selected language: {0}"
+msgstr ""
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr ""
+
+msgid "Complete your profile"
+msgstr ""
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr ""
+
+msgid "First name"
+msgstr ""
+
+msgid "Last name"
+msgstr ""
+
+msgid "Phone"
+msgstr ""
+
+msgid "Club"
+msgstr ""
+
+msgid "Select club..."
+msgstr ""
+
+msgid "Submit application"
+msgstr ""
+
+msgid "Please enter your first name."
+msgstr ""
+
+msgid "Please enter your last name."
+msgstr ""
+
+msgid "Please correct the errors below."
+msgstr ""

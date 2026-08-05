@@ -22,6 +22,15 @@ msgstr "Zurück zum Profil"
 msgid "Change password"
 msgstr "Passwort ändern"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Wählen Sie Ihr Land anhand des lokalen Namens. Die Sprache des Landes wird die Sprache Ihres Kontos."
+
+msgid "Club"
+msgstr "Club"
+
+msgid "Complete your profile"
+msgstr "Profil vervollständigen"
+
 msgid "Confirm password"
 msgstr "Passwort bestätigen"
 
@@ -43,6 +52,9 @@ msgstr "Geben Sie Ihre E-Mail oder Ihren Benutzernamen ein. Wir senden Ihnen ein
 msgid "Error"
 msgstr "Fehler"
 
+msgid "First name"
+msgstr "Vorname"
+
 msgid "Forgot password?"
 msgstr "Passwort vergessen?"
 
@@ -51,6 +63,12 @@ msgstr "Ich akzeptiere die Nutzungsbedingungen"
 
 msgid "Info"
 msgstr "Info"
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Last name"
+msgstr "Nachname"
 
 msgid "Log out"
 msgstr "Abmelden"
@@ -73,14 +91,29 @@ msgstr "Keine Ergebnisse gefunden."
 msgid "Password"
 msgstr "Passwort"
 
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Bitte korrigieren Sie die folgenden Fehler."
+
 msgid "Please enter a valid email."
 msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein."
 
 msgid "Please enter your email."
 msgstr "Bitte geben Sie Ihre E-Mail-Adresse ein."
 
+msgid "Please enter your first name."
+msgstr "Bitte geben Sie Ihren Vornamen ein."
+
+msgid "Please enter your last name."
+msgstr "Bitte geben Sie Ihren Nachnamen ein."
+
 msgid "Please enter your name."
 msgstr "Bitte geben Sie Ihren Namen ein."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Bitte füllen Sie die fehlenden Angaben aus, damit wir Ihre Mitgliedschaftsanfrage an den Clubpräsidenten senden können."
 
 msgid "Please select your country."
 msgstr "Bitte wählen Sie Ihr Land."
@@ -97,17 +130,29 @@ msgstr "Angemeldet bleiben"
 msgid "Search..."
 msgstr "Suchen..."
 
+msgid "Select club..."
+msgstr "Club auswählen..."
+
 msgid "Select country"
 msgstr "Land auswählen"
 
 msgid "Select country..."
 msgstr "Land auswählen..."
 
+msgid "Select language..."
+msgstr "Sprache auswählen..."
+
+msgid "Selected language: {0}"
+msgstr "Ausgewählte Sprache: {0}"
+
 msgid "Send reset link"
 msgstr "Link zum Zurücksetzen senden"
 
 msgid "Social accounts"
 msgstr "Soziale Konten"
+
+msgid "Submit application"
+msgstr "Antrag absenden"
 
 msgid "Success"
 msgstr "Erfolg"

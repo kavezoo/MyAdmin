@@ -63,6 +63,12 @@ class LanguagesTable extends Table
             ->notEmptyString('name');
 
         $validator
+            ->scalar('endonim_name')
+            ->maxLength('endonim_name', 150)
+            ->requirePresence('endonim_name', 'create')
+            ->notEmptyString('endonim_name');
+
+        $validator
             ->boolean('visible')
             ->allowEmptyString('visible');
 

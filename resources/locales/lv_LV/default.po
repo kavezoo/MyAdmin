@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: lv_LV\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Jau ir konts? Pieteikties"
+
+msgid "Back to admin"
+msgstr "Atpakaļ uz admin"
+
+msgid "Back to login"
+msgstr "Atpakaļ uz pieteikšanos"
+
+msgid "Back to profile"
+msgstr "Atpakaļ uz profilu"
+
+msgid "Change password"
+msgstr "Mainīt paroli"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Izvēlieties valsti pēc vietējā nosaukuma. Valsts valoda kļūst par jūsu konta valodu."
+
+msgid "Club"
+msgstr "Klubs"
+
+msgid "Complete your profile"
+msgstr "Aizpildiet profilu"
+
+msgid "Confirm password"
+msgstr "Apstiprināt paroli"
+
+msgid "Country"
+msgstr "Valsts"
+
+msgid "Current password"
+msgstr "Pašreizējā parole"
+
+msgid "Email"
+msgstr "E-pasts"
+
+msgid "Email or username"
+msgstr "E-pasts vai lietotājvārds"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Ievadiet e-pastu vai lietotājvārdu — nosūtīsim paroles atjaunošanas saiti."
+
+msgid "Error"
+msgstr "Kļūda"
+
+msgid "First name"
+msgstr "Vārds"
+
+msgid "Forgot password?"
+msgstr "Aizmirsāt paroli?"
+
+msgid "I accept the terms of service"
+msgstr "Piekrītu lietošanas noteikumiem"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Valoda"
+
+msgid "Last name"
+msgstr "Uzvārds"
+
+msgid "Log out"
+msgstr "Iziet"
+
+msgid "Login"
+msgstr "Pieteikties"
+
+msgid "Message"
+msgstr "Ziņa"
+
+msgid "Name"
+msgstr "Vārds"
+
+msgid "New password"
+msgstr "Jaunā parole"
+
+msgid "No results found."
+msgstr "Nav rezultātu."
+
+msgid "Password"
+msgstr "Parole"
+
+msgid "Phone"
+msgstr "Tālrunis"
+
+msgid "Please correct the errors below."
+msgstr "Labojiet zemāk norādītās kļūdas."
+
+msgid "Please enter a valid email."
+msgstr "Lūdzu, ievadiet derīgu e-pastu."
+
+msgid "Please enter your email."
+msgstr "Lūdzu, ievadiet e-pastu."
+
+msgid "Please enter your first name."
+msgstr "Ievadiet vārdu."
+
+msgid "Please enter your last name."
+msgstr "Ievadiet uzvārdu."
+
+msgid "Please enter your name."
+msgstr "Lūdzu, ievadiet vārdu."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Aizpildiet trūkstošos datus, lai varētu nosūtīt biedra pieteikumu kluba prezidentam."
+
+msgid "Please select your country."
+msgstr "Lūdzu, izvēlieties valsti."
+
+msgid "Profile"
+msgstr "Profils"
+
+msgid "Register"
+msgstr "Reģistrēties"
+
+msgid "Remember me"
+msgstr "Atcerēties mani"
+
+msgid "Search..."
+msgstr "Meklēt..."
+
+msgid "Select club..."
+msgstr "Izvēlieties klubu..."
+
+msgid "Select country"
+msgstr "Izvēlieties valsti"
+
+msgid "Select country..."
+msgstr "Izvēlieties valsti..."
+
+msgid "Select language..."
+msgstr "Izvēlieties valodu..."
+
+msgid "Selected language: {0}"
+msgstr "Izvēlētā valoda: {0}"
+
+msgid "Send reset link"
+msgstr "Nosūtīt atjaunošanas saiti"
+
+msgid "Social accounts"
+msgstr "Sociālie konti"
+
+msgid "Submit application"
+msgstr "Iesniegt pieteikumu"
+
+msgid "Success"
+msgstr "Veiksmīgi"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Valsts valoda (locale) kļūst par jūsu konta valodu."
+
+msgid "Username"
+msgstr "Lietotājvārds"
+
+msgid "Warning"
+msgstr "Brīdinājums"
+

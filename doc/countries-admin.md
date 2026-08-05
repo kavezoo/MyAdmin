@@ -3,8 +3,12 @@
 Referencia-adat: `countries` + `continents` + Translate.  
 ACL: [users-auth.md](users-auth.md) / `CountryAccess` — **superuser** teljes CRUD; **admin** csak `visible` + `pos`.
 
+Mezők: `name` (angol kanonikus + Translate), **`endonim_name`** (endoním / saját írásrendszer — nem fordított), `locale`, …
+
 Kapcsolódó: [i18n.md](i18n.md) (országnevek DB — seedelt fordítások), **[country-visibilities.md](country-visibilities.md)** (plusz nyelvek / TAB), [admin-konvenciok.md](admin-konvenciok.md) (index / count / Swal), [admin-oldal.md](admin-oldal.md).  
 Rule: `.cursor/rules/admin-countries-index.mdc`
+
+`endonim_name` seed: `php tmp/seed_country_endonim_names.php` (ICU `Locale::getDisplayRegion`).
 
 ---
 
@@ -71,13 +75,14 @@ Kötelező sorrend (thead = tbody):
 | (opt.) | `number id` | `id` | `4.75rem` |
 | 1 | `string continent` | `Continents.name` | **fix** `10.5rem` |
 | 2 | `string name` | `name` | **rugalmas** |
-| 3 | `string iso2` | `iso2` | **fix** `5rem` (középre) |
-| 4 | `string locale` | `locale` | **fix** `8.5rem` |
+| 3 | `string endonim` | `endonim_name` | **fix** `12rem` |
+| 4 | `string iso2` | `iso2` | **fix** `5rem` (középre) |
+| 5 | `string locale` | `locale` | **fix** `8.5rem` |
 | (opt.) | `boolean visible` | `visible` | `7.5rem` |
-| 5 | `number pos` | `pos` | `5.5rem` |
+| 6 | `number pos` | `pos` | `5.5rem` |
 | (opt.) | `number count` | `user_count` | **`min-width: 15rem`** (`width: 1%`) |
 | (opt.) | `datetime` | created / modified | `10.5rem` |
-| 6 | `actions` | — | — |
+| 7 | `actions` | — | — |
 
 Alap rendezés (controller): `Continents.name ASC`, `Countries.name ASC`.
 
@@ -87,6 +92,7 @@ Címkék (msgid → hu példa):
 |-------|-----|
 | `Continent` | Földrész |
 | `Name` | Név |
+| `Endonym` | Endoním |
 | `ISO` | ISO |
 | `Locale` | **Nyelvi kód** |
 | `Number of users` | **Felhasználók száma** |

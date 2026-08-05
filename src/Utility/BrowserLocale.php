@@ -8,15 +8,15 @@ use Cake\Http\Cookie\Cookie;
 use Cake\Http\Cookie\CookieInterface;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
-use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use DateTimeImmutable;
 
 /**
  * Resolve / persist UI locale against visible Countries.locale values.
  *
  * Resolution order (guest / auth screens):
  * 1. Session App.uiLocale
- * 2. Cookie AppUiLocale (≥ 1 year)
+ * 2. Cookie AppUiLocale (≥ 1 year, renewed on each response)
  * 3. Browser Accept-Language
  * 4. App.defaultLocale / hu_HU / first available
  *
@@ -32,7 +32,13 @@ class BrowserLocale
     public const COOKIE_NAME = 'AppUiLocale';
 
     /**
-     * Distinct `countries.locale` values for visible countries (DB casing).
+     * Last-used UI language cookie lifetime (at least one year; sliding via middleware).
+     */
+    public const COOKIE_LIFETIME = '+1 year';
+
+    /**
+     * Distinct locale codes allowed for UI / login (`languages.visible = true`).
+     * Fallback: visible countries’ locales if the languages table is empty.
      *
      * @return list<string>
      */
@@ -43,22 +49,46 @@ class BrowserLocale
             return $cache;
         }
 
+        try {
+            /** @var \App\Model\Table\LanguagesTable $languages */
+            $languages = (new self())->fetchTable('Languages');
+            $rows = $languages->find()
+                ->select(['Languages.code'])
+                ->where(['Languages.visible' => true])
+                ->orderBy([
+                    'CASE WHEN Languages.code = \'en_GB\' THEN 0 WHEN Languages.code LIKE \'en_%\' THEN 1 ELSE 2 END' => 'ASC',
+                    'Languages.pos' => 'ASC',
+                    'Languages.code' => 'ASC',
+                ])
+                ->disableHydration()
+                ->all();
+
+            $out = [];
+            foreach ($rows as $row) {
+                $locale = trim((string)($row['code'] ?? ''));
+                if ($locale !== '') {
+                    $out[] = $locale;
+                }
+            }
+            if ($out !== []) {
+                $cache = array_values(array_unique($out));
+
+                return $cache;
+            }
+        } catch (\Throwable) {
+            // fall through
+        }
+
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
-        $ids = $countries->loginVisibleCountryIds();
-        $query = $countries->find()
+        $rows = $countries->find()
             ->select(['Countries.locale'])
             ->where([
+                'Countries.visible' => true,
                 'Countries.locale IS NOT' => null,
                 'Countries.locale !=' => '',
             ])
-            ->distinct(['Countries.locale']);
-        if ($ids !== []) {
-            $query->where(['Countries.id IN' => $ids]);
-        } else {
-            $query->where(['Countries.visible' => true]);
-        }
-        $rows = $query
+            ->distinct(['Countries.locale'])
             ->orderBy([
                 'CASE WHEN Countries.locale = \'en_GB\' THEN 0 WHEN Countries.locale LIKE \'en_%\' THEN 1 ELSE 2 END' => 'ASC',
                 'Countries.locale' => 'ASC',
@@ -202,7 +232,7 @@ class BrowserLocale
         }
 
         $cookie = Cookie::create(self::COOKIE_NAME, $canonical, [
-            'expires' => new DateTime('+400 days'),
+            'expires' => new DateTimeImmutable(self::COOKIE_LIFETIME),
             'path' => '/',
             'httponly' => true,
             'samesite' => CookieInterface::SAMESITE_LAX,

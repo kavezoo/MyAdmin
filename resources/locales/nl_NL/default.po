@@ -22,6 +22,15 @@ msgstr "Terug naar profiel"
 msgid "Change password"
 msgstr "Wachtwoord wijzigen"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Kies je land op de lokale naam. De landtaal wordt de taal van je account."
+
+msgid "Club"
+msgstr "Club"
+
+msgid "Complete your profile"
+msgstr "Profiel voltooien"
+
 msgid "Confirm password"
 msgstr "Bevestig wachtwoord"
 
@@ -43,6 +52,9 @@ msgstr "Voer uw e-mail of gebruikersnaam in; we sturen een link om uw wachtwoord
 msgid "Error"
 msgstr "Fout"
 
+msgid "First name"
+msgstr "Voornaam"
+
 msgid "Forgot password?"
 msgstr "Wachtwoord vergeten?"
 
@@ -51,6 +63,12 @@ msgstr "Ik accepteer de gebruiksvoorwaarden"
 
 msgid "Info"
 msgstr "Info"
+
+msgid "Language"
+msgstr "Taal"
+
+msgid "Last name"
+msgstr "Achternaam"
 
 msgid "Log out"
 msgstr "Uitloggen"
@@ -73,14 +91,29 @@ msgstr "Geen resultaten gevonden."
 msgid "Password"
 msgstr "Wachtwoord"
 
+msgid "Phone"
+msgstr "Telefoon"
+
+msgid "Please correct the errors below."
+msgstr "Corrigeer de onderstaande fouten."
+
 msgid "Please enter a valid email."
 msgstr "Voer een geldig e-mailadres in."
 
 msgid "Please enter your email."
 msgstr "Voer uw e-mailadres in."
 
+msgid "Please enter your first name."
+msgstr "Voer je voornaam in."
+
+msgid "Please enter your last name."
+msgstr "Voer je achternaam in."
+
 msgid "Please enter your name."
 msgstr "Voer uw naam in."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Vul de ontbrekende gegevens in zodat we je lidmaatschapsaanvraag naar de clubvoorzitter kunnen sturen."
 
 msgid "Please select your country."
 msgstr "Selecteer uw land."
@@ -97,17 +130,29 @@ msgstr "Onthoud mij"
 msgid "Search..."
 msgstr "Zoeken..."
 
+msgid "Select club..."
+msgstr "Selecteer club..."
+
 msgid "Select country"
 msgstr "Selecteer land"
 
 msgid "Select country..."
 msgstr "Selecteer land..."
 
+msgid "Select language..."
+msgstr "Selecteer taal..."
+
+msgid "Selected language: {0}"
+msgstr "Geselecteerde taal: {0}"
+
 msgid "Send reset link"
 msgstr "Resetlink verzenden"
 
 msgid "Social accounts"
 msgstr "Sociale accounts"
+
+msgid "Submit application"
+msgstr "Aanvraag indienen"
 
 msgid "Success"
 msgstr "Gelukt"

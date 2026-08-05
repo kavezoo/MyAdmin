@@ -1458,3 +1458,6 @@ msgstr "Válassz további nyelveket..."
 
 msgid "Your own country language is always available on form tabs and is not listed here. Pick other countries whose languages should also appear as translation tabs when this country is active."
 msgstr "A saját ország nyelve mindig elérhető a form TAB-okon, és itt nem jelenik meg. Válaszd ki a többi országot, amelyek nyelvén a tartalmakat is közzé szeretnéd tenni ezen ország aktív állapota mellett."
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Válaszd az országot a helyi neve alapján. Az ország nyelve lesz a fiókod nyelvezete."

@@ -22,6 +22,15 @@ msgstr "Powrót do profilu"
 msgid "Change password"
 msgstr "Zmień hasło"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Wybierz kraj według lokalnej nazwy. Język kraju stanie się językiem Twojego konta."
+
+msgid "Club"
+msgstr "Klub"
+
+msgid "Complete your profile"
+msgstr "Uzupełnij profil"
+
 msgid "Confirm password"
 msgstr "Potwierdź hasło"
 
@@ -43,6 +52,9 @@ msgstr "Podaj e-mail lub nazwę użytkownika — wyślemy link do resetu hasła.
 msgid "Error"
 msgstr "Błąd"
 
+msgid "First name"
+msgstr "Imię"
+
 msgid "Forgot password?"
 msgstr "Nie pamiętasz hasła?"
 
@@ -51,6 +63,12 @@ msgstr "Akceptuję regulamin"
 
 msgid "Info"
 msgstr "Info"
+
+msgid "Language"
+msgstr "Język"
+
+msgid "Last name"
+msgstr "Nazwisko"
 
 msgid "Log out"
 msgstr "Wyloguj"
@@ -73,14 +91,29 @@ msgstr "Brak wyników."
 msgid "Password"
 msgstr "Hasło"
 
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Popraw poniższe błędy."
+
 msgid "Please enter a valid email."
 msgstr "Podaj prawidłowy adres e-mail."
 
 msgid "Please enter your email."
 msgstr "Podaj swój e-mail."
 
+msgid "Please enter your first name."
+msgstr "Podaj imię."
+
+msgid "Please enter your last name."
+msgstr "Podaj nazwisko."
+
 msgid "Please enter your name."
 msgstr "Podaj swoje imię i nazwisko."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Uzupełnij brakujące dane, abyśmy mogli przesłać wniosek o członkostwo do prezesa klubu."
 
 msgid "Please select your country."
 msgstr "Wybierz swój kraj."
@@ -97,17 +130,29 @@ msgstr "Zapamiętaj mnie"
 msgid "Search..."
 msgstr "Szukaj..."
 
+msgid "Select club..."
+msgstr "Wybierz klub..."
+
 msgid "Select country"
 msgstr "Wybierz kraj"
 
 msgid "Select country..."
 msgstr "Wybierz kraj..."
 
+msgid "Select language..."
+msgstr "Wybierz język..."
+
+msgid "Selected language: {0}"
+msgstr "Wybrany język: {0}"
+
 msgid "Send reset link"
 msgstr "Wyślij link resetujący"
 
 msgid "Social accounts"
 msgstr "Konta społecznościowe"
+
+msgid "Submit application"
+msgstr "Wyślij wniosek"
 
 msgid "Success"
 msgstr "Sukces"

@@ -22,6 +22,15 @@ msgstr "Tilbage til profil"
 msgid "Change password"
 msgstr "Skift adgangskode"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Vælg dit land efter det lokale navn. Landets sprog bliver sproget for din konto."
+
+msgid "Club"
+msgstr "Klub"
+
+msgid "Complete your profile"
+msgstr "Fuldfør din profil"
+
 msgid "Confirm password"
 msgstr "Bekræft adgangskode"
 
@@ -43,6 +52,9 @@ msgstr "Indtast e-mail eller brugernavn; vi sender et link til nulstilling af ad
 msgid "Error"
 msgstr "Fejl"
 
+msgid "First name"
+msgstr "Fornavn"
+
 msgid "Forgot password?"
 msgstr "Glemt adgangskode?"
 
@@ -51,6 +63,12 @@ msgstr "Jeg accepterer vilkårene"
 
 msgid "Info"
 msgstr "Info"
+
+msgid "Language"
+msgstr "Sprog"
+
+msgid "Last name"
+msgstr "Efternavn"
 
 msgid "Log out"
 msgstr "Log ud"
@@ -73,14 +91,29 @@ msgstr "Ingen resultater."
 msgid "Password"
 msgstr "Adgangskode"
 
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Ret fejlene nedenfor."
+
 msgid "Please enter a valid email."
 msgstr "Indtast en gyldig e-mail."
 
 msgid "Please enter your email."
 msgstr "Indtast din e-mail."
 
+msgid "Please enter your first name."
+msgstr "Indtast dit fornavn."
+
+msgid "Please enter your last name."
+msgstr "Indtast dit efternavn."
+
 msgid "Please enter your name."
 msgstr "Indtast dit navn."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Udfyld de manglende oplysninger, så vi kan sende din medlemsansøgning til klubpræsidenten."
 
 msgid "Please select your country."
 msgstr "Vælg dit land."
@@ -97,17 +130,29 @@ msgstr "Husk mig"
 msgid "Search..."
 msgstr "Søg..."
 
+msgid "Select club..."
+msgstr "Vælg klub..."
+
 msgid "Select country"
 msgstr "Vælg land"
 
 msgid "Select country..."
 msgstr "Vælg land..."
 
+msgid "Select language..."
+msgstr "Vælg sprog..."
+
+msgid "Selected language: {0}"
+msgstr "Valgt sprog: {0}"
+
 msgid "Send reset link"
 msgstr "Send nulstillingslink"
 
 msgid "Social accounts"
 msgstr "Sociale konti"
+
+msgid "Submit application"
+msgstr "Send ansøgning"
 
 msgid "Success"
 msgstr "Succes"

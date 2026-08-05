@@ -12,6 +12,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $code
  * @property string $name
+ * @property string $endonim_name Endonym (language name in itself)
  * @property bool $visible
  * @property int $pos
  * @property \Cake\I18n\DateTime $created
@@ -27,6 +28,7 @@ class Language extends Entity
     protected array $_accessible = [
         'code' => true,
         'name' => true,
+        'endonim_name' => true,
         'visible' => true,
         'pos' => true,
         'created' => true,

@@ -135,6 +135,142 @@ class AdminCountry
     }
 
     /**
+     * Registration country Select2: id => endonim_name only.
+     * Only `Countries.visible = true`, sorted by endonym so people find their own country.
+     *
+     * @return array<int, string>
+     */
+    public static function registerOptions(): array
+    {
+        /** @var \App\Model\Table\CountriesTable $countries */
+        $countries = (new self())->fetchTable('Countries');
+        $rows = $countries->find()
+            ->select([
+                'Countries.id',
+                'Countries.endonim_name',
+                'Countries.iso2',
+            ])
+            ->where(['Countries.visible' => true])
+            ->orderBy([
+                'Countries.endonim_name' => 'ASC',
+                'Countries.id' => 'ASC',
+            ])
+            ->disableHydration()
+            ->all();
+
+        $out = [];
+        foreach ($rows as $row) {
+            $id = (int)$row['id'];
+            $label = trim((string)($row['endonim_name'] ?? ''));
+            if ($label === '') {
+                $label = (string)($row['iso2'] ?? $id);
+            }
+            $out[$id] = $label;
+        }
+
+        return $out;
+    }
+
+    /**
+     * id => countries.locale for the registration Select2 (visible countries only).
+     *
+     * @return array<int, string>
+     */
+    public static function registerLocaleMap(): array
+    {
+        /** @var \App\Model\Table\CountriesTable $countries */
+        $countries = (new self())->fetchTable('Countries');
+        $rows = $countries->find()
+            ->select(['Countries.id', 'Countries.locale'])
+            ->where(['Countries.visible' => true])
+            ->disableHydration()
+            ->all();
+
+        $out = [];
+        foreach ($rows as $row) {
+            $out[(int)$row['id']] = (string)$row['locale'];
+        }
+
+        return $out;
+    }
+
+    /**
+     * Registration / auth country Select2: id => lowercase iso2 (for flag icons).
+     *
+     * @return array<int, string>
+     */
+    public static function registerFlagMap(): array
+    {
+        /** @var \App\Model\Table\CountriesTable $countries */
+        $countries = (new self())->fetchTable('Countries');
+        $rows = $countries->find()
+            ->select(['Countries.id', 'Countries.iso2'])
+            ->where(['Countries.visible' => true])
+            ->disableHydration()
+            ->all();
+
+        $out = [];
+        foreach ($rows as $row) {
+            $id = (int)($row['id'] ?? 0);
+            $iso = strtolower(trim((string)($row['iso2'] ?? '')));
+            if ($id > 0 && preg_match('/^[a-z]{2}$/', $iso)) {
+                $out[$id] = $iso;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Country id => lowercase iso2 (any countries; for complete-profile / mixed lists).
+     *
+     * @param list<int>|null $onlyIds null = all
+     * @return array<int, string>
+     */
+    public static function iso2Map(?array $onlyIds = null): array
+    {
+        /** @var \App\Model\Table\CountriesTable $countries */
+        $countries = (new self())->fetchTable('Countries');
+        $query = $countries->find()
+            ->select(['Countries.id', 'Countries.iso2'])
+            ->disableHydration();
+        if ($onlyIds !== null) {
+            $onlyIds = array_values(array_filter(array_map('intval', $onlyIds), static fn(int $id): bool => $id > 0));
+            if ($onlyIds === []) {
+                return [];
+            }
+            $query->where(['Countries.id IN' => $onlyIds]);
+        }
+        $out = [];
+        foreach ($query->all() as $row) {
+            $id = (int)($row['id'] ?? 0);
+            $iso = strtolower(trim((string)($row['iso2'] ?? '')));
+            if ($id > 0 && preg_match('/^[a-z]{2}$/', $iso)) {
+                $out[$id] = $iso;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Country allowed on the registration form (`visible = true`).
+     */
+    public static function isRegisterCountryId(int $countryId): bool
+    {
+        if ($countryId < 1) {
+            return false;
+        }
+        /** @var \App\Model\Table\CountriesTable $countries */
+        $countries = (new self())->fetchTable('Countries');
+
+        return $countries->exists([
+            'Countries.id' => $countryId,
+            'Countries.visible' => true,
+        ]);
+    }
+
+    /**
      * Select2 / list options: id => "Translated name (ISO2)".
      * Only visible countries; names follow the page locale (Translate).
      *

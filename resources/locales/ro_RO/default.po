@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: ro_RO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Aveți deja un cont? Autentificare"
+
+msgid "Back to admin"
+msgstr "Înapoi la admin"
+
+msgid "Back to login"
+msgstr "Înapoi la autentificare"
+
+msgid "Back to profile"
+msgstr "Înapoi la profil"
+
+msgid "Change password"
+msgstr "Schimbă parola"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Alegeți țara după denumirea locală. Limba țării devine limba contului dvs."
+
+msgid "Club"
+msgstr "Club"
+
+msgid "Complete your profile"
+msgstr "Completați profilul"
+
+msgid "Confirm password"
+msgstr "Confirmă parola"
+
+msgid "Country"
+msgstr "Țară"
+
+msgid "Current password"
+msgstr "Parola actuală"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email or username"
+msgstr "E-mail sau nume de utilizator"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Introduceți e-mailul sau numele de utilizator și vă vom trimite un link de resetare a parolei."
+
+msgid "Error"
+msgstr "Eroare"
+
+msgid "First name"
+msgstr "Prenume"
+
+msgid "Forgot password?"
+msgstr "Ați uitat parola?"
+
+msgid "I accept the terms of service"
+msgstr "Accept termenii și condițiile"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Limbă"
+
+msgid "Last name"
+msgstr "Nume de familie"
+
+msgid "Log out"
+msgstr "Deconectare"
+
+msgid "Login"
+msgstr "Autentificare"
+
+msgid "Message"
+msgstr "Mesaj"
+
+msgid "Name"
+msgstr "Nume"
+
+msgid "New password"
+msgstr "Parolă nouă"
+
+msgid "No results found."
+msgstr "Niciun rezultat."
+
+msgid "Password"
+msgstr "Parolă"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Corectați erorile de mai jos."
+
+msgid "Please enter a valid email."
+msgstr "Introduceți un e-mail valid."
+
+msgid "Please enter your email."
+msgstr "Introduceți e-mailul."
+
+msgid "Please enter your first name."
+msgstr "Introduceți prenumele."
+
+msgid "Please enter your last name."
+msgstr "Introduceți numele de familie."
+
+msgid "Please enter your name."
+msgstr "Introduceți numele."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Completați datele lipsă pentru a putea trimite cererea de membru președintelui clubului."
+
+msgid "Please select your country."
+msgstr "Selectați țara."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Înregistrare"
+
+msgid "Remember me"
+msgstr "Ține-mă minte"
+
+msgid "Search..."
+msgstr "Căutare..."
+
+msgid "Select club..."
+msgstr "Selectați clubul..."
+
+msgid "Select country"
+msgstr "Selectați țara"
+
+msgid "Select country..."
+msgstr "Selectați țara..."
+
+msgid "Select language..."
+msgstr "Selectați limba..."
+
+msgid "Selected language: {0}"
+msgstr "Limba selectată: {0}"
+
+msgid "Send reset link"
+msgstr "Trimite linkul de resetare"
+
+msgid "Social accounts"
+msgstr "Conturi sociale"
+
+msgid "Submit application"
+msgstr "Trimite cererea"
+
+msgid "Success"
+msgstr "Succes"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Limba țării (locale) devine limba contului dvs."
+
+msgid "Username"
+msgstr "Nume de utilizator"
+
+msgid "Warning"
+msgstr "Avertisment"
+

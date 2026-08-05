@@ -22,6 +22,15 @@ msgstr "Zeréck bei de Profil"
 msgid "Change password"
 msgstr "Passwuert änneren"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Wiel däi Land nom lokalen Numm. D’Sprooch vum Land gëtt d’Sprooch vun dengem Kont."
+
+msgid "Club"
+msgstr "Club"
+
+msgid "Complete your profile"
+msgstr "Profil komplettéieren"
+
 msgid "Confirm password"
 msgstr "Passwuert bestätegen"
 
@@ -43,6 +52,9 @@ msgstr "Gëff deng E-Mail oder de Benotzernumm an; mir schécken e Link fir d’
 msgid "Error"
 msgstr "Feeler"
 
+msgid "First name"
+msgstr "Virnumm"
+
 msgid "Forgot password?"
 msgstr "Passwuert vergiess?"
 
@@ -51,6 +63,12 @@ msgstr "Ech akzeptéieren d’Notzungsbedingunge"
 
 msgid "Info"
 msgstr "Info"
+
+msgid "Language"
+msgstr "Sprooch"
+
+msgid "Last name"
+msgstr "Familljennumm"
 
 msgid "Log out"
 msgstr "Ofmellen"
@@ -73,14 +91,29 @@ msgstr "Keng Resultater fonnt."
 msgid "Password"
 msgstr "Passwuert"
 
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Korrigéier w.e.g. déi follgend Feeler."
+
 msgid "Please enter a valid email."
 msgstr "Gëff w.e.g. eng valabel E-Mail an."
 
 msgid "Please enter your email."
 msgstr "Gëff w.e.g. deng E-Mail an."
 
+msgid "Please enter your first name."
+msgstr "Gëff w.e.g. däi Virnumm an."
+
+msgid "Please enter your last name."
+msgstr "Gëff w.e.g. däi Familljennumm an."
+
 msgid "Please enter your name."
 msgstr "Gëff w.e.g. däin Numm an."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Fëll déi feelend Detailer aus, fir dass mir deng Memberufro un de Clubpresident schécke kënnen."
 
 msgid "Please select your country."
 msgstr "Wiel w.e.g. däi Land."
@@ -97,17 +130,29 @@ msgstr "Erënner mech"
 msgid "Search..."
 msgstr "Sichen..."
 
+msgid "Select club..."
+msgstr "Club auswielen..."
+
 msgid "Select country"
 msgstr "Land auswielen"
 
 msgid "Select country..."
 msgstr "Land auswielen..."
 
+msgid "Select language..."
+msgstr "Sprooch auswielen..."
+
+msgid "Selected language: {0}"
+msgstr "Ausgewielte Sprooch: {0}"
+
 msgid "Send reset link"
 msgstr "Reset-Link schécken"
 
 msgid "Social accounts"
 msgstr "Sozial Konten"
+
+msgid "Submit application"
+msgstr "Demande schécken"
 
 msgid "Success"
 msgstr "Erfolleg"

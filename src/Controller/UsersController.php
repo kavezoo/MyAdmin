@@ -108,17 +108,14 @@ class UsersController extends CakeDCUsersController
         $action = (string)$this->getRequest()->getParam('action');
         if (in_array($action, self::LANGUAGE_SELECT_ACTIONS, true)) {
             $uiLocale = I18n::getLocale();
-            AdminCountry::applyTranslateLocale($uiLocale);
-            $this->set('languageOptions', AdminLanguage::options($uiLocale));
+            $this->set('languageOptions', AdminLanguage::loginOptions($uiLocale));
             $this->set('selectedLocale', BrowserLocale::canonicalize($uiLocale) ?? $uiLocale);
-            $this->set('selectedLanguageLabel', AdminLanguage::displayName($uiLocale, $uiLocale));
+            $this->set('selectedLanguageLabel', AdminLanguage::loginLabel($uiLocale, $uiLocale));
         }
         if (in_array($action, self::COUNTRY_SELECT_ACTIONS, true)) {
-            $uiLocale = I18n::getLocale();
-            AdminCountry::applyTranslateLocale($uiLocale);
-            $this->set('countryOptions', AdminCountry::optionsWithLocale($uiLocale));
-            $this->set('countryLocales', AdminCountry::localeMap());
-            $this->set('selectedCountryId', $this->resolveGuestCountryId());
+            $this->set('countryOptions', AdminCountry::registerOptions());
+            $this->set('countryLocales', AdminCountry::registerLocaleMap());
+            $this->set('selectedCountryId', $this->resolveRegisterCountryId());
         }
         if ($action === 'profile') {
             $this->prepareProfileViewVars();
@@ -315,7 +312,6 @@ class UsersController extends CakeDCUsersController
             throw new ForbiddenException(__('You must be logged in to view your event log.'));
         }
 
-        $this->loadComponent('Paginator');
         /** @var \App\Model\Table\EventLogsTable $eventLogs */
         $eventLogs = $this->fetchTable('EventLogs');
         $query = $eventLogs->find()
@@ -374,13 +370,15 @@ class UsersController extends CakeDCUsersController
     }
 
     /**
-     * After login: keep the login-screen language (session/cookie); country_id only for AdminCountry scope.
+     * After login: keep the login-screen language (POST/query → session/cookie); country_id only for AdminCountry scope.
+     * Persists AppUiLocale cookie for ≥ 1 year.
      *
      * @param mixed $user
      */
     protected function applyStoredUserLocalePreferences(mixed $user, Response $response): Response
     {
-        $locale = BrowserLocale::forLoggedIn($this->getRequest(), $user);
+        $locale = $this->explicitLocale()
+            ?? BrowserLocale::forLoggedIn($this->getRequest(), $user);
 
         $countryId = 0;
         if (is_object($user) && method_exists($user, 'get')) {
@@ -476,7 +474,7 @@ class UsersController extends CakeDCUsersController
      */
     protected function applyGuestCountryLocale(): void
     {
-        $countryId = $this->resolveGuestCountryId();
+        $countryId = $this->resolveRegisterCountryId();
         if ($countryId < 1) {
             $this->applyUiLocale(BrowserLocale::resolve($this->getRequest()));
 
@@ -510,7 +508,25 @@ class UsersController extends CakeDCUsersController
     }
 
     /**
-     * Country for the select default: explicit → cookie/session → HU.
+     * Registration country: explicit → cookie/session → default HU — only if visible.
+     */
+    protected function resolveRegisterCountryId(): int
+    {
+        $explicit = $this->explicitCountryId();
+        if ($explicit > 0 && AdminCountry::isRegisterCountryId($explicit)) {
+            return $explicit;
+        }
+
+        $remembered = AdminCountry::id($this->getRequest());
+        if (AdminCountry::isRegisterCountryId($remembered)) {
+            return $remembered;
+        }
+
+        return AdminCountry::defaultCountryId();
+    }
+
+    /**
+     * Country for non-register guest selects: explicit → cookie/session → HU.
      */
     protected function resolveGuestCountryId(): int
     {

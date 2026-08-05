@@ -161,10 +161,10 @@ foreach ($panelPrefixes as $prefix) {
 
 ## 5. Login / register részletek
 
-- Login: **nyelv** Select2 a POST-on kívül (`?locale=`); feliratok a kiválasztott nyelven (`languages` + i18n); alap: böngésző Accept-Language. Részlet: [login-language.md](login-language.md).
+- Login: **nyelv** Select2 a POST-on kívül (`?locale=`); feliratok: **aktuális nyelven + (endoním)** (pl. Angol (English)); csak látható országok locale-jai. Részlet: [login-language.md](login-language.md).
 - Login: email mező (`type=email`).
-- Register: **ország** Select2; `normalizeRegistrationData` (username←email); `country_id` kötelező; **ne** duplikáld a `nonNegativeInteger` szabályt a `validationRegister`-ben.
-- Locale login után: **login session/cookie nyelv** (`?locale=`), fallback: user `country_id` → `Countries.locale` → `BrowserLocale::persist` + panel `forLoggedIn`.
+- Register: **ország** Select2 — címke = `endonim_name`, csak `Countries.visible = true`; `normalizeRegistrationData` (username←email); `country_id` kötelező; **ne** duplikáld a `nonNegativeInteger` szabályt a `validationRegister`-ben.
+- Locale login után: **login session/cookie nyelv** (`?locale=` / POST `locale`), fallback: user `country_id` → `Countries.locale` → `BrowserLocale::persist` (`AppUiLocale` ≥ 1 év) + panel `forLoggedIn`.
 
 ### 5.1 `active` vs `enabled`
 
@@ -196,14 +196,15 @@ ErrorHandler → HostHeader → SanitizeAuthRedirect → Asset → Routing
 → (CakeDC) Authentication → Authorization → RequireUserEnabled
 ```
 
-`LocaleMiddleware`: mindig `BrowserLocale::resolve` (+ cookie refresh); panel AppController finomít `forLoggedIn`-nel.
+`LocaleMiddleware`: mindig `BrowserLocale::resolve` (+ `AppUiLocale` cookie megújítás ≥ 1 év); panel AppController finomít `forLoggedIn`-nel.
 
 ---
 
 ## 8. i18n
 
-Auth stringek: `__()` + `resources/locales/{locale}/default.po` (látható ország locale-ok).  
+Auth stringek: `__()` + `resources/locales/{locale}/default.po` (`languages.visible = true`).  
 Újraépítés: `php tmp/build_auth_locale_pos.php`.  
+Login/register box: `.login-box.local-login` szélesebb (`users_auth.css`, ~32rem) a zászlós Select2 miatt.
 Részletek: [i18n.md](i18n.md).
 
 ---

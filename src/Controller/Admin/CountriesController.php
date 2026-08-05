@@ -118,6 +118,7 @@ class CountriesController extends AppController
                 'id',
                 'iso2',
                 'name',
+                'endonim_name',
                 'locale',
                 'continent_id',
                 'Continents.name',
@@ -180,20 +181,19 @@ class CountriesController extends AppController
 
         if ($this->request->is('post')) {
             try {
-                $data = $this->normalizeVisibleCountriesData($this->request->getData());
-                $country = $this->Countries->patchEntity($country, $data, [
-                    'fields' => ['iso2', 'name', 'locale', 'continent_id', 'visible', 'pos', 'user_count', 'visible_countries'],
-                    'associated' => ['VisibleCountries'],
+                $postedExtras = $this->postedAdditionalLanguageIds($this->request->getData());
+                $country = $this->Countries->patchEntity($country, $this->request->getData(), [
+                    'fields' => ['iso2', 'name', 'endonim_name', 'locale', 'timezone', 'continent_id', 'visible', 'pos', 'user_count'],
                     'accessibleFields' => [
                         'iso2' => true,
                         'name' => true,
+                        'endonim_name' => true,
                         'locale' => true,
+                        'timezone' => true,
                         'continent_id' => true,
                         'visible' => true,
                         'pos' => true,
                         'user_count' => true,
-                        'visible_countries' => true,
-                        'visible_countries._ids' => true,
                     ],
                 ]);
                 if ($country->get('user_count') === null) {
@@ -201,7 +201,7 @@ class CountriesController extends AppController
                 }
                 if ($this->Countries->save($country)) {
                     $newId = (int)$country->id;
-                    $this->Countries->ensureSelfVisibility($newId);
+                    $this->Countries->replaceVisibleCountryIds($newId, $postedExtras);
                     $this->rememberLastVisited('Countries', $country->id);
                     $this->Flash->success(__('The country has been saved.'));
 
@@ -215,6 +215,7 @@ class CountriesController extends AppController
 
         $this->setFormOptions();
         $this->set(compact('country'));
+        $this->set('selectedVisibleIds', $postedExtras ?? []);
         $this->setCountryAccessFlags($country);
         $this->set('title', __('New country'));
         $this->viewBuilder()->setVar('breadcrumb', __('Countries'));
@@ -232,26 +233,26 @@ class CountriesController extends AppController
         }
 
         $this->setTranslateLocales();
-        $country = $this->Countries->get($id, contain: ['Continents', 'VisibleCountries']);
+        $country = $this->Countries->get($id, contain: ['Continents']);
         $this->rememberLastVisited('Countries', $country->id);
+        $selectedVisibleIds = $this->Countries->additionalLanguageIds((int)$country->id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             try {
                 $data = $this->request->getData();
                 if (CountryAccess::canEditFully()) {
-                    $data = $this->normalizeVisibleCountriesData($data, (int)$country->id);
+                    $selectedVisibleIds = $this->postedAdditionalLanguageIds($data);
                     $country = $this->Countries->patchEntity($country, $data, [
-                        'fields' => ['iso2', 'name', 'locale', 'continent_id', 'visible', 'pos', 'visible_countries'],
-                        'associated' => ['VisibleCountries'],
+                        'fields' => ['iso2', 'name', 'endonim_name', 'locale', 'timezone', 'continent_id', 'visible', 'pos'],
                         'accessibleFields' => [
                             'iso2' => true,
                             'name' => true,
+                            'endonim_name' => true,
                             'locale' => true,
+                            'timezone' => true,
                             'continent_id' => true,
                             'visible' => true,
                             'pos' => true,
-                            'visible_countries' => true,
-                            'visible_countries._ids' => true,
                         ],
                     ]);
                 } else {
@@ -264,7 +265,7 @@ class CountriesController extends AppController
                 }
                 if ($this->Countries->save($country)) {
                     if (CountryAccess::canEditFully()) {
-                        $this->Countries->ensureSelfVisibility((int)$country->id);
+                        $this->Countries->replaceVisibleCountryIds((int)$country->id, $selectedVisibleIds);
                     }
                     $this->rememberLastVisited('Countries', $country->id);
                     $this->Flash->success(__('The country has been saved.'));
@@ -278,7 +279,7 @@ class CountriesController extends AppController
         }
 
         $this->setFormOptions();
-        $this->set(compact('country'));
+        $this->set(compact('country', 'selectedVisibleIds'));
         $this->setCountryAccessFlags($country);
         $this->set('title', __('Edit country'));
         $this->viewBuilder()->setVar('breadcrumb', __('Countries'));
@@ -348,10 +349,7 @@ class CountriesController extends AppController
 
         try {
             $this->setTranslateLocales();
-            $country = $this->Countries->get($id, contain: [
-                'Continents',
-                'VisibleCountries' => $this->containRelatedForModal('VisibleCountries'),
-            ]);
+            $country = $this->Countries->get($id, contain: ['Continents']);
         } catch (\Throwable $e) {
             return $this->response
                 ->withStatus(404)
@@ -364,14 +362,7 @@ class CountriesController extends AppController
 
         $this->rememberLastVisited('Countries', $country->id);
 
-        $selfId = (int)$country->id;
-        $extras = [];
-        foreach ($country->visible_countries ?? [] as $partner) {
-            if ((int)$partner->get('id') === $selfId) {
-                continue;
-            }
-            $extras[] = $partner;
-        }
+        $extras = $this->Countries->additionalLanguageCountries((int)$country->id);
 
         return $this->response
             ->withType('application/json')
@@ -381,7 +372,9 @@ class CountriesController extends AppController
                     'id' => $country->id,
                     'iso2' => $country->iso2,
                     'name' => $country->name,
+                    'endonim_name' => $country->endonim_name,
                     'locale' => $country->locale,
+                    'timezone' => $country->timezone,
                     'continent' => $country->continent->name ?? '',
                     'visible' => (bool)$country->visible,
                     'pos' => \App\Utility\LocaleNumberParser::format($country->pos, decimals: 0),
@@ -447,30 +440,21 @@ class CountriesController extends AppController
     }
 
     /**
-     * Merge posted extra languages with mandatory self (own language always on tabs).
+     * Posted Additional languages Select2 ids (self excluded).
      *
      * @param array<string, mixed> $data
-     * @return array<string, mixed>
+     * @return list<int>
      */
-    protected function normalizeVisibleCountriesData(array $data, ?int $selfCountryId = null): array
+    protected function postedAdditionalLanguageIds(array $data): array
     {
         $ids = $data['visible_countries']['_ids'] ?? [];
         if (!is_array($ids)) {
             $ids = [];
         }
-        $ids = array_map('intval', $ids);
-        if ($selfCountryId !== null && $selfCountryId > 0) {
-            // Never allow removing self from the posted extras list.
-            $ids = array_values(array_filter($ids, static fn(int $id): bool => $id !== $selfCountryId));
-            $data['visible_countries']['_ids'] = $this->Countries->ensureSelfFirst($ids, $selfCountryId);
-        } else {
-            // Add: self is attached after save via ensureSelfVisibility.
-            $data['visible_countries']['_ids'] = array_values(array_unique(array_filter(
-                $ids,
-                static fn(int $id): bool => $id > 0
-            )));
-        }
 
-        return $data;
+        return array_values(array_unique(array_filter(
+            array_map('intval', $ids),
+            static fn(int $id): bool => $id > 0
+        )));
     }
 }

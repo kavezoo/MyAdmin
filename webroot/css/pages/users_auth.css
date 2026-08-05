@@ -7,11 +7,22 @@
  * height follows the form content (register / profile taller than login).
  */
 
-/* Box: keep ValiAdmin chrome; height from content */
+/* Box: keep ValiAdmin chrome; height from content; wider for flagged Select2 labels */
 .users-auth-body .login-content .login-box.local-login {
 	height: auto;
 	min-height: 0;
+	min-width: 28rem;
+	width: min(100%, 32rem);
+	max-width: 36rem;
 	overflow: visible;
+}
+
+@media (max-width: 480px) {
+	.users-auth-body .login-content .login-box.local-login {
+		min-width: 0;
+		width: 100%;
+		max-width: 100%;
+	}
 }
 
 /* Visible local face = normal document flow (not absolute flip panel) */
@@ -108,4 +119,28 @@
 .users-auth-body + .select2-container--open,
 body > .select2-container--bootstrap-5 {
 	z-index: 3000;
+}
+
+/* Flag icons in auth Select2 (login language / register country) */
+.select2-flag-option {
+	display: inline-flex;
+	align-items: center;
+	gap: 0;
+	line-height: 1.25;
+}
+
+.select2-flag {
+	flex: 0 0 auto;
+	width: 1.25rem;
+	height: 1.25rem;
+	margin-top: -1px; /* midway between original and -2px */
+	margin-right: 0.3rem;
+	object-fit: cover;
+	border-radius: 2px;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+	vertical-align: middle;
+}
+
+.select2-container--bootstrap-5 .select2-selection__rendered .select2-flag-option {
+	max-width: 100%;
 }

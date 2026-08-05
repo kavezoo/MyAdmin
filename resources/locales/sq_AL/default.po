@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: sq_AL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Keni tashmë një llogari? Hyr"
+
+msgid "Back to admin"
+msgstr "Kthehu te admin"
+
+msgid "Back to login"
+msgstr "Kthehu te hyrja"
+
+msgid "Back to profile"
+msgstr "Kthehu te profili"
+
+msgid "Change password"
+msgstr "Ndrysho fjalëkalimin"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Zgjidhni shtetin sipas emrit lokal. Gjuha e shtetit bëhet gjuha e llogarisë suaj."
+
+msgid "Club"
+msgstr "Klubi"
+
+msgid "Complete your profile"
+msgstr "Plotësoni profilin"
+
+msgid "Confirm password"
+msgstr "Konfirmo fjalëkalimin"
+
+msgid "Country"
+msgstr "Shteti"
+
+msgid "Current password"
+msgstr "Fjalëkalimi aktual"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Email or username"
+msgstr "Email ose emri i përdoruesit"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Vendosni emailin ose emrin e përdoruesit dhe do t’ju dërgojmë një lidhje për rivendosjen e fjalëkalimit."
+
+msgid "Error"
+msgstr "Gabim"
+
+msgid "First name"
+msgstr "Emri"
+
+msgid "Forgot password?"
+msgstr "Keni harruar fjalëkalimin?"
+
+msgid "I accept the terms of service"
+msgstr "Pranoj kushtet e shërbimit"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Gjuha"
+
+msgid "Last name"
+msgstr "Mbiemri"
+
+msgid "Log out"
+msgstr "Dil"
+
+msgid "Login"
+msgstr "Hyr"
+
+msgid "Message"
+msgstr "Mesazh"
+
+msgid "Name"
+msgstr "Emri"
+
+msgid "New password"
+msgstr "Fjalëkalimi i ri"
+
+msgid "No results found."
+msgstr "Nuk u gjetën rezultate."
+
+msgid "Password"
+msgstr "Fjalëkalimi"
+
+msgid "Phone"
+msgstr "Telefoni"
+
+msgid "Please correct the errors below."
+msgstr "Korrigjoni gabimet më poshtë."
+
+msgid "Please enter a valid email."
+msgstr "Ju lutemi vendosni një email të vlefshëm."
+
+msgid "Please enter your email."
+msgstr "Ju lutemi vendosni emailin."
+
+msgid "Please enter your first name."
+msgstr "Vendosni emrin."
+
+msgid "Please enter your last name."
+msgstr "Vendosni mbiemrin."
+
+msgid "Please enter your name."
+msgstr "Ju lutemi vendosni emrin."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Plotësoni të dhënat që mungojnë që të mund të dërgojmë aplikimin për anëtarësi te presidenti i klubit."
+
+msgid "Please select your country."
+msgstr "Ju lutemi zgjidhni shtetin."
+
+msgid "Profile"
+msgstr "Profili"
+
+msgid "Register"
+msgstr "Regjistrohu"
+
+msgid "Remember me"
+msgstr "Më mbaj mend"
+
+msgid "Search..."
+msgstr "Kërko..."
+
+msgid "Select club..."
+msgstr "Zgjidhni klubin..."
+
+msgid "Select country"
+msgstr "Zgjidhni shtetin"
+
+msgid "Select country..."
+msgstr "Zgjidhni shtetin..."
+
+msgid "Select language..."
+msgstr "Zgjidhni gjuhën..."
+
+msgid "Selected language: {0}"
+msgstr "Gjuha e zgjedhur: {0}"
+
+msgid "Send reset link"
+msgstr "Dërgo lidhjen e rivendosjes"
+
+msgid "Social accounts"
+msgstr "Llogaritë sociale"
+
+msgid "Submit application"
+msgstr "Dërgo aplikimin"
+
+msgid "Success"
+msgstr "Sukses"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Gjuha e shtetit (locale) bëhet gjuha e llogarisë suaj."
+
+msgid "Username"
+msgstr "Emri i përdoruesit"
+
+msgid "Warning"
+msgstr "Paralajmërim"
+

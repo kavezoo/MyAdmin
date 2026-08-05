@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: mt_MT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Diġà għandek kont? Idħol"
+
+msgid "Back to admin"
+msgstr "Lura għall-admin"
+
+msgid "Back to login"
+msgstr "Lura għall-login"
+
+msgid "Back to profile"
+msgstr "Lura għall-profil"
+
+msgid "Change password"
+msgstr "Ibdel il-password"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Agħżel il-pajjiż bl-isem lokali. Il-lingwa tal-pajjiż issir il-lingwa tal-kont tiegħek."
+
+msgid "Club"
+msgstr "Klabb"
+
+msgid "Complete your profile"
+msgstr "Imla l-profil"
+
+msgid "Confirm password"
+msgstr "Ikkonferma l-password"
+
+msgid "Country"
+msgstr "Pajjiż"
+
+msgid "Current password"
+msgstr "Password attwali"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Email or username"
+msgstr "Email jew username"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Daħħal l-email jew l-username u nibagħtulek link biex terġa’ tissettja l-password."
+
+msgid "Error"
+msgstr "Żball"
+
+msgid "First name"
+msgstr "Isem"
+
+msgid "Forgot password?"
+msgstr "Insejt il-password?"
+
+msgid "I accept the terms of service"
+msgstr "Naċċetta t-termini tas-servizz"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Lingwa"
+
+msgid "Last name"
+msgstr "Kunjom"
+
+msgid "Log out"
+msgstr "Oħroġ"
+
+msgid "Login"
+msgstr "Idħol"
+
+msgid "Message"
+msgstr "Messaġġ"
+
+msgid "Name"
+msgstr "Isem"
+
+msgid "New password"
+msgstr "Password ġdida"
+
+msgid "No results found."
+msgstr "Ma nstabu l-ebda riżultati."
+
+msgid "Password"
+msgstr "Password"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Ikkoreġi l-iżbalji hawn taħt."
+
+msgid "Please enter a valid email."
+msgstr "Jekk jogħġbok daħħal email valida."
+
+msgid "Please enter your email."
+msgstr "Jekk jogħġbok daħħal l-email tiegħek."
+
+msgid "Please enter your first name."
+msgstr "Daħħal l-isem tiegħek."
+
+msgid "Please enter your last name."
+msgstr "Daħħal il-kunjom tiegħek."
+
+msgid "Please enter your name."
+msgstr "Jekk jogħġbok daħħal ismek."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Imla d-dettalji nieqsa sabiex nistgħu nibagħtu l-applikazzjoni għas-sħubija lill-president tal-klabb."
+
+msgid "Please select your country."
+msgstr "Jekk jogħġbok agħżel il-pajjiż tiegħek."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Irreġistra"
+
+msgid "Remember me"
+msgstr "Ftakarni"
+
+msgid "Search..."
+msgstr "Fittex..."
+
+msgid "Select club..."
+msgstr "Agħżel klabb..."
+
+msgid "Select country"
+msgstr "Agħżel pajjiż"
+
+msgid "Select country..."
+msgstr "Agħżel pajjiż..."
+
+msgid "Select language..."
+msgstr "Agħżel lingwa..."
+
+msgid "Selected language: {0}"
+msgstr "Lingwa magħżula: {0}"
+
+msgid "Send reset link"
+msgstr "Ibgħat il-link tar-reset"
+
+msgid "Social accounts"
+msgstr "Kontijiet soċjali"
+
+msgid "Submit application"
+msgstr "Ibgħat l-applikazzjoni"
+
+msgid "Success"
+msgstr "Success"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Il-lingwa tal-pajjiż (locale) issir il-lingwa tal-kont tiegħek."
+
+msgid "Username"
+msgstr "Username"
+
+msgid "Warning"
+msgstr "Twissija"
+

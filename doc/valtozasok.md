@@ -5,6 +5,152 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-05 — Users event-log: ne loadComponent('Paginator')
+
+### Mi változott / miért
+CakePHP 5-ben nincs `PaginatorComponent`; a `$this->paginate()` a Controller metódus. A `loadComponent('Paginator')` MissingComponentException-t dobott `/users/event-log`-on.
+
+### Érintett
+- `src/Controller/UsersController.php`
+- `src/Controller/Clubpresident/ApplicantsController.php` (ugyanaz a hiba megelőzve)
+
+---
+
+## 2026-08-05 — Auth zászló CSS + szélesebb box + visible language .po
+
+### Mi változott / miért
+- Select2 zászló: 2px feljebb + jobb margó (szöveg középre, nem olvad egybe).
+- Login/register `.login-box` szélesebb (flag + hosszú címkék miatt).
+- Auth `.po` / `.pot`: mind a **53** `languages.visible=true` locale; új stringek (Language, Select language…, Choose your country…).
+
+### Érintett
+- `webroot/css/pages/users_auth.css`
+- `resources/locales/**/default.po`, `resources/locales/default.pot`
+- `tmp/build_auth_locale_pos.php`, `tmp/auth_locale_extra.php`, `tmp/auth_locale_new_langs*.php`
+- `doc/i18n.md`, `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Select2 zászló ikonok (login / register)
+
+### Mi változott / miért
+Login nyelv és register ország Select2: a megnevezés előtt `img/flags/{iso}.png` ikon.
+
+### Érintett
+- `users_auth_locale.js`, `users_auth_country.js`, `users_auth.css`
+- `templates/Users/login.php`, `register.php`, `complete_profile.php`
+- `AdminLanguage::flagMapForLocales`, `AdminCountry::registerFlagMap`
+
+---
+
+## 2026-08-05 — Country flags PNG (256×256)
+
+### Mi változott / miért
+Minden `countries.iso2`-hoz `webroot/img/flags/{iso2}.png` (256×256). Forrás: flagcdn.com; elavult kódok utódzászlóval.
+
+### Érintett
+- `webroot/img/flags/*.png`
+- Seed helper: `php tmp/download_flags.php`, `php tmp/fill_obsolete_flags.php`
+
+---
+
+## 2026-08-05 — Login nyelv: UI név + endoním
+
+### Mi változott / miért
+Login Select2: `Angol (English)` — aktuális nyelven a név, zárójelben az endoním. Azonos nyelvváltozatoknál régió: `Német — Ausztria (Deutsch)`.
+
+### Érintett
+- `AdminLanguage::loginOptions`, `loginLabel`, `languageName`
+- `UsersController` login beforeRender
+
+---
+
+## 2026-08-05 — Login nyelvek = látható országok locale-jai
+
+### Mi változott / miért
+A login lista rövidebb volt, mert a elavult `languages` táblára (9 sor) szűrt. Most a látható országok distinct `locale` értékeiből épül (ugyanaz a pool, mint a regisztrációnál). `BrowserLocale::availableLocales` is `Countries.visible`-t használ.
+
+### Érintett
+- `AdminLanguage::loginOptions`
+- `BrowserLocale::availableLocales`
+
+---
+
+## 2026-08-05 — Countries index: Endonym oszlop
+
+### Mi változott / miért
+Az Admin Countries listán megjelenik az `endonim_name` (Endonym) oszlop a Name után.
+
+### Érintett
+- `templates/Admin/Countries/index.php`
+- `CountriesController::index` sortableFields
+- `webroot/css/style.css` `.endonim`
+- Doc / rule: `countries-admin.md`, `admin-countries-index.mdc`
+
+---
+
+## 2026-08-05 — Login nyelvlísta: endoním
+
+### Mi változott / miért
+A login Select2 a nyelveket endonímmal listázza (Magyar, English, Deutsch…), és csak a látható országok locale-jait mutatja — mindenki a saját nyelvén találja meg.
+
+### Érintett
+- `AdminLanguage::loginOptions`, `endonym`
+- `UsersController` login beforeRender
+- Doc: `login-language.md`, `users-auth.md`
+
+---
+
+## 2026-08-05 — Register országlista: endonim + visible
+
+### Mi változott / miért
+A regisztráción az ország Select2 csak a látható országokat listázza, és a címke kizárólag `endonim_name` (saját írásrendszer), hogy mindenki megtalálja a sajátját.
+
+### Érintett
+- `AdminCountry::registerOptions`, `registerLocaleMap`, `isRegisterCountryId`
+- `UsersController` register beforeRender / resolveRegisterCountryId
+- Doc: `login-language.md`, `users-auth.md`
+
+---
+
+## 2026-08-05 — Countries: `endonim_name` átnevezés
+
+### Mi változott / miért
+`countries.original_name` → `endonim_name`.
+
+### Érintett
+- DB ALTER + `config/schema/countries.sql`
+- Entity / Table / Controller / form / view / index modal
+- Seed: `tmp/seed_country_endonim_names.php`
+
+---
+
+## 2026-08-05 — Countries: additional languages mentés + original_name
+
+### Mi változott / miért
+A további nyelvek mentése a junctionbe ment, de a self-ref `VisibleCountries` contain rosszul hidratált (mindig a saját ország) — a form üresen jött vissza. Mentés/betöltés most junction API-n megy. `original_name` endoním mező feltöltve (🇨🇳 中国, 🇷🇺 Россия, …).
+
+### Érintett
+- `CountriesTable::replaceVisibleCountryIds`, `additionalLanguageIds`, `additionalLanguageCountries`
+- `CountriesController` add/edit/recordGet
+- `countries.original_name` + `tmp/seed_country_original_names.php`
+- Doc: `country-visibilities.md`, `countries-admin.md`
+
+---
+
+## 2026-08-04 — UI nyelv cookie ≥ 1 év
+
+### Mi változott / miért
+Az utoljára használt nyelv `AppUiLocale` cookie-ja `+1 year`, minden válasz megújítja; login POST rejtett `locale` mezővel is elmenti.
+
+### Érintett
+- `BrowserLocale::COOKIE_LIFETIME`, `withCookie`
+- `LocaleMiddleware` cookie renew
+- `templates/Users/login.php` hidden locale
+- Doc: `login-language.md`
+
+---
+
 ## 2026-08-04 — UI nyelv = login nyelv
 
 ### Mi változott / miért

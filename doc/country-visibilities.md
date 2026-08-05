@@ -22,8 +22,9 @@ Seed: `php tmp/seed_country_visibilities.php` (TRUNCATE + minden ország ↔ ön
 
 ## Admin UI
 
-Countries full edit: **Additional languages** multiple Select2 → `visible_countries._ids` (csak partnerek).  
-Saját nyelv nincs a listában; a help szöveg ezt magyarázza.
+Countries full edit: **Additional languages** multiple Select2 → mentés: `replaceVisibleCountryIds()` (junction közvetlenül; a self-ref `contain(['VisibleCountries'])` nem megbízható).  
+Saját nyelv nincs a listában; a help szöveg ezt magyarázza.  
+Form kiválasztás: `additionalLanguageIds()` / modal: `additionalLanguageCountries()`.
 
 **Form TAB-ok (Samples, Parents, …):** pontosan ezek a nyelvek — `FormLanguages::tabs()` ← `country_visibilities` (saját + extras). Nincs globális „minden ország” füllista.
 
@@ -32,6 +33,8 @@ Saját nyelv nincs a listában; a help szöveg ezt magyarázza.
 | API | Szerep |
 |-----|--------|
 | `ensureSelfVisibility` / `ensureSelfFirst` | saját nyelv lock |
+| `additionalLanguageIds` / `additionalLanguageCountries` | form Select2 + modal (junction olvasás) |
+| `replaceVisibleCountryIds` | form mentés: self + extras |
 | `visibleCountryIdsFor($activeId)` | saját + extras |
 | `seedDefaultVisibilitiesForCountry` | új ország: csak self |
 | `FormLanguages::tabs()` | saját nyelvű TAB első |

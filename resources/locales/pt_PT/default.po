@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Já tem uma conta? Entrar"
+
+msgid "Back to admin"
+msgstr "Voltar ao admin"
+
+msgid "Back to login"
+msgstr "Voltar ao início de sessão"
+
+msgid "Back to profile"
+msgstr "Voltar ao perfil"
+
+msgid "Change password"
+msgstr "Alterar palavra-passe"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Escolha o país pelo nome local. O idioma do país torna-se o idioma da sua conta."
+
+msgid "Club"
+msgstr "Clube"
+
+msgid "Complete your profile"
+msgstr "Concluir o perfil"
+
+msgid "Confirm password"
+msgstr "Confirmar palavra-passe"
+
+msgid "Country"
+msgstr "País"
+
+msgid "Current password"
+msgstr "Palavra-passe atual"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email or username"
+msgstr "E-mail ou nome de utilizador"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Introduza o e-mail ou nome de utilizador e enviaremos um link para redefinir a palavra-passe."
+
+msgid "Error"
+msgstr "Erro"
+
+msgid "First name"
+msgstr "Nome próprio"
+
+msgid "Forgot password?"
+msgstr "Esqueceu a palavra-passe?"
+
+msgid "I accept the terms of service"
+msgstr "Aceito os termos de serviço"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Last name"
+msgstr "Apelido"
+
+msgid "Log out"
+msgstr "Terminar sessão"
+
+msgid "Login"
+msgstr "Entrar"
+
+msgid "Message"
+msgstr "Mensagem"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "New password"
+msgstr "Nova palavra-passe"
+
+msgid "No results found."
+msgstr "Nenhum resultado."
+
+msgid "Password"
+msgstr "Palavra-passe"
+
+msgid "Phone"
+msgstr "Telefone"
+
+msgid "Please correct the errors below."
+msgstr "Corrija os erros abaixo."
+
+msgid "Please enter a valid email."
+msgstr "Introduza um e-mail válido."
+
+msgid "Please enter your email."
+msgstr "Introduza o seu e-mail."
+
+msgid "Please enter your first name."
+msgstr "Introduza o seu nome próprio."
+
+msgid "Please enter your last name."
+msgstr "Introduza o seu apelido."
+
+msgid "Please enter your name."
+msgstr "Introduza o seu nome."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Preencha os dados em falta para podermos enviar o pedido de adesão ao presidente do clube."
+
+msgid "Please select your country."
+msgstr "Selecione o seu país."
+
+msgid "Profile"
+msgstr "Perfil"
+
+msgid "Register"
+msgstr "Registar"
+
+msgid "Remember me"
+msgstr "Lembrar-me"
+
+msgid "Search..."
+msgstr "Pesquisar..."
+
+msgid "Select club..."
+msgstr "Selecionar clube..."
+
+msgid "Select country"
+msgstr "Selecionar país"
+
+msgid "Select country..."
+msgstr "Selecionar país..."
+
+msgid "Select language..."
+msgstr "Selecionar idioma..."
+
+msgid "Selected language: {0}"
+msgstr "Idioma selecionado: {0}"
+
+msgid "Send reset link"
+msgstr "Enviar link de redefinição"
+
+msgid "Social accounts"
+msgstr "Contas sociais"
+
+msgid "Submit application"
+msgstr "Enviar pedido"
+
+msgid "Success"
+msgstr "Sucesso"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "O idioma do país (locale) passa a ser o idioma da sua conta."
+
+msgid "Username"
+msgstr "Nome de utilizador"
+
+msgid "Warning"
+msgstr "Aviso"
+

@@ -5,6 +5,7 @@ namespace App\Model\Table;
 
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
 use App\Utility\AdminCountry;
+use App\Utility\AdminTimezone;
 use App\Utility\AdminTranslate;
 use ArrayObject;
 use Cake\Datasource\EntityInterface;
@@ -20,11 +21,17 @@ use Cake\Validation\Validator;
 /**
  * Countries Model — matches `countries` schema.
  *
- * Columns: iso2, name, locale, continent_id, visible, pos, user_count, created, modified
+ * Columns: iso2, name, endonim_name, locale, timezone, continent_id, visible, pos, user_count, created, modified
  * - `name` Translate EAV → i18n (model=Countries)
+ * - `endonim_name` endonym (native script), not translated
+ * - `timezone` IANA (display/save via AdminTimezone + LocaleDateParser)
  * - belongsTo Continents via continent_id
  * - `user_count`: CounterCache from UsersTable (belongsTo Countries)
  * - Access: superuser full CRUD; admin visible + pos only (see CountryAccess)
+ *
+ * Note: BelongsToMany `VisibleCountries` is kept for association wiring / save helpers,
+ * but eager `contain(['VisibleCountries'])` is unreliable on this self-ref + Translate
+ * setup — prefer {@see additionalLanguageIds()} / {@see replaceVisibleCountryIds()}.
  *
  * @property \App\Model\Table\ContinentsTable&\Cake\ORM\Association\BelongsTo $Continents
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
@@ -295,10 +302,28 @@ class CountriesTable extends Table
             ->notEmptyString('name');
 
         $validator
+            ->scalar('endonim_name')
+            ->maxLength('endonim_name', 150)
+            ->requirePresence('endonim_name', 'create')
+            ->notEmptyString('endonim_name');
+
+        $validator
             ->scalar('locale')
             ->maxLength('locale', 10)
             ->requirePresence('locale', 'create')
             ->notEmptyString('locale');
+
+        $validator
+            ->scalar('timezone')
+            ->maxLength('timezone', 64)
+            ->requirePresence('timezone', 'create')
+            ->notEmptyString('timezone')
+            ->add('timezone', 'iana', [
+                'rule' => static function ($value) {
+                    return is_string($value) && AdminTimezone::isValid($value);
+                },
+                'message' => 'Invalid IANA timezone',
+            ]);
 
         $validator
             ->nonNegativeInteger('continent_id')
@@ -415,6 +440,88 @@ class CountriesTable extends Table
         return $query
             ->where(['Countries.visible' => true])
             ->orderBy($order);
+    }
+
+    /**
+     * Extra (non-self) visible partner country ids for the Countries form Select2.
+     * Reads the junction directly — do not rely on contain(['VisibleCountries']).
+     *
+     * @return list<int>
+     */
+    public function additionalLanguageIds(int $countryId): array
+    {
+        if ($countryId < 1) {
+            return [];
+        }
+
+        /** @var \App\Model\Table\CountryVisibilitiesTable $junction */
+        $junction = $this->fetchTable('CountryVisibilities');
+        $ids = $junction->find()
+            ->select(['visible_country_id'])
+            ->where([
+                'CountryVisibilities.country_id' => $countryId,
+                'CountryVisibilities.visible' => true,
+                'CountryVisibilities.visible_country_id !=' => $countryId,
+            ])
+            ->orderBy(['CountryVisibilities.pos' => 'ASC', 'CountryVisibilities.id' => 'ASC'])
+            ->all()
+            ->extract('visible_country_id')
+            ->toList();
+
+        return array_values(array_unique(array_map('intval', $ids)));
+    }
+
+    /**
+     * Extra language partner countries (Translate names) for index modal / lists.
+     *
+     * @return list<\App\Model\Entity\Country>
+     */
+    public function additionalLanguageCountries(int $countryId, ?string $locale = null): array
+    {
+        $ids = $this->additionalLanguageIds($countryId);
+        if ($ids === []) {
+            return [];
+        }
+
+        $locale = AdminCountry::normalizeTranslateLocale(
+            ($locale !== null && $locale !== '') ? $locale : I18n::getLocale()
+        );
+        $this->getBehavior('Translate')->setLocale($locale);
+
+        return $this->find()
+            ->where(['Countries.id IN' => $ids])
+            ->orderBy(['FIELD(Countries.id, ' . implode(',', $ids) . ')' => 'ASC'])
+            ->all()
+            ->toList();
+    }
+
+    /**
+     * Replace visibility edges for a country: mandatory self + posted extras.
+     * Prefer this over BelongsToMany `_ids` save (self-ref contain/hydration is unreliable).
+     *
+     * @param list<int> $extraVisibleCountryIds Partner ids only (self is always added)
+     */
+    public function replaceVisibleCountryIds(int $countryId, array $extraVisibleCountryIds): void
+    {
+        if ($countryId < 1) {
+            return;
+        }
+
+        $extras = array_values(array_unique(array_filter(
+            array_map('intval', $extraVisibleCountryIds),
+            static fn(int $id): bool => $id > 0 && $id !== $countryId
+        )));
+
+        /** @var \App\Model\Table\CountryVisibilitiesTable $junction */
+        $junction = $this->fetchTable('CountryVisibilities');
+        $junction->deleteAll(['country_id' => $countryId]);
+
+        $this->ensureSelfVisibility($countryId);
+        $pos = 10;
+        foreach ($extras as $visibleId) {
+            $this->ensurePartnerVisibility($countryId, $visibleId, preferredPos: $pos);
+            $pos += 10;
+        }
     }
 
     /**

@@ -22,6 +22,15 @@ msgstr "Natrag na profil"
 msgid "Change password"
 msgstr "Promijeni lozinku"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Odaberite zemlju prema lokalnom nazivu. Jezik zemlje postaje jezik vašeg računa."
+
+msgid "Club"
+msgstr "Klub"
+
+msgid "Complete your profile"
+msgstr "Dopunite profil"
+
 msgid "Confirm password"
 msgstr "Potvrdi lozinku"
 
@@ -43,6 +52,9 @@ msgstr "Unesite e-mail ili korisničko ime; poslat ćemo poveznicu za reset lozi
 msgid "Error"
 msgstr "Greška"
 
+msgid "First name"
+msgstr "Ime"
+
 msgid "Forgot password?"
 msgstr "Zaboravljena lozinka?"
 
@@ -51,6 +63,12 @@ msgstr "Prihvaćam uvjete korištenja"
 
 msgid "Info"
 msgstr "Info"
+
+msgid "Language"
+msgstr "Jezik"
+
+msgid "Last name"
+msgstr "Prezime"
 
 msgid "Log out"
 msgstr "Odjava"
@@ -73,14 +91,29 @@ msgstr "Nema rezultata."
 msgid "Password"
 msgstr "Lozinka"
 
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Ispravite dolje navedene greške."
+
 msgid "Please enter a valid email."
 msgstr "Unesite valjani e-mail."
 
 msgid "Please enter your email."
 msgstr "Unesite svoj e-mail."
 
+msgid "Please enter your first name."
+msgstr "Unesite ime."
+
+msgid "Please enter your last name."
+msgstr "Unesite prezime."
+
 msgid "Please enter your name."
 msgstr "Unesite svoje ime."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Ispunite nedostajuće podatke kako bismo mogli poslati zahtjev za članstvo predsjedniku kluba."
 
 msgid "Please select your country."
 msgstr "Odaberite svoju državu."
@@ -97,17 +130,29 @@ msgstr "Zapamti me"
 msgid "Search..."
 msgstr "Pretraži..."
 
+msgid "Select club..."
+msgstr "Odaberite klub..."
+
 msgid "Select country"
 msgstr "Odaberite državu"
 
 msgid "Select country..."
 msgstr "Odaberite državu..."
 
+msgid "Select language..."
+msgstr "Odaberite jezik..."
+
+msgid "Selected language: {0}"
+msgstr "Odabrani jezik: {0}"
+
 msgid "Send reset link"
 msgstr "Pošalji poveznicu"
 
 msgid "Social accounts"
 msgstr "Društveni računi"
+
+msgid "Submit application"
+msgstr "Pošalji prijavu"
 
 msgid "Success"
 msgstr "Uspjeh"

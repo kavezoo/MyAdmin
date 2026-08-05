@@ -22,6 +22,15 @@ msgstr "Volver ao perfil"
 msgid "Change password"
 msgstr "Cambiar contrasinal"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Escolla o país polo nome local. A lingua do país pasa a ser a lingua da súa conta."
+
+msgid "Club"
+msgstr "Club"
+
+msgid "Complete your profile"
+msgstr "Completar o perfil"
+
 msgid "Confirm password"
 msgstr "Confirmar contrasinal"
 
@@ -43,6 +52,9 @@ msgstr "Introduce o correo ou nome de usuario; enviarémosche unha ligazón para
 msgid "Error"
 msgstr "Erro"
 
+msgid "First name"
+msgstr "Nome"
+
 msgid "Forgot password?"
 msgstr "Esqueciches o contrasinal?"
 
@@ -51,6 +63,12 @@ msgstr "Acepto as condicións de uso"
 
 msgid "Info"
 msgstr "Info"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Last name"
+msgstr "Apelidos"
 
 msgid "Log out"
 msgstr "Saír"
@@ -73,14 +91,29 @@ msgstr "Non se atoparon resultados."
 msgid "Password"
 msgstr "Contrasinal"
 
+msgid "Phone"
+msgstr "Teléfono"
+
+msgid "Please correct the errors below."
+msgstr "Corrixa os erros seguintes."
+
 msgid "Please enter a valid email."
 msgstr "Introduce un correo válido."
 
 msgid "Please enter your email."
 msgstr "Introduce o teu correo."
 
+msgid "Please enter your first name."
+msgstr "Introduza o seu nome."
+
+msgid "Please enter your last name."
+msgstr "Introduza os seus apelidos."
+
 msgid "Please enter your name."
 msgstr "Introduce o teu nome."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Cubra os datos que faltan para que poidamos enviar a solicitude de afiliación ao presidente do club."
 
 msgid "Please select your country."
 msgstr "Selecciona o teu país."
@@ -97,17 +130,29 @@ msgstr "Lembrarme"
 msgid "Search..."
 msgstr "Buscar..."
 
+msgid "Select club..."
+msgstr "Seleccionar club..."
+
 msgid "Select country"
 msgstr "Seleccionar país"
 
 msgid "Select country..."
 msgstr "Seleccionar país..."
 
+msgid "Select language..."
+msgstr "Seleccionar idioma..."
+
+msgid "Selected language: {0}"
+msgstr "Idioma seleccionado: {0}"
+
 msgid "Send reset link"
 msgstr "Enviar ligazón"
 
 msgid "Social accounts"
 msgstr "Contas sociais"
+
+msgid "Submit application"
+msgstr "Enviar solicitude"
 
 msgid "Success"
 msgstr "Éxito"

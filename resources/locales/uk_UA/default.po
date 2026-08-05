@@ -22,6 +22,15 @@ msgstr "Назад до профілю"
 msgid "Change password"
 msgstr "Змінити пароль"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Оберіть країну за місцевою назвою. Мова країни стане мовою вашого облікового запису."
+
+msgid "Club"
+msgstr "Клуб"
+
+msgid "Complete your profile"
+msgstr "Заповніть профіль"
+
 msgid "Confirm password"
 msgstr "Підтвердіть пароль"
 
@@ -43,6 +52,9 @@ msgstr "Введіть ел. пошту або ім’я користувача 
 msgid "Error"
 msgstr "Помилка"
 
+msgid "First name"
+msgstr "Імʼя"
+
 msgid "Forgot password?"
 msgstr "Забули пароль?"
 
@@ -51,6 +63,12 @@ msgstr "Я приймаю умови використання"
 
 msgid "Info"
 msgstr "Інфо"
+
+msgid "Language"
+msgstr "Мова"
+
+msgid "Last name"
+msgstr "Прізвище"
 
 msgid "Log out"
 msgstr "Вийти"
@@ -73,14 +91,29 @@ msgstr "Нічого не знайдено."
 msgid "Password"
 msgstr "Пароль"
 
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Please correct the errors below."
+msgstr "Виправте помилки нижче."
+
 msgid "Please enter a valid email."
 msgstr "Введіть дійсну ел. пошту."
 
 msgid "Please enter your email."
 msgstr "Введіть свою ел. пошту."
 
+msgid "Please enter your first name."
+msgstr "Введіть імʼя."
+
+msgid "Please enter your last name."
+msgstr "Введіть прізвище."
+
 msgid "Please enter your name."
 msgstr "Введіть своє ім’я."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Заповніть відсутні дані, щоб ми могли надіслати заявку на членство президенту клубу."
 
 msgid "Please select your country."
 msgstr "Оберіть свою країну."
@@ -97,17 +130,29 @@ msgstr "Запам’ятати мене"
 msgid "Search..."
 msgstr "Пошук..."
 
+msgid "Select club..."
+msgstr "Виберіть клуб..."
+
 msgid "Select country"
 msgstr "Оберіть країну"
 
 msgid "Select country..."
 msgstr "Оберіть країну..."
 
+msgid "Select language..."
+msgstr "Виберіть мову..."
+
+msgid "Selected language: {0}"
+msgstr "Вибрана мова: {0}"
+
 msgid "Send reset link"
 msgstr "Надіслати посилання"
 
 msgid "Social accounts"
 msgstr "Соціальні акаунти"
+
+msgid "Submit application"
+msgstr "Надіслати заявку"
 
 msgid "Success"
 msgstr "Успіх"

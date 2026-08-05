@@ -32,7 +32,7 @@ $showCreatedColumn = true;
 $showModifiedColumn = true;
 
 $showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
-$indexColspan = 6; // continent, name, iso2, locale, pos, actions
+$indexColspan = 7; // continent, name, endonim_name, iso2, locale, pos, actions
 if ($showIdColumn) {
 	$indexColspan++;
 }
@@ -72,6 +72,7 @@ $config = [
 		'id' => __('ID'),
 		'iso2' => __('ISO'),
 		'name' => __('Name'),
+		'endonim_name' => __('Endonym'),
 		'locale' => __('Locale'),
 		'continent' => __('Continent'),
 		'visible' => __('Visible'),
@@ -97,6 +98,7 @@ $config = [
 			'id' => __('ID'),
 			'iso2' => __('ISO'),
 			'name' => __('Name'),
+			'endonim_name' => __('Endonym'),
 			'locale' => __('Locale'),
 			'continent' => __('Continent'),
 			'visible' => __('Visible'),
@@ -165,6 +167,7 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 								<?php endif; ?>
 								<th scope="col" class="string continent"><?= $this->Paginator->sort('Continents.name', __('Continent')) ?></th>
 								<th scope="col" class="string name"><?= $this->Paginator->sort('name', __('Name')) ?></th>
+								<th scope="col" class="string endonim"><?= $this->Paginator->sort('endonim_name', __('Endonym')) ?></th>
 								<th scope="col" class="string iso2"><?= $this->Paginator->sort('iso2', __('ISO')) ?></th>
 								<th scope="col" class="string locale"><?= $this->Paginator->sort('locale', __('Locale')) ?></th>
 								<?php if ($showVisibleColumn): ?>
@@ -199,6 +202,7 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 									<?php endif; ?>
 									<td class="string continent"><?= h($country->continent->name ?? '') ?></td>
 									<td class="string name"><?= h($country->name) ?></td>
+									<td class="string endonim"><?= h($country->endonim_name) ?></td>
 									<td class="string iso2"><code><?= h($country->iso2) ?></code></td>
 									<td class="string locale"><code><?= h($country->locale) ?></code></td>
 									<?php if ($showVisibleColumn): ?>

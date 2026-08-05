@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: be_BY\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Ужо ёсць уліковы запіс? Уваход"
+
+msgid "Back to admin"
+msgstr "Назад у адмінку"
+
+msgid "Back to login"
+msgstr "Назад да ўваходу"
+
+msgid "Back to profile"
+msgstr "Назад да профілю"
+
+msgid "Change password"
+msgstr "Змяніць пароль"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Выберыце краіну па мясцовай назве. Мова краіны стане мовай вашага ўліковага запісу."
+
+msgid "Club"
+msgstr "Клуб"
+
+msgid "Complete your profile"
+msgstr "Запоўніце профіль"
+
+msgid "Confirm password"
+msgstr "Пацвердзіце пароль"
+
+msgid "Country"
+msgstr "Краіна"
+
+msgid "Current password"
+msgstr "Бягучы пароль"
+
+msgid "Email"
+msgstr "Эл. пошта"
+
+msgid "Email or username"
+msgstr "Эл. пошта або імя карыстальніка"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Увядзіце эл. пошту або імя карыстальніка — мы дашлем спасылку для скидання пароля."
+
+msgid "Error"
+msgstr "Памылка"
+
+msgid "First name"
+msgstr "Імя"
+
+msgid "Forgot password?"
+msgstr "Забылі пароль?"
+
+msgid "I accept the terms of service"
+msgstr "Я прымаю ўмовы карыстання"
+
+msgid "Info"
+msgstr "Інфа"
+
+msgid "Language"
+msgstr "Мова"
+
+msgid "Last name"
+msgstr "Прозвішча"
+
+msgid "Log out"
+msgstr "Выйсці"
+
+msgid "Login"
+msgstr "Уваход"
+
+msgid "Message"
+msgstr "Паведамленне"
+
+msgid "Name"
+msgstr "Імя"
+
+msgid "New password"
+msgstr "Новы пароль"
+
+msgid "No results found."
+msgstr "Нічога не знойдзена."
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Phone"
+msgstr "Тэлефон"
+
+msgid "Please correct the errors below."
+msgstr "Выпраўце памылкі ніжэй."
+
+msgid "Please enter a valid email."
+msgstr "Увядзіце карэктны адрас эл. пошты."
+
+msgid "Please enter your email."
+msgstr "Увядзіце эл. пошту."
+
+msgid "Please enter your first name."
+msgstr "Увядзіце імя."
+
+msgid "Please enter your last name."
+msgstr "Увядзіце прозвішча."
+
+msgid "Please enter your name."
+msgstr "Увядзіце імя."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Запоўніце адсутныя даныя, каб мы маглі даслаць заяўку на членства прэзідэнту клуба."
+
+msgid "Please select your country."
+msgstr "Выберыце краіну."
+
+msgid "Profile"
+msgstr "Профіль"
+
+msgid "Register"
+msgstr "Рэгістрацыя"
+
+msgid "Remember me"
+msgstr "Запомніць мяне"
+
+msgid "Search..."
+msgstr "Пошук..."
+
+msgid "Select club..."
+msgstr "Выберыце клуб..."
+
+msgid "Select country"
+msgstr "Выберыце краіну"
+
+msgid "Select country..."
+msgstr "Выберыце краіну..."
+
+msgid "Select language..."
+msgstr "Выберыце мову..."
+
+msgid "Selected language: {0}"
+msgstr "Выбраная мова: {0}"
+
+msgid "Send reset link"
+msgstr "Даслаць спасылку"
+
+msgid "Social accounts"
+msgstr "Сацыяльныя акаўнты"
+
+msgid "Submit application"
+msgstr "Даслаць заяўку"
+
+msgid "Success"
+msgstr "Паспяхова"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Мова краіны (locale) стане мовай вашага ўліковага запісу."
+
+msgid "Username"
+msgstr "Імя карыстальніка"
+
+msgid "Warning"
+msgstr "Папярэджанне"
+

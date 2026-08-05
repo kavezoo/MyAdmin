@@ -2153,6 +2153,22 @@ a.record-modal-link:hover,
   flex-shrink: 0;
 }
 
+/* Countries: endonym (native script name) */
+.table th.endonim,
+.table td.endonim {
+  width: 12rem;
+  min-width: 12rem;
+  max-width: 14rem;
+  white-space: nowrap;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table th.endonim > a {
+  justify-content: flex-start;
+}
+
 /* Countries: ISO (2 betű) + címke + sort */
 .table th.iso2,
 .table td.iso2 {

@@ -210,7 +210,9 @@ $setupsTable = ob_get_clean();
 					<div class="record-view-row"><dt><?= __('ID') ?></dt><dd><?= h($country->id) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('ISO') ?></dt><dd><code><?= h($country->iso2) ?></code></dd></div>
 					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h($country->name) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Endonym') ?></dt><dd><?= h($country->endonim_name) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Primary locale') ?></dt><dd><code><?= h($country->locale) ?></code></dd></div>
+					<div class="record-view-row"><dt><?= __('Timezone') ?></dt><dd><code><?= h($country->timezone) ?></code></dd></div>
 					<div class="record-view-row"><dt><?= __('Continent') ?></dt><dd><?= h($country->continent->name ?? '') ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Visible') ?></dt><dd><?= $country->visible ? __('Yes') : __('No') ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Position') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($country->pos, decimals: 0)) ?></dd></div>

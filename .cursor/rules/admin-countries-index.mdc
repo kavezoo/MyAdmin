@@ -24,9 +24,9 @@ Lásd `doc/country-visibilities.md`, `doc/countries-admin.md`.
 
 ## Oszlopsorrend
 
-`continent` → `name` → `iso2` → `locale` → visible → pos → `user_count` (Number of users) → …
+`continent` → `name` → `endonim_name` → `iso2` → `locale` → visible → pos → `user_count` (Number of users) → …
 
-Fix CSS: `.continent` 10.5rem, `.iso2` 5rem (közép), `.locale` 8.5rem (közép).  
+Fix CSS: `.continent` 10.5rem, `.endonim` 12rem, `.iso2` 5rem (közép), `.locale` 8.5rem (közép).  
 `.count`: `width:1%` + `min-width:15rem` (+ `pages/index.css` + opcionális inline) — **ne** sima fix `max-width` (tábla zsugorítja).
 
 ## i18n (msgid angol)
@@ -36,5 +36,6 @@ Fix CSS: `.continent` 10.5rem, `.iso2` 5rem (közép), `.locale` 8.5rem (közép
 | Only visible countries | Csak a látható országok |
 | Number of users | Felhasználók száma |
 | Locale | Nyelvi kód |
+| Endonym | Endoním |
 
 `.po` + `bin/cake cache clear _cake_translations_` új szöveg után.

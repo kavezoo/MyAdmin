@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: bs_BA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Već imate račun? Prijava"
+
+msgid "Back to admin"
+msgstr "Nazad na admin"
+
+msgid "Back to login"
+msgstr "Nazad na prijavu"
+
+msgid "Back to profile"
+msgstr "Nazad na profil"
+
+msgid "Change password"
+msgstr "Promijeni lozinku"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Odaberite državu po lokalnom nazivu. Jezik države postaje jezik vašeg računa."
+
+msgid "Club"
+msgstr "Klub"
+
+msgid "Complete your profile"
+msgstr "Dopunite profil"
+
+msgid "Confirm password"
+msgstr "Potvrdi lozinku"
+
+msgid "Country"
+msgstr "Država"
+
+msgid "Current password"
+msgstr "Trenutna lozinka"
+
+msgid "Email"
+msgstr "E-pošta"
+
+msgid "Email or username"
+msgstr "E-pošta ili korisničko ime"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Unesite e-poštu ili korisničko ime i poslat ćemo link za resetovanje lozinke."
+
+msgid "Error"
+msgstr "Greška"
+
+msgid "First name"
+msgstr "Ime"
+
+msgid "Forgot password?"
+msgstr "Zaboravljena lozinka?"
+
+msgid "I accept the terms of service"
+msgstr "Prihvatam uslove korištenja"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Jezik"
+
+msgid "Last name"
+msgstr "Prezime"
+
+msgid "Log out"
+msgstr "Odjava"
+
+msgid "Login"
+msgstr "Prijava"
+
+msgid "Message"
+msgstr "Poruka"
+
+msgid "Name"
+msgstr "Ime"
+
+msgid "New password"
+msgstr "Nova lozinka"
+
+msgid "No results found."
+msgstr "Nema rezultata."
+
+msgid "Password"
+msgstr "Lozinka"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Ispravite greške ispod."
+
+msgid "Please enter a valid email."
+msgstr "Unesite ispravnu e-poštu."
+
+msgid "Please enter your email."
+msgstr "Unesite e-poštu."
+
+msgid "Please enter your first name."
+msgstr "Unesite ime."
+
+msgid "Please enter your last name."
+msgstr "Unesite prezime."
+
+msgid "Please enter your name."
+msgstr "Unesite ime."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Popunite nedostajuće podatke kako bismo mogli poslati zahtjev za članstvo predsjedniku kluba."
+
+msgid "Please select your country."
+msgstr "Odaberite državu."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Registracija"
+
+msgid "Remember me"
+msgstr "Zapamti me"
+
+msgid "Search..."
+msgstr "Pretraga..."
+
+msgid "Select club..."
+msgstr "Odaberite klub..."
+
+msgid "Select country"
+msgstr "Odaberite državu"
+
+msgid "Select country..."
+msgstr "Odaberite državu..."
+
+msgid "Select language..."
+msgstr "Odaberite jezik..."
+
+msgid "Selected language: {0}"
+msgstr "Odabrani jezik: {0}"
+
+msgid "Send reset link"
+msgstr "Pošalji link za resetovanje"
+
+msgid "Social accounts"
+msgstr "Društveni računi"
+
+msgid "Submit application"
+msgstr "Pošalji prijavu"
+
+msgid "Success"
+msgstr "Uspjeh"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Jezik države (locale) postaje jezik vašeg računa."
+
+msgid "Username"
+msgstr "Korisničko ime"
+
+msgid "Warning"
+msgstr "Upozorenje"
+

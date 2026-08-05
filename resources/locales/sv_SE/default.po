@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Har du redan ett konto? Logga in"
+
+msgid "Back to admin"
+msgstr "Tillbaka till admin"
+
+msgid "Back to login"
+msgstr "Tillbaka till inloggning"
+
+msgid "Back to profile"
+msgstr "Tillbaka till profil"
+
+msgid "Change password"
+msgstr "Byt lösenord"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Välj land efter det lokala namnet. Landets språk blir språk för ditt konto."
+
+msgid "Club"
+msgstr "Klubb"
+
+msgid "Complete your profile"
+msgstr "Slutför din profil"
+
+msgid "Confirm password"
+msgstr "Bekräfta lösenord"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Current password"
+msgstr "Nuvarande lösenord"
+
+msgid "Email"
+msgstr "E-post"
+
+msgid "Email or username"
+msgstr "E-post eller användarnamn"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Ange din e-post eller ditt användarnamn så skickar vi en länk för att återställa lösenordet."
+
+msgid "Error"
+msgstr "Fel"
+
+msgid "First name"
+msgstr "Förnamn"
+
+msgid "Forgot password?"
+msgstr "Glömt lösenordet?"
+
+msgid "I accept the terms of service"
+msgstr "Jag godkänner användarvillkoren"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Språk"
+
+msgid "Last name"
+msgstr "Efternamn"
+
+msgid "Log out"
+msgstr "Logga ut"
+
+msgid "Login"
+msgstr "Logga in"
+
+msgid "Message"
+msgstr "Meddelande"
+
+msgid "Name"
+msgstr "Namn"
+
+msgid "New password"
+msgstr "Nytt lösenord"
+
+msgid "No results found."
+msgstr "Inga resultat."
+
+msgid "Password"
+msgstr "Lösenord"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Rätta felen nedan."
+
+msgid "Please enter a valid email."
+msgstr "Ange en giltig e-postadress."
+
+msgid "Please enter your email."
+msgstr "Ange din e-post."
+
+msgid "Please enter your first name."
+msgstr "Ange ditt förnamn."
+
+msgid "Please enter your last name."
+msgstr "Ange ditt efternamn."
+
+msgid "Please enter your name."
+msgstr "Ange ditt namn."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Fyll i saknade uppgifter så att vi kan skicka din medlemsansökan till klubbpresidenten."
+
+msgid "Please select your country."
+msgstr "Välj ditt land."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Register"
+msgstr "Registrera"
+
+msgid "Remember me"
+msgstr "Kom ihåg mig"
+
+msgid "Search..."
+msgstr "Sök..."
+
+msgid "Select club..."
+msgstr "Välj klubb..."
+
+msgid "Select country"
+msgstr "Välj land"
+
+msgid "Select country..."
+msgstr "Välj land..."
+
+msgid "Select language..."
+msgstr "Välj språk..."
+
+msgid "Selected language: {0}"
+msgstr "Valt språk: {0}"
+
+msgid "Send reset link"
+msgstr "Skicka återställningslänk"
+
+msgid "Social accounts"
+msgstr "Sociala konton"
+
+msgid "Submit application"
+msgstr "Skicka ansökan"
+
+msgid "Success"
+msgstr "Klart"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Landets språk (locale) blir språk för ditt konto."
+
+msgid "Username"
+msgstr "Användarnamn"
+
+msgid "Warning"
+msgstr "Varning"
+

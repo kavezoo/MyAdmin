@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: bg_BG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Вече имате акаунт? Вход"
+
+msgid "Back to admin"
+msgstr "Назад към админ"
+
+msgid "Back to login"
+msgstr "Назад към входа"
+
+msgid "Back to profile"
+msgstr "Назад към профила"
+
+msgid "Change password"
+msgstr "Смяна на парола"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Изберете държавата по местното ѝ име. Езикът на държавата става език на акаунта ви."
+
+msgid "Club"
+msgstr "Клуб"
+
+msgid "Complete your profile"
+msgstr "Попълнете профила"
+
+msgid "Confirm password"
+msgstr "Потвърдете паролата"
+
+msgid "Country"
+msgstr "Държава"
+
+msgid "Current password"
+msgstr "Текуща парола"
+
+msgid "Email"
+msgstr "Имейл"
+
+msgid "Email or username"
+msgstr "Имейл или потребителско име"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Въведете имейл или потребителско име и ще ви изпратим връзка за нулиране на паролата."
+
+msgid "Error"
+msgstr "Грешка"
+
+msgid "First name"
+msgstr "Име"
+
+msgid "Forgot password?"
+msgstr "Забравена парола?"
+
+msgid "I accept the terms of service"
+msgstr "Приемам условията за ползване"
+
+msgid "Info"
+msgstr "Инфо"
+
+msgid "Language"
+msgstr "Език"
+
+msgid "Last name"
+msgstr "Фамилия"
+
+msgid "Log out"
+msgstr "Изход"
+
+msgid "Login"
+msgstr "Вход"
+
+msgid "Message"
+msgstr "Съобщение"
+
+msgid "Name"
+msgstr "Име"
+
+msgid "New password"
+msgstr "Нова парола"
+
+msgid "No results found."
+msgstr "Няма резултати."
+
+msgid "Password"
+msgstr "Парола"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Please correct the errors below."
+msgstr "Коригирайте грешките по-долу."
+
+msgid "Please enter a valid email."
+msgstr "Моля, въведете валиден имейл."
+
+msgid "Please enter your email."
+msgstr "Моля, въведете имейл."
+
+msgid "Please enter your first name."
+msgstr "Въведете име."
+
+msgid "Please enter your last name."
+msgstr "Въведете фамилия."
+
+msgid "Please enter your name."
+msgstr "Моля, въведете име."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Попълнете липсващите данни, за да изпратим молбата за членство на президента на клуба."
+
+msgid "Please select your country."
+msgstr "Моля, изберете държава."
+
+msgid "Profile"
+msgstr "Профил"
+
+msgid "Register"
+msgstr "Регистрация"
+
+msgid "Remember me"
+msgstr "Запомни ме"
+
+msgid "Search..."
+msgstr "Търсене..."
+
+msgid "Select club..."
+msgstr "Изберете клуб..."
+
+msgid "Select country"
+msgstr "Изберете държава"
+
+msgid "Select country..."
+msgstr "Изберете държава..."
+
+msgid "Select language..."
+msgstr "Изберете език..."
+
+msgid "Selected language: {0}"
+msgstr "Избран език: {0}"
+
+msgid "Send reset link"
+msgstr "Изпрати връзка"
+
+msgid "Social accounts"
+msgstr "Социални акаунти"
+
+msgid "Submit application"
+msgstr "Изпрати молба"
+
+msgid "Success"
+msgstr "Успех"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Езикът на държавата (locale) става език на вашия акаунт."
+
+msgid "Username"
+msgstr "Потребителско име"
+
+msgid "Warning"
+msgstr "Предупреждение"
+

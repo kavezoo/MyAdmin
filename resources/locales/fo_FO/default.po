@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: fo_FO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Hevur tú longu eina kontu? Rita inn"
+
+msgid "Back to admin"
+msgstr "Aftur til admin"
+
+msgid "Back to login"
+msgstr "Aftur til innritan"
+
+msgid "Back to profile"
+msgstr "Aftur til profil"
+
+msgid "Change password"
+msgstr "Broyt loyniorð"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Vel landið eftir lokalum navni. Málið í landinum verður málið á kontuni hjá tær."
+
+msgid "Club"
+msgstr "Felag"
+
+msgid "Complete your profile"
+msgstr "Fullfíggja profilin"
+
+msgid "Confirm password"
+msgstr "Vátta loyniorð"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Current password"
+msgstr "Núverandi loyniorð"
+
+msgid "Email"
+msgstr "Teldupostur"
+
+msgid "Email or username"
+msgstr "Teldupostur ella brúkaranavn"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Skriva teldupost ella brúkaranavn, so senda vit eina leinkju til at nullstilla loyniorðið."
+
+msgid "Error"
+msgstr "Villa"
+
+msgid "First name"
+msgstr "Fornavn"
+
+msgid "Forgot password?"
+msgstr "Gloymt loyniorð?"
+
+msgid "I accept the terms of service"
+msgstr "Eg góðtaki treytirnar"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Mál"
+
+msgid "Last name"
+msgstr "Eftirnavn"
+
+msgid "Log out"
+msgstr "Rita út"
+
+msgid "Login"
+msgstr "Rita inn"
+
+msgid "Message"
+msgstr "Boð"
+
+msgid "Name"
+msgstr "Navn"
+
+msgid "New password"
+msgstr "Nýtt loyniorð"
+
+msgid "No results found."
+msgstr "Ongi úrslit funnin."
+
+msgid "Password"
+msgstr "Loyniorð"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Rætta villurnar niðanfyri."
+
+msgid "Please enter a valid email."
+msgstr "Vinarliga skriva galdandi teldupost."
+
+msgid "Please enter your email."
+msgstr "Vinarliga skriva teldupostin tín."
+
+msgid "Please enter your first name."
+msgstr "Skriva fornavnið títt."
+
+msgid "Please enter your last name."
+msgstr "Skriva eftirnavnið títt."
+
+msgid "Please enter your name."
+msgstr "Vinarliga skriva navnið títt."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Fyll út manglandi upplýsingar, so vit kunnu senda limaumsóknina til forsetan í felagnum."
+
+msgid "Please select your country."
+msgstr "Vinarliga vel landið títt."
+
+msgid "Profile"
+msgstr "Profilur"
+
+msgid "Register"
+msgstr "Skráset"
+
+msgid "Remember me"
+msgstr "Minst til meg"
+
+msgid "Search..."
+msgstr "Leita..."
+
+msgid "Select club..."
+msgstr "Vel felag..."
+
+msgid "Select country"
+msgstr "Vel land"
+
+msgid "Select country..."
+msgstr "Vel land..."
+
+msgid "Select language..."
+msgstr "Vel mál..."
+
+msgid "Selected language: {0}"
+msgstr "Valt mál: {0}"
+
+msgid "Send reset link"
+msgstr "Send nullstillingarleinkju"
+
+msgid "Social accounts"
+msgstr "Sosialar kontur"
+
+msgid "Submit application"
+msgstr "Send umsókn"
+
+msgid "Success"
+msgstr "Eydnaðist"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Málið í landinum (locale) verður málið á kontuni hjá tær."
+
+msgid "Username"
+msgstr "Brúkaranavn"
+
+msgid "Warning"
+msgstr "Ávaring"
+

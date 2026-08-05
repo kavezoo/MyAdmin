@@ -113,6 +113,11 @@ $completeProfileUrl = (string)($completeProfileUrl ?? $this->Url->build(UsersUrl
 <script>
 window.UsersAuthCountry = window.UsersAuthCountry || {};
 window.UsersAuthCountry.reloadUrl = <?= json_encode($completeProfileUrl) ?>;
+window.UsersAuthCountry.flagBase = <?= json_encode($this->Url->build('/img/flags/'), JSON_UNESCAPED_SLASHES) ?>;
+window.UsersAuthCountry.flags = <?= json_encode(
+	\App\Utility\AdminCountry::iso2Map(array_map('intval', array_keys($countryOptions))),
+	JSON_UNESCAPED_UNICODE
+) ?>;
 window.UsersAuthCountry.noResults = <?= json_encode(__('No results found.')) ?>;
 window.UsersAuthCountry.searchPlaceholder = <?= json_encode(__('Search...')) ?>;
 </script>

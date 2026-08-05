@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: lt_LT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Jau turite paskyrą? Prisijungti"
+
+msgid "Back to admin"
+msgstr "Atgal į admin"
+
+msgid "Back to login"
+msgstr "Atgal į prisijungimą"
+
+msgid "Back to profile"
+msgstr "Atgal į profilį"
+
+msgid "Change password"
+msgstr "Keisti slaptažodį"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Pasirinkite šalį pagal vietinį pavadinimą. Šalies kalba taps jūsų paskyros kalba."
+
+msgid "Club"
+msgstr "Klubas"
+
+msgid "Complete your profile"
+msgstr "Užpildykite profilį"
+
+msgid "Confirm password"
+msgstr "Patvirtinkite slaptažodį"
+
+msgid "Country"
+msgstr "Šalis"
+
+msgid "Current password"
+msgstr "Dabartinis slaptažodis"
+
+msgid "Email"
+msgstr "El. paštas"
+
+msgid "Email or username"
+msgstr "El. paštas arba naudotojo vardas"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Įveskite el. paštą arba naudotojo vardą – atsiųsime slaptažodžio atkūrimo nuorodą."
+
+msgid "Error"
+msgstr "Klaida"
+
+msgid "First name"
+msgstr "Vardas"
+
+msgid "Forgot password?"
+msgstr "Pamiršote slaptažodį?"
+
+msgid "I accept the terms of service"
+msgstr "Sutinku su naudojimo sąlygomis"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Kalba"
+
+msgid "Last name"
+msgstr "Pavardė"
+
+msgid "Log out"
+msgstr "Atsijungti"
+
+msgid "Login"
+msgstr "Prisijungti"
+
+msgid "Message"
+msgstr "Žinutė"
+
+msgid "Name"
+msgstr "Vardas"
+
+msgid "New password"
+msgstr "Naujas slaptažodis"
+
+msgid "No results found."
+msgstr "Nieko nerasta."
+
+msgid "Password"
+msgstr "Slaptažodis"
+
+msgid "Phone"
+msgstr "Telefonas"
+
+msgid "Please correct the errors below."
+msgstr "Ištaisykite žemiau esančias klaidas."
+
+msgid "Please enter a valid email."
+msgstr "Įveskite galiojantį el. paštą."
+
+msgid "Please enter your email."
+msgstr "Įveskite el. paštą."
+
+msgid "Please enter your first name."
+msgstr "Įveskite vardą."
+
+msgid "Please enter your last name."
+msgstr "Įveskite pavardę."
+
+msgid "Please enter your name."
+msgstr "Įveskite vardą."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Užpildykite trūkstamus duomenis, kad galėtume nusiųsti narystės prašymą klubo prezidentui."
+
+msgid "Please select your country."
+msgstr "Pasirinkite šalį."
+
+msgid "Profile"
+msgstr "Profilis"
+
+msgid "Register"
+msgstr "Registruotis"
+
+msgid "Remember me"
+msgstr "Prisiminti mane"
+
+msgid "Search..."
+msgstr "Ieškoti..."
+
+msgid "Select club..."
+msgstr "Pasirinkite klubą..."
+
+msgid "Select country"
+msgstr "Pasirinkite šalį"
+
+msgid "Select country..."
+msgstr "Pasirinkite šalį..."
+
+msgid "Select language..."
+msgstr "Pasirinkite kalbą..."
+
+msgid "Selected language: {0}"
+msgstr "Pasirinkta kalba: {0}"
+
+msgid "Send reset link"
+msgstr "Siųsti atkūrimo nuorodą"
+
+msgid "Social accounts"
+msgstr "Socialinės paskyros"
+
+msgid "Submit application"
+msgstr "Pateikti prašymą"
+
+msgid "Success"
+msgstr "Pavyko"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Šalies kalba (locale) taps jūsų paskyros kalba."
+
+msgid "Username"
+msgstr "Naudotojo vardas"
+
+msgid "Warning"
+msgstr "Įspėjimas"
+

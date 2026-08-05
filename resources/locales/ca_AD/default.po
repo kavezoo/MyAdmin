@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: ca_AD\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Ja tens un compte? Inicia la sessió"
+
+msgid "Back to admin"
+msgstr "Torna a l’admin"
+
+msgid "Back to login"
+msgstr "Torna a l’inici de sessió"
+
+msgid "Back to profile"
+msgstr "Torna al perfil"
+
+msgid "Change password"
+msgstr "Canvia la contrasenya"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Tria el país pel nom local. L’idioma del país esdevé l’idioma del teu compte."
+
+msgid "Club"
+msgstr "Club"
+
+msgid "Complete your profile"
+msgstr "Completa el perfil"
+
+msgid "Confirm password"
+msgstr "Confirma la contrasenya"
+
+msgid "Country"
+msgstr "País"
+
+msgid "Current password"
+msgstr "Contrasenya actual"
+
+msgid "Email"
+msgstr "Correu electrònic"
+
+msgid "Email or username"
+msgstr "Correu o nom d’usuari"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Introdueix el correu o el nom d’usuari i t’enviarem un enllaç per restablir la contrasenya."
+
+msgid "Error"
+msgstr "Error"
+
+msgid "First name"
+msgstr "Nom"
+
+msgid "Forgot password?"
+msgstr "Has oblidat la contrasenya?"
+
+msgid "I accept the terms of service"
+msgstr "Accepto les condicions del servei"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Last name"
+msgstr "Cognoms"
+
+msgid "Log out"
+msgstr "Tanca la sessió"
+
+msgid "Login"
+msgstr "Inicia la sessió"
+
+msgid "Message"
+msgstr "Missatge"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "New password"
+msgstr "Contrasenya nova"
+
+msgid "No results found."
+msgstr "No s’han trobat resultats."
+
+msgid "Password"
+msgstr "Contrasenya"
+
+msgid "Phone"
+msgstr "Telèfon"
+
+msgid "Please correct the errors below."
+msgstr "Corregeix els errors següents."
+
+msgid "Please enter a valid email."
+msgstr "Introdueix un correu vàlid."
+
+msgid "Please enter your email."
+msgstr "Introdueix el teu correu."
+
+msgid "Please enter your first name."
+msgstr "Introdueix el nom."
+
+msgid "Please enter your last name."
+msgstr "Introdueix els cognoms."
+
+msgid "Please enter your name."
+msgstr "Introdueix el teu nom."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Omple les dades que falten perquè puguem enviar la sol·licitud de membre al president del club."
+
+msgid "Please select your country."
+msgstr "Selecciona el teu país."
+
+msgid "Profile"
+msgstr "Perfil"
+
+msgid "Register"
+msgstr "Registra’t"
+
+msgid "Remember me"
+msgstr "Recorda’m"
+
+msgid "Search..."
+msgstr "Cerca..."
+
+msgid "Select club..."
+msgstr "Selecciona el club..."
+
+msgid "Select country"
+msgstr "Selecciona el país"
+
+msgid "Select country..."
+msgstr "Selecciona el país..."
+
+msgid "Select language..."
+msgstr "Selecciona l’idioma..."
+
+msgid "Selected language: {0}"
+msgstr "Idioma seleccionat: {0}"
+
+msgid "Send reset link"
+msgstr "Envia l’enllaç de restabliment"
+
+msgid "Social accounts"
+msgstr "Comptes socials"
+
+msgid "Submit application"
+msgstr "Envia la sol·licitud"
+
+msgid "Success"
+msgstr "Correcte"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "L’idioma del país (locale) passa a ser l’idioma del teu compte."
+
+msgid "Username"
+msgstr "Nom d’usuari"
+
+msgid "Warning"
+msgstr "Avís"
+

@@ -22,6 +22,15 @@ msgstr "Takaisin profiiliin"
 msgid "Change password"
 msgstr "Vaihda salasana"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Valitse maa paikallisella nimellä. Maan kieli tulee tilisi kieleksi."
+
+msgid "Club"
+msgstr "Seura"
+
+msgid "Complete your profile"
+msgstr "Täydennä profiili"
+
 msgid "Confirm password"
 msgstr "Vahvista salasana"
 
@@ -43,6 +52,9 @@ msgstr "Anna sähköposti tai käyttäjänimi; lähetämme salasanan nollauslink
 msgid "Error"
 msgstr "Virhe"
 
+msgid "First name"
+msgstr "Etunimi"
+
 msgid "Forgot password?"
 msgstr "Unohtuiko salasana?"
 
@@ -51,6 +63,12 @@ msgstr "Hyväksyn käyttöehdot"
 
 msgid "Info"
 msgstr "Info"
+
+msgid "Language"
+msgstr "Kieli"
+
+msgid "Last name"
+msgstr "Sukunimi"
 
 msgid "Log out"
 msgstr "Kirjaudu ulos"
@@ -73,14 +91,29 @@ msgstr "Ei tuloksia."
 msgid "Password"
 msgstr "Salasana"
 
+msgid "Phone"
+msgstr "Puhelin"
+
+msgid "Please correct the errors below."
+msgstr "Korjaa alla olevat virheet."
+
 msgid "Please enter a valid email."
 msgstr "Anna kelvollinen sähköpostiosoite."
 
 msgid "Please enter your email."
 msgstr "Anna sähköpostiosoitteesi."
 
+msgid "Please enter your first name."
+msgstr "Anna etunimesi."
+
+msgid "Please enter your last name."
+msgstr "Anna sukunimesi."
+
 msgid "Please enter your name."
 msgstr "Anna nimesi."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Täytä puuttuvat tiedot, jotta voimme lähettää jäsenhakemuksesi seuran presidentille."
 
 msgid "Please select your country."
 msgstr "Valitse maasi."
@@ -97,17 +130,29 @@ msgstr "Muista minut"
 msgid "Search..."
 msgstr "Haku..."
 
+msgid "Select club..."
+msgstr "Valitse seura..."
+
 msgid "Select country"
 msgstr "Valitse maa"
 
 msgid "Select country..."
 msgstr "Valitse maa..."
 
+msgid "Select language..."
+msgstr "Valitse kieli..."
+
+msgid "Selected language: {0}"
+msgstr "Valittu kieli: {0}"
+
 msgid "Send reset link"
 msgstr "Lähetä nollauslinkki"
 
 msgid "Social accounts"
 msgstr "Sosiaalisen median tilit"
+
+msgid "Submit application"
+msgstr "Lähetä hakemus"
 
 msgid "Success"
 msgstr "Onnistui"

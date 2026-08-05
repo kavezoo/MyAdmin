@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: el_GR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Έχετε ήδη λογαριασμό; Σύνδεση"
+
+msgid "Back to admin"
+msgstr "Πίσω στο admin"
+
+msgid "Back to login"
+msgstr "Πίσω στη σύνδεση"
+
+msgid "Back to profile"
+msgstr "Πίσω στο προφίλ"
+
+msgid "Change password"
+msgstr "Αλλαγή κωδικού"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Επιλέξτε τη χώρα με το τοπικό της όνομα. Η γλώσσα της χώρας γίνεται η γλώσσα του λογαριασμού σας."
+
+msgid "Club"
+msgstr "Σύλλογος"
+
+msgid "Complete your profile"
+msgstr "Ολοκληρώστε το προφίλ"
+
+msgid "Confirm password"
+msgstr "Επιβεβαίωση κωδικού"
+
+msgid "Country"
+msgstr "Χώρα"
+
+msgid "Current password"
+msgstr "Τρέχων κωδικός"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Email or username"
+msgstr "Email ή όνομα χρήστη"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Εισαγάγετε το email ή το όνομα χρήστη και θα σας στείλουμε σύνδεσμο επαναφοράς κωδικού."
+
+msgid "Error"
+msgstr "Σφάλμα"
+
+msgid "First name"
+msgstr "Όνομα"
+
+msgid "Forgot password?"
+msgstr "Ξεχάσατε τον κωδικό;"
+
+msgid "I accept the terms of service"
+msgstr "Αποδέχομαι τους όρους χρήσης"
+
+msgid "Info"
+msgstr "Πληροφορία"
+
+msgid "Language"
+msgstr "Γλώσσα"
+
+msgid "Last name"
+msgstr "Επώνυμο"
+
+msgid "Log out"
+msgstr "Αποσύνδεση"
+
+msgid "Login"
+msgstr "Σύνδεση"
+
+msgid "Message"
+msgstr "Μήνυμα"
+
+msgid "Name"
+msgstr "Όνομα"
+
+msgid "New password"
+msgstr "Νέος κωδικός"
+
+msgid "No results found."
+msgstr "Δεν βρέθηκαν αποτελέσματα."
+
+msgid "Password"
+msgstr "Κωδικός"
+
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+msgid "Please correct the errors below."
+msgstr "Διορθώστε τα παρακάτω σφάλματα."
+
+msgid "Please enter a valid email."
+msgstr "Εισαγάγετε έγκυρο email."
+
+msgid "Please enter your email."
+msgstr "Εισαγάγετε το email σας."
+
+msgid "Please enter your first name."
+msgstr "Εισαγάγετε το όνομά σας."
+
+msgid "Please enter your last name."
+msgstr "Εισαγάγετε το επώνυμό σας."
+
+msgid "Please enter your name."
+msgstr "Εισαγάγετε το όνομά σας."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Συμπληρώστε τα στοιχεία που λείπουν για να στείλουμε την αίτηση μέλους στον πρόεδρο του συλλόγου."
+
+msgid "Please select your country."
+msgstr "Επιλέξτε τη χώρα σας."
+
+msgid "Profile"
+msgstr "Προφίλ"
+
+msgid "Register"
+msgstr "Εγγραφή"
+
+msgid "Remember me"
+msgstr "Να με θυμάσαι"
+
+msgid "Search..."
+msgstr "Αναζήτηση..."
+
+msgid "Select club..."
+msgstr "Επιλέξτε σύλλογο..."
+
+msgid "Select country"
+msgstr "Επιλέξτε χώρα"
+
+msgid "Select country..."
+msgstr "Επιλέξτε χώρα..."
+
+msgid "Select language..."
+msgstr "Επιλέξτε γλώσσα..."
+
+msgid "Selected language: {0}"
+msgstr "Επιλεγμένη γλώσσα: {0}"
+
+msgid "Send reset link"
+msgstr "Αποστολή συνδέσμου"
+
+msgid "Social accounts"
+msgstr "Κοινωνικοί λογαριασμοί"
+
+msgid "Submit application"
+msgstr "Υποβολή αίτησης"
+
+msgid "Success"
+msgstr "Επιτυχία"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Η γλώσσα της χώρας (locale) γίνεται η γλώσσα του λογαριασμού σας."
+
+msgid "Username"
+msgstr "Όνομα χρήστη"
+
+msgid "Warning"
+msgstr "Προειδοποίηση"
+

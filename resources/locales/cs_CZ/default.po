@@ -22,6 +22,15 @@ msgstr "Zpět na profil"
 msgid "Change password"
 msgstr "Změnit heslo"
 
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Vyberte zemi podle místního názvu. Jazyk země se stane jazykem vašeho účtu."
+
+msgid "Club"
+msgstr "Klub"
+
+msgid "Complete your profile"
+msgstr "Doplňte profil"
+
 msgid "Confirm password"
 msgstr "Potvrzení hesla"
 
@@ -43,6 +52,9 @@ msgstr "Zadejte e-mail nebo uživatelské jméno; pošleme odkaz pro obnovení h
 msgid "Error"
 msgstr "Chyba"
 
+msgid "First name"
+msgstr "Jméno"
+
 msgid "Forgot password?"
 msgstr "Zapomenuté heslo?"
 
@@ -51,6 +63,12 @@ msgstr "Souhlasím s podmínkami použití"
 
 msgid "Info"
 msgstr "Info"
+
+msgid "Language"
+msgstr "Jazyk"
+
+msgid "Last name"
+msgstr "Příjmení"
 
 msgid "Log out"
 msgstr "Odhlásit se"
@@ -73,14 +91,29 @@ msgstr "Nebyly nalezeny žádné výsledky."
 msgid "Password"
 msgstr "Heslo"
 
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Opravte níže uvedené chyby."
+
 msgid "Please enter a valid email."
 msgstr "Zadejte platný e-mail."
 
 msgid "Please enter your email."
 msgstr "Zadejte svůj e-mail."
 
+msgid "Please enter your first name."
+msgstr "Zadejte jméno."
+
+msgid "Please enter your last name."
+msgstr "Zadejte příjmení."
+
 msgid "Please enter your name."
 msgstr "Zadejte své jméno."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Vyplňte chybějící údaje, abychom mohli odeslat žádost o členství předsedovi klubu."
 
 msgid "Please select your country."
 msgstr "Vyberte svou zemi."
@@ -97,17 +130,29 @@ msgstr "Zapamatovat si mě"
 msgid "Search..."
 msgstr "Hledat..."
 
+msgid "Select club..."
+msgstr "Vyberte klub..."
+
 msgid "Select country"
 msgstr "Vyberte zemi"
 
 msgid "Select country..."
 msgstr "Vyberte zemi..."
 
+msgid "Select language..."
+msgstr "Vyberte jazyk..."
+
+msgid "Selected language: {0}"
+msgstr "Vybraný jazyk: {0}"
+
 msgid "Send reset link"
 msgstr "Odeslat odkaz"
 
 msgid "Social accounts"
 msgstr "Sociální účty"
+
+msgid "Submit application"
+msgstr "Odeslat žádost"
 
 msgid "Success"
 msgstr "Úspěch"

@@ -35,7 +35,6 @@ class ApplicantsController extends AppController
 
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->fetchTable('Users');
-        $this->loadComponent('Paginator');
         $query = $users->find()
             ->where([
                 'Users.role' => AppRoles::NEW,

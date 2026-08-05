@@ -45,7 +45,7 @@ $this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => tr
 			'data-reload-url' => $registerUrl,
 			'data-placeholder' => __('Select country...'),
 		]) ?>
-		<div class="form-text"><?= __('The country language (locale) becomes the site language for your account.') ?></div>
+		<div class="form-text"><?= __('Choose your country by its local name. The country language becomes the site language for your account.') ?></div>
 	</div>
 
 	<div class="mb-3">
@@ -133,9 +133,11 @@ $this->Html->scriptBlock(
 		'window.UsersAuthCountry = %s;',
 		json_encode([
 			'reloadUrl' => $registerUrl,
+			'flagBase' => $this->Url->build('/img/flags/'),
+			'flags' => \App\Utility\AdminCountry::registerFlagMap(),
 			'searchPlaceholder' => __('Search...'),
 			'noResults' => __('No results found.'),
-		], JSON_UNESCAPED_UNICODE)
+		], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
 	),
 	['block' => true]
 );

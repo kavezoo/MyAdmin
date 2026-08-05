@@ -45,18 +45,15 @@ foreach ($visibleCountryOptions as $optId => $optLabel) {
 	$visibleCountrySelectOptions[$optId] = $optLabel;
 }
 
-// Selected extras only (exclude self).
-$selectedVisibleIds = [];
-if ($isEdit && !empty($country->visible_countries)) {
-	foreach ($country->visible_countries as $vc) {
-		$id = (int)$vc->id;
-		if ($selfCountryId > 0 && $id === $selfCountryId) {
-			continue;
-		}
-		$selectedVisibleIds[] = $id;
-	}
-}
-$selectedVisibleIds = array_values(array_unique($selectedVisibleIds));
+// Selected extras only (from junction — not BelongsToMany contain).
+$selectedVisibleIds = array_values(array_unique(array_map(
+	'intval',
+	(array)($selectedVisibleIds ?? [])
+)));
+$selectedVisibleIds = array_values(array_filter(
+	$selectedVisibleIds,
+	static fn(int $id): bool => $id > 0 && ($selfCountryId < 1 || $id !== $selfCountryId)
+));
 ?>
 <div class="row">
 	<div class="col-12 col-xxl-11 p-2 pt-3">
@@ -111,6 +108,20 @@ $selectedVisibleIds = array_values(array_unique($selectedVisibleIds));
 						</div>
 
 						<div class="form-group row mb-3">
+							<?= $this->Form->adminLabel('endonim_name', __('Endonym:'), ['for' => 'endonim-name']) ?>
+							<div class="col-12 col-md-10 col-xl-5">
+								<?= $this->Form->control('endonim_name', [
+									'label' => false,
+									'class' => 'form-control',
+									'id' => 'endonim-name',
+								]) ?>
+								<div class="form-text">
+									<?= __('Endonym — how the country name is written in its own language/script (e.g. Magyarország, Россия, 中国).') ?>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group row mb-3">
 							<?= $this->Form->adminLabel('locale', __('Primary locale:'), ['for' => 'locale']) ?>
 							<div class="col-12 col-md-10 col-xl-4">
 								<?= $this->Form->control('locale', [
@@ -119,6 +130,21 @@ $selectedVisibleIds = array_values(array_unique($selectedVisibleIds));
 									'id' => 'locale',
 									'placeholder' => 'en_GB',
 								]) ?>
+							</div>
+						</div>
+
+						<div class="form-group row mb-3">
+							<?= $this->Form->adminLabel('timezone', __('Timezone:'), ['for' => 'timezone']) ?>
+							<div class="col-12 col-md-10 col-xl-5">
+								<?= $this->Form->control('timezone', [
+									'label' => false,
+									'class' => 'form-control',
+									'id' => 'timezone',
+									'placeholder' => 'Europe/Budapest',
+								]) ?>
+								<div class="form-text">
+									<?= __('IANA timezone used for datetime display for users registered in this country (e.g. Europe/Budapest, Europe/London).') ?>
+								</div>
 							</div>
 						</div>
 
@@ -168,9 +194,23 @@ $selectedVisibleIds = array_values(array_unique($selectedVisibleIds));
 						</div>
 
 						<div class="form-group row mb-3">
+							<label class="col-sm-3 col-md-2 col-form-label"><?= __('Endonym:') ?></label>
+							<div class="col-12 col-md-10 col-xl-5">
+								<p class="form-control-plaintext mb-0"><?= h($country->endonim_name) ?></p>
+							</div>
+						</div>
+
+						<div class="form-group row mb-3">
 							<label class="col-sm-3 col-md-2 col-form-label"><?= __('Primary locale:') ?></label>
 							<div class="col-12 col-md-10 col-xl-4">
 								<p class="form-control-plaintext mb-0"><code><?= h($country->locale) ?></code></p>
+							</div>
+						</div>
+
+						<div class="form-group row mb-3">
+							<label class="col-sm-3 col-md-2 col-form-label"><?= __('Timezone:') ?></label>
+							<div class="col-12 col-md-10 col-xl-5">
+								<p class="form-control-plaintext mb-0"><code><?= h($country->timezone) ?></code></p>
 							</div>
 						</div>
 

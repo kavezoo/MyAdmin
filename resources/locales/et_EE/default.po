@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyAdmin Auth\n"
+"Language: et_EE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account? Login"
+msgstr "Konto juba olemas? Logi sisse"
+
+msgid "Back to admin"
+msgstr "Tagasi admini"
+
+msgid "Back to login"
+msgstr "Tagasi sisselogimisele"
+
+msgid "Back to profile"
+msgstr "Tagasi profiilile"
+
+msgid "Change password"
+msgstr "Muuda parooli"
+
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Vali riik kohaliku nime järgi. Riigi keel muutub konto keeleks."
+
+msgid "Club"
+msgstr "Klubi"
+
+msgid "Complete your profile"
+msgstr "Täida profiil"
+
+msgid "Confirm password"
+msgstr "Kinnita parool"
+
+msgid "Country"
+msgstr "Riik"
+
+msgid "Current password"
+msgstr "Praegune parool"
+
+msgid "Email"
+msgstr "E-post"
+
+msgid "Email or username"
+msgstr "E-post või kasutajanimi"
+
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Sisesta e-post või kasutajanimi — saadame parooli lähtestamise lingi."
+
+msgid "Error"
+msgstr "Viga"
+
+msgid "First name"
+msgstr "Eesnimi"
+
+msgid "Forgot password?"
+msgstr "Unustasid parooli?"
+
+msgid "I accept the terms of service"
+msgstr "Nõustun kasutustingimustega"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Language"
+msgstr "Keel"
+
+msgid "Last name"
+msgstr "Perekonnanimi"
+
+msgid "Log out"
+msgstr "Logi välja"
+
+msgid "Login"
+msgstr "Logi sisse"
+
+msgid "Message"
+msgstr "Teade"
+
+msgid "Name"
+msgstr "Nimi"
+
+msgid "New password"
+msgstr "Uus parool"
+
+msgid "No results found."
+msgstr "Tulemusi ei leitud."
+
+msgid "Password"
+msgstr "Parool"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Please correct the errors below."
+msgstr "Paranda allolevad vead."
+
+msgid "Please enter a valid email."
+msgstr "Palun sisesta kehtiv e-post."
+
+msgid "Please enter your email."
+msgstr "Palun sisesta e-post."
+
+msgid "Please enter your first name."
+msgstr "Sisesta eesnimi."
+
+msgid "Please enter your last name."
+msgstr "Sisesta perekonnanimi."
+
+msgid "Please enter your name."
+msgstr "Palun sisesta nimi."
+
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Täida puuduvad andmed, et saaksime saata liikmelisuse taotluse klubi presidendile."
+
+msgid "Please select your country."
+msgstr "Palun vali riik."
+
+msgid "Profile"
+msgstr "Profiil"
+
+msgid "Register"
+msgstr "Registreeru"
+
+msgid "Remember me"
+msgstr "Jäta mind meelde"
+
+msgid "Search..."
+msgstr "Otsi..."
+
+msgid "Select club..."
+msgstr "Vali klubi..."
+
+msgid "Select country"
+msgstr "Vali riik"
+
+msgid "Select country..."
+msgstr "Vali riik..."
+
+msgid "Select language..."
+msgstr "Vali keel..."
+
+msgid "Selected language: {0}"
+msgstr "Valitud keel: {0}"
+
+msgid "Send reset link"
+msgstr "Saada lähtestamislink"
+
+msgid "Social accounts"
+msgstr "Sotsiaalkontod"
+
+msgid "Submit application"
+msgstr "Saada taotlus"
+
+msgid "Success"
+msgstr "Õnnestus"
+
+msgid "The country language (locale) becomes the site language for your account."
+msgstr "Riigi keel (locale) muutub teie konto keeleks."
+
+msgid "Username"
+msgstr "Kasutajanimi"
+
+msgid "Warning"
+msgstr "Hoiatus"
+

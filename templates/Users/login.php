@@ -53,6 +53,10 @@ $this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => tr
 		'url' => UsersUrl::actionUrl('login'),
 		'id' => 'users-login-form',
 	]) ?>
+	<?= $this->Form->hidden('locale', [
+		'value' => $selectedLocale !== '' ? $selectedLocale : null,
+		'id' => 'login-locale',
+	]) ?>
 
 	<?php if ($socialEnabled): ?>
 		<div class="mb-3">
@@ -130,9 +134,11 @@ $this->Html->scriptBlock(
 		'window.UsersAuthLocale = %s;',
 		json_encode([
 			'reloadUrl' => $loginUrl,
+			'flagBase' => $this->Url->build('/img/flags/'),
+			'flags' => \App\Utility\AdminLanguage::flagMapForLocales($languageOptions),
 			'searchPlaceholder' => __('Search...'),
 			'noResults' => __('No results found.'),
-		], JSON_UNESCAPED_UNICODE)
+		], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
 	),
 	['block' => true]
 );

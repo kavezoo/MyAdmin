@@ -10,11 +10,14 @@ Seed: `php tmp/seed_languages.php` (`AdminLanguage::syncFromCountries`).
 
 | Képernyő | Select | UI locale |
 |----------|--------|-----------|
-| Login | nyelv (`?locale=`) | kiválasztott nyelv; alap: session/cookie → **böngésző** Accept-Language |
-| Register | ország (`?country_id=`) | ország primary locale (mint eddig) |
+| Login | nyelv (`?locale=`) | `languages.visible=true` (európai locale-ok + **en_US** + **en_CA**); címke: UI nyelv + (endoním) |
+| Register | ország (`?country_id=`) | lista: **csak `visible` + `endonim_name`**; UI locale = ország primary locale |
 | **Bejelentkezés után (UI)** | — | **ugyanaz a login nyelv** (session/cookie); fallback: user `country_id` locale |
 
-- A nyelvlista **feliratai** a jelenlegi UI nyelven jönnek (`Languages.name` Translate → `i18n`).
+**Megjegyzés (≥ 1 év):** az utoljára használt UI nyelv `AppUiLocale` cookie-ban él (`BrowserLocale::COOKIE_LIFETIME = '+1 year'`). Minden válasz megújítja (sliding). Login POST rejtett `locale` mezővel is elmenti.
+
+- A nyelvlista forrása: `languages` (`visible=1` = Európa + en_US + en_CA); felirat: aktuális UI nyelven + zárójelben `endonim_name`.
+- Seed: `php tmp/seed_languages.php` (`AdminLanguage::syncFromCountries` — minden country locale + endonim).
 - Alatta: **Selected language: …** + locale kód.
 - Login oldal szövegei: kiválasztott nyelv `.po` (egyelőre EN + HU).
 
@@ -26,7 +29,9 @@ Minden `languages` sorhoz ICU `Locale::getDisplayName` minden elérhető cél-lo
 
 | API | Szerep |
 |-----|--------|
-| `AdminLanguage::options($uiLocale)` | select options |
+| `AdminLanguage::loginOptions($uiLocale)` | login Select2: `{UI nyelv} ({endoním})`; látható országok locale-jai |
+| `AdminCountry::registerOptions()` | register Select2: endonim_name, visible only |
+| `AdminLanguage::options($uiLocale)` | fordított nevek (egyéb UI) |
 | `AdminLanguage::displayName($code, $in)` | egy címke |
 | `AdminLanguage::syncFromCountries()` | tábla + i18n feltöltés |
 | `BrowserLocale::availableLocales()` | login-visible country locale-ok |

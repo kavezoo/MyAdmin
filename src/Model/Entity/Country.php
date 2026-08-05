@@ -15,7 +15,9 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $iso2
  * @property string $name English canonical; Translate overlays UI locale
+ * @property string $endonim_name Endonym (native script)
  * @property string $locale Primary locale (e.g. hu_HU)
+ * @property string $timezone IANA timezone (e.g. Europe/Budapest)
  * @property int $continent_id FK → continents.id
  * @property bool $visible
  * @property int $pos

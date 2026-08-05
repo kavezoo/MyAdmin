@@ -208,12 +208,16 @@ class LocaleDateParser
         };
 
         if ($value instanceof \DateTimeInterface) {
-            return $value->format($phpFormat);
+            return static::toDisplayTimezone($value, $type)->format($phpFormat);
         }
 
         // Cake Chronos / I18n Date / DateTime
         if (is_object($value) && method_exists($value, 'format')) {
             try {
+                if (method_exists($value, 'setTimezone') && static::needsTimezone($type)) {
+                    return $value->setTimezone(AdminTimezone::current())->format($phpFormat);
+                }
+
                 return $value->format($phpFormat);
             } catch (\Throwable) {
                 // fall through
@@ -226,10 +230,14 @@ class LocaleDateParser
                 return $value;
             }
             try {
-                if (preg_match('/^\d{1,2}:\d{2}/', $normalized)) {
+                if (preg_match('/^\d{1,2}:\d{2}/', $normalized) && !preg_match('/^\d{4}-\d{2}-\d{2}/', $normalized)) {
                     $dt = new DateTimeImmutable('1970-01-01 ' . $normalized);
                 } else {
-                    $dt = new DateTimeImmutable($normalized);
+                    // DB canonical datetimes are UTC
+                    $dt = new DateTimeImmutable($normalized, new \DateTimeZone(AdminTimezone::appDefault()));
+                    if (static::needsTimezone($type)) {
+                        $dt = $dt->setTimezone(AdminTimezone::dateTimeZone());
+                    }
                 }
 
                 return $dt->format($phpFormat);
@@ -239,6 +247,27 @@ class LocaleDateParser
         }
 
         return (string)$value;
+    }
+
+    /**
+     * Datetime display/save uses the registered country timezone; date/time-only stay wall-clock.
+     */
+    protected static function needsTimezone(string $type): bool
+    {
+        return $type === 'datetime' || $type === 'datetime_short';
+    }
+
+    /**
+     * @param \DateTimeInterface $value
+     */
+    protected static function toDisplayTimezone(\DateTimeInterface $value, string $type): DateTimeImmutable
+    {
+        $dt = DateTimeImmutable::createFromInterface($value);
+        if (!static::needsTimezone($type)) {
+            return $dt;
+        }
+
+        return $dt->setTimezone(AdminTimezone::dateTimeZone());
     }
 
     /**
@@ -344,7 +373,17 @@ class LocaleDateParser
             return $value;
         }
 
-        return $normalizedDate . ' ' . $timeSql;
+        // UI datetime is in the registered country timezone → store UTC
+        try {
+            $local = new DateTimeImmutable(
+                $normalizedDate . ' ' . $timeSql,
+                AdminTimezone::dateTimeZone()
+            );
+
+            return $local->setTimezone(new \DateTimeZone(AdminTimezone::appDefault()))->format('Y-m-d H:i:s');
+        } catch (\Throwable) {
+            return $normalizedDate . ' ' . $timeSql;
+        }
     }
 
     /**
