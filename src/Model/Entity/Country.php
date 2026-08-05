@@ -18,6 +18,7 @@ use Cake\ORM\Entity;
  * @property string $endonim_name Endonym (native script)
  * @property string $locale Primary locale (e.g. hu_HU)
  * @property string $timezone IANA timezone (e.g. Europe/Budapest)
+ * @property string $phone_prefix E.164 calling prefix (e.g. +36)
  * @property int $continent_id FK → continents.id
  * @property bool $visible
  * @property int $pos

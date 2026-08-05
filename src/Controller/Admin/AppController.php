@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Auth\PanelAccess;
 use App\Controller\AppController as BaseController;
 use App\Utility\AdminCountry;
 use App\Utility\AdminSearch;
@@ -72,6 +73,11 @@ class AppController extends BaseController
             'controller' => 'Dashboard',
             'action' => 'index',
         ]);
+        $session = $request->getSession();
+        if ($session !== null) {
+            $session->write('Panel.lastPrefix', 'Admin');
+        }
+        $this->set('panelSwitcherLinks', PanelAccess::switcherLinks('Admin', $request));
         $this->set('registeredCountryExamples', AdminCountry::registeredCountryExamples($request));
     }
 

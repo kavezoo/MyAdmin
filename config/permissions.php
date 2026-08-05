@@ -7,7 +7,8 @@ declare(strict_types=1);
  * IMPORTANT: App `Users.controller = Users` → request `plugin` is null.
  * Do NOT set `'plugin' => false` (false !== null in CakeDC Rbac matcher).
  *
- * Role panels: each role may enter only its own prefix (Registration `new` → New only).
+ * Role panels: each role may enter its own prefix (Registration `new` → New only).
+ * Officers also access Member; president/vp/clubpresident with club → Clubpresident too.
  *
  * @see vendor/cakedc/users/config/permissions.php
  */
@@ -73,21 +74,13 @@ return [
             'controller' => 'Users',
             'action' => ['profile', 'completeProfile', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword', 'eventLog', 'eventLogView', 'deleteAvatar'],
         ],
-        // Global header search (Admin\Search) — president / vicepresident and above
+        // Admin prefix — only admin / superuser (full panel)
         [
-            'role' => ['superuser', 'admin', 'president', 'vicepresident'],
+            'role' => ['superuser', 'admin'],
             'prefix' => 'Admin',
-            'controller' => 'Search',
+            'controller' => '*',
             'action' => '*',
         ],
-        // Event logs browse (country-scoped) — same roles as global search
-        [
-            'role' => ['superuser', 'admin', 'president', 'vicepresident'],
-            'prefix' => 'Admin',
-            'controller' => 'EventLogs',
-            'action' => '*',
-        ],
-        // Role → own panel only
         [
             'role' => 'new',
             'prefix' => 'New',
@@ -101,6 +94,12 @@ return [
             'action' => '*',
         ],
         [
+            'role' => ['clubpresident', 'president', 'vicepresident'],
+            'prefix' => 'Member',
+            'controller' => '*',
+            'action' => '*',
+        ],
+        [
             'role' => 'clubpresident',
             'prefix' => 'Clubpresident',
             'controller' => '*',
@@ -108,14 +107,13 @@ return [
         ],
         [
             'role' => ['president', 'vicepresident'],
-            'prefix' => 'President',
+            'prefix' => 'Clubpresident',
             'controller' => '*',
             'action' => '*',
         ],
-        // Admin panel + Setups module access still gated by SetupAccess
         [
-            'role' => ['superuser', 'admin'],
-            'prefix' => 'Admin',
+            'role' => ['president', 'vicepresident'],
+            'prefix' => 'President',
             'controller' => '*',
             'action' => '*',
         ],

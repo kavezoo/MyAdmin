@@ -9,6 +9,7 @@
  * @var int $selectedCountryId
  * @var string $completeProfileUrl
  */
+use App\Utility\PhoneNumber;
 use CakeDC\Users\Utility\UsersUrl;
 
 $this->assign('title', __('Complete your profile'));
@@ -18,7 +19,9 @@ $this->Html->css([
 	'pages/index',
 ], ['block' => true]);
 $this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => 'scriptBottom']);
+$this->Html->script('/plugins/inputmask/jquery.inputmask.min', ['block' => 'scriptBottom']);
 $this->Html->script('pages/users_auth_country', ['block' => 'scriptBottom']);
+$this->Html->script('pages/users_phone', ['block' => 'scriptBottom']);
 $this->Html->script('pages/complete_profile', ['block' => 'scriptBottom']);
 
 $countryOptions = $countryOptions ?? [];
@@ -26,6 +29,9 @@ $clubOptions = $clubOptions ?? [];
 $clubOptionsEmpty = (bool)($clubOptionsEmpty ?? false);
 $selectedCountryId = (int)($selectedCountryId ?? 0);
 $completeProfileUrl = (string)($completeProfileUrl ?? $this->Url->build(UsersUrl::actionUrl('completeProfile')));
+$defaultPhonePrefix = (string)($defaultPhonePrefix ?? '');
+$countryPhonePrefixes = $countryPhonePrefixes ?? [];
+$phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhonePrefix);
 ?>
 <div class="row mt-3">
 	<div class="col-12 col-lg-10 col-xxl-8 p-2 pt-0">
@@ -64,11 +70,13 @@ $completeProfileUrl = (string)($completeProfileUrl ?? $this->Url->build(UsersUrl
 						'type' => 'tel',
 						'class' => 'form-control js-phone-intl',
 						'id' => 'phone',
+						'value' => $phoneInputValue,
+						'data-default-prefix' => $defaultPhonePrefix !== '' ? $defaultPhonePrefix : '+',
 						'autocomplete' => 'tel',
 						'inputmode' => 'tel',
-						'placeholder' => '+36301234567',
+						'placeholder' => $defaultPhonePrefix !== '' ? $defaultPhonePrefix . '301234567' : '+36301234567',
 					]) ?>
-					<div class="form-text"><?= __('Optional. Must start with + followed by digits only (e.g. +36301234567).') ?></div>
+					<div class="form-text"><?= __('Optional. Starts with + and your country calling code (e.g. {0}). Enter your number after the prefix.', $defaultPhonePrefix !== '' ? $defaultPhonePrefix : '+36') ?></div>
 				</div>
 				<div class="mb-3">
 					<label class="form-label" for="country-id"><?= __('Country') ?></label>
@@ -128,4 +136,10 @@ window.UsersAuthCountry.flags = <?= json_encode(
 ) ?>;
 window.UsersAuthCountry.noResults = <?= json_encode(__('No results found.')) ?>;
 window.UsersAuthCountry.searchPlaceholder = <?= json_encode(__('Search...')) ?>;
+window.UsersAuthCountry.phonePrefixes = <?= json_encode($countryPhonePrefixes, JSON_UNESCAPED_UNICODE) ?>;
+window.UsersAuthCountry.defaultPhonePrefix = <?= json_encode($defaultPhonePrefix, JSON_UNESCAPED_UNICODE) ?>;
+window.UsersPhone = {
+	phonePrefixes: window.UsersAuthCountry.phonePrefixes,
+	defaultPhonePrefix: window.UsersAuthCountry.defaultPhonePrefix
+};
 </script>

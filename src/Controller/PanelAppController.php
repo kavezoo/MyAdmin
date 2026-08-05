@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Auth\PanelAccess;
 use App\Auth\RoleHome;
 use App\Utility\AdminCountry;
 use App\Utility\BrowserLocale;
@@ -29,6 +30,10 @@ abstract class PanelAppController extends AppController
         AdminCountry::applyTranslateLocale($locale);
 
         $prefix = (string)$request->getParam('prefix');
+        $session = $request->getSession();
+        if ($prefix !== '' && $session !== null) {
+            $session->write('Panel.lastPrefix', $prefix);
+        }
         $this->viewBuilder()->setLayout('admin');
         $this->set('panelPrefix', $prefix);
         $this->set('panelBrand', RoleHome::brand($prefix));
@@ -38,6 +43,7 @@ abstract class PanelAppController extends AppController
             'controller' => 'Dashboard',
             'action' => 'index',
         ]);
+        $this->set('panelSwitcherLinks', PanelAccess::switcherLinks($prefix, $request));
         // Panels start without CRUD toolbar actions until content is defined.
         $this->set('canAdd', false);
         $this->set('canEdit', false);

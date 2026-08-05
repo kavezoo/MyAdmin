@@ -1,14 +1,13 @@
 <?php
 /**
- * Global Admin search (header) — president / vicepresident and above only.
+ * Global Admin search (header) — admin / superuser only (`/admin/search`).
  *
  * @var \App\View\AppView $this
  */
-use App\Auth\AppRoles;
-use App\Auth\CurrentUser;
+use App\Auth\PanelAccess;
 use App\Utility\AdminSearch;
 
-if (!AppRoles::canUseGlobalSearch(CurrentUser::role($this->getRequest()))) {
+if (!PanelAccess::canUseAdminPanel($this->request)) {
 	return;
 }
 

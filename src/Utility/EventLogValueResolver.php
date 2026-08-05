@@ -5,6 +5,8 @@ namespace App\Utility;
 
 use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
+use App\Utility\LocaleDateParser;
+use App\Utility\MembershipFee;
 use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
@@ -63,6 +65,10 @@ class EventLogValueResolver
             return static::membershipStatusLabel((string)$value);
         }
 
+        if ($field === 'club_membership_fee_date' || $field === 'national_membership_fee_date') {
+            return static::membershipFeeDateLabel($module, $field, $value);
+        }
+
         if (static::isBooleanField($field) && static::isBoolish($value)) {
             return static::boolLabel($value);
         }
@@ -113,6 +119,26 @@ class EventLogValueResolver
             '' => (string)__('empty'),
             default => $status,
         };
+    }
+
+    protected static function membershipFeeDateLabel(string $module, string $field, mixed $value): string
+    {
+        if ($value === null || $value === '' || $value === '[empty]') {
+            return (string)__('empty');
+        }
+
+        try {
+            if ($value instanceof \Cake\I18n\Date) {
+                return LocaleDateParser::format($value, 'date');
+            }
+            if (is_string($value) && preg_match('/^\d{4}-\d{2}-\d{2}/', $value)) {
+                return LocaleDateParser::format(substr($value, 0, 10), 'date');
+            }
+        } catch (\Throwable) {
+            // fall through
+        }
+
+        return EventLogChanges::formatValue($value);
     }
 
     protected static function boolLabel(mixed $value): string

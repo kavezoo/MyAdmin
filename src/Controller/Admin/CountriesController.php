@@ -183,13 +183,14 @@ class CountriesController extends AppController
             try {
                 $postedExtras = $this->postedAdditionalLanguageIds($this->request->getData());
                 $country = $this->Countries->patchEntity($country, $this->request->getData(), [
-                    'fields' => ['iso2', 'name', 'endonim_name', 'locale', 'timezone', 'continent_id', 'visible', 'pos', 'user_count'],
+                    'fields' => ['iso2', 'name', 'endonim_name', 'locale', 'timezone', 'phone_prefix', 'continent_id', 'visible', 'pos', 'user_count'],
                     'accessibleFields' => [
                         'iso2' => true,
                         'name' => true,
                         'endonim_name' => true,
                         'locale' => true,
                         'timezone' => true,
+                        'phone_prefix' => true,
                         'continent_id' => true,
                         'visible' => true,
                         'pos' => true,
@@ -243,13 +244,14 @@ class CountriesController extends AppController
                 if (CountryAccess::canEditFully()) {
                     $selectedVisibleIds = $this->postedAdditionalLanguageIds($data);
                     $country = $this->Countries->patchEntity($country, $data, [
-                        'fields' => ['iso2', 'name', 'endonim_name', 'locale', 'timezone', 'continent_id', 'visible', 'pos'],
+                        'fields' => ['iso2', 'name', 'endonim_name', 'locale', 'timezone', 'phone_prefix', 'continent_id', 'visible', 'pos'],
                         'accessibleFields' => [
                             'iso2' => true,
                             'name' => true,
                             'endonim_name' => true,
                             'locale' => true,
                             'timezone' => true,
+                            'phone_prefix' => true,
                             'continent_id' => true,
                             'visible' => true,
                             'pos' => true,

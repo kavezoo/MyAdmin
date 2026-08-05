@@ -38,6 +38,19 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 6. **Clubpresident** → `/clubpresident/applicants` lista; **Approve** → `MembershipService::approve`:
    - `role=member`, `membership_status=approved`
    - email a jelentkezőnek login linkkel (`/login`)
+7. **Reject** → `MembershipService::reject`: `users.enabled=false` (nincs törlés); a jelentkező nem tud újra belépni. Következő kérésnél `RequireUserEnabledMiddleware` kijelentkezteti (pl. `/new` oldal frissítés).
+8. **Lista szűrő** — fejléc switch: alapból csak `enabled=1` jelentkezők; kikapcsolva láthatók az elutasított (letiltott) sorok is, akció gombok nélkül.
+
+### Tagdíj dátumok (`users`)
+
+| Mező | Jelentés |
+|------|----------|
+| `club_membership_fee_date` | Helyi klub tagdíj befizetés dátuma (év = dátum éve → érvényes tagság arra az évre) |
+| `national_membership_fee_date` | Országos szövetség tagdíj (Magyarországon: MPE) |
+
+- Clubpresident: `/clubpresident/members` — klub tagdíj **egy gomb + SWAL** → mai dátum; oszlopban zöld pipa vagy piros „Outstanding” gomb.
+- **Profil:** feltűnő piros blokk ha nincs befizetve; zöld pipa + dátum ha igen (klub + országos/MPE).
+- **Napló:** `EventLogBehavior` + `MembershipFee::activityDescriptions` — klub országának nyelvén (`ActivityLogLocale`); megadás / törlés / módosítás. Külön tagdíj napló tábla később.
 
 **Profil klubváltás (member+):** más klub mentése → `role=new`, `membership_status=pending`, `Authentication::setIdentity` (session role is `new`), clubpresident értesítés; redirect `/new`. **RestrictNewRoleMiddleware:** csak `/new` + profil/auth URL-ek, más prefix → `/new`. Profil továbbra is szerkeszthető (`canEditOwnProfile` minden érvényes role-nál). UI: piros figyelmeztetés + SweetAlert.
 
@@ -64,6 +77,7 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 | Mailer | `src/Mailer/MembershipMailer.php` + `templates/email/{html,text}/membership_*.php` |
 | Profil form | `UsersController::completeProfile`, `templates/Users/complete_profile.php` |
 | Jelentkezők | `Clubpresident\ApplicantsController`, sidebar menü |
+| Aktív tagok / tagdíj | `Clubpresident\MembersController`, `MembershipFee` |
 | Login redirect | `Application` `EVENT_AFTER_LOGIN` |
 | New gate | `Controller/New/AppController.php` |
 | Role `new` lock | `RestrictNewRoleMiddleware` (auth után) |
@@ -88,4 +102,5 @@ Transport: `config/app.php` / `app_local.php` `Email` + `EmailTransport`.
 - [ ] Új regisztráció → login → complete profile kötelező
 - [ ] Mentés után clubpresident kap emailt (vagy log, ha nincs transport)
 - [ ] Approve → role `member` + email login linkkel
+- [ ] Reject → `enabled=0`; elutasított user oldalfrissítéskor login redirect
 - [ ] Új tag újra belép → Member panel

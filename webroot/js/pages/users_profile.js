@@ -22,24 +22,6 @@
 			.join(' ');
 	}
 
-	function normalizePhoneInput($input) {
-		var raw = String($input.val() || '').trim();
-		if (raw === '') {
-			return;
-		}
-		var digits = raw.replace(/[^\d+]/g, '');
-		if (digits.charAt(0) !== '+') {
-			digits = '+' + digits.replace(/\+/g, '');
-		} else {
-			digits = '+' + digits.slice(1).replace(/\+/g, '');
-		}
-		digits = digits.replace(/[^\d+]/g, '');
-		if (digits.length > 1) {
-			digits = '+' + digits.slice(1).replace(/\D/g, '');
-		}
-		$input.val(digits);
-	}
-
 	$(function () {
 		var $club = $('#club-id');
 		if ($club.length && $.fn.select2) {
@@ -63,14 +45,6 @@
 		$('.js-title-case-name').on('blur', function () {
 			var $el = $(this);
 			$el.val(titleCaseName($el.val()));
-		});
-
-		var $phone = $('.js-phone-intl');
-		$phone.each(function () {
-			normalizePhoneInput($(this));
-		});
-		$phone.on('input blur', function () {
-			normalizePhoneInput($(this));
 		});
 
 		var $deleteBtn = $('#btn-delete-avatar');

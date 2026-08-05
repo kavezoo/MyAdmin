@@ -7,12 +7,15 @@ use App\Auth\AppRoles;
 use App\Auth\CurrentUser;
 use App\Auth\EventLogAccess;
 use App\Auth\MembershipProfile;
+use App\Auth\PanelAccess;
 use App\Auth\RoleHome;
 use App\Service\MembershipService;
 use App\Utility\AdminCountry;
 use App\Utility\AdminLanguage;
 use App\Utility\BrowserLocale;
 use App\Utility\EntityFormErrors;
+use App\Utility\MembershipFee;
+use App\Utility\PhoneNumber;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
@@ -73,13 +76,15 @@ class UsersController extends CakeDCUsersController
         } elseif (in_array($action, ['profile', 'completeProfile', 'eventLog', 'eventLogView'], true)) {
             $this->viewBuilder()->setLayout('admin');
             $this->applyLoggedInUiLocale();
-            $role = CurrentUser::role($this->getRequest());
-            $home = RoleHome::url($role);
+            $request = $this->getRequest();
+            $role = CurrentUser::role($request);
+            $home = $this->resolvePanelHomeForProfile($request, $role);
             $prefix = (string)($home['prefix'] ?? 'Admin');
             $this->set('panelPrefix', $prefix);
             $this->set('panelBrand', RoleHome::brand($prefix));
             $this->set('panelSidebar', RoleHome::sidebarElement($prefix));
             $this->set('panelHomeUrl', $home);
+            $this->set('panelSwitcherLinks', PanelAccess::switcherLinks($prefix, $request));
             $this->set('indexListUrl', $home);
             $this->set('breadcrumbBackLabel', __('Dashboard'));
             $this->set('canAdd', false);
@@ -268,8 +273,10 @@ class UsersController extends CakeDCUsersController
             if (isset($patch['club_id'])) {
                 $patch['club_id'] = (int)$patch['club_id'];
             }
-            if (isset($patch['phone']) && trim((string)$patch['phone']) === '') {
-                $patch['phone'] = '';
+            $countryIdForPhone = (int)($patch['country_id'] ?? $user->get('country_id') ?? 0);
+            if (array_key_exists('phone', $patch)) {
+                $normalizedPhone = PhoneNumber::normalizeForStorage($patch['phone'], PhoneNumber::prefixForCountryId($countryIdForPhone));
+                $patch['phone'] = $normalizedPhone ?? '';
             }
 
             $user = $users->patchEntity($user, $patch, [
@@ -340,8 +347,10 @@ class UsersController extends CakeDCUsersController
             if (isset($patch['club_id'])) {
                 $patch['club_id'] = (int)$patch['club_id'];
             }
-            if (isset($patch['phone']) && trim((string)$patch['phone']) === '') {
-                $patch['phone'] = '';
+            $countryIdForPhone = (int)($patch['country_id'] ?? $user->get('country_id') ?? 0);
+            if (array_key_exists('phone', $patch)) {
+                $normalizedPhone = PhoneNumber::normalizeForStorage($patch['phone'], PhoneNumber::prefixForCountryId($countryIdForPhone));
+                $patch['phone'] = $normalizedPhone ?? '';
             }
 
             $user = $users->patchEntity($user, $patch, [
@@ -587,6 +596,50 @@ class UsersController extends CakeDCUsersController
                 ?? AdminCountry::label($countryId);
         }
         $this->set('countryLabel', $countryLabel);
+        $this->setMembershipFeeViewVars($user);
+    }
+
+    protected function setMembershipFeeViewVars(?object $user): void
+    {
+        $membershipYear = MembershipFee::currentYear();
+        $countryId = 0;
+        $clubFeeDate = null;
+        $nationalFeeDate = null;
+        if ($user !== null && method_exists($user, 'get')) {
+            $countryId = (int)($user->get('country_id') ?? 0);
+            $clubFeeDate = $user->get('club_membership_fee_date');
+            $nationalFeeDate = $user->get('national_membership_fee_date');
+        }
+
+        $this->set(compact('membershipYear', 'countryId'));
+        $this->set('clubFeeLabel', MembershipFee::clubFeeLabel($countryId));
+        $this->set('nationalFeeLabel', MembershipFee::nationalFeeLabel($countryId));
+        $this->set('clubFeeDisplay', MembershipFee::paymentDisplay($clubFeeDate, $membershipYear));
+        $this->set('nationalFeeDisplay', MembershipFee::paymentDisplay($nationalFeeDate, $membershipYear));
+        $this->set('clubFeeDateFormatted', MembershipFee::paidDateFormatted($clubFeeDate, $membershipYear));
+        $this->set('nationalFeeDateFormatted', MembershipFee::paidDateFormatted($nationalFeeDate, $membershipYear));
+        $this->set('clubFeePaid', MembershipFee::isPaidForYear($clubFeeDate, $membershipYear));
+        $this->set('nationalFeePaid', MembershipFee::isPaidForYear($nationalFeeDate, $membershipYear));
+    }
+
+    /**
+     * Profile chrome: last visited panel if allowed, else primary role home.
+     *
+     * @return array<string, mixed>
+     */
+    protected function resolvePanelHomeForProfile(\Cake\Http\ServerRequest $request, string $role): array
+    {
+        $session = $request->getSession();
+        $lastPrefix = (string)($session->read('Panel.lastPrefix') ?? '');
+        if ($lastPrefix !== '' && PanelAccess::canAccessPrefix($lastPrefix, $request)) {
+            return [
+                'prefix' => $lastPrefix,
+                'controller' => 'Dashboard',
+                'action' => 'index',
+            ];
+        }
+
+        return RoleHome::url($role);
     }
 
     protected function prepareProfileEditViewVars(): void
@@ -640,6 +693,9 @@ class UsersController extends CakeDCUsersController
         $this->set('clubOptionsEmpty', $countryIdForClubs > 0 && $clubOptions === []);
         $this->set('selectedCountryId', $selectedCountryId);
         $this->set('selectedClubId', $selectedClubId);
+        $defaultPhonePrefix = PhoneNumber::prefixForCountryId($selectedCountryId);
+        $this->set('defaultPhonePrefix', $defaultPhonePrefix);
+        $this->set('countryPhonePrefixes', PhoneNumber::prefixMapForCountryIds(array_map('intval', array_keys($countryOptions))));
         $this->set('profileUrl', Router::url(UsersUrl::actionUrl('profile')));
         $this->set('deleteAvatarUrl', Router::url(UsersUrl::actionUrl('deleteAvatar')));
     }
@@ -694,10 +750,14 @@ class UsersController extends CakeDCUsersController
 
         $clubOptions = $clubs->optionsForCountry($countryId, $includeClubId);
 
-        $this->set('countryOptions', AdminCountry::registerOptions());
+        $countryOptions = AdminCountry::registerOptions();
+        $this->set('countryOptions', $countryOptions);
         $this->set('clubOptions', $clubOptions);
         $this->set('clubOptionsEmpty', $countryId > 0 && $clubOptions === []);
         $this->set('selectedCountryId', $countryId);
+        $defaultPhonePrefix = PhoneNumber::prefixForCountryId($countryId);
+        $this->set('defaultPhonePrefix', $defaultPhonePrefix);
+        $this->set('countryPhonePrefixes', PhoneNumber::prefixMapForCountryIds(array_map('intval', array_keys($countryOptions))));
         $this->set('completeProfileUrl', Router::url(UsersUrl::actionUrl('completeProfile')));
     }
 

@@ -84,6 +84,34 @@ class MembershipService
     }
 
     /**
+     * Club president rejects applicant → users.enabled = false (no delete).
+     */
+    public function reject(EntityInterface $applicant, EntityInterface $rejecter): bool
+    {
+        if (strtolower((string)$applicant->get('role')) !== AppRoles::NEW) {
+            return false;
+        }
+        if ((int)$applicant->get('club_id') < 1) {
+            return false;
+        }
+        if ((int)$rejecter->get('club_id') !== (int)$applicant->get('club_id')) {
+            return false;
+        }
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->fetchTable('Users');
+        $applicant->set('enabled', false);
+
+        return $users->save($applicant, [
+            'checkRules' => false,
+            'accessibleFields' => [
+                'enabled' => true,
+                'modified' => true,
+            ],
+        ]);
+    }
+
+    /**
      * After profile club switch: notify presidents of the new club (always re-notify).
      */
     public function onClubChanged(EntityInterface $user): void

@@ -96,6 +96,8 @@ class EventLogPresenter
             'timezone' => __('Timezone'),
             'iso2' => __('ISO code'),
             'membership_status' => __('Membership status'),
+            'club_membership_fee_date' => __('Club membership fee'),
+            'national_membership_fee_date' => __('National association membership fee'),
             'avatar' => __('Profile picture'),
             'password' => __('Password'),
             'value' => __('Value'),

@@ -157,6 +157,21 @@ $selectedVisibleIds = array_values(array_filter(
 						</div>
 
 						<div class="form-group row mb-3">
+							<?= $this->Form->adminLabel('phone_prefix', __('Phone prefix:'), ['for' => 'phone-prefix']) ?>
+							<div class="col-12 col-md-10 col-xl-3">
+								<?= $this->Form->control('phone_prefix', [
+									'label' => false,
+									'class' => 'form-control js-phone-prefix',
+									'id' => 'phone-prefix',
+									'placeholder' => '+36',
+								]) ?>
+								<div class="form-text">
+									<?= __('International calling code for user phone inputs (E.164, e.g. +36).') ?>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group row mb-3">
 							<?= $this->Form->adminLabel('continent_id', __('Continent:'), ['for' => 'continent-id']) ?>
 							<div class="col-12 col-md-10 col-xl-5">
 								<?= $this->Form->control('continent_id', [
@@ -219,6 +234,13 @@ $selectedVisibleIds = array_values(array_filter(
 							<label class="col-sm-3 col-md-2 col-form-label"><?= __('Timezone:') ?></label>
 							<div class="col-12 col-md-10 col-xl-5">
 								<p class="form-control-plaintext mb-0"><code><?= h($country->timezone) ?></code></p>
+							</div>
+						</div>
+
+						<div class="form-group row mb-3">
+							<label class="col-sm-3 col-md-2 col-form-label"><?= __('Phone prefix:') ?></label>
+							<div class="col-12 col-md-10 col-xl-3">
+								<p class="form-control-plaintext mb-0"><code><?= h((string)$country->phone_prefix) ?></code></p>
 							</div>
 						</div>
 

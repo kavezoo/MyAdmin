@@ -3,7 +3,7 @@
 Referencia-adat: `countries` + `continents` + Translate.  
 ACL: [users-auth.md](users-auth.md) / `CountryAccess` — **superuser** teljes CRUD; **admin** csak `visible` + `pos`.
 
-Mezők: `name` (angol kanonikus + Translate), **`endonim_name`** (endoním / saját írásrendszer — nem fordított), `locale`, …
+Mezők: `name` (angol kanonikus + Translate), **`endonim_name`** (endoním / saját írásrendszer — nem fordított), `locale`, `timezone`, **`phone_prefix`** (E.164 hívószám, pl. `+36` — user telefon input alapértelmezés), …
 
 Kapcsolódó: [i18n.md](i18n.md) (országnevek DB — seedelt fordítások), **[country-visibilities.md](country-visibilities.md)** (plusz nyelvek / TAB), [admin-konvenciok.md](admin-konvenciok.md) (index / count / Swal), [admin-oldal.md](admin-oldal.md).  
 Rule: `.cursor/rules/admin-countries-index.mdc`
@@ -17,7 +17,7 @@ Rule: `.cursor/rules/admin-countries-index.mdc`
 Form TAB / login: **`country_visibilities`** — [country-visibilities.md](country-visibilities.md).  
 Countries form: **Additional languages** Select2 (saját nyelv mindig tárolva, listában nem).  
 Countries formon **nincs** nyelvi TAB a `name`-hez — a többnyelvű országnevek a seedelt `i18n` fordítások; a formon egyetlen Name mező.  
-Form placeholder / help példák (`iso2`, `name`, `endonim`, `locale`, `timezone`): belépett user regisztrált ország (`Users.country_id`) — `registeredCountryExamples` view var / `AdminCountry::registeredCountryExamples()`.
+Form placeholder / help példák (`iso2`, `name`, `endonim`, `locale`, `timezone`, `phone_prefix`): belépett user regisztrált ország (`Users.country_id`) — `registeredCountryExamples` view var / `AdminCountry::registeredCountryExamples()`.
 Index modal: **Additional languages** kapcsolt linklista (`recordGet` → `additional_languages`).
 
 ---

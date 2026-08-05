@@ -5,6 +5,109 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-05 — Admin prefix: csak admin/superuser; panel váltó minden role-ra
+
+### Mi változott / miért
+- `/admin` csak `admin` + `superuser` (president/vp Search/EventLogs jogok levéve).
+- `PanelAccess::canUseAdminPanel`; admin sidebar → váltás New/Member/Clubpresident/President/Admin.
+- Más panelek menüjében **nincs** Admin link.
+
+### Érintett
+- `src/Auth/PanelAccess.php`, `config/permissions.php`, `Admin\AppController`, `admin/sidebar.php`
+- `templates/element/president/sidebar.php` (Admin Event logs link törölve)
+- `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Panel váltás: president/vp → member + clubpresident
+
+### Mi változott / miért
+- President / vicepresident: Member prefix is elérhető (minden tisztviselő tag is).
+- Clubpresident prefix: clubpresident + president/vp **ha van `club_id`**; menüben csak ekkor jelenik meg.
+- Sidebar `panel/switcher`: felfelé / lefelé panel linkek; session `Panel.lastPrefix` profil visszanavigáláshoz.
+
+### Érintett
+- `src/Auth/PanelAccess.php`, `src/Auth/CurrentUser.php` (`clubId`)
+- `config/permissions.php`, `PanelAppController`, `UsersController`
+- `templates/element/panel/switcher.php`, member/clubpresident/president sidebars
+- `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Tagdíj UI: egy gomb + SWAL, pipa / piros figyelmeztetés
+
+### Mi változott / miért
+- Clubpresident lista: nincs dátummező — piros „Outstanding” gomb + SWAL → mai dátum; befizetve zöld pipa + dátum.
+- Profil: `membership_fee_status` element — feltűnő piros blokk ha adós, zöld pipa + dátum ha rendben.
+
+### Érintett
+- `templates/Clubpresident/Members/index.php`, `webroot/js/pages/clubpresident_members.js`
+- `templates/element/users/membership_fee_status.php`, `webroot/css/pages/membership_fee.css`
+- `templates/Users/profile.php`, `MembersController::updateClubFee`
+
+---
+
+## 2026-08-05 — Tagdíj dátumok + clubpresident aktív tagok
+
+### Mi változott / miért
+- `users.club_membership_fee_date` + `users.national_membership_fee_date` (tárgyévi érvényesség a dátum évével).
+- Clubpresident: `/clubpresident/members` — aktív tagok, klub tagdíj dátum szerkesztés (Tempus).
+- Profil: tárgyévi tagdíj állapot (klub + országos/MPE).
+- Napló: tagdíj mező változás `event_logs`-ban, klub ország locale-jén (`ActivityLogLocale`, `MembershipFee`).
+
+### Érintett
+- `config/Migrations/20260805140000_AddMembershipFeeDatesToUsers.php`, `config/schema/users_membership_fees.sql`
+- `src/Utility/MembershipFee.php`, `src/Utility/ActivityLogLocale.php`
+- `src/Controller/Clubpresident/MembersController.php`, `src/Controller/Clubpresident/AppController.php`
+- `templates/Clubpresident/Members/index.php`, `templates/Users/profile.php`
+- `src/Model/Behavior/EventLogBehavior.php`, `EventLogPresenter`, `EventLogValueResolver`
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Clubpresident applicants: enabled-only switch a fejlécben
+
+### Mi változott / miért
+- Fejléc **switch**: alapból csak `enabled=1` pending jelentkezők; kikapcsolva elutasított (letiltott) sorok is látszanak, „Rejected” felirattal, gombok nélkül.
+- Session: `enabled_only` query → `Clubpresident.Applicants.enabled_only`.
+
+### Érintett
+- `src/Controller/Clubpresident/ApplicantsController.php`, `templates/Clubpresident/Applicants/index.php`
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Clubpresident applicants: elutasítás + SWAL megerősítés
+
+### Mi változott / miért
+- Elfogadás mellett **Reject** gomb: `users.enabled=false` (nem törlés); elutasított user nem tud belépni.
+- Mindkét gomb SweetAlert megerősítés (`clubpresident_applicants.js`).
+- Lista csak `enabled=1` pending jelentkezőket mutat.
+- Elutasított `new` user oldalfrissítéskor `RequireUserEnabledMiddleware` → login (már meglévő gate).
+
+### Érintett
+- `src/Service/MembershipService.php` (`reject`)
+- `src/Controller/Clubpresident/ApplicantsController.php` (`reject`, index `enabled`)
+- `templates/Clubpresident/Applicants/index.php`, `webroot/js/pages/clubpresident_applicants.js`
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Telefon: ország hívószám + maszk (+36…)
+
+### Mi változott / miért
+- `countries.phone_prefix` (E.164, pl. `+36`); seed: `config/phone_prefixes_by_iso2.json` + `tmp/seed_country_phone_prefixes.php`.
+- Profil / complete-profile: inputmask `+` + számjegyek; alapértelmezés = user ország hívószáma.
+- Mentés: csak ha van tényleges szám (csak prefix → `NULL`); DB-ben mindig `+` + számjegyek.
+- `PhoneNumber`, `PhonePrefixMap`, `webroot/js/pages/users_phone.js`.
+
+### Érintett
+- `config/Migrations/20260805130000_AddPhonePrefixToCountries.php`, `config/schema/countries.sql`
+- `src/Utility/PhoneNumber.php`, `src/Model/Table/UsersTable.php`, `src/Controller/UsersController.php`
+- `templates/Users/profile.php`, `templates/Users/complete_profile.php`, `templates/Admin/Countries/*`
+
+---
+
 ## 2026-08-05 — Profil: mezőhibák + opcionális telefon
 
 ### Mi változott / miért

@@ -64,6 +64,7 @@ $showEventLogsMenu = EventLogAccess::canSearch($this->request);
 						<?php endif; ?>
 					</ul>
 				</li>
+				<?= $this->element('panel/switcher') ?>
 			</ul>
 			<div class="clearfix"></div>
 		</div>

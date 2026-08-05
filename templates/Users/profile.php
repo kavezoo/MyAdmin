@@ -16,9 +16,19 @@
  * @var string $profileUrl
  * @var string $deleteAvatarUrl
  * @var int $profileOriginalClubId
+ * @var int $membershipYear
+ * @var string $clubFeeLabel
+ * @var string $nationalFeeLabel
+ * @var string $clubFeeDisplay
+ * @var string $nationalFeeDisplay
+ * @var bool $clubFeePaid
+ * @var bool $nationalFeePaid
+ * @var string $clubFeeDateFormatted
+ * @var string $nationalFeeDateFormatted
  */
 use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
+use App\Utility\PhoneNumber;
 use App\Utility\UserAvatar;
 use CakeDC\Users\Utility\UsersUrl;
 
@@ -28,6 +38,7 @@ $this->Html->css([
 	'/plugins/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min',
 	'pages/index',
 	'pages/users_profile',
+	'pages/membership_fee',
 ], ['block' => true]);
 
 $isCurrentUser = (bool)($isCurrentUser ?? false);
@@ -64,8 +75,23 @@ $dashboardUrl = $this->Url->build($this->get('panelHomeUrl') ?? [
 ]);
 $socialAccounts = $user->social_accounts ?? [];
 $profileOriginalClubId = (int)($profileOriginalClubId ?? 0);
+$defaultPhonePrefix = (string)($defaultPhonePrefix ?? '');
+$countryPhonePrefixes = $countryPhonePrefixes ?? [];
+$phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhonePrefix);
+
+$membershipYear = (int)($membershipYear ?? \App\Utility\MembershipFee::currentYear());
+$clubFeeLabel = (string)($clubFeeLabel ?? '');
+$nationalFeeLabel = (string)($nationalFeeLabel ?? '');
+$clubFeeDisplay = (string)($clubFeeDisplay ?? '');
+$nationalFeeDisplay = (string)($nationalFeeDisplay ?? '');
+$clubFeePaid = (bool)($clubFeePaid ?? false);
+$nationalFeePaid = (bool)($nationalFeePaid ?? false);
+$clubFeeDateFormatted = (string)($clubFeeDateFormatted ?? '');
+$nationalFeeDateFormatted = (string)($nationalFeeDateFormatted ?? '');
 
 if ($canEditProfile) {
+	$this->Html->script('/plugins/inputmask/jquery.inputmask.min', ['block' => 'scriptBottom']);
+	$this->Html->script('pages/users_phone', ['block' => 'scriptBottom']);
 	$this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => 'scriptBottom']);
 	$this->Html->script('pages/users_auth_country', ['block' => 'scriptBottom']);
 	$this->Html->script('pages/users_profile', ['block' => 'scriptBottom']);
@@ -110,6 +136,25 @@ if ($canEditProfile) {
 				]) ?>
 				<div class="card-body">
 					<?= $this->element('users/form_errors', ['entity' => $user]) ?>
+
+					<div class="membership-fee-panel mb-4">
+						<div class="membership-fee-panel__title"><?= __('Membership fees ({0})', $membershipYear) ?></div>
+						<?= $this->element('users/membership_fee_status', [
+							'label' => $clubFeeLabel,
+							'paid' => $clubFeePaid,
+							'membershipYear' => $membershipYear,
+							'dateFormatted' => $clubFeeDateFormatted,
+							'mode' => 'profile',
+						]) ?>
+						<?= $this->element('users/membership_fee_status', [
+							'label' => $nationalFeeLabel,
+							'paid' => $nationalFeePaid,
+							'membershipYear' => $membershipYear,
+							'dateFormatted' => $nationalFeeDateFormatted,
+							'mode' => 'profile',
+						]) ?>
+					</div>
+
 					<?php if ($canManageAvatar): ?>
 						<div class="users-profile-avatar-block mb-4">
 							<h5 class="mb-2"><?= __('Profile picture') ?></h5>
@@ -172,11 +217,13 @@ if ($canEditProfile) {
 							'type' => 'tel',
 							'class' => 'form-control js-phone-intl',
 							'id' => 'phone',
+							'value' => $phoneInputValue,
+							'data-default-prefix' => $defaultPhonePrefix !== '' ? $defaultPhonePrefix : '+',
 							'autocomplete' => 'tel',
 							'inputmode' => 'tel',
-							'placeholder' => '+36301234567',
+							'placeholder' => $defaultPhonePrefix !== '' ? $defaultPhonePrefix . '301234567' : '+36301234567',
 						]) ?>
-						<div class="form-text"><?= __('Optional. Must start with + followed by digits only (e.g. +36301234567).') ?></div>
+						<div class="form-text"><?= __('Optional. Starts with + and your country calling code (e.g. {0}). Enter your number after the prefix.', $defaultPhonePrefix !== '' ? $defaultPhonePrefix : '+36') ?></div>
 					</div>
 
 					<div class="mb-3">
@@ -238,6 +285,7 @@ if ($canEditProfile) {
 							<div class="record-view-row"><dt><?= __('Superuser') ?></dt><dd><?= h(__('Yes')) ?></dd></div>
 						<?php endif; ?>
 					</dl>
+
 				</div>
 				<div class="card-footer">
 					<div class="record-view-footer-actions">
@@ -263,6 +311,12 @@ if ($canEditProfile) {
 				) ?>;
 				window.UsersAuthCountry.noResults = <?= json_encode(__('No results found.')) ?>;
 				window.UsersAuthCountry.searchPlaceholder = <?= json_encode(__('Search...')) ?>;
+				window.UsersAuthCountry.phonePrefixes = <?= json_encode($countryPhonePrefixes, JSON_UNESCAPED_UNICODE) ?>;
+				window.UsersAuthCountry.defaultPhonePrefix = <?= json_encode($defaultPhonePrefix, JSON_UNESCAPED_UNICODE) ?>;
+				window.UsersPhone = {
+					phonePrefixes: window.UsersAuthCountry.phonePrefixes,
+					defaultPhonePrefix: window.UsersAuthCountry.defaultPhonePrefix
+				};
 				window.UsersProfile = {
 					deleteAvatarUrl: <?= json_encode($deleteAvatarUrl) ?>,
 					originalClubId: <?= (int)$profileOriginalClubId ?>,
@@ -308,6 +362,24 @@ if ($canEditProfile) {
 							</div>
 						</div>
 					<?php endif; ?>
+
+					<div class="membership-fee-panel mb-4">
+						<div class="membership-fee-panel__title"><?= __('Membership fees ({0})', $membershipYear) ?></div>
+						<?= $this->element('users/membership_fee_status', [
+							'label' => $clubFeeLabel,
+							'paid' => $clubFeePaid,
+							'membershipYear' => $membershipYear,
+							'dateFormatted' => $clubFeeDateFormatted,
+							'mode' => 'profile',
+						]) ?>
+						<?= $this->element('users/membership_fee_status', [
+							'label' => $nationalFeeLabel,
+							'paid' => $nationalFeePaid,
+							'membershipYear' => $membershipYear,
+							'dateFormatted' => $nationalFeeDateFormatted,
+							'mode' => 'profile',
+						]) ?>
+					</div>
 
 					<dl class="record-view-fields mb-0">
 						<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h($displayName) ?></dd></div>

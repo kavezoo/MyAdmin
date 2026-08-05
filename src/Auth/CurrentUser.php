@@ -131,6 +131,23 @@ class CurrentUser
     }
 
     /**
+     * Logged-in user's club (`Users.club_id`), or 0.
+     */
+    public static function clubId(?ServerRequest $request = null): int
+    {
+        $request ??= Router::getRequest();
+        if ($request === null) {
+            return 0;
+        }
+        $raw = static::identityValue($request->getAttribute('identity'), 'club_id');
+        if (is_numeric($raw) && (int)$raw > 0) {
+            return (int)$raw;
+        }
+
+        return 0;
+    }
+
+    /**
      * @param mixed $identity
      */
     protected static function roleFromIdentity(mixed $identity): ?string

@@ -17,6 +17,7 @@ $home = ['prefix' => 'Member', 'controller' => 'Dashboard', 'action' => 'index']
 						<i class="fa fa-fw fa-tachometer"></i><span> <?= __('Dashboard') ?> </span>
 					</a>
 				</li>
+				<?= $this->element('panel/switcher') ?>
 			</ul>
 			<div class="clearfix"></div>
 		</div>

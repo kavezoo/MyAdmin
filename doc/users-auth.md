@@ -64,13 +64,14 @@ Nincs URL nyelv-prefix. Panelek (Admin chrome):
 |--------------|---------------|-----|-------------|
 | `new` | `New` | `/new` | **csak** ez (regisztráció default) |
 | `member`, `editor` | `Member` | `/member` | saját panel |
-| `clubpresident` | `Clubpresident` | `/clubpresident` | saját panel |
-| `president`, `vicepresident` | `President` | `/president` | saját panel |
-| `admin`, `superuser` | `Admin` | `/admin` | Admin (+ wildcard) |
+| `clubpresident` | `Clubpresident` | `/clubpresident` | saját panel + **Member** |
+| `president`, `vicepresident` | `President` | `/president` | saját panel + **Member**; **Clubpresident** ha `club_id` > 0 |
+| `admin`, `superuser` | `Admin` | `/admin` | **csak** ezek; panel váltó → minden role prefix |
 
-Kód:
+**Panel váltás:** `PanelAccess` + `element/panel/switcher` — felfelé menü alsó panelekből; Clubpresident link csak ha van klub (vagy admin). **Admin** prefix és menü link **csak** `admin` / `superuser`; admin sidebar → összes role panel.
 
 - `App\Auth\AppRoles` — szerepkör konstansok / címkék
+- `App\Auth\PanelAccess` — elérhető prefixek, sidebar switcher
 - `App\Auth\RoleHome` — `prefix()` / `path()` / `url()` / `brand()` / `sidebarElement()`
 - `App\Controller\PanelAppController` — locale + `admin` layout + `panel*` view változók
 - `App\Controller\{New,Member,Clubpresident,President}\` — Dashboard placeholder
@@ -192,7 +193,7 @@ Session közben `RequireUserEnabledMiddleware` kidobja a usert, ha `enabled` (va
 
 ### 6.1 Profile oldal (`/users/profile`)
 
-- **Minden érvényes role** (beleértve `new`): szerkeszthető — kötelező: **név**, ország, klub; **opcionális** telefon (`+` majd csak számjegyek).
+- **Minden érvényes role** (beleértve `new`): szerkeszthető — kötelező: **név**, ország, klub; **opcionális** telefon (`+` + ország hívószám + számjegyek; csak prefix → nem mentődik).
 - Validációs hiba: piros összefoglaló a form felett + mező alatti `error-message` + toast konkrét szöveggel.
 - **Role `new` + hiányos profil:** `/complete-profile` továbbra is kötelező (New panel redirect).
 - **Role `new` (klubváltás / pending):** csak `/new` prefix + profil/auth URL-ek; `RestrictNewRoleMiddleware` — más prefix → `/new`.

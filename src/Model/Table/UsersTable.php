@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Auth\MembershipProfile;
+use App\Utility\PhoneNumber;
 use App\Model\Entity\User;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -67,6 +68,12 @@ class UsersTable extends CakeDCUsersTable
         $validator
             ->boolean('application_notified')
             ->allowEmptyString('application_notified');
+        $validator
+            ->date('club_membership_fee_date')
+            ->allowEmptyDate('club_membership_fee_date');
+        $validator
+            ->date('national_membership_fee_date')
+            ->allowEmptyDate('national_membership_fee_date');
 
         return $validator;
     }
@@ -88,7 +95,7 @@ class UsersTable extends CakeDCUsersTable
                         return true;
                     }
 
-                    return (bool)preg_match('/^\+\d+$/', (string)$value);
+                    return PhoneNumber::isValidStored((string)$value);
                 },
                 'message' => __('Phone must start with + and contain digits only.'),
             ])
@@ -120,7 +127,7 @@ class UsersTable extends CakeDCUsersTable
                         return true;
                     }
 
-                    return (bool)preg_match('/^\+\d+$/', (string)$value);
+                    return PhoneNumber::isValidStored((string)$value);
                 },
                 'message' => __('Phone must start with + and contain digits only.'),
             ])
@@ -142,6 +149,10 @@ class UsersTable extends CakeDCUsersTable
         }
         if ($entity->isDirty('last_name')) {
             $entity->set('last_name', static::formatPersonName($entity->get('last_name')));
+        }
+        if ($entity->isDirty('phone') || $entity->isDirty('country_id')) {
+            $prefix = PhoneNumber::prefixForCountryId((int)($entity->get('country_id') ?? 0));
+            $entity->set('phone', PhoneNumber::normalizeForStorage($entity->get('phone'), $prefix));
         }
     }
 

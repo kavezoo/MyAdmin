@@ -7,6 +7,7 @@ use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
 use App\Utility\AdminCountry;
 use App\Utility\AdminTimezone;
 use App\Utility\AdminTranslate;
+use App\Utility\PhoneNumber;
 use ArrayObject;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -21,7 +22,7 @@ use Cake\Validation\Validator;
 /**
  * Countries Model — matches `countries` schema.
  *
- * Columns: iso2, name, endonim_name, locale, timezone, continent_id, visible, pos, user_count, created, modified
+ * Columns: iso2, name, endonim_name, locale, timezone, phone_prefix, continent_id, visible, pos, user_count, created, modified
  * - `name` Translate EAV → i18n (model=Countries)
  * - `endonim_name` endonym (native script), not translated
  * - `timezone` IANA (display/save via AdminTimezone + LocaleDateParser)
@@ -326,6 +327,21 @@ class CountriesTable extends Table
             ]);
 
         $validator
+            ->scalar('phone_prefix')
+            ->maxLength('phone_prefix', 16)
+            ->allowEmptyString('phone_prefix')
+            ->add('phone_prefix', 'e164Prefix', [
+                'rule' => static function ($value) {
+                    if ($value === null || $value === '') {
+                        return true;
+                    }
+
+                    return (bool)preg_match('/^\+\d{1,4}$/', (string)$value);
+                },
+                'message' => __('Use an international prefix like +36.'),
+            ]);
+
+        $validator
             ->nonNegativeInteger('continent_id')
             ->requirePresence('continent_id', 'create')
             ->notEmptyString('continent_id');
@@ -343,6 +359,14 @@ class CountriesTable extends Table
             ->allowEmptyString('user_count');
 
         return $validator;
+    }
+
+    public function beforeSave(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
+    {
+        if ($entity->isDirty('phone_prefix')) {
+            $normalized = PhoneNumber::normalizePrefix($entity->get('phone_prefix'));
+            $entity->set('phone_prefix', $normalized);
+        }
     }
 
     /**

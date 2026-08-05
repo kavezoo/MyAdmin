@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace App\Model\Behavior;
 
+use App\Utility\ActivityLogLocale;
 use App\Utility\EventLogChanges;
 use App\Utility\EventLogger;
+use App\Utility\MembershipFee;
 use ArrayObject;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -102,16 +104,39 @@ class EventLogBehavior extends Behavior
         $label = $this->entityLabel($entity);
         $changeSummary = EventLogChanges::summary($changes, 350);
 
-        $description = sprintf(
-            '%s %s #%s%s',
-            $created ? 'Created' : 'Updated',
-            $alias,
-            (string)$pk,
-            $label !== '' ? ' (' . $label . ')' : ''
-        );
-        if ($changeSummary !== '') {
-            $description .= ': ' . $changeSummary;
+        $countryId = 0;
+        if ($alias === 'Users') {
+            $countryId = (int)($entity->get('country_id') ?? 0);
         }
+
+        $feeChanges = [];
+        if ($alias === 'Users' && $changes !== []) {
+            foreach (MembershipFee::DATE_FIELDS as $feeField) {
+                if (isset($changes[$feeField])) {
+                    $feeChanges[$feeField] = $changes[$feeField];
+                }
+            }
+        }
+
+        if ($feeChanges !== [] && $countryId > 0) {
+            $description = ActivityLogLocale::runForCountry(
+                $countryId,
+                fn () => MembershipFee::activityDescriptions($entity, $feeChanges, $created)
+            );
+        } else {
+            $description = sprintf(
+                '%s %s #%s%s',
+                $created ? 'Created' : 'Updated',
+                $alias,
+                (string)$pk,
+                $label !== '' ? ' (' . $label . ')' : ''
+            );
+            if ($changeSummary !== '') {
+                $description .= ': ' . $changeSummary;
+            }
+        }
+
+        $logCountryId = $countryId > 0 ? $countryId : null;
 
         EventLogger::log([
             'module' => $alias,
@@ -119,6 +144,7 @@ class EventLogBehavior extends Behavior
             'entity' => $alias,
             'entity_id' => $pk,
             'description' => $description,
+            'country_id' => $logCountryId,
             'request_data' => [
                 'changes' => $changes,
             ],

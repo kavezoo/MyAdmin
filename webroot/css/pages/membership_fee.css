@@ -1,0 +1,90 @@
+/**
+ * Membership fee payment dates — status display + SWAL record (today).
+ */
+.membership-fee-status--profile {
+	border-radius: 0.5rem;
+	padding: 1rem 1.15rem;
+	margin-bottom: 0.75rem;
+}
+
+.membership-fee-status--profile.membership-fee-status--paid {
+	background: #f0fdf4;
+	border: 1px solid #bbf7d0;
+}
+
+.membership-fee-status--profile.membership-fee-status--unpaid {
+	background: #fff5f5;
+	border: 2px solid #f1aeb5;
+	box-shadow: 0 0 0 1px rgba(220, 53, 69, 0.08);
+}
+
+.membership-fee-status__head {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+}
+
+.membership-fee-status__icon {
+	font-size: 1.75rem;
+	line-height: 1;
+}
+
+.membership-fee-status--paid .membership-fee-status__icon {
+	color: #198754;
+}
+
+.membership-fee-status--unpaid .membership-fee-status__icon {
+	color: #dc3545;
+}
+
+.membership-fee-status__label {
+	font-weight: 700;
+	font-size: 1.05rem;
+}
+
+.membership-fee-status__year {
+	color: #6c757d;
+	font-size: 0.9rem;
+}
+
+.membership-fee-status__message {
+	margin-top: 0.65rem;
+	font-size: 0.95rem;
+}
+
+.membership-fee-status__message--unpaid {
+	color: #842029;
+	font-size: 1rem;
+}
+
+.membership-fee-panel__title {
+	font-weight: 700;
+	margin-bottom: 0.75rem;
+}
+
+.membership-fee-cell__check {
+	color: #198754;
+	font-size: 1.35rem;
+	line-height: 1;
+}
+
+.membership-fee-cell__warning {
+	font-size: 1.25rem;
+	line-height: 1;
+}
+
+.membership-fee-cell__date {
+	margin-top: 0.2rem;
+}
+
+.membership-fee-record-btn {
+	font-weight: 600;
+}
+
+.membership-fee-record-btn .fa {
+	font-size: 0.95rem;
+}
+
+.membership-fee-hidden-form {
+	display: none !important;
+}

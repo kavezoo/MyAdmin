@@ -6,8 +6,6 @@ namespace App\Controller\Clubpresident;
 use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
 use App\Service\MembershipService;
-use ArrayIterator;
-use Cake\Datasource\Paging\PaginatedResultSet;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
@@ -17,6 +15,8 @@ use Cake\Http\Response;
  */
 class ApplicantsController extends AppController
 {
+    private const APPLICANTS_ENABLED_ONLY_SESSION_KEY = 'Clubpresident.Applicants.enabled_only';
+
     /**
      * Pending applicants for this club.
      *
@@ -37,13 +37,18 @@ class ApplicantsController extends AppController
 
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->fetchTable('Users');
+        $applicantsEnabledOnly = $this->resolveApplicantsEnabledOnly();
+        $where = [
+            'Users.role' => AppRoles::NEW,
+            'Users.club_id' => $clubId,
+            'Users.membership_status' => MembershipProfile::STATUS_PENDING,
+            'Users.active' => 1,
+        ];
+        if ($applicantsEnabledOnly) {
+            $where['Users.enabled'] = 1;
+        }
         $query = $users->find()
-            ->where([
-                'Users.role' => AppRoles::NEW,
-                'Users.club_id' => $clubId,
-                'Users.membership_status' => MembershipProfile::STATUS_PENDING,
-                'Users.active' => 1,
-            ])
+            ->where($where)
             ->orderBy(['Users.modified' => 'DESC', 'Users.created' => 'DESC']);
 
         $clubName = '';
@@ -60,7 +65,36 @@ class ApplicantsController extends AppController
             'limit' => 50,
             'maxLimit' => 200,
         ]));
-        $this->set(compact('clubName', 'clubId'));
+        $this->set(compact('clubName', 'clubId', 'applicantsEnabledOnly'));
+    }
+
+    /**
+     * Index filter: only `enabled=1` applicants (default) or all pending including rejected.
+     *
+     * Query `enabled_only=1|0` → session; otherwise last session value; first visit → true.
+     */
+    protected function resolveApplicantsEnabledOnly(): bool
+    {
+        $session = $this->request->getSession();
+        $query = $this->request->getQueryParams();
+
+        if (array_key_exists('enabled_only', $query)) {
+            $raw = $query['enabled_only'];
+            if (is_array($raw)) {
+                $raw = end($raw);
+            }
+            $enabledOnly = in_array((string)$raw, ['1', 'true', 'on'], true);
+            $session->write(self::APPLICANTS_ENABLED_ONLY_SESSION_KEY, $enabledOnly);
+
+            return $enabledOnly;
+        }
+
+        $saved = $session->read(self::APPLICANTS_ENABLED_ONLY_SESSION_KEY);
+        if ($saved === null) {
+            return true;
+        }
+
+        return (bool)$saved;
     }
 
     /**
@@ -85,6 +119,7 @@ class ApplicantsController extends AppController
                 'Users.role' => AppRoles::NEW,
                 'Users.club_id' => $clubId,
                 'Users.membership_status' => MembershipProfile::STATUS_PENDING,
+                'Users.enabled' => 1,
             ])
             ->first();
         if ($applicant === null) {
@@ -113,57 +148,54 @@ class ApplicantsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    protected function presidentClubId(): int
+    /**
+     * Reject applicant → users.enabled = false (cannot log in again).
+     *
+     * @param string|null $id User id
+     * @return \Cake\Http\Response|null
+     */
+    public function reject(?string $id = null): ?Response
     {
-        $identity = $this->getRequest()->getAttribute('identity');
-        if ($identity === null) {
-            return 0;
-        }
-
-        $clubId = 0;
-        if (method_exists($identity, 'get')) {
-            $clubId = (int)($identity->get('club_id') ?? 0);
-        }
-        if ($clubId > 0) {
-            return $clubId;
-        }
-
-        $userId = '';
-        if (method_exists($identity, 'getIdentifier')) {
-            $userId = (string)$identity->getIdentifier();
-        } elseif (method_exists($identity, 'get')) {
-            $userId = (string)($identity->get('id') ?? '');
-        }
-        if ($userId === '') {
-            return 0;
+        $this->request->allowMethod(['post', 'put', 'patch']);
+        $clubId = $this->presidentClubId();
+        if ($clubId < 1) {
+            throw new ForbiddenException(__('Your account is not assigned to a club yet.'));
         }
 
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->fetchTable('Users');
-        $row = $users->find()
-            ->select(['club_id'])
-            ->where(['Users.id' => $userId])
+        $applicant = $users->find()
+            ->where([
+                'Users.id' => (string)$id,
+                'Users.role' => AppRoles::NEW,
+                'Users.club_id' => $clubId,
+                'Users.membership_status' => MembershipProfile::STATUS_PENDING,
+                'Users.enabled' => 1,
+            ])
             ->first();
+        if ($applicant === null) {
+            throw new NotFoundException(__('Applicant not found.'));
+        }
 
-        return $row !== null ? (int)($row->get('club_id') ?? 0) : 0;
-    }
+        $rejecterId = '';
+        $identity = $this->getRequest()->getAttribute('identity');
+        if ($identity !== null && method_exists($identity, 'getIdentifier')) {
+            $rejecterId = (string)$identity->getIdentifier();
+        } elseif ($identity !== null && method_exists($identity, 'get')) {
+            $rejecterId = (string)($identity->get('id') ?? '');
+        }
+        if ($rejecterId === '') {
+            throw new ForbiddenException(__('You must be logged in.'));
+        }
+        $rejecter = $users->get($rejecterId);
 
-    /**
-     * Empty paginated set for index_pagination (CakePHP 5 PaginatorHelper).
-     */
-    protected function emptyPaginated(int $limit = 50): PaginatedResultSet
-    {
-        return new PaginatedResultSet(new ArrayIterator([]), [
-            'count' => 0,
-            'totalCount' => 0,
-            'perPage' => $limit,
-            'currentPage' => 1,
-            'pageCount' => 1,
-            'start' => 0,
-            'end' => 0,
-            'hasPrevPage' => false,
-            'hasNextPage' => false,
-            'requestedPage' => 1,
-        ]);
+        $ok = (new MembershipService())->reject($applicant, $rejecter);
+        if ($ok) {
+            $this->Flash->success(__('The application has been rejected. The applicant can no longer log in.'));
+        } else {
+            $this->Flash->error(__('Could not reject this application.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
     }
 }
