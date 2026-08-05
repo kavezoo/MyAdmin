@@ -17,6 +17,7 @@ Rule: `.cursor/rules/admin-countries-index.mdc`
 Form TAB / login: **`country_visibilities`** — [country-visibilities.md](country-visibilities.md).  
 Countries form: **Additional languages** Select2 (saját nyelv mindig tárolva, listában nem).  
 Countries formon **nincs** nyelvi TAB a `name`-hez — a többnyelvű országnevek a seedelt `i18n` fordítások; a formon egyetlen Name mező.  
+Form placeholder / help példák (`iso2`, `name`, `endonim`, `locale`, `timezone`): belépett user regisztrált ország (`Users.country_id`) — `registeredCountryExamples` view var / `AdminCountry::registeredCountryExamples()`.
 Index modal: **Additional languages** kapcsolt linklista (`recordGet` → `additional_languages`).
 
 ---

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Auth;
 
 use App\Model\Entity\EventLog;
+use App\Utility\ActivityLogSetup;
 use Cake\Http\ServerRequest;
 
 /**
@@ -33,7 +34,11 @@ class EventLogAccess
 
     public static function canViewOwn(?ServerRequest $request = null): bool
     {
-        return CurrentUser::role($request) !== '';
+        if (CurrentUser::role($request) === '') {
+            return false;
+        }
+
+        return ActivityLogSetup::usersCanViewOwn(null, $request);
     }
 
     public static function canView(EventLog $log, ?ServerRequest $request = null): bool
@@ -47,7 +52,7 @@ class EventLogAccess
         }
 
         if ($myId !== '' && (string)($log->user_id ?? '') === $myId) {
-            return true;
+            return static::canViewOwn($request);
         }
 
         if (!static::canSearch($request)) {

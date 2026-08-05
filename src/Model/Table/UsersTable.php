@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Auth\MembershipProfile;
+use App\Model\Entity\User;
 use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
-use CakeDC\Users\Model\Entity\User;
 use CakeDC\Users\Model\Table\UsersTable as CakeDCUsersTable;
 
 /**
@@ -36,7 +37,6 @@ class UsersTable extends CakeDCUsersTable
             'foreignKey' => 'club_id',
             'className' => 'Clubs',
             'joinType' => 'LEFT',
-            'conditions' => ['Users.club_id >' => 0],
         ]);
         // Countries.user_count — child (belongsTo) side CounterCache
         $this->addBehavior('CounterCache', [
@@ -57,6 +57,10 @@ class UsersTable extends CakeDCUsersTable
             ->nonNegativeInteger('club_id')
             ->allowEmptyString('club_id');
         $validator
+            ->scalar('avatar')
+            ->maxLength('avatar', 255)
+            ->allowEmptyString('avatar');
+        $validator
             ->scalar('membership_status')
             ->maxLength('membership_status', 20)
             ->allowEmptyString('membership_status');
@@ -74,14 +78,20 @@ class UsersTable extends CakeDCUsersTable
     {
         $validator
             ->requirePresence('first_name')
-            ->notEmptyString('first_name', __('Please enter your first name.'))
+            ->notEmptyString('first_name', __('Please enter your name.'))
             ->maxLength('first_name', 50)
-            ->requirePresence('last_name')
-            ->notEmptyString('last_name', __('Please enter your last name.'))
-            ->maxLength('last_name', 50)
-            ->requirePresence('phone')
-            ->notEmptyString('phone', __('Please enter your phone number.'))
+            ->allowEmptyString('phone')
             ->maxLength('phone', 50)
+            ->add('phone', 'international', [
+                'rule' => static function ($value) {
+                    if ($value === null || $value === '') {
+                        return true;
+                    }
+
+                    return (bool)preg_match('/^\+\d+$/', (string)$value);
+                },
+                'message' => __('Phone must start with + and contain digits only.'),
+            ])
             ->requirePresence('country_id')
             ->notEmptyString('country_id', __('Please select your country.'))
             ->nonNegativeInteger('country_id')
@@ -91,6 +101,58 @@ class UsersTable extends CakeDCUsersTable
             ->greaterThan('club_id', 0, __('Please select your club.'));
 
         return $validator;
+    }
+
+    /**
+     * Logged-in user profile edit (member+).
+     */
+    public function validationProfileEdit(Validator $validator): Validator
+    {
+        $validator
+            ->requirePresence('first_name')
+            ->notEmptyString('first_name', __('Please enter your name.'))
+            ->maxLength('first_name', 50)
+            ->allowEmptyString('phone')
+            ->maxLength('phone', 50)
+            ->add('phone', 'international', [
+                'rule' => static function ($value) {
+                    if ($value === null || $value === '') {
+                        return true;
+                    }
+
+                    return (bool)preg_match('/^\+\d+$/', (string)$value);
+                },
+                'message' => __('Phone must start with + and contain digits only.'),
+            ])
+            ->requirePresence('country_id')
+            ->notEmptyString('country_id', __('Please select your country.'))
+            ->nonNegativeInteger('country_id')
+            ->requirePresence('club_id')
+            ->notEmptyString('club_id', __('Please select your club.'))
+            ->nonNegativeInteger('club_id')
+            ->greaterThan('club_id', 0, __('Please select your club.'));
+
+        return $validator;
+    }
+
+    public function beforeSave(EventInterface $event, EntityInterface $entity, \ArrayObject $options): void
+    {
+        if ($entity->isDirty('first_name')) {
+            $entity->set('first_name', static::formatPersonName($entity->get('first_name')));
+        }
+        if ($entity->isDirty('last_name')) {
+            $entity->set('last_name', static::formatPersonName($entity->get('last_name')));
+        }
+    }
+
+    protected static function formatPersonName(mixed $name): string
+    {
+        $name = trim(preg_replace('/\s+/u', ' ', (string)$name) ?? '');
+        if ($name === '') {
+            return '';
+        }
+
+        return mb_convert_case($name, MB_CASE_TITLE, 'UTF-8');
     }
 
     /**
@@ -198,6 +260,8 @@ class UsersTable extends CakeDCUsersTable
             return $this->Clubs->exists([
                 'Clubs.id' => $clubId,
                 'Clubs.country_id' => $countryId,
+                'Clubs.visible' => true,
+                'Clubs.enabled' => true,
             ]);
         }, 'clubInCountry', [
             'errorField' => 'club_id',

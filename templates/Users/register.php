@@ -52,11 +52,14 @@ $this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => tr
 		<label class="form-label" for="first-name"><?= __('Name') ?></label>
 		<?= $this->Form->control('first_name', [
 			'label' => false,
+			'type' => 'text',
 			'class' => 'form-control',
 			'id' => 'first-name',
 			'required' => true,
 			'placeholder' => __('Name'),
 			'autocomplete' => 'name',
+			'inputmode' => 'text',
+			'autocapitalize' => 'words',
 		]) ?>
 	</div>
 
@@ -70,6 +73,7 @@ $this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => tr
 			'required' => true,
 			'placeholder' => __('Email'),
 			'autocomplete' => 'email',
+			'inputmode' => 'email',
 		]) ?>
 	</div>
 

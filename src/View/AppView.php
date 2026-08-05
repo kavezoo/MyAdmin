@@ -46,7 +46,8 @@ class AppView extends View
             // Plugin unavailable in some CLI contexts.
         }
 
-        if ($this->getRequest()->getParam('prefix') === 'Admin') {
+        if ($this->getRequest()->getParam('prefix') === 'Admin'
+            || strcasecmp((string)$this->getLayout(), 'admin') === 0) {
             // Ensure field errors render under the input (red bold in style.css)
             $this->Form->setTemplates([
                 'error' => '<div class="error-message" id="{{id}}">{{content}}</div>',
@@ -60,7 +61,7 @@ class AppView extends View
     }
 
     /**
-     * Flash as Simple Notify toast (Admin + CakeDC auth / login layout).
+     * Flash as Simple Notify toast (Admin prefix, admin layout, login layout).
      */
     public function usesFlashToast(): bool
     {
@@ -68,6 +69,11 @@ class AppView extends View
             return true;
         }
 
-        return strcasecmp((string)$this->getLayout(), 'login') === 0;
+        $layout = (string)$this->getLayout();
+        if (strcasecmp($layout, 'admin') === 0 || strcasecmp($layout, 'login') === 0) {
+            return true;
+        }
+
+        return false;
     }
 }

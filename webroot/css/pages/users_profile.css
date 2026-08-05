@@ -1,0 +1,65 @@
+/**
+ * Users profile — avatar preview and layout.
+ */
+
+.users-profile-avatar-preview {
+	object-fit: cover;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.users-profile-avatar-preview-wrap .users-profile-avatar-preview,
+.users-profile-avatar-preview-wrap .users-profile-avatar-placeholder {
+	width: 120px;
+	height: 120px;
+}
+
+.users-profile-avatar-placeholder {
+	background: #f1f3f5;
+}
+
+.users-profile-avatar-placeholder-sm {
+	width: 72px;
+	height: 72px;
+}
+
+.users-profile-avatar-hint {
+	font-size: 0.9rem;
+}
+
+.users-profile-club-warning {
+	background-color: #fff5f5;
+}
+
+.users-profile-club-warning-title {
+	color: #b02a37;
+	font-size: 1.05rem;
+}
+
+.users-profile-club-warning-text {
+	color: #842029;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.45;
+}
+
+#profile-form .error-message,
+#profile-form .error-message-list,
+#complete-profile-form .error-message,
+#complete-profile-form .error-message-list,
+.users-form-errors {
+	color: #dc3545;
+}
+
+#profile-form .form-control.is-invalid,
+#profile-form .form-select.is-invalid,
+#complete-profile-form .form-control.is-invalid,
+#complete-profile-form .form-select.is-invalid {
+	border-color: #dc3545;
+}
+
+#profile-form select.is-invalid ~ .select2-container .select2-selection,
+#profile-form .is-invalid + .select2-container .select2-selection,
+#complete-profile-form select.is-invalid ~ .select2-container .select2-selection,
+#complete-profile-form .is-invalid + .select2-container .select2-selection {
+	border-color: #dc3545 !important;
+}

@@ -7,162 +7,227 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Already have an account? Login"
-msgstr "Onko sinulla jo tili? Kirjaudu"
+msgid "Account active"
+msgstr "Tili aktiivinen"
 
-msgid "Back to admin"
-msgstr "Takaisin adminiin"
+msgid "Account enabled"
+msgstr "Tili käytössä"
 
-msgid "Back to login"
-msgstr "Takaisin kirjautumiseen"
+msgid "Activity details"
+msgstr "Toiminnan tiedot"
 
-msgid "Back to profile"
-msgstr "Takaisin profiiliin"
+msgid "Activity log"
+msgstr "Toimintaloki"
 
-msgid "Change password"
-msgstr "Vaihda salasana"
+msgid "Activity logging"
+msgstr "Toimintaloki"
 
-msgid "Choose your country by its local name. The country language becomes the site language for your account."
-msgstr "Valitse maa paikallisella nimellä. Maan kieli tulee tilisi kieleksi."
+msgid "Activity logging enabled"
+msgstr "Toimintaloki käytössä"
 
-msgid "Club"
-msgstr "Seura"
+msgid "Activity logging has been turned off for {0}."
+msgstr "Toimintaloki poistettu käytöstä maalta {0}."
 
-msgid "Complete your profile"
-msgstr "Täydennä profiili"
+msgid "Activity logging has been turned on for {0}."
+msgstr "Toimintaloki otettu käyttöön maalle {0}."
 
-msgid "Confirm password"
-msgstr "Vahvista salasana"
+msgid "Application settings"
+msgstr "Sovellusasetukset"
 
-msgid "Country"
-msgstr "Maa"
+msgid "Approved"
+msgstr "Approved"
 
-msgid "Current password"
-msgstr "Nykyinen salasana"
+msgid "Browse all activity"
+msgstr "Selaa kaikkea toimintaa"
 
-msgid "Email"
-msgstr "Sähköposti"
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Hallitsee «Oma toimintani» -valikkokohtaa tämän maan käyttäjille."
 
-msgid "Email or username"
-msgstr "Sähköposti tai käyttäjänimi"
+msgid "Created"
+msgstr "Luotu"
 
-msgid "Enter your email or username and we will send you a link to reset your password."
-msgstr "Anna sähköposti tai käyttäjänimi; lähetämme salasanan nollauslinkin."
+msgid "Created {0}"
+msgstr "{0} luotu"
 
-msgid "Error"
-msgstr "Virhe"
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
 
-msgid "First name"
-msgstr "Etunimi"
+msgid "Deleted"
+msgstr "Poistettu"
 
-msgid "Forgot password?"
-msgstr "Unohtuiko salasana?"
+msgid "Deleted {0}"
+msgstr "{0} poistettu"
 
-msgid "I accept the terms of service"
-msgstr "Hyväksyn käyttöehdot"
+msgid "Endonym"
+msgstr "Endonyymi"
 
-msgid "Info"
-msgstr "Info"
+msgid "Hide from users"
+msgstr "Piilota käyttäjiltä"
 
-msgid "Language"
-msgstr "Kieli"
+msgid "ISO code"
+msgstr "ISO-koodi"
 
-msgid "Last name"
-msgstr "Sukunimi"
+msgid "Identifier"
+msgstr "Tunniste"
 
-msgid "Log out"
-msgstr "Kirjaudu ulos"
+msgid "Incomplete"
+msgstr "Incomplete"
 
-msgid "Login"
-msgstr "Kirjaudu"
+msgid "Language code"
+msgstr "Kielikoodi"
 
-msgid "Message"
-msgstr "Viesti"
+msgid "Membership status"
+msgstr "Jäsenyyden tila"
 
-msgid "Name"
-msgstr "Nimi"
+msgid "My activity"
+msgstr "Oma toimintani"
 
-msgid "New password"
-msgstr "Uusi salasana"
+msgid "No activity recorded yet."
+msgstr "Toimintaa ei ole vielä tallennettu."
 
-msgid "No results found."
-msgstr "Ei tuloksia."
+msgid "No further details for this entry."
+msgstr "Ei lisätietoja tälle merkinnälle."
 
-msgid "Password"
-msgstr "Salasana"
+msgid "No working country is set."
+msgstr "Työmaata ei ole asetettu."
 
-msgid "Phone"
-msgstr "Puhelin"
+msgid "Off"
+msgstr "Pois"
 
-msgid "Please correct the errors below."
-msgstr "Korjaa alla olevat virheet."
+msgid "On"
+msgstr "Päällä"
 
-msgid "Please enter a valid email."
-msgstr "Anna kelvollinen sähköpostiosoite."
+msgid "Parent record"
+msgstr "Ylätason tietue"
 
-msgid "Please enter your email."
-msgstr "Anna sähköpostiosoitteesi."
+msgid "Pending approval"
+msgstr "Pending approval"
 
-msgid "Please enter your first name."
-msgstr "Anna etunimesi."
+msgid "Record"
+msgstr "Tietue"
 
-msgid "Please enter your last name."
-msgstr "Anna sukunimesi."
+msgid "Sample record"
+msgstr "Esimerkkitietue"
 
-msgid "Please enter your name."
-msgstr "Anna nimesi."
+msgid "Search activity…"
+msgstr "Hae toimintaa…"
 
-msgid "Please fill in the missing details so we can send your membership application to the club president."
-msgstr "Täytä puuttuvat tiedot, jotta voimme lähettää jäsenhakemuksesi seuran presidentille."
+msgid "Settings for {0}"
+msgstr "Asetukset: {0}"
 
-msgid "Please select your country."
-msgstr "Valitse maasi."
+msgid "Show to users"
+msgstr "Näytä käyttäjille"
 
-msgid "Profile"
-msgstr "Profiili"
+msgid "Sign-in"
+msgstr "Kirjautuminen"
 
-msgid "Register"
-msgstr "Rekisteröidy"
+msgid "Signed in"
+msgstr "Kirjautunut"
 
-msgid "Remember me"
-msgstr "Muista minut"
+msgid "Signed out"
+msgstr "Kirjautunut ulos"
 
-msgid "Search..."
-msgstr "Haku..."
+msgid "The setting could not be saved. Please try again."
+msgstr "Asetusta ei voitu tallentaa. Yritä uudelleen."
 
-msgid "Select club..."
-msgstr "Valitse seura..."
+msgid "Timezone"
+msgstr "Aikavyöhyke"
 
-msgid "Select country"
-msgstr "Valitse maa"
+msgid "Turn off logging"
+msgstr "Poista lokitus käytöstä"
 
-msgid "Select country..."
-msgstr "Valitse maa..."
+msgid "Turn on logging"
+msgstr "Ota lokitus käyttöön"
 
-msgid "Select language..."
-msgstr "Valitse kieli..."
+msgid "Updated"
+msgstr "Päivitetty"
 
-msgid "Selected language: {0}"
-msgstr "Valittu kieli: {0}"
+msgid "Updated {0}"
+msgstr "{0} päivitetty"
 
-msgid "Send reset link"
-msgstr "Lähetä nollauslinkki"
+msgid "Updated: {0}"
+msgstr "Päivitetty: {0}"
 
-msgid "Social accounts"
-msgstr "Sosiaalisen median tilit"
+msgid "User account"
+msgstr "Käyttäjätili"
 
-msgid "Submit application"
-msgstr "Lähetä hakemus"
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Käyttäjät eivät voi enää nähdä omaa toimintaansa maassa {0}."
 
-msgid "Success"
-msgstr "Onnistui"
+msgid "Users can now view their own activity in {0}."
+msgstr "Käyttäjät voivat nyt nähdä oman toimintansa maassa {0}."
 
-msgid "The country language (locale) becomes the site language for your account."
-msgstr "Maan kieli (locale) tulee tilisi kieleksi."
+msgid "Users can view own activity log"
+msgstr "Käyttäjät voivat nähdä oman toimintansa"
 
-msgid "Username"
-msgstr "Käyttäjänimi"
+msgid "Users see own activity"
+msgstr "Käyttäjät näkevät oman toimintansa"
 
-msgid "Warning"
-msgstr "Varoitus"
+msgid "What changed"
+msgstr "Mitä muuttui"
 
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Kun pois päältä, uusia kirjautumisia, uloskirjautumisia tai tietomuutoksia ei tallenneta."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Kun kirjaudut sisään, ulos tai muutat tietojasi."
+
+msgid "Who can edit"
+msgstr "Kuka voi muokata"
+
+msgid "You are not allowed to change this setting."
+msgstr "Sinulla ei ole oikeutta muuttaa tätä asetusta."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Työmaasi — kytkimet koskevat vain tätä maata."
+
+msgid "and more"
+msgstr "ja lisää"
+
+msgid "changed"
+msgstr "muutettu"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "set"
+msgstr "set"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

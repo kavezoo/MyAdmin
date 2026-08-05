@@ -4,33 +4,24 @@
  *
  * @var \App\View\AppView $this
  * @var array<string, array{from?: mixed, to?: mixed}|mixed> $changes
+ * @var string $module
  * @var bool $compact
  */
 use App\Utility\EventLogChanges;
+use App\Utility\EventLogPresenter;
 use App\Utility\EventLogger;
 
 $changes = $changes ?? [];
+$module = (string)($module ?? '');
 $compact = (bool)($compact ?? false);
 if ($changes === []) {
 	return;
 }
 ?>
 <?php if ($compact): ?>
-	<ul class="list-unstyled mb-0 small event-log-changes">
-		<?php foreach ($changes as $field => $pair): ?>
-			<?php
-			$from = is_array($pair) ? ($pair['from'] ?? null) : null;
-			$to = is_array($pair) ? ($pair['to'] ?? null) : $pair;
-			$isSecret = EventLogger::isSecretField((string)$field);
-			?>
-			<li<?= $isSecret ? ' class="text-warning-emphasis"' : '' ?>>
-				<code><?= h((string)$field) ?></code>:
-				<span class="text-muted"><?= h(EventLogChanges::formatValue($from)) ?></span>
-				→
-				<strong><?= h(EventLogChanges::formatValue($to)) ?></strong>
-			</li>
-		<?php endforeach; ?>
-	</ul>
+	<div class="small event-log-changes text-muted mb-0">
+		<?= h(EventLogPresenter::friendlyChangeSummary($changes, $module, 400)) ?>
+	</div>
 <?php else: ?>
 	<div class="table-responsive">
 		<table class="table table-sm table-bordered mb-0 align-middle">
@@ -47,16 +38,18 @@ if ($changes === []) {
 					$from = is_array($pair) ? ($pair['from'] ?? null) : null;
 					$to = is_array($pair) ? ($pair['to'] ?? null) : $pair;
 					$isSecret = EventLogger::isSecretField((string)$field);
+					$label = EventLogPresenter::fieldLabel($module, (string)$field);
 					?>
 					<tr<?= $isSecret ? ' class="table-warning"' : '' ?>>
 						<td>
-							<code><?= h((string)$field) ?></code>
+							<?= h($label) ?>
+							<span class="text-muted small"><code><?= h((string)$field) ?></code></span>
 							<?php if ($isSecret): ?>
 								<span class="badge text-bg-warning"><?= h(__('Secret')) ?></span>
 							<?php endif; ?>
 						</td>
-						<td><code><?= h(EventLogChanges::formatValue($from)) ?></code></td>
-						<td><code><?= h(EventLogChanges::formatValue($to)) ?></code></td>
+						<td><?= h(EventLogPresenter::formatFieldValue($module, (string)$field, $from)) ?></td>
+						<td><strong><?= h(EventLogPresenter::formatFieldValue($module, (string)$field, $to)) ?></strong></td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>

@@ -7,8 +7,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Account active"
+msgstr "Konto aktiv"
+
+msgid "Account enabled"
+msgstr "Konto aktivert"
+
+msgid "Activity details"
+msgstr "Aktivitetsdetaljer"
+
+msgid "Activity log"
+msgstr "Aktivitetslogg"
+
+msgid "Activity logging"
+msgstr "Aktivitetslogging"
+
+msgid "Activity logging enabled"
+msgstr "Aktivitetslogging aktivert"
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "Aktivitetslogging er slått av for {0}."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "Aktivitetslogging er slått på for {0}."
+
 msgid "Already have an account? Login"
 msgstr "Har du allerede en konto? Logg inn"
+
+msgid "Application settings"
+msgstr "Applikasjonsinnstillinger"
 
 msgid "Back to admin"
 msgstr "Tilbake til admin"
@@ -18,6 +45,9 @@ msgstr "Tilbake til innlogging"
 
 msgid "Back to profile"
 msgstr "Tilbake til profil"
+
+msgid "Browse all activity"
+msgstr "Bla gjennom all aktivitet"
 
 msgid "Change password"
 msgstr "Endre passord"
@@ -34,17 +64,35 @@ msgstr "Fullfør profilen"
 msgid "Confirm password"
 msgstr "Bekreft passord"
 
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Styrer menyelementet «Min aktivitet» for brukere i dette landet."
+
 msgid "Country"
 msgstr "Land"
 
+msgid "Created"
+msgstr "Opprettet"
+
+msgid "Created {0}"
+msgstr "{0} opprettet"
+
 msgid "Current password"
 msgstr "Nåværende passord"
+
+msgid "Deleted"
+msgstr "Slettet"
+
+msgid "Deleted {0}"
+msgstr "{0} slettet"
 
 msgid "Email"
 msgstr "E-post"
 
 msgid "Email or username"
 msgstr "E-post eller brukernavn"
+
+msgid "Endonym"
+msgstr "Endonym"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Skriv inn e-post eller brukernavn, så sender vi en lenke for å tilbakestille passordet."
@@ -58,14 +106,26 @@ msgstr "Fornavn"
 msgid "Forgot password?"
 msgstr "Glemt passord?"
 
+msgid "Hide from users"
+msgstr "Skjul for brukere"
+
 msgid "I accept the terms of service"
 msgstr "Jeg godtar vilkårene"
+
+msgid "ISO code"
+msgstr "ISO-kode"
+
+msgid "Identifier"
+msgstr "Identifikator"
 
 msgid "Info"
 msgstr "Info"
 
 msgid "Language"
 msgstr "Språk"
+
+msgid "Language code"
+msgstr "Språkkode"
 
 msgid "Last name"
 msgstr "Etternavn"
@@ -76,8 +136,14 @@ msgstr "Logg ut"
 msgid "Login"
 msgstr "Logg inn"
 
+msgid "Membership status"
+msgstr "Medlemsstatus"
+
 msgid "Message"
 msgstr "Melding"
+
+msgid "My activity"
+msgstr "Min aktivitet"
 
 msgid "Name"
 msgstr "Navn"
@@ -85,8 +151,26 @@ msgstr "Navn"
 msgid "New password"
 msgstr "Nytt passord"
 
+msgid "No activity recorded yet."
+msgstr "Ingen aktivitet registrert ennå."
+
+msgid "No further details for this entry."
+msgstr "Ingen flere detaljer for denne oppføringen."
+
 msgid "No results found."
 msgstr "Ingen resultater."
+
+msgid "No working country is set."
+msgstr "Ingen arbeidsland er satt."
+
+msgid "Off"
+msgstr "Av"
+
+msgid "On"
+msgstr "På"
+
+msgid "Parent record"
+msgstr "Overordnet post"
 
 msgid "Password"
 msgstr "Passord"
@@ -121,11 +205,20 @@ msgstr "Velg landet ditt."
 msgid "Profile"
 msgstr "Profil"
 
+msgid "Record"
+msgstr "Post"
+
 msgid "Register"
 msgstr "Registrer"
 
 msgid "Remember me"
 msgstr "Husk meg"
+
+msgid "Sample record"
+msgstr "Eksempelpost"
+
+msgid "Search activity…"
+msgstr "Søk i aktivitet…"
 
 msgid "Search..."
 msgstr "Søk..."
@@ -148,6 +241,21 @@ msgstr "Valgt språk: {0}"
 msgid "Send reset link"
 msgstr "Send tilbakestillingslenke"
 
+msgid "Settings for {0}"
+msgstr "Innstillinger for {0}"
+
+msgid "Show to users"
+msgstr "Vis for brukere"
+
+msgid "Sign-in"
+msgstr "Innlogging"
+
+msgid "Signed in"
+msgstr "Innlogget"
+
+msgid "Signed out"
+msgstr "Utlogget"
+
 msgid "Social accounts"
 msgstr "Sosiale kontoer"
 
@@ -160,9 +268,125 @@ msgstr "Vellykket"
 msgid "The country language (locale) becomes the site language for your account."
 msgstr "Landets språk (locale) blir språket for kontoen din."
 
+msgid "The setting could not be saved. Please try again."
+msgstr "Innstillingen kunne ikke lagres. Prøv igjen."
+
+msgid "Timezone"
+msgstr "Tidssone"
+
+msgid "Turn off logging"
+msgstr "Slå av logging"
+
+msgid "Turn on logging"
+msgstr "Slå på logging"
+
+msgid "Updated"
+msgstr "Oppdatert"
+
+msgid "Updated {0}"
+msgstr "{0} oppdatert"
+
+msgid "Updated: {0}"
+msgstr "Oppdatert: {0}"
+
+msgid "User account"
+msgstr "Brukerkonto"
+
 msgid "Username"
 msgstr "Brukernavn"
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Brukere kan ikke lenger se egen aktivitet i {0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "Brukere kan nå se egen aktivitet i {0}."
+
+msgid "Users can view own activity log"
+msgstr "Brukere kan se egen aktivitet"
+
+msgid "Users see own activity"
+msgstr "Brukere ser egen aktivitet"
 
 msgid "Warning"
 msgstr "Advarsel"
 
+msgid "What changed"
+msgstr "Hva som endret seg"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Når av, registreres ikke nye innlogginger, utlogginger eller dataendringer."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Når du logger inn, logger ut eller endrer dataene dine."
+
+msgid "Who can edit"
+msgstr "Hvem kan redigere"
+
+msgid "You are not allowed to change this setting."
+msgstr "Du har ikke tillatelse til å endre denne innstillingen."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Ditt arbeidsland — bryterne gjelder bare dette landet."
+
+msgid "and more"
+msgstr "og mer"
+
+msgid "changed"
+msgstr "endret"
+
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "set"
+msgstr "set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "Incomplete"
+msgstr "Incomplete"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

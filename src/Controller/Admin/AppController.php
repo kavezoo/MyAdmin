@@ -72,6 +72,7 @@ class AppController extends BaseController
             'controller' => 'Dashboard',
             'action' => 'index',
         ]);
+        $this->set('registeredCountryExamples', AdminCountry::registeredCountryExamples($request));
     }
 
     /**

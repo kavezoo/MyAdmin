@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Utility;
 
+use App\Auth\CurrentUser;
 use Cake\Http\Cookie\Cookie;
 use Cake\Http\Cookie\CookieInterface;
 use Cake\Http\Response;
@@ -35,6 +36,11 @@ class AdminCountry
     public const COOKIE_NAME = 'AdminWorkingCountryId';
 
     public const DEFAULT_ISO2 = 'HU';
+
+    /**
+     * @var array<string, string>|null
+     */
+    protected static ?array $registeredExamplesCache = null;
 
     /**
      * Map non-seed / alias locales to Translate i18n.locale values.
@@ -72,7 +78,7 @@ class AdminCountry
         if ($countries->hasAssociation('Continents') && $countries->Continents->hasBehavior('Translate')) {
             $countries->Continents->getBehavior('Translate')->setLocale($locale);
         }
-        AdminTranslate::applyLocales(['Samples', 'Parents'], $locale);
+        AdminTranslate::applyLocales(['Samples', 'Parents', 'Setups'], $locale);
     }
 
     /**
@@ -278,18 +284,50 @@ class AdminCountry
      */
     public static function options(?string $locale = null): array
     {
-        return static::buildOptions($locale, withLocaleSuffix: false);
+        return static::buildOptions($locale, withLocaleSuffix: false, allVisible: true);
     }
 
     /**
      * Registration / auth select: id => "Name (ISO2) — locale"
      * Distinguishes variants e.g. Franciaország (FR) — fr_FR vs (FX) — en_FX.
+     * Login / language lists: junction-based {@see findLoginVisible}.
      *
      * @return array<int, string>
      */
     public static function optionsWithLocale(?string $locale = null): array
     {
-        return static::buildOptions($locale, withLocaleSuffix: true);
+        return static::buildOptions($locale, withLocaleSuffix: true, allVisible: false);
+    }
+
+    /**
+     * Profile / correction: every `Countries.visible = true` row (not login junction subset).
+     *
+     * @return array<int, string>
+     */
+    public static function visibleOptionsWithLocale(?string $locale = null): array
+    {
+        return static::buildOptions($locale, withLocaleSuffix: true, allVisible: true);
+    }
+
+    /**
+     * Keep only options whose keys are in $countryIds (preserves order of $options).
+     *
+     * @param array<int, string> $options
+     * @param list<int> $countryIds
+     * @return array<int, string>
+     */
+    public static function filterOptionsByCountryIds(array $options, array $countryIds): array
+    {
+        $allowed = array_fill_keys(array_map('intval', $countryIds), true);
+        $filtered = [];
+        foreach ($options as $id => $label) {
+            $id = (int)$id;
+            if (isset($allowed[$id])) {
+                $filtered[$id] = $label;
+            }
+        }
+
+        return $filtered;
     }
 
     /**
@@ -349,12 +387,13 @@ class AdminCountry
     /**
      * @return array<int, string>
      */
-    protected static function buildOptions(?string $locale, bool $withLocaleSuffix): array
+    protected static function buildOptions(?string $locale, bool $withLocaleSuffix, bool $allVisible = false): array
     {
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
+        $finder = $allVisible ? 'visibleTranslated' : 'loginVisible';
         $rows = $countries->find(
-            'loginVisible',
+            $finder,
             locale: $locale ?? I18n::getLocale()
         )->all();
 
@@ -500,6 +539,85 @@ class AdminCountry
             'Countries.id' => $countryId,
             'Countries.visible' => true,
         ]);
+    }
+
+    /**
+     * Placeholder / help-text examples from the logged-in user's registered country (`Users.country_id`).
+     *
+     * @return array{
+     *     country_id: int,
+     *     iso2: string,
+     *     locale: string,
+     *     timezone: string,
+     *     name: string,
+     *     endonim_name: string
+     * }
+     */
+    public static function registeredCountryExamples(?ServerRequest $request = null): array
+    {
+        if (static::$registeredExamplesCache !== null) {
+            return static::$registeredExamplesCache;
+        }
+
+        $request ??= Router::getRequest();
+        $countryId = CurrentUser::countryId($request);
+        if ($countryId < 1) {
+            $countryId = static::defaultCountryId();
+        }
+
+        $fallback = [
+            'country_id' => 0,
+            'iso2' => self::DEFAULT_ISO2,
+            'locale' => 'hu_HU',
+            'timezone' => 'Europe/Budapest',
+            'name' => 'Hungary',
+            'endonim_name' => 'Magyarország',
+        ];
+
+        if ($countryId < 1) {
+            static::$registeredExamplesCache = $fallback;
+
+            return $fallback;
+        }
+
+        /** @var \App\Model\Table\CountriesTable $countries */
+        $countries = (new self())->fetchTable('Countries');
+        $row = $countries->find()
+            ->select([
+                'Countries.id',
+                'Countries.iso2',
+                'Countries.locale',
+                'Countries.timezone',
+                'Countries.name',
+                'Countries.endonim_name',
+            ])
+            ->where(['Countries.id' => $countryId])
+            ->disableHydration()
+            ->first();
+
+        if (!is_array($row)) {
+            static::$registeredExamplesCache = $fallback;
+
+            return $fallback;
+        }
+
+        $iso2 = strtoupper(trim((string)($row['iso2'] ?? '')));
+        $locale = trim((string)($row['locale'] ?? ''));
+        $timezone = trim((string)($row['timezone'] ?? ''));
+        if ($timezone === '' || !AdminTimezone::isValid($timezone)) {
+            $timezone = AdminTimezone::guessForIso2($iso2 !== '' ? $iso2 : self::DEFAULT_ISO2);
+        }
+
+        static::$registeredExamplesCache = [
+            'country_id' => (int)$row['id'],
+            'iso2' => $iso2 !== '' ? $iso2 : $fallback['iso2'],
+            'locale' => $locale !== '' ? $locale : $fallback['locale'],
+            'timezone' => $timezone,
+            'name' => trim((string)($row['name'] ?? '')),
+            'endonim_name' => trim((string)($row['endonim_name'] ?? '')),
+        ];
+
+        return static::$registeredExamplesCache;
     }
 
     public static function defaultCountryId(): int

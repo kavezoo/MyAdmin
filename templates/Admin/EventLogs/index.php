@@ -40,9 +40,11 @@ $userSearchUrl = (string)($userSearchUrl ?? '');
 
 $baseQuery = $this->request->getQueryParams();
 unset($baseQuery['page']);
+$redirectTarget = $this->request->getRequestTarget();
 ?>
 <div class="row">
 	<div class="col-12 p-2">
+		<?= $this->element('admin/activity_log_setup_toggles', compact('redirectTarget')) ?>
 		<div class="card mb-3 shadow border border-2">
 			<div class="card-header">
 				<div class="float-left">
@@ -160,7 +162,11 @@ unset($baseQuery['page']);
 								<td class="string action"><span class="badge text-bg-secondary"><?= h($eventLog->action) ?></span></td>
 								<td class="string changes">
 									<?php if ($changes !== []): ?>
-										<?= $this->element('admin/event_log_changes', ['changes' => $changes, 'compact' => true]) ?>
+										<?= $this->element('admin/event_log_changes', [
+											'changes' => $changes,
+											'module' => (string)($eventLog->module ?? ''),
+											'compact' => true,
+										]) ?>
 									<?php else: ?>
 										<span class="text-muted"><?= h((string)($eventLog->description ?? '—')) ?></span>
 									<?php endif; ?>

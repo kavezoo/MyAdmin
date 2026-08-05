@@ -6,11 +6,14 @@ namespace App\Model\Table;
 use App\Model\Entity\Setup;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
 use App\Utility\AdminCountry;
+use App\Utility\ActivityLogSetup;
 use App\Utility\SetupEditBy;
+use App\Utility\SetupNameI18n;
 use App\Utility\SetupValue;
 use ArrayObject;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
+use Cake\ORM\Behavior\Translate\EavStrategy;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -27,6 +30,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Setup|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \Cake\ORM\Behavior\TranslateBehavior
  */
 class SetupsTable extends Table
 {
@@ -48,6 +52,12 @@ class SetupsTable extends Table
         $this->setEntityClass(Setup::class);
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Translate', [
+            'strategyClass' => EavStrategy::class,
+            'fields' => ['name'],
+            'defaultLocale' => SetupNameI18n::DEFAULT_LOCALE,
+            'allowEmptyTranslations' => true,
+        ]);
 
         $this->belongsTo('Countries', [
             'foreignKey' => 'country_id',
@@ -301,6 +311,10 @@ class SetupsTable extends Table
 
                     return null;
                 }
+                $nameMsgid = trim((string)($rowData['name'] ?? ''));
+                if ($nameMsgid !== '') {
+                    SetupNameI18n::seedForEntity($this, $entity, $nameMsgid);
+                }
                 if ($countryId === $primaryCountryId) {
                     $primary = $entity;
                 }
@@ -313,6 +327,98 @@ class SetupsTable extends Table
         }
 
         return $primary;
+    }
+
+    /**
+     * Ensure activity-log setup slugs exist for visible countries (or one country).
+     */
+    public function ensureActivityLogSetups(?int $countryId = null): void
+    {
+        if ($countryId !== null && $countryId > 0) {
+            $this->ensureActivityLogSetupForCountry($countryId);
+
+            return;
+        }
+
+        foreach (AdminCountry::visibleIds() as $id) {
+            $this->ensureActivityLogSetupForCountry((int)$id);
+        }
+    }
+
+    /**
+     * @return \App\Model\Entity\Setup|null
+     */
+    public function findBySlugAndCountry(string $slug, int $countryId): ?Setup
+    {
+        $slug = strtolower(trim($slug));
+        if ($slug === '' || $countryId < 1 || !SetupValue::isValidSlug($slug)) {
+            return null;
+        }
+
+        return $this->find()
+            ->where([
+                'Setups.slug' => $slug,
+                'Setups.country_id' => $countryId,
+            ])
+            ->first();
+    }
+
+    /**
+     * Flip a boolean setup value for a country. Returns new bool state or null on failure.
+     */
+    public function toggleBoolean(int $countryId, string $slug): ?bool
+    {
+        $this->ensureActivityLogSetupForCountry($countryId);
+        $setup = $this->findBySlugAndCountry($slug, $countryId);
+        if ($setup === null) {
+            return null;
+        }
+
+        $current = (bool)SetupValue::cast(
+            (string)$setup->get('type'),
+            (string)($setup->get('value') ?? '0')
+        );
+        $new = !$current;
+        $setup = $this->patchEntity($setup, [
+            'value' => $new ? '1' : '0',
+        ], [
+            'fields' => ['value'],
+        ]);
+        if ($setup->hasErrors() || !$this->save($setup)) {
+            return null;
+        }
+
+        return $new;
+    }
+
+    protected function ensureActivityLogSetupForCountry(int $countryId): void
+    {
+        if ($countryId < 1) {
+            return;
+        }
+
+        foreach (ActivityLogSetup::definitions() as $slug => $def) {
+            if ($this->exists(['slug' => $slug, 'country_id' => $countryId])) {
+                continue;
+            }
+
+            $entity = $this->newEmptyEntity();
+            $this->applySchemaDefaults($entity);
+            $entity = $this->patchEntity($entity, [
+                'country_id' => $countryId,
+                'name' => $def['name'],
+                'slug' => $slug,
+                'type' => $def['type'],
+                'value' => $def['value'],
+                'edit_by' => $def['edit_by'],
+                'visible' => $def['visible'],
+            ]);
+            if (!$entity->hasErrors()) {
+                if ($this->save($entity, ['checkRules' => false])) {
+                    SetupNameI18n::seedForEntity($this, $entity, (string)$def['name']);
+                }
+            }
+        }
     }
 
     /**

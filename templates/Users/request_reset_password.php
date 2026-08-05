@@ -22,12 +22,14 @@ $this->assign('title', __('Forgot password?'));
 		<label class="form-label" for="reference"><?= __('Email or username') ?></label>
 		<?= $this->Form->control('reference', [
 			'label' => false,
+			'type' => 'email',
 			'class' => 'form-control',
 			'id' => 'reference',
 			'required' => true,
 			'autofocus' => true,
 			'placeholder' => __('Email or username'),
 			'autocomplete' => 'username',
+			'inputmode' => 'email',
 		]) ?>
 	</div>
 

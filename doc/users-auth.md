@@ -16,14 +16,14 @@ Ez a dokumentum a **MyAdmin-ban összerakott** auth / regisztráció / szerepkö
 | Terület | Rögzített minta |
 |---------|-----------------|
 | Login layout | ValiAdmin CDN + `login-box local-login` + `.local-login-form` flow; **nincs** box-logo |
-| Flash | Simple Notify toast (`usesFlashToast`) — Adminmal azonos |
+| Flash | Simple Notify toast — `Admin` prefix, **`admin` layout** (profil, tevékenységnapló), `login` layout |
 | App Users | `Users.controller` / `Users.table` = App; templatek `templates/Users/` |
 | Permissions | **ne** `'plugin' => false` App Usersre; `SanitizeAuthRedirectMiddleware` |
 | Ország + locale | Login: **nyelv** Select2 + BrowserLocale; Register: **ország** + `users.country_id` — [login-language.md](login-language.md) |
 | Login azonosító | **email** (nem username) — Form authenticator `fields.username` → `email` |
 | Belépés kapu | CakeDC `active` **és** app `enabled` (`findActive`); session közben is |
-| Eseménynapló | `event_logs` — saját lista minden usernek; officer ország-kereső — [event-logs.md](event-logs.md) |
-| Profil | `admin` layout + view stílusú `dl`; header: Belépve / Profile / My event log / Change password / Logout |
+| Eseménynapló / tevékenység | `event_logs` — saját lista ha `users_activity_log_visible`; officer kereső — [event-logs.md](event-logs.md) |
+| Profil | `admin` layout; member+ szerkeszthető profil + avatár — §6.1 |
 | Tagság onboarding | `new` → kötelező `/complete-profile` → clubpresident Approve → `member` — [membership.md](membership.md) |
 | URL nyelv | **nincs** `/{lang}/…` — locale session / user ország |
 | Panel chrome | ugyanaz az `admin` layout (header / sidebar / breadcrumb / content) minden szerepkör-prefixen |
@@ -49,7 +49,7 @@ Ez a dokumentum a **MyAdmin-ban összerakott** auth / regisztráció / szerepkö
 | Regisztráció | `/register` | `login` | **ország** (első) → név → email → jelszó → confirm → role=`new` |
 | Elfelejtett jelszó | `/request-reset-password` | `login` | reference |
 | Profil | `/profile` | **`admin`** | view-stílusú adatlap; vissza a role panel Dashboardjára |
-| Profil kiegészítés | `/complete-profile` | **`admin`** | kötelező `new` role-nak (first/last/phone/country/club) — [membership.md](membership.md) |
+| Profil kiegészítés | `/complete-profile` | **`admin`** | kötelező `new` role-nak (név/phone/country/club) — [membership.md](membership.md) |
 | Jelszócsere | `/change-password` | `login` | current + new + confirm |
 
 Kinézet: **ValiAdmin** + `users_auth.css`. Minta: `login-box local-login` + `.local-login-form` (ne `.login-form` — ValiAdmin elrejti). Flash: Simple Notify.
@@ -162,7 +162,11 @@ foreach ($panelPrefixes as $prefix) {
 ## 5. Login / register részletek
 
 - Login: **nyelv** Select2 a POST-on kívül (`?locale=`); feliratok: **aktuális nyelven + (endoním)** (pl. Angol (English)); csak látható országok locale-jai. Részlet: [login-language.md](login-language.md).
-- Login: email mező (`type=email`).
+- Login: email mező (`type=email`, `inputmode=email`); jelszó (`type=password`, `autocomplete=current-password`).
+- Register: név (`inputmode=text`, `autocapitalize=words`); email (`inputmode=email`); jelszó (`type=password`, `autocomplete=new-password`).
+- Reset jelszó: `reference` (`type=email`, `inputmode=email`).
+- Complete-profile / profile: név (`autocapitalize=words`); telefon (`type=tel`, `inputmode=tel`). Profil szerkesztés: egy **Name** mező (`first_name`), mint regisztráción.
+- Mobil billentyűzet: `type` + `inputmode` + `autocomplete` a Users auth űrlapokon.
 - Register: **ország** Select2 — címke = `endonim_name`, csak `Countries.visible = true`; `normalizeRegistrationData` (username←email); `country_id` kötelező; **ne** duplikáld a `nonNegativeInteger` szabályt a `validationRegister`-ben.
 - Locale login után: **login session/cookie nyelv** (`?locale=` / POST `locale`), fallback: user `country_id` → `Countries.locale` → `BrowserLocale::persist` (`AppUiLocale` ≥ 1 év) + panel `forLoggedIn`.
 
@@ -186,6 +190,18 @@ Session közben `RequireUserEnabledMiddleware` kidobja a usert, ha `enabled` (va
 2. Profile / Change password / Log out — `.dropdown-item.notify-item`, **0.9rem** (mint a többi header legördülő)
 3. `.profile-dropdown`: min ~280px, max ~420px
 
+### 6.1 Profile oldal (`/users/profile`)
+
+- **Minden érvényes role** (beleértve `new`): szerkeszthető — kötelező: **név**, ország, klub; **opcionális** telefon (`+` majd csak számjegyek).
+- Validációs hiba: piros összefoglaló a form felett + mező alatti `error-message` + toast konkrét szöveggel.
+- **Role `new` + hiányos profil:** `/complete-profile` továbbra is kötelező (New panel redirect).
+- **Role `new` (klubváltás / pending):** csak `/new` prefix + profil/auth URL-ek; `RestrictNewRoleMiddleware` — más prefix → `/new`.
+- Névmezők title-case mentéskor.
+- **Profilkép:** minden role; ajánlott **1000×1000 px** négyzetes; törlés SweetAlert + `deleteAvatar` POST.
+- Fájl: `uploads/avatars/{user.id}.jpg` (pl. UUID); DB: `users.avatar` (ugyanaz az útvonal).
+- **Entitás:** `App\Model\Entity\User` — CakeDC `_getAvatar()` helyett DB útvonal (+ social fallback); header + profil preview `UserAvatar::publicUrlFor`.
+- **Klubváltás:** más klub mentése → `role=new`, pending jelentkezés, clubpresident értesítés; piros figyelmeztetés + SWAL — [membership.md](membership.md).
+
 ---
 
 ## 7. Middleware
@@ -193,7 +209,7 @@ Session közben `RequireUserEnabledMiddleware` kidobja a usert, ha `enabled` (va
 ```
 ErrorHandler → HostHeader → SanitizeAuthRedirect → Asset → Routing
 → Locale → BodyParser → NormalizeLocalizedDate → NormalizeLocalizedNumber → Csrf
-→ (CakeDC) Authentication → Authorization → RequireUserEnabled
+→ (CakeDC) Authentication → Authorization → RequireUserEnabled → **RestrictNewRole**
 ```
 
 `LocaleMiddleware`: mindig `BrowserLocale::resolve` (+ `AppUiLocale` cookie megújítás ≥ 1 év); panel AppController finomít `forLoggedIn`-nel.

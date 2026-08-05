@@ -7,162 +7,227 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Already have an account? Login"
-msgstr "Al een account? Inloggen"
+msgid "Account active"
+msgstr "Account actief"
 
-msgid "Back to admin"
-msgstr "Terug naar admin"
+msgid "Account enabled"
+msgstr "Account ingeschakeld"
 
-msgid "Back to login"
-msgstr "Terug naar inloggen"
+msgid "Activity details"
+msgstr "Activiteitsdetails"
 
-msgid "Back to profile"
-msgstr "Terug naar profiel"
+msgid "Activity log"
+msgstr "Activiteitenlogboek"
 
-msgid "Change password"
-msgstr "Wachtwoord wijzigen"
+msgid "Activity logging"
+msgstr "Activiteitslogboek"
 
-msgid "Choose your country by its local name. The country language becomes the site language for your account."
-msgstr "Kies je land op de lokale naam. De landtaal wordt de taal van je account."
+msgid "Activity logging enabled"
+msgstr "Activiteitslogboek ingeschakeld"
 
-msgid "Club"
-msgstr "Club"
+msgid "Activity logging has been turned off for {0}."
+msgstr "Activiteitslogboek uitgeschakeld voor {0}."
 
-msgid "Complete your profile"
-msgstr "Profiel voltooien"
+msgid "Activity logging has been turned on for {0}."
+msgstr "Activiteitslogboek ingeschakeld voor {0}."
 
-msgid "Confirm password"
-msgstr "Bevestig wachtwoord"
+msgid "Application settings"
+msgstr "Applicatie-instellingen"
 
-msgid "Country"
-msgstr "Land"
+msgid "Approved"
+msgstr "Approved"
 
-msgid "Current password"
-msgstr "Huidig wachtwoord"
+msgid "Browse all activity"
+msgstr "Alle activiteit doorbladeren"
 
-msgid "Email"
-msgstr "E-mail"
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Bepaalt het menu-item « Mijn activiteit » voor gebruikers in dit land."
 
-msgid "Email or username"
-msgstr "E-mail of gebruikersnaam"
+msgid "Created"
+msgstr "Aangemaakt"
 
-msgid "Enter your email or username and we will send you a link to reset your password."
-msgstr "Voer uw e-mail of gebruikersnaam in; we sturen een link om uw wachtwoord te resetten."
+msgid "Created {0}"
+msgstr "{0} aangemaakt"
 
-msgid "Error"
-msgstr "Fout"
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
 
-msgid "First name"
-msgstr "Voornaam"
+msgid "Deleted"
+msgstr "Verwijderd"
 
-msgid "Forgot password?"
-msgstr "Wachtwoord vergeten?"
+msgid "Deleted {0}"
+msgstr "{0} verwijderd"
 
-msgid "I accept the terms of service"
-msgstr "Ik accepteer de gebruiksvoorwaarden"
+msgid "Endonym"
+msgstr "Endoniem"
 
-msgid "Info"
-msgstr "Info"
+msgid "Hide from users"
+msgstr "Verbergen voor gebruikers"
 
-msgid "Language"
-msgstr "Taal"
+msgid "ISO code"
+msgstr "ISO-code"
 
-msgid "Last name"
-msgstr "Achternaam"
+msgid "Identifier"
+msgstr "Identificatie"
 
-msgid "Log out"
-msgstr "Uitloggen"
+msgid "Incomplete"
+msgstr "Incomplete"
 
-msgid "Login"
-msgstr "Inloggen"
+msgid "Language code"
+msgstr "Taalcode"
 
-msgid "Message"
-msgstr "Bericht"
+msgid "Membership status"
+msgstr "Lidmaatschstatus"
 
-msgid "Name"
-msgstr "Naam"
+msgid "My activity"
+msgstr "Mijn activiteit"
 
-msgid "New password"
-msgstr "Nieuw wachtwoord"
+msgid "No activity recorded yet."
+msgstr "Nog geen activiteit geregistreerd."
 
-msgid "No results found."
-msgstr "Geen resultaten gevonden."
+msgid "No further details for this entry."
+msgstr "Geen verdere details voor dit item."
 
-msgid "Password"
-msgstr "Wachtwoord"
+msgid "No working country is set."
+msgstr "Geen werkland ingesteld."
 
-msgid "Phone"
-msgstr "Telefoon"
+msgid "Off"
+msgstr "Uit"
 
-msgid "Please correct the errors below."
-msgstr "Corrigeer de onderstaande fouten."
+msgid "On"
+msgstr "Aan"
 
-msgid "Please enter a valid email."
-msgstr "Voer een geldig e-mailadres in."
+msgid "Parent record"
+msgstr "Bovenliggend record"
 
-msgid "Please enter your email."
-msgstr "Voer uw e-mailadres in."
+msgid "Pending approval"
+msgstr "Pending approval"
 
-msgid "Please enter your first name."
-msgstr "Voer je voornaam in."
+msgid "Record"
+msgstr "Record"
 
-msgid "Please enter your last name."
-msgstr "Voer je achternaam in."
+msgid "Sample record"
+msgstr "Voorbeeldrecord"
 
-msgid "Please enter your name."
-msgstr "Voer uw naam in."
+msgid "Search activity…"
+msgstr "Activiteit zoeken…"
 
-msgid "Please fill in the missing details so we can send your membership application to the club president."
-msgstr "Vul de ontbrekende gegevens in zodat we je lidmaatschapsaanvraag naar de clubvoorzitter kunnen sturen."
+msgid "Settings for {0}"
+msgstr "Instellingen voor {0}"
 
-msgid "Please select your country."
-msgstr "Selecteer uw land."
+msgid "Show to users"
+msgstr "Tonen aan gebruikers"
 
-msgid "Profile"
-msgstr "Profiel"
+msgid "Sign-in"
+msgstr "Aanmelding"
 
-msgid "Register"
-msgstr "Registreren"
+msgid "Signed in"
+msgstr "Aangemeld"
 
-msgid "Remember me"
-msgstr "Onthoud mij"
+msgid "Signed out"
+msgstr "Uitgelogd"
 
-msgid "Search..."
-msgstr "Zoeken..."
+msgid "The setting could not be saved. Please try again."
+msgstr "Instelling kon niet worden opgeslagen. Probeer opnieuw."
 
-msgid "Select club..."
-msgstr "Selecteer club..."
+msgid "Timezone"
+msgstr "Tijdzone"
 
-msgid "Select country"
-msgstr "Selecteer land"
+msgid "Turn off logging"
+msgstr "Logboek uitschakelen"
 
-msgid "Select country..."
-msgstr "Selecteer land..."
+msgid "Turn on logging"
+msgstr "Logboek inschakelen"
 
-msgid "Select language..."
-msgstr "Selecteer taal..."
+msgid "Updated"
+msgstr "Bijgewerkt"
 
-msgid "Selected language: {0}"
-msgstr "Geselecteerde taal: {0}"
+msgid "Updated {0}"
+msgstr "{0} bijgewerkt"
 
-msgid "Send reset link"
-msgstr "Resetlink verzenden"
+msgid "Updated: {0}"
+msgstr "Bijgewerkt: {0}"
 
-msgid "Social accounts"
-msgstr "Sociale accounts"
+msgid "User account"
+msgstr "Gebruikersaccount"
 
-msgid "Submit application"
-msgstr "Aanvraag indienen"
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Gebruikers kunnen hun activiteit niet meer zien in {0}."
 
-msgid "Success"
-msgstr "Gelukt"
+msgid "Users can now view their own activity in {0}."
+msgstr "Gebruikers kunnen nu hun activiteit zien in {0}."
 
-msgid "The country language (locale) becomes the site language for your account."
-msgstr "De taal van het land (locale) wordt de taal van uw account."
+msgid "Users can view own activity log"
+msgstr "Gebruikers kunnen eigen activiteit zien"
 
-msgid "Username"
-msgstr "Gebruikersnaam"
+msgid "Users see own activity"
+msgstr "Gebruikers zien eigen activiteit"
 
-msgid "Warning"
-msgstr "Waarschuwing"
+msgid "What changed"
+msgstr "Wat is gewijzigd"
 
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Uitgeschakeld: geen nieuwe logins, logouts of datawijzigingen."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Wanneer u inlogt, uitlogt of gegevens wijzigt."
+
+msgid "Who can edit"
+msgstr "Wie kan bewerken"
+
+msgid "You are not allowed to change this setting."
+msgstr "U mag deze instelling niet wijzigen."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Uw werkland — schakelaars gelden alleen voor dit land."
+
+msgid "and more"
+msgstr "en meer"
+
+msgid "changed"
+msgstr "gewijzigd"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "set"
+msgstr "set"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

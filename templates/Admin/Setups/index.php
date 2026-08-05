@@ -23,17 +23,13 @@ $this->Html->css([
 $rowDoubleClickAction = 'modal'; // 'modal' | 'edit' | 'none'
 $numberDecimals = ['integer' => 0, 'decimal' => 2];
 $showIdColumn = true;
-$showVisibleColumn = true;
+$showVisibleColumn = false;
 $showCreatedColumn = true;
 $showModifiedColumn = true;
 $showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
 
-$indexColspan = 6; // name, slug, type, value, edit_by, actions
+$indexColspan = 5; // name, slug, type, value, edit_by, actions
 if ($showIdColumn) {
-	$indexColspan++;
-}
-$indexColspan++; // pos
-if ($showVisibleColumn) {
 	$indexColspan++;
 }
 if ($showTimestampColumn) {
@@ -66,8 +62,6 @@ $config = [
 		'type' => __('Type'),
 		'edit_by' => __('Editable by'),
 		'value' => __('Value'),
-		'pos' => __('Position'),
-		'visible' => __('Visible'),
 		'created' => __('Created'),
 		'modified' => __('Modified'),
 	],
@@ -129,10 +123,6 @@ $setupCount = is_object($setups) && method_exists($setups, 'count')
 							<th scope="col" class="string type"><?= $this->Paginator->sort('type', __('Type')) ?></th>
 							<th scope="col" class="string value"><?= __('Value') ?></th>
 							<th scope="col" class="string edit-by"><?= $this->Paginator->sort('edit_by', __('Editable by')) ?></th>
-							<th scope="col" class="number pos"><?= $this->Paginator->sort('pos', __('Position')) ?></th>
-							<?php if ($showVisibleColumn): ?>
-								<th scope="col" class="boolean visible"><?= $this->Paginator->sort('visible', __('Visible')) ?></th>
-							<?php endif; ?>
 							<?php if ($showTimestampColumn): ?>
 								<th scope="col" class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
 									<?php if ($showCreatedColumn): ?>
@@ -175,14 +165,6 @@ $setupCount = is_object($setups) && method_exists($setups, 'count')
 									<?php endif; ?>
 								</td>
 								<td class="string edit-by"><span class="small"><?= h($editByLabel) ?></span></td>
-								<td class="number pos text-end"><?= h(\App\Utility\LocaleNumberParser::format($setup->pos, decimals: $numberDecimals['integer'])) ?></td>
-								<?php if ($showVisibleColumn): ?>
-									<td class="boolean visible">
-										<?= $setup->visible
-											? '<i class="fa fa-check text-success"></i>'
-											: '<i class="fa fa-times text-danger"></i>' ?>
-									</td>
-								<?php endif; ?>
 								<?php if ($showTimestampColumn): ?>
 									<td class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
 										<?php if ($showCreatedColumn): ?>

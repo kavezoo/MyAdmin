@@ -71,7 +71,7 @@ return [
         [
             'role' => '*',
             'controller' => 'Users',
-            'action' => ['profile', 'completeProfile', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword', 'eventLog', 'eventLogView'],
+            'action' => ['profile', 'completeProfile', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword', 'eventLog', 'eventLogView', 'deleteAvatar'],
         ],
         // Global header search (Admin\Search) — president / vicepresident and above
         [

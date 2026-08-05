@@ -7,8 +7,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Account active"
+msgstr "Llogaria aktive"
+
+msgid "Account enabled"
+msgstr "Llogaria e aktivizuar"
+
+msgid "Activity details"
+msgstr "Detajet e aktivitetit"
+
+msgid "Activity log"
+msgstr "Regjistri i aktivitetit"
+
+msgid "Activity logging"
+msgstr "Regjistrimi i aktivitetit"
+
+msgid "Activity logging enabled"
+msgstr "Regjistrimi i aktivitetit i aktivizuar"
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "Regjistrimi i aktivitetit u çaktivizua për {0}."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "Regjistrimi i aktivitetit u aktivizua për {0}."
+
 msgid "Already have an account? Login"
 msgstr "Keni tashmë një llogari? Hyr"
+
+msgid "Application settings"
+msgstr "Cilësimet e aplikacionit"
 
 msgid "Back to admin"
 msgstr "Kthehu te admin"
@@ -18,6 +45,9 @@ msgstr "Kthehu te hyrja"
 
 msgid "Back to profile"
 msgstr "Kthehu te profili"
+
+msgid "Browse all activity"
+msgstr "Shfletoni të gjithë aktivitetin"
 
 msgid "Change password"
 msgstr "Ndrysho fjalëkalimin"
@@ -34,17 +64,35 @@ msgstr "Plotësoni profilin"
 msgid "Confirm password"
 msgstr "Konfirmo fjalëkalimin"
 
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Kontrollon elementin e menusë «Aktiviteti im» për përdoruesit në këtë vend."
+
 msgid "Country"
 msgstr "Shteti"
 
+msgid "Created"
+msgstr "Krijuar"
+
+msgid "Created {0}"
+msgstr "{0} krijuar"
+
 msgid "Current password"
 msgstr "Fjalëkalimi aktual"
+
+msgid "Deleted"
+msgstr "Fshirë"
+
+msgid "Deleted {0}"
+msgstr "{0} fshirë"
 
 msgid "Email"
 msgstr "Email"
 
 msgid "Email or username"
 msgstr "Email ose emri i përdoruesit"
+
+msgid "Endonym"
+msgstr "Endonim"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Vendosni emailin ose emrin e përdoruesit dhe do t’ju dërgojmë një lidhje për rivendosjen e fjalëkalimit."
@@ -58,14 +106,26 @@ msgstr "Emri"
 msgid "Forgot password?"
 msgstr "Keni harruar fjalëkalimin?"
 
+msgid "Hide from users"
+msgstr "Fshih nga përdoruesit"
+
 msgid "I accept the terms of service"
 msgstr "Pranoj kushtet e shërbimit"
+
+msgid "ISO code"
+msgstr "Kodi ISO"
+
+msgid "Identifier"
+msgstr "Identifikues"
 
 msgid "Info"
 msgstr "Info"
 
 msgid "Language"
 msgstr "Gjuha"
+
+msgid "Language code"
+msgstr "Kodi i gjuhës"
 
 msgid "Last name"
 msgstr "Mbiemri"
@@ -76,8 +136,14 @@ msgstr "Dil"
 msgid "Login"
 msgstr "Hyr"
 
+msgid "Membership status"
+msgstr "Statusi i anëtarësimit"
+
 msgid "Message"
 msgstr "Mesazh"
+
+msgid "My activity"
+msgstr "Aktiviteti im"
 
 msgid "Name"
 msgstr "Emri"
@@ -85,8 +151,26 @@ msgstr "Emri"
 msgid "New password"
 msgstr "Fjalëkalimi i ri"
 
+msgid "No activity recorded yet."
+msgstr "Ende nuk është regjistruar aktivitet."
+
+msgid "No further details for this entry."
+msgstr "Nuk ka detaje të tjera për këtë hyrje."
+
 msgid "No results found."
 msgstr "Nuk u gjetën rezultate."
+
+msgid "No working country is set."
+msgstr "Nuk është vendosur vend pune."
+
+msgid "Off"
+msgstr "Joaktiv"
+
+msgid "On"
+msgstr "Aktiv"
+
+msgid "Parent record"
+msgstr "Regjistrim prind"
 
 msgid "Password"
 msgstr "Fjalëkalimi"
@@ -121,11 +205,20 @@ msgstr "Ju lutemi zgjidhni shtetin."
 msgid "Profile"
 msgstr "Profili"
 
+msgid "Record"
+msgstr "Regjistrim"
+
 msgid "Register"
 msgstr "Regjistrohu"
 
 msgid "Remember me"
 msgstr "Më mbaj mend"
+
+msgid "Sample record"
+msgstr "Regjistrim shembull"
+
+msgid "Search activity…"
+msgstr "Kërko aktivitet…"
 
 msgid "Search..."
 msgstr "Kërko..."
@@ -148,6 +241,21 @@ msgstr "Gjuha e zgjedhur: {0}"
 msgid "Send reset link"
 msgstr "Dërgo lidhjen e rivendosjes"
 
+msgid "Settings for {0}"
+msgstr "Cilësimet për {0}"
+
+msgid "Show to users"
+msgstr "Shfaq te përdoruesit"
+
+msgid "Sign-in"
+msgstr "Hyrje"
+
+msgid "Signed in"
+msgstr "I kyçur"
+
+msgid "Signed out"
+msgstr "I çkyçur"
+
 msgid "Social accounts"
 msgstr "Llogaritë sociale"
 
@@ -160,9 +268,125 @@ msgstr "Sukses"
 msgid "The country language (locale) becomes the site language for your account."
 msgstr "Gjuha e shtetit (locale) bëhet gjuha e llogarisë suaj."
 
+msgid "The setting could not be saved. Please try again."
+msgstr "Cilësimi nuk u ruajt. Provoni përsëri."
+
+msgid "Timezone"
+msgstr "Zona kohore"
+
+msgid "Turn off logging"
+msgstr "Çaktivizo regjistrimin"
+
+msgid "Turn on logging"
+msgstr "Aktivizo regjistrimin"
+
+msgid "Updated"
+msgstr "Përditësuar"
+
+msgid "Updated {0}"
+msgstr "{0} përditësuar"
+
+msgid "Updated: {0}"
+msgstr "Përditësuar: {0}"
+
+msgid "User account"
+msgstr "Llogaria e përdoruesit"
+
 msgid "Username"
 msgstr "Emri i përdoruesit"
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Përdoruesit nuk mund më të shohin aktivitetin e tyre në {0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "Përdoruesit tani mund të shohin aktivitetin e tyre në {0}."
+
+msgid "Users can view own activity log"
+msgstr "Përdoruesit mund të shohin aktivitetin e tyre"
+
+msgid "Users see own activity"
+msgstr "Përdoruesit shohin aktivitetin e tyre"
 
 msgid "Warning"
 msgstr "Paralajmërim"
 
+msgid "What changed"
+msgstr "Çfarë ndryshoi"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Kur është joaktiv, hyrjet, daljet dhe ndryshimet e të dhënave nuk regjistrohen."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Kur hyni, dilni ose ndryshoni të dhënat tuaja."
+
+msgid "Who can edit"
+msgstr "Kush mund të redaktojë"
+
+msgid "You are not allowed to change this setting."
+msgstr "Nuk ju lejohet të ndryshoni këtë cilësim."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Vendi juaj i punës — ndërprerësit vlejnë vetëm për këtë vend."
+
+msgid "and more"
+msgstr "dhe më shumë"
+
+msgid "changed"
+msgstr "ndryshuar"
+
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "set"
+msgstr "set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "Incomplete"
+msgstr "Incomplete"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

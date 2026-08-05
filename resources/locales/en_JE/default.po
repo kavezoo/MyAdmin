@@ -7,162 +7,227 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Already have an account? Login"
-msgstr "Already have an account? Login"
+msgid "Account active"
+msgstr "Account active"
 
-msgid "Back to admin"
-msgstr "Back to admin"
+msgid "Account enabled"
+msgstr "Account enabled"
 
-msgid "Back to login"
-msgstr "Back to login"
+msgid "Activity details"
+msgstr "Activity details"
 
-msgid "Back to profile"
-msgstr "Back to profile"
+msgid "Activity log"
+msgstr "Activity log"
 
-msgid "Change password"
-msgstr "Change password"
+msgid "Activity logging"
+msgstr "Activity logging"
 
-msgid "Choose your country by its local name. The country language becomes the site language for your account."
-msgstr "Choose your country by its local name. The country language becomes the site language for your account."
+msgid "Activity logging enabled"
+msgstr "Activity logging enabled"
 
-msgid "Club"
-msgstr "Club"
+msgid "Activity logging has been turned off for {0}."
+msgstr "Activity logging has been turned off for {0}."
 
-msgid "Complete your profile"
-msgstr "Complete your profile"
+msgid "Activity logging has been turned on for {0}."
+msgstr "Activity logging has been turned on for {0}."
 
-msgid "Confirm password"
-msgstr "Confirm password"
+msgid "Application settings"
+msgstr "Application settings"
 
-msgid "Country"
-msgstr "Country"
+msgid "Approved"
+msgstr "Approved"
 
-msgid "Current password"
-msgstr "Current password"
+msgid "Browse all activity"
+msgstr "Browse all activity"
 
-msgid "Email"
-msgstr "Email"
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Controls the “My activity” menu item for users in this country."
 
-msgid "Email or username"
-msgstr "Email or username"
+msgid "Created"
+msgstr "Created"
 
-msgid "Enter your email or username and we will send you a link to reset your password."
-msgstr "Enter your email or username and we will send you a link to reset your password."
+msgid "Created {0}"
+msgstr "Created {0}"
 
-msgid "Error"
-msgstr "Error"
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
 
-msgid "First name"
-msgstr "First name"
+msgid "Deleted"
+msgstr "Deleted"
 
-msgid "Forgot password?"
-msgstr "Forgot password?"
+msgid "Deleted {0}"
+msgstr "Deleted {0}"
 
-msgid "I accept the terms of service"
-msgstr "I accept the terms of service"
+msgid "Endonym"
+msgstr "Endonym"
 
-msgid "Info"
-msgstr "Info"
+msgid "Hide from users"
+msgstr "Hide from users"
 
-msgid "Language"
-msgstr "Language"
+msgid "ISO code"
+msgstr "ISO code"
 
-msgid "Last name"
-msgstr "Last name"
+msgid "Identifier"
+msgstr "Identifier"
 
-msgid "Log out"
-msgstr "Log out"
+msgid "Incomplete"
+msgstr "Incomplete"
 
-msgid "Login"
-msgstr "Login"
+msgid "Language code"
+msgstr "Language code"
 
-msgid "Message"
-msgstr "Message"
+msgid "Membership status"
+msgstr "Membership status"
 
-msgid "Name"
-msgstr "Name"
+msgid "My activity"
+msgstr "My activity"
 
-msgid "New password"
-msgstr "New password"
+msgid "No activity recorded yet."
+msgstr "No activity recorded yet."
 
-msgid "No results found."
-msgstr "No results found."
+msgid "No further details for this entry."
+msgstr "No further details for this entry."
 
-msgid "Password"
-msgstr "Password"
+msgid "No working country is set."
+msgstr "No working country is set."
 
-msgid "Phone"
-msgstr "Phone"
+msgid "Off"
+msgstr "Off"
 
-msgid "Please correct the errors below."
-msgstr "Please correct the errors below."
+msgid "On"
+msgstr "On"
 
-msgid "Please enter a valid email."
-msgstr "Please enter a valid email."
+msgid "Parent record"
+msgstr "Parent record"
 
-msgid "Please enter your email."
-msgstr "Please enter your email."
+msgid "Pending approval"
+msgstr "Pending approval"
 
-msgid "Please enter your first name."
-msgstr "Please enter your first name."
+msgid "Record"
+msgstr "Record"
 
-msgid "Please enter your last name."
-msgstr "Please enter your last name."
+msgid "Sample record"
+msgstr "Sample record"
 
-msgid "Please enter your name."
-msgstr "Please enter your name."
+msgid "Search activity…"
+msgstr "Search activity…"
 
-msgid "Please fill in the missing details so we can send your membership application to the club president."
-msgstr "Please fill in the missing details so we can send your membership application to the club president."
+msgid "Settings for {0}"
+msgstr "Settings for {0}"
 
-msgid "Please select your country."
-msgstr "Please select your country."
+msgid "Show to users"
+msgstr "Show to users"
 
-msgid "Profile"
-msgstr "Profile"
+msgid "Sign-in"
+msgstr "Sign-in"
 
-msgid "Register"
-msgstr "Register"
+msgid "Signed in"
+msgstr "Signed in"
 
-msgid "Remember me"
-msgstr "Remember me"
+msgid "Signed out"
+msgstr "Signed out"
 
-msgid "Search..."
-msgstr "Search..."
+msgid "The setting could not be saved. Please try again."
+msgstr "The setting could not be saved. Please try again."
 
-msgid "Select club..."
-msgstr "Select club..."
+msgid "Timezone"
+msgstr "Timezone"
 
-msgid "Select country"
-msgstr "Select country"
+msgid "Turn off logging"
+msgstr "Turn off logging"
 
-msgid "Select country..."
-msgstr "Select country..."
+msgid "Turn on logging"
+msgstr "Turn on logging"
 
-msgid "Select language..."
-msgstr "Select language..."
+msgid "Updated"
+msgstr "Updated"
 
-msgid "Selected language: {0}"
-msgstr "Selected language: {0}"
+msgid "Updated {0}"
+msgstr "Updated {0}"
 
-msgid "Send reset link"
-msgstr "Send reset link"
+msgid "Updated: {0}"
+msgstr "Updated: {0}"
 
-msgid "Social accounts"
-msgstr "Social accounts"
+msgid "User account"
+msgstr "User account"
 
-msgid "Submit application"
-msgstr "Submit application"
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
-msgid "Success"
-msgstr "Success"
+msgid "Users can now view their own activity in {0}."
+msgstr "Users can now view their own activity in {0}."
 
-msgid "The country language (locale) becomes the site language for your account."
-msgstr "The country language (locale) becomes the site language for your account."
+msgid "Users can view own activity log"
+msgstr "Users can view own activity log"
 
-msgid "Username"
-msgstr "Username"
+msgid "Users see own activity"
+msgstr "Users see own activity"
 
-msgid "Warning"
-msgstr "Warning"
+msgid "What changed"
+msgstr "What changed"
 
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "When off, new login/logout and data changes are not recorded."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "When you signed in, signed out, or changed your data."
+
+msgid "Who can edit"
+msgstr "Who can edit"
+
+msgid "You are not allowed to change this setting."
+msgstr "You are not allowed to change this setting."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Your working country — toggles apply only to this country."
+
+msgid "and more"
+msgstr "and more"
+
+msgid "changed"
+msgstr "changed"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "set"
+msgstr "set"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

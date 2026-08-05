@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `clubs` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `country_id` int(10) unsigned NOT NULL,
   `name` varchar(150) NOT NULL,
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT 1 COMMENT '0 = not selectable on profile',
   `visible` tinyint(1) NOT NULL DEFAULT 1,
   `pos` int(11) NOT NULL DEFAULT 1000,
   `created` datetime NOT NULL,
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS `clubs` (
   KEY `country_id` (`country_id`),
   KEY `name` (`name`),
   KEY `visible` (`visible`),
+  KEY `enabled` (`enabled`),
   KEY `pos` (`pos`),
   CONSTRAINT `clubs_country_id_fk`
     FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT

@@ -239,41 +239,6 @@ $this->Html->css(['/plugins/tempus-dominus/css/tempus-dominus.min'], ['block' =>
 						</div>
 					</div>
 
-					<div class="row">
-						<div class="col-12 col-xxl-11">
-							<hr class="my-4">
-						</div>
-					</div>
-					<div class="form-group row mb-3">
-						<div class="d-none d-md-block col-md-2"></div>
-						<div class="col-12 col-md-10">
-							<div class="form-check form-switch">
-								<?= $this->Form->checkbox('visible', [
-									'class' => 'form-check-input',
-									'id' => 'visible',
-									'disabled' => $metaReadonly,
-								]) ?>
-								<?= $this->Form->adminLabel('visible', __('Visible'), [
-									'for' => 'visible',
-									'class' => 'form-check-label',
-								]) ?>
-							</div>
-							<?php if ($metaReadonly): ?>
-								<?= $this->Form->hidden('visible') ?>
-							<?php endif; ?>
-							<?= $this->element('admin/field_error', ['field' => 'visible']) ?>
-						</div>
-					</div>
-					<div class="form-group row mb-3">
-						<?= $this->Form->adminLabel('pos', __('Position:'), ['for' => 'pos']) ?>
-						<div class="col-12 col-md-10 col-xl-3">
-							<?= $this->Form->control('pos', \App\Utility\LocaleNumberParser::formIntegerOptions(
-								$setup->pos,
-								['id' => 'pos', 'readonly' => $metaReadonly]
-							)) ?>
-						</div>
-					</div>
-
 				<?= $this->Form->end() ?>
 			</div>
 			<div class="card-footer">

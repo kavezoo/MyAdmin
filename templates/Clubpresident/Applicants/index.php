@@ -7,13 +7,13 @@
  * @var string $clubName
  * @var int $clubId
  */
+use App\Auth\MembershipProfile;
 use App\Utility\AdminCountry;
 
 $this->Html->css(['pages/index'], ['block' => true]);
 $this->assign('title', __('Applicants'));
 
 $clubName = (string)($clubName ?? '');
-$applicants = $applicants ?? [];
 ?>
 <div class="row">
 	<div class="col-12 p-2">
@@ -48,7 +48,7 @@ $applicants = $applicants ?? [];
 							$empty = true;
 							foreach ($applicants as $applicant):
 								$empty = false;
-								$name = trim((string)($applicant->first_name ?? '') . ' ' . (string)($applicant->last_name ?? ''));
+								$name = MembershipProfile::displayName($applicant);
 								if ($name === '') {
 									$name = (string)($applicant->email ?? '');
 								}

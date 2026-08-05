@@ -34,6 +34,7 @@ $canEditFully = (bool)$this->get('canEditFully', false);
 $continents = $continents ?? [];
 $visibleCountryOptions = $visibleCountryOptions ?? [];
 $selfCountryId = (int)($selfCountryId ?? ($isEdit ? (int)$country->id : 0));
+$countryExamples = $registeredCountryExamples ?? \App\Utility\AdminCountry::registeredCountryExamples();
 
 // Options: every other country (own language is always stored, never listed).
 $visibleCountrySelectOptions = [];
@@ -92,6 +93,7 @@ $selectedVisibleIds = array_values(array_filter(
 									'class' => 'form-control text-uppercase',
 									'id' => 'iso2',
 									'maxlength' => 2,
+									'placeholder' => $countryExamples['iso2'],
 								]) ?>
 							</div>
 						</div>
@@ -103,6 +105,7 @@ $selectedVisibleIds = array_values(array_filter(
 									'label' => false,
 									'class' => 'form-control',
 									'id' => 'name',
+									'placeholder' => $countryExamples['name'] !== '' ? $countryExamples['name'] : null,
 								]) ?>
 							</div>
 						</div>
@@ -114,9 +117,14 @@ $selectedVisibleIds = array_values(array_filter(
 									'label' => false,
 									'class' => 'form-control',
 									'id' => 'endonim-name',
+									'placeholder' => $countryExamples['endonim_name'] !== '' ? $countryExamples['endonim_name'] : null,
 								]) ?>
 								<div class="form-text">
-									<?= __('Endonym — how the country name is written in its own language/script (e.g. Magyarország, Россия, 中国).') ?>
+									<?php if ($countryExamples['endonim_name'] !== ''): ?>
+										<?= __('Endonym — how the country name is written in its own language/script (e.g. {0}).', $countryExamples['endonim_name']) ?>
+									<?php else: ?>
+										<?= __('Endonym — how the country name is written in its own language/script.') ?>
+									<?php endif; ?>
 								</div>
 							</div>
 						</div>
@@ -128,7 +136,7 @@ $selectedVisibleIds = array_values(array_filter(
 									'label' => false,
 									'class' => 'form-control',
 									'id' => 'locale',
-									'placeholder' => 'en_GB',
+									'placeholder' => $countryExamples['locale'],
 								]) ?>
 							</div>
 						</div>
@@ -140,10 +148,10 @@ $selectedVisibleIds = array_values(array_filter(
 									'label' => false,
 									'class' => 'form-control',
 									'id' => 'timezone',
-									'placeholder' => 'Europe/Budapest',
+									'placeholder' => $countryExamples['timezone'],
 								]) ?>
 								<div class="form-text">
-									<?= __('IANA timezone used for datetime display for users registered in this country (e.g. Europe/Budapest, Europe/London).') ?>
+									<?= __('IANA timezone used for datetime display for users registered in this country (e.g. {0}).', $countryExamples['timezone']) ?>
 								</div>
 							</div>
 						</div>

@@ -23,7 +23,7 @@ class MembershipProfile
      */
     public static function requiredFields(): array
     {
-        return ['first_name', 'last_name', 'phone', 'country_id', 'club_id'];
+        return ['first_name', 'country_id', 'club_id'];
     }
 
     public static function statusOf(mixed $user): string
@@ -63,6 +63,41 @@ class MembershipProfile
         $role = strtolower(trim((string)(static::value($user, 'role') ?? '')));
 
         return $role === AppRoles::NEW && !static::isComplete($user);
+    }
+
+    /**
+     * Own profile edit + avatar upload (all valid roles, including `new`).
+     */
+    public static function canEditOwnProfile(mixed $user): bool
+    {
+        $role = strtolower(trim((string)(static::value($user, 'role') ?? '')));
+        if ($role === '') {
+            return false;
+        }
+
+        return AppRoles::isValid($role);
+    }
+
+    /**
+     * Display name: registration uses a single `first_name` field.
+     */
+    public static function displayName(mixed $user): string
+    {
+        $first = trim((string)(static::value($user, 'first_name') ?? ''));
+        $last = trim((string)(static::value($user, 'last_name') ?? ''));
+        if ($first !== '' && $last !== '') {
+            return $first . ' ' . $last;
+        }
+
+        return $first !== '' ? $first : $last;
+    }
+
+    /**
+     * True when user switches from one club to another (not first assignment).
+     */
+    public static function isClubSwitch(int $previousClubId, int $newClubId): bool
+    {
+        return $previousClubId > 0 && $newClubId > 0 && $previousClubId !== $newClubId;
     }
 
     public static function wasNotified(mixed $user): bool

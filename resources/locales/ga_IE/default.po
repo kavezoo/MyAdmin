@@ -7,8 +7,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Account active"
+msgstr "Cuntas gníomhach"
+
+msgid "Account enabled"
+msgstr "Cuntas cumasaithe"
+
+msgid "Activity details"
+msgstr "Sonraí gníomhaíochta"
+
+msgid "Activity log"
+msgstr "Log gníomhaíochta"
+
+msgid "Activity logging"
+msgstr "Logáil gníomhaíochta"
+
+msgid "Activity logging enabled"
+msgstr "Logáil gníomhaíochta cumasaithe"
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "Logáil ghníomhaíochta casta as do {0}."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "Logáil ghníomhaíochta casta air do {0}."
+
 msgid "Already have an account? Login"
 msgstr "An bhfuil cuntas agat cheana? Logáil isteach"
+
+msgid "Application settings"
+msgstr "Socruithe feidhmchláir"
 
 msgid "Back to admin"
 msgstr "Ar ais chuig an riarachán"
@@ -18,6 +45,9 @@ msgstr "Ar ais chuig logáil isteach"
 
 msgid "Back to profile"
 msgstr "Ar ais chuig an bpróifíl"
+
+msgid "Browse all activity"
+msgstr "Brabhsáil an ghníomhaíocht go léir"
 
 msgid "Change password"
 msgstr "Athraigh an pasfhocal"
@@ -34,17 +64,35 @@ msgstr "Comhlánaigh do phróifíl"
 msgid "Confirm password"
 msgstr "Deimhnigh an pasfhocal"
 
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Rialaíonn míre roghchláir «Mo ghníomhaíocht» d’úsáideoirí sa tír seo."
+
 msgid "Country"
 msgstr "Tír"
 
+msgid "Created"
+msgstr "Cruthaithe"
+
+msgid "Created {0}"
+msgstr "{0} cruthaithe"
+
 msgid "Current password"
 msgstr "Pasfhocal reatha"
+
+msgid "Deleted"
+msgstr "Scriosta"
+
+msgid "Deleted {0}"
+msgstr "{0} scriosta"
 
 msgid "Email"
 msgstr "Ríomhphost"
 
 msgid "Email or username"
 msgstr "Ríomhphost nó ainm úsáideora"
+
+msgid "Endonym"
+msgstr "Endainm"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Cuir isteach do ríomhphost nó ainm úsáideora agus seolfaimid nasc chun do phasfhocal a athshocrú."
@@ -58,14 +106,26 @@ msgstr "Céadainm"
 msgid "Forgot password?"
 msgstr "Pasfhocal dearmadta?"
 
+msgid "Hide from users"
+msgstr "Folaigh ó úsáideoirí"
+
 msgid "I accept the terms of service"
 msgstr "Glacaim le téarmaí an tseirbhís"
+
+msgid "ISO code"
+msgstr "Cód ISO"
+
+msgid "Identifier"
+msgstr "Aitheantóir"
 
 msgid "Info"
 msgstr "Eolas"
 
 msgid "Language"
 msgstr "Teanga"
+
+msgid "Language code"
+msgstr "Cód teanga"
 
 msgid "Last name"
 msgstr "Sloinne"
@@ -76,8 +136,14 @@ msgstr "Logáil amach"
 msgid "Login"
 msgstr "Logáil isteach"
 
+msgid "Membership status"
+msgstr "Stádas ballraíochta"
+
 msgid "Message"
 msgstr "Teachtaireacht"
+
+msgid "My activity"
+msgstr "Mo ghníomhaíocht"
 
 msgid "Name"
 msgstr "Ainm"
@@ -85,8 +151,26 @@ msgstr "Ainm"
 msgid "New password"
 msgstr "Pasfhocal nua"
 
+msgid "No activity recorded yet."
+msgstr "Níl aon ghníomhaíocht taifeadta fós."
+
+msgid "No further details for this entry."
+msgstr "Níl aon tuilleadh sonraí don iontráil seo."
+
 msgid "No results found."
 msgstr "Níor aimsíodh torthaí."
+
+msgid "No working country is set."
+msgstr "Níl aon tír oibre socraithe."
+
+msgid "Off"
+msgstr "As"
+
+msgid "On"
+msgstr "Ar"
+
+msgid "Parent record"
+msgstr "Taifead tuismitheora"
 
 msgid "Password"
 msgstr "Pasfhocal"
@@ -121,11 +205,20 @@ msgstr "Roghnaigh do thír."
 msgid "Profile"
 msgstr "Próifíl"
 
+msgid "Record"
+msgstr "Taifead"
+
 msgid "Register"
 msgstr "Cláraigh"
 
 msgid "Remember me"
 msgstr "Cuimhnigh orm"
+
+msgid "Sample record"
+msgstr "Taifead samplach"
+
+msgid "Search activity…"
+msgstr "Cuardaigh gníomhaíocht…"
 
 msgid "Search..."
 msgstr "Cuardaigh..."
@@ -148,6 +241,21 @@ msgstr "Teanga roghnaithe: {0}"
 msgid "Send reset link"
 msgstr "Seol nasc athshocraithe"
 
+msgid "Settings for {0}"
+msgstr "Socruithe do {0}"
+
+msgid "Show to users"
+msgstr "Taispeáin d’úsáideoirí"
+
+msgid "Sign-in"
+msgstr "Logáil isteach"
+
+msgid "Signed in"
+msgstr "Logáilte isteach"
+
+msgid "Signed out"
+msgstr "Logáilte amach"
+
 msgid "Social accounts"
 msgstr "Cuntais shóisialta"
 
@@ -160,9 +268,125 @@ msgstr "D’éirigh leis"
 msgid "The country language (locale) becomes the site language for your account."
 msgstr "Beidh teanga na tíre (locale) mar theanga do chuntais."
 
+msgid "The setting could not be saved. Please try again."
+msgstr "Níorbh fhéidir an socrú a shábháil. Bain triail eile as."
+
+msgid "Timezone"
+msgstr "Crios ama"
+
+msgid "Turn off logging"
+msgstr "Múch an logáil"
+
+msgid "Turn on logging"
+msgstr "Cas ar an logáil"
+
+msgid "Updated"
+msgstr "Nuashonraithe"
+
+msgid "Updated {0}"
+msgstr "{0} nuashonraithe"
+
+msgid "Updated: {0}"
+msgstr "Nuashonraithe: {0}"
+
+msgid "User account"
+msgstr "Cuntas úsáideora"
+
 msgid "Username"
 msgstr "Ainm úsáideora"
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Ní féidir le húsáideoirí a ngníomhaíocht féin a fheiceáil a thuilleadh i {0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "Is féidir le húsáideoirí a ngníomhaíocht féin a fheiceáil anois i {0}."
+
+msgid "Users can view own activity log"
+msgstr "Is féidir le húsáideoirí a ngníomhaíocht féin a fheiceáil"
+
+msgid "Users see own activity"
+msgstr "Feiceann úsáideoirí a ngníomhaíocht féin"
 
 msgid "Warning"
 msgstr "Rabhadh"
 
+msgid "What changed"
+msgstr "Cad a d’athraigh"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Nuair atá sé múchta, ní thaifeadtar logáil isteach nua, logáil amach ná athruithe ar shonraí."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Nuair a logálann tú isteach, amach nó nuair a athraíonn tú do shonraí."
+
+msgid "Who can edit"
+msgstr "Cé atá in ann eagarthóireacht a dhéanamh"
+
+msgid "You are not allowed to change this setting."
+msgstr "Níl cead agat an socrú seo a athrú."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Do thír oibre — ní bhaineann na scoránaigh ach leis an tír seo."
+
+msgid "and more"
+msgstr "agus tuilleadh"
+
+msgid "changed"
+msgstr "athraithe"
+
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "set"
+msgstr "set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "Incomplete"
+msgstr "Incomplete"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

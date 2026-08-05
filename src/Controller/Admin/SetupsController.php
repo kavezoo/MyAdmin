@@ -5,9 +5,11 @@ namespace App\Controller\Admin;
 
 use App\Auth\SetupAccess;
 use App\Utility\AdminCountry;
+use App\Utility\AdminTranslate;
 use App\Utility\LocaleDateParser;
 use App\Utility\LocaleNumberParser;
 use App\Utility\SetupEditBy;
+use App\Utility\SetupNameI18n;
 use App\Utility\SetupValue;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
@@ -99,8 +101,6 @@ class SetupsController extends AppController
                 'slug',
                 'type',
                 'edit_by',
-                'pos',
-                'visible',
                 'created',
                 'modified',
             ],
@@ -175,6 +175,7 @@ class SetupsController extends AppController
      */
     public function edit(?string $id = null)
     {
+        AdminTranslate::applyLocale($this->Setups);
         $setup = $this->Setups->get($id);
         $this->rememberLastVisited('Setups', $setup->id);
 
@@ -213,6 +214,12 @@ class SetupsController extends AppController
                 ]);
                 if ($this->Setups->save($setup)) {
                     $this->rememberLastVisited('Setups', $setup->id);
+                    if ($canMeta) {
+                        $nameMsgid = trim((string)($data['name'] ?? $setup->name ?? ''));
+                        if ($nameMsgid !== '') {
+                            SetupNameI18n::seedForEntity($this->Setups, $setup, $nameMsgid);
+                        }
+                    }
                     $this->Flash->success(__('The setup has been saved.'));
 
                     return $this->redirectToIndexList('Setups');
@@ -239,6 +246,7 @@ class SetupsController extends AppController
      */
     public function view(?string $id = null)
     {
+        AdminTranslate::applyLocale($this->Setups);
         $setup = $this->Setups->get($id, contain: ['Countries']);
         $this->rememberLastVisited('Setups', $setup->id);
         $this->set(compact('setup'));
@@ -277,6 +285,7 @@ class SetupsController extends AppController
         $this->request->allowMethod(['get']);
 
         try {
+            AdminTranslate::applyLocale($this->Setups);
             $setup = $this->Setups->get($id);
         } catch (\Throwable $e) {
             return $this->response
@@ -304,8 +313,6 @@ class SetupsController extends AppController
                     'type' => $typeLabels[$type] ?? $type,
                     'edit_by' => SetupEditBy::label($editBy),
                     'value' => SetupValue::formatForDisplay($type, $setup->value),
-                    'pos' => LocaleNumberParser::format($setup->pos, decimals: 0),
-                    'visible' => (bool)$setup->visible,
                     'created' => $setup->created ? LocaleDateParser::format($setup->created, 'datetime_short') : '',
                     'modified' => $setup->modified ? LocaleDateParser::format($setup->modified, 'datetime_short') : '',
                     'can_delete' => SetupAccess::canDelete($this->request),

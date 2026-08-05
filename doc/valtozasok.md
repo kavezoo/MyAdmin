@@ -5,6 +5,333 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-05 — Profil: mezőhibák + opcionális telefon
+
+### Mi változott / miért
+- Toast + piros összefoglaló: konkrét mezőhibák (`EntityFormErrors`, `users/form_errors` element).
+- `AppView`: Form error sablonok minden `admin` layout oldalon (nem csak Admin prefix).
+- Telefon opcionális: profil, complete-profile, `MembershipProfile::requiredFields`, `validationProfileComplete`.
+
+### Érintett
+- `src/Utility/EntityFormErrors.php`, `src/Controller/UsersController.php`, `src/View/AppView.php`
+- `templates/element/users/form_errors.php`, `templates/Users/profile.php`, `templates/Users/complete_profile.php`
+- `webroot/css/pages/users_profile.css`, `webroot/js/pages/complete_profile.js`
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Clubpresident applicants: lapozó hiba
+
+### Mi változott / miért
+- CakePHP 5 `PaginatorHelper` `PaginatedInterface` instance-t vár; üres `[]` applicants → „setPaginated() first” hiba.
+- Nincs klub: `emptyPaginated()`; `presidentClubId()` DB fallback ha a session identity-ben nincs `club_id`.
+
+### Érintett
+- `src/Controller/Clubpresident/ApplicantsController.php`
+- `templates/Clubpresident/Applicants/index.php`
+
+---
+
+## 2026-08-05 — Profil: egy névmező + role `new` szerkesztés + login nyelvek
+
+### Mi változott / miért
+- **Név:** regisztrációval egyezően csak `first_name` (complete-profile, validáció, `MembershipProfile::requiredFields`).
+- **Profil szerkesztés:** `canEditOwnProfile` minden érvényes role-nál (beleértve `new`) — kép, név, ország, klub.
+- **Klubváltás után:** `RestrictNewRoleMiddleware` — role `new` csak `/new` + profil/auth; session `setIdentity` role frissítés.
+- **Login nyelvek üres:** `languages` tábla üres / hiányzó `endonim_name` → fallback ICU; migráció `endonim_name`; seed törli stale `i18n` Languages sorokat.
+
+### Érintett
+- `src/Auth/MembershipProfile.php`, `src/Middleware/RestrictNewRoleMiddleware.php`, `src/Auth/UsersMiddlewareQueueLoader.php`
+- `src/Utility/AdminLanguage.php`, `config/Migrations/20260805120000_AddEndonimNameToLanguages.php`
+- `templates/Users/complete_profile.php`, `templates/element/new/sidebar.php`
+- `doc/users-auth.md`, `doc/membership.md`, `doc/login-language.md`
+
+---
+
+## 2026-08-05 — Profil: alap ország + klub a users rekordból
+
+### Mi változott / miért
+- Profil megnyitáskor ország és klub select a `users.country_id` / `users.club_id` értéket mutatja.
+- `?country_id=` csak **más** ország választásakor üríti a klubot; ugyanaz a query nem nullázza a klubot.
+- Hiányzó ország opció + mentett klub mindig megjelenik a listában (include).
+
+### Érintett
+- `src/Controller/UsersController.php`, `src/Model/Table/ClubsTable.php`
+- `templates/Users/profile.php`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — Klubok: `enabled` + profil lista szűrés
+
+### Mi változott / miért
+- `clubs.enabled` (DEFAULT 1) — profil / complete-profile listában csak `enabled` + `visible` klubok, ország szerint, `pos` → `name`.
+- Üres lista ha az országban nincs ilyen klub; validáció: `clubInCountry` ellenőrzi enabled/visible.
+
+### Érintett
+- `config/schema/clubs.sql`, `config/Migrations/20260805110000_AddEnabledToClubs.php`
+- `src/Model/Table/ClubsTable.php`, `src/Model/Entity/Club.php`, `src/Model/Table/UsersTable.php`
+- `tmp/seed_membership.php`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — Profilkép törlés: SWAL + külső form
+
+### Mi változott / miért
+- Törlés gomb: SweetAlert (warning) „Valóban törölni szeretnéd…?”; megerősítés után POST `deleteAvatar`.
+- Törlő form kikerült a profil `form`-ból (érvényes HTML); fájl + DB `avatar` törlés.
+
+### Érintett
+- `templates/Users/profile.php`, `webroot/js/pages/users_profile.js`
+- `src/Controller/UsersController.php` (`deleteAvatar`)
+- `templates/layout/admin.php`, `tmp/activity_locale_extra.php`
+
+---
+
+## 2026-08-05 — Profil: klubváltás → role `new` + figyelmeztetés + SWAL
+
+### Mi változott / miért
+- Profil mentés más klubra: `role=new`, `membership_status=pending`, clubpresident értesítés, redirect `/new`.
+- Piros figyelmeztető szöveg a klub mezőnél; SweetAlert megerősítés mentés előtt.
+- `MembershipProfile::isClubSwitch`, `MembershipService::onClubChanged`.
+
+### Érintett
+- `src/Controller/UsersController.php`, `src/Service/MembershipService.php`, `src/Auth/MembershipProfile.php`
+- `templates/Users/profile.php`, `webroot/js/pages/users_profile.js`, `webroot/css/pages/users_profile.css`
+- `doc/membership.md`, `doc/users-auth.md`, `tmp/activity_locale_extra.php`
+
+---
+
+## 2026-08-05 — Profilkép: `{user.id}.jpg` + header avatar (UUID)
+
+### Mi változott / miért
+- Fájlnév mindig `uploads/avatars/{user.id}.jpg` (UUID string, nem `(int)` cast).
+- `UserAvatar` string `userId`; `displayPath` először a kanonikus fájlt nézi → header legördülő is mutatja, ha a kép a szerveren van (session `avatar` nélkül is).
+
+### Érintett
+- `src/Utility/UserAvatar.php`, `src/Controller/UsersController.php`
+- `templates/Users/profile.php`, `templates/element/admin/header_profile.php`
+- `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Profil fotó megjelenítés + mentés (CakeDC avatar accessor)
+
+### Mi változott / miért
+- CakeDC `User::_getAvatar()` csak social account képet adott vissza → `users.avatar` nem mentődött / nem jelent meg.
+- `App\Model\Entity\User`: DB `avatar` elsődleges, social fallback; `_setAvatar` mentéshez.
+- `UserAvatar::displayPath` / `publicUrlFor` (cache-buster); profil + header avatar.
+
+### Érintett
+- `src/Model/Entity/User.php` (új)
+- `src/Model/Table/UsersTable.php`, `src/Utility/UserAvatar.php`
+- `templates/Users/profile.php`, `templates/element/admin/header_profile.php`
+- `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Profil telefon: + jel betöltéskor
+
+### Mi változott / miért
+- Profil szerkesztés: mentett telefonszám betöltésekor is `normalizePhoneInput` fut → `3630…` → `+3630…`.
+
+### Érintett
+- `webroot/js/pages/users_profile.js`
+
+---
+
+## 2026-08-05 — Profil mentés: Flash toast (Simple Notify)
+
+### Mi változott / miért
+- Profil / tevékenységnapló (`Users` + `admin` layout) mentés után a siker/hiba üzenet toastként jelenik meg (korábban HTML flash a `<script>` blokkban, láthatóan nem működött).
+- `AppView::usesFlashToast()` — `admin` layout is toast (nem csak `Admin` prefix).
+
+### Érintett
+- `src/View/AppView.php`
+- `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Tevékenységnapló: konkrét from→to értékek
+
+### Mi változott / miért
+- A napló **konkrétan írja**, mit változtatott a user: mezőcím + régi érték → új érték (pl. név, ország, klub).
+- `EventLogValueResolver`: FK (ország, klub), bool, tagság státusz, avatar emberi szöveg.
+- `EventLogBehavior`: Translate `_translations` diff; avatar `[empty]`/`[set]`.
+- User lista összefoglaló nem csak „Frissítve: Név, Telefon”, hanem teljes érték diff.
+
+### Érintett
+- `src/Utility/EventLogValueResolver.php` (új)
+- `src/Utility/EventLogPresenter.php`, `src/Model/Behavior/EventLogBehavior.php`
+- `templates/element/activity_log_changes.php`, `templates/element/admin/event_log_changes.php`
+- `templates/Users/event_log.php`, `templates/Admin/EventLogs/*`
+- `tmp/activity_locale_extra.php`, `doc/event-logs.md`
+
+---
+
+## 2026-08-05 — Tevékenységnapló + Setups: teljes i18n fordítások
+
+### Mi változott / miért
+- Új UI szövegek (activity log, setup toggle, EventLogPresenter) minden visible nyelvre — `tmp/activity_locale_extra.php` + override fájlok, `build_auth_locale_pos.php` merge.
+- Setup `name` i18n újra seedelve a frissített `.po`-kból.
+
+### Érintett
+- `tmp/activity_locale_extra.php`, `activity_locale_overrides_eu.php`, `activity_locale_overrides_rest.php`
+- `tmp/build_auth_locale_pos.php`
+- `resources/locales/*/default.po`, `default.pot`
+- `tmp/seed_setup_name_i18n.php` (futtatva)
+
+---
+
+## 2026-08-05 — Setups: name i18n + pos/visible elrejtve
+
+### Mi változott / miért
+- `Setups.name` Translate EAV; tevékenységnapló setup nevek msgid + `SetupNameI18n` seed (.po fordítások).
+- Index/view/form: `pos` és `visible` nincs a UI-ban; DB DEFAULT marad.
+- Megjelenítés: UI locale (`AdminTranslate::applyLocale`).
+
+### Érintett
+- `src/Model/Table/SetupsTable.php`, `src/Utility/SetupNameI18n.php`
+- `src/Controller/Admin/SetupsController.php`, `src/Utility/AdminTranslate.php`, `AdminCountry.php`
+- `templates/Admin/Setups/index.php`, `form.php`, `view.php`
+- `resources/locales/default.pot`, `hu_HU/default.po`
+- `tmp/seed_setup_name_i18n.php`
+- `doc/setups.md`
+
+---
+
+## 2026-08-05 — Nyelvi TAB tooltip: beragadás javítása
+
+### Mi változott / miért
+- Form nyelvi fülön (Samples, Parents, …) a saját ország TAB tooltip nem tűnt el egérrel — `title` + tab gomb fókusz / `hover focus` trigger ütközés.
+- Tooltip külön `span.js-hover-only-tooltip` a gombon belül; `App.initHoverOnlyTooltips()` + tab váltáskor `hideHoverOnlyTooltipsIn()`.
+
+### Érintett
+- `templates/element/admin/form_language_fields.php`
+- `webroot/js/app.js`, `webroot/js/pages/form.js`
+- `doc/form-i18n-tabs.md`, `.cursor/rules/admin-form-i18n-tabs.mdc`
+
+---
+
+## 2026-08-05 — Tevékenységnapló: Setups ki/be + user-friendly UI
+
+### Mi változott / miért
+- Setups: `activity_logging_enabled`, `users_activity_log_visible` (országonként).
+- `EventLogger` gate; `EventLogAccess::canViewOwn` setup-alapú; profil menü feltételes.
+- User UI: „My activity” időrendi lista + emberi összefoglaló (`EventLogPresenter`); officer index marad technikai.
+- Admin `/admin/event-logs`: working country beállítások kapcsolói (naplózás + user menü láthatóság); `SetupsTable::toggleBoolean`.
+
+### Érintett
+- `src/Utility/ActivityLogSetup.php`, `EventLogPresenter.php`, `EventLogger.php`, `EventLogAccess.php`
+- `src/Controller/Admin/EventLogsController.php`, `src/Model/Table/SetupsTable.php`
+- `templates/Admin/EventLogs/index.php`, `view.php`, `element/admin/activity_log_setup_toggles.php`
+- `templates/Users/event_log.php`, `activity_log_view.php`, `element/activity_log_changes.php`
+- `templates/element/admin/header_profile.php`, `webroot/css/pages/activity_log.css`
+- `tmp/seed_activity_log_setups.php`
+- `doc/event-logs.md`, `doc/setups.md`
+
+---
+
+## 2026-08-05 — Profil mentés: Clubs belongsTo conditions SQL hiba
+
+### Mi változott / miért
+`UsersTable` → `Clubs` belongsTo `conditions` (`Users.club_id > 0`) a `Clubs->exists()` hívásokban is érvényesült → „Unknown column Users.club_id”. Conditions törölve; opcionális klub továbbra is `club_id = 0` + LEFT join.
+
+### Érintett
+- `src/Model/Table/UsersTable.php`
+
+---
+
+## 2026-08-05 — Profil: teljes visible országlista + klub Select2
+
+### Mi változott / miért
+Profil szerkesztés: ország select = minden `visible=true` ország (`visibleOptionsWithLocale`), nem klub-szűrt részhalmaz. Klub select: üres placeholder opció + explicit `value` — Select2 minden országhoz tartozó klubot listáz.
+
+### Érintett
+- `src/Utility/AdminCountry.php`, `src/Controller/UsersController.php`
+- `templates/Users/profile.php`, `complete_profile.php`
+- `webroot/js/pages/users_profile.js`, `complete_profile.js`
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Klub select: országhoz kötött lista + üres állapot
+
+### Mi változott / miért
+Klub lista csak a kiválasztott `country_id` látható klubjait mutatja; ország select csak országok klubbal (+ aktuális). Üres lista: figyelmeztetés + disabled select. Demo seed: SK klub. `ClubsTable::optionsForCountry` + `countryIdsWithVisibleClubs`.
+
+### Érintett
+- `src/Model/Table/ClubsTable.php`, `src/Utility/AdminCountry.php`
+- `src/Controller/UsersController.php`
+- `templates/Users/complete_profile.php`, `templates/Users/profile.php`
+- `tmp/seed_membership.php`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — UsersController::profile szignatúra (CakeDC kompat)
+
+### Mi változott / miért
+`profile($id = null)` — nincs `?string` type hint (CakeDC parent kompat); login Fatal Error megszűnt.
+
+### Érintett
+- `src/Controller/UsersController.php`
+
+---
+
+## 2026-08-05 — Countries form: user ország placeholder példák
+
+### Mi változott / miért
+Ország form mezők (`iso2`, `name`, `endonim`, `locale`, `timezone`) placeholder és help-text példák = belépett user `Users.country_id` ország értékei (`AdminCountry::registeredCountryExamples`). Admin layout minden oldalon kapja a `registeredCountryExamples` view változót.
+
+### Érintett
+- `src/Utility/AdminCountry.php`
+- `src/Controller/Admin/AppController.php`
+- `templates/Admin/Countries/form.php`
+- `doc/countries-admin.md`
+
+---
+
+## 2026-08-05 — Profil szerkesztés: egy névmező (mint regisztráció)
+
+### Mi változott / miért
+`/users/profile` szerkesztő: csak egy **Name** mező (`first_name`), mint a regisztrációs űrlapon — nincs külön keresztnév/vezetéknév.
+
+### Érintett
+- `templates/Users/profile.php`
+- `src/Model/Table/UsersTable.php` (`validationProfileEdit`)
+- `src/Controller/UsersController.php` (`profile` patch mezők)
+- `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Auth űrlapok: mobil billentyűzet típusok
+
+### Mi változott / miért
+Users login/register/reset/complete-profile/profile mezők: `type`, `inputmode`, `autocomplete` (és névmezőknél `autocapitalize=words`) — mobilon megfelelő billentyűzet (email, telefon, jelszó).
+
+### Érintett
+- `templates/Users/login.php`, `register.php`, `request_reset_password.php`, `complete_profile.php`, `profile.php`
+- `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Profil szerkesztés + avatár (member+)
+
+### Mi változott / miért
+- `/users/profile`: saját adatok szerkesztése (`first_name`, `last_name`, opcionális `phone` +/+számok, kötelező `country_id` + `club_id`).
+- Profilkép feltöltés/törlés csak ha `role !== new` (legalább member); ajánlott 1000×1000 px négyzetes; törlés Swal megerősítéssel.
+- `users.avatar` oszlop; fájl: `webroot/uploads/avatars/{id}.jpg`.
+
+### Érintett
+- `config/Migrations/20260805100000_AddAvatarToUsers.php`
+- `src/Utility/UserAvatar.php`, `src/Auth/MembershipProfile.php`
+- `src/Controller/UsersController.php` (`profile`, `deleteAvatar`)
+- `src/Model/Table/UsersTable.php` (`validationProfileEdit`, név title-case)
+- `templates/Users/profile.php`, `webroot/js/pages/users_profile.js`, `webroot/css/pages/users_profile.css`
+- `config/permissions.php`, `templates/layout/admin.php` (Swal msgid)
+- `doc/users-auth.md`
+
+---
+
 ## 2026-08-05 — Users event-log: ne loadComponent('Paginator')
 
 ### Mi változott / miért

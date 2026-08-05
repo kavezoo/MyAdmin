@@ -11,6 +11,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $country_id
  * @property string $name
+ * @property bool $enabled
  * @property bool $visible
  * @property int $pos
  * @property \Cake\I18n\DateTime $created
@@ -25,6 +26,7 @@ class Club extends Entity
     protected array $_accessible = [
         'country_id' => true,
         'name' => true,
+        'enabled' => true,
         'visible' => true,
         'pos' => true,
         'created' => true,

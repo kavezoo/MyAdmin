@@ -42,6 +42,9 @@ if ($decoded !== []) {
 ?>
 <div class="row">
 	<div class="col-12 col-xxl-10 p-2 pt-3">
+		<?= $this->element('admin/activity_log_setup_toggles', [
+			'redirectTarget' => $this->request->getRequestTarget(),
+		]) ?>
 		<?php if ($changes !== []): ?>
 			<div class="card mb-3 shadow border border-2 border-primary">
 				<div class="card-header bg-primary-subtle">
@@ -49,7 +52,11 @@ if ($decoded !== []) {
 					<div class="text-muted small"><?= __('Which fields changed and to what values.') ?></div>
 				</div>
 				<div class="card-body">
-					<?= $this->element('admin/event_log_changes', ['changes' => $changes, 'compact' => false]) ?>
+					<?= $this->element('admin/event_log_changes', [
+						'changes' => $changes,
+						'module' => (string)($eventLog->module ?? ''),
+						'compact' => false,
+					]) ?>
 				</div>
 			</div>
 		<?php endif; ?>

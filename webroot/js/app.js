@@ -27,6 +27,52 @@
 	};
 
 	/**
+	 * Tooltip that hides on mouseleave (no focus trigger — safe inside tab buttons).
+	 * Use class js-hover-only-tooltip; do not mix data-bs-toggle="tooltip" on tab toggles.
+	 *
+	 * @param {string|Element|jQuery} selector
+	 */
+	App.initHoverOnlyTooltips = function (selector) {
+		if (typeof bootstrap === 'undefined' || !bootstrap.Tooltip) {
+			return;
+		}
+		$(selector).each(function () {
+			var el = this;
+			var prev = bootstrap.Tooltip.getInstance(el);
+			if (prev) {
+				prev.dispose();
+			}
+			var placement = el.getAttribute('data-bs-placement') || 'top';
+			var tip = new bootstrap.Tooltip(el, {
+				html: el.getAttribute('data-bs-html') === 'true',
+				placement: placement,
+				container: 'body',
+				trigger: 'hover'
+			});
+			el.addEventListener('mouseleave', function () {
+				tip.hide();
+			});
+		});
+	};
+
+	/**
+	 * Hide hover-only tooltips inside a container (e.g. after tab switch).
+	 *
+	 * @param {Element|null} root
+	 */
+	App.hideHoverOnlyTooltipsIn = function (root) {
+		if (!root || typeof bootstrap === 'undefined' || !bootstrap.Tooltip) {
+			return;
+		}
+		root.querySelectorAll('.js-hover-only-tooltip').forEach(function (el) {
+			var tip = bootstrap.Tooltip.getInstance(el);
+			if (tip) {
+				tip.hide();
+			}
+		});
+	};
+
+	/**
 	 * Bootstrap 5 Modal FocusTrap ütközik a SweetAlert2-vel (fókusz visszarántás).
 	 * Swal megnyitás előtt deaktiváljuk, bezáráskor vissza.
 	 *

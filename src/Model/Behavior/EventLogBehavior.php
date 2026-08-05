@@ -182,6 +182,9 @@ class EventLogBehavior extends Behavior
         $originals = $entity->isNew() ? [] : $entity->extractOriginalChanged($dirty);
         $changes = [];
         foreach ($dirty as $field) {
+            if ($field === '_translations') {
+                continue;
+            }
             $from = $entity->isNew() ? null : ($originals[$field] ?? $entity->getOriginal($field));
             $to = $entity->get($field);
 
@@ -189,6 +192,19 @@ class EventLogBehavior extends Behavior
                 $changes[$field] = [
                     'from' => $this->secretPresence($from),
                     'to' => '[changed]',
+                ];
+                continue;
+            }
+
+            if ($field === 'avatar') {
+                $fromNorm = $this->normalizeAvatarValue($from);
+                $toNorm = $this->normalizeAvatarValue($to);
+                if ($fromNorm === $toNorm) {
+                    continue;
+                }
+                $changes[$field] = [
+                    'from' => $fromNorm,
+                    'to' => $toNorm,
                 ];
                 continue;
             }
@@ -205,6 +221,10 @@ class EventLogBehavior extends Behavior
             ];
         }
 
+        foreach ($this->captureTranslationChanges($entity) as $field => $pair) {
+            $changes[$field] = $pair;
+        }
+
         return $changes;
     }
 
@@ -219,6 +239,10 @@ class EventLogBehavior extends Behavior
                 continue;
             }
             if (!$entity->has($field) && !array_key_exists($field, $entity->toArray())) {
+                continue;
+            }
+            if ($field === 'avatar') {
+                $changes[$field]['to'] = $this->normalizeAvatarValue($entity->get($field));
                 continue;
             }
             $changes[$field]['to'] = $this->normalizeValue($entity->get($field));
@@ -271,6 +295,59 @@ class EventLogBehavior extends Behavior
         }
 
         return $out;
+    }
+
+    /**
+     * @return array<string, array{from: mixed, to: mixed}>
+     */
+    protected function captureTranslationChanges(EntityInterface $entity): array
+    {
+        if (!$entity->isDirty('_translations')) {
+            return [];
+        }
+
+        $to = $entity->get('_translations');
+        if (!is_array($to)) {
+            return [];
+        }
+
+        $from = $entity->getOriginal('_translations');
+        if (!is_array($from)) {
+            $from = [];
+        }
+
+        $changes = [];
+        foreach ($to as $locale => $fields) {
+            if (!is_string($locale) || !is_array($fields)) {
+                continue;
+            }
+            foreach ($fields as $transField => $newVal) {
+                if (!is_string($transField)) {
+                    continue;
+                }
+                $oldVal = is_array($from[$locale] ?? null) ? ($from[$locale][$transField] ?? null) : null;
+                $fromNorm = $this->normalizeValue($oldVal);
+                $toNorm = $this->normalizeValue($newVal);
+                if ($fromNorm === $toNorm || EventLogChanges::isEmptyEmpty($fromNorm, $toNorm)) {
+                    continue;
+                }
+                $changes[$transField . ':' . $locale] = [
+                    'from' => $fromNorm,
+                    'to' => $toNorm,
+                ];
+            }
+        }
+
+        return $changes;
+    }
+
+    protected function normalizeAvatarValue(mixed $value): string
+    {
+        if ($value === null || $value === '' || $value === false) {
+            return '[empty]';
+        }
+
+        return '[set]';
     }
 
     protected function secretPresence(mixed $value): string

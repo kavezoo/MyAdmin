@@ -7,8 +7,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Account active"
+msgstr "Cont activ"
+
+msgid "Account enabled"
+msgstr "Cont activat"
+
+msgid "Activity details"
+msgstr "Detalii activitate"
+
+msgid "Activity log"
+msgstr "Jurnal de activitate"
+
+msgid "Activity logging"
+msgstr "Jurnalizarea activității"
+
+msgid "Activity logging enabled"
+msgstr "Jurnalizarea activității activată"
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "Jurnalizarea activității a fost dezactivată pentru {0}."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "Jurnalizarea activității a fost activată pentru {0}."
+
 msgid "Already have an account? Login"
 msgstr "Aveți deja un cont? Autentificare"
+
+msgid "Application settings"
+msgstr "Setări aplicație"
 
 msgid "Back to admin"
 msgstr "Înapoi la admin"
@@ -18,6 +45,9 @@ msgstr "Înapoi la autentificare"
 
 msgid "Back to profile"
 msgstr "Înapoi la profil"
+
+msgid "Browse all activity"
+msgstr "Răsfoiește toată activitatea"
 
 msgid "Change password"
 msgstr "Schimbă parola"
@@ -34,17 +64,35 @@ msgstr "Completați profilul"
 msgid "Confirm password"
 msgstr "Confirmă parola"
 
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Controlează elementul de meniu „Activitatea mea” pentru utilizatorii din această țară."
+
 msgid "Country"
 msgstr "Țară"
 
+msgid "Created"
+msgstr "Creat"
+
+msgid "Created {0}"
+msgstr "{0} creat"
+
 msgid "Current password"
 msgstr "Parola actuală"
+
+msgid "Deleted"
+msgstr "Șters"
+
+msgid "Deleted {0}"
+msgstr "{0} șters"
 
 msgid "Email"
 msgstr "E-mail"
 
 msgid "Email or username"
 msgstr "E-mail sau nume de utilizator"
+
+msgid "Endonym"
+msgstr "Endonim"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Introduceți e-mailul sau numele de utilizator și vă vom trimite un link de resetare a parolei."
@@ -58,14 +106,26 @@ msgstr "Prenume"
 msgid "Forgot password?"
 msgstr "Ați uitat parola?"
 
+msgid "Hide from users"
+msgstr "Ascunde de utilizatori"
+
 msgid "I accept the terms of service"
 msgstr "Accept termenii și condițiile"
+
+msgid "ISO code"
+msgstr "Cod ISO"
+
+msgid "Identifier"
+msgstr "Identificator"
 
 msgid "Info"
 msgstr "Info"
 
 msgid "Language"
 msgstr "Limbă"
+
+msgid "Language code"
+msgstr "Cod limbă"
 
 msgid "Last name"
 msgstr "Nume de familie"
@@ -76,8 +136,14 @@ msgstr "Deconectare"
 msgid "Login"
 msgstr "Autentificare"
 
+msgid "Membership status"
+msgstr "Statut membru"
+
 msgid "Message"
 msgstr "Mesaj"
+
+msgid "My activity"
+msgstr "Activitatea mea"
 
 msgid "Name"
 msgstr "Nume"
@@ -85,8 +151,26 @@ msgstr "Nume"
 msgid "New password"
 msgstr "Parolă nouă"
 
+msgid "No activity recorded yet."
+msgstr "Nicio activitate înregistrată încă."
+
+msgid "No further details for this entry."
+msgstr "Nu există detalii suplimentare pentru această intrare."
+
 msgid "No results found."
 msgstr "Niciun rezultat."
+
+msgid "No working country is set."
+msgstr "Nu este setată o țară de lucru."
+
+msgid "Off"
+msgstr "Oprit"
+
+msgid "On"
+msgstr "Pornit"
+
+msgid "Parent record"
+msgstr "Înregistrare părinte"
 
 msgid "Password"
 msgstr "Parolă"
@@ -121,11 +205,20 @@ msgstr "Selectați țara."
 msgid "Profile"
 msgstr "Profil"
 
+msgid "Record"
+msgstr "Înregistrare"
+
 msgid "Register"
 msgstr "Înregistrare"
 
 msgid "Remember me"
 msgstr "Ține-mă minte"
+
+msgid "Sample record"
+msgstr "Înregistrare exemplu"
+
+msgid "Search activity…"
+msgstr "Căutare activitate…"
 
 msgid "Search..."
 msgstr "Căutare..."
@@ -148,6 +241,21 @@ msgstr "Limba selectată: {0}"
 msgid "Send reset link"
 msgstr "Trimite linkul de resetare"
 
+msgid "Settings for {0}"
+msgstr "Setări pentru {0}"
+
+msgid "Show to users"
+msgstr "Arată utilizatorilor"
+
+msgid "Sign-in"
+msgstr "Autentificare"
+
+msgid "Signed in"
+msgstr "Autentificat"
+
+msgid "Signed out"
+msgstr "Deconectat"
+
 msgid "Social accounts"
 msgstr "Conturi sociale"
 
@@ -160,9 +268,125 @@ msgstr "Succes"
 msgid "The country language (locale) becomes the site language for your account."
 msgstr "Limba țării (locale) devine limba contului dvs."
 
+msgid "The setting could not be saved. Please try again."
+msgstr "Setarea nu a putut fi salvată. Încercați din nou."
+
+msgid "Timezone"
+msgstr "Fus orar"
+
+msgid "Turn off logging"
+msgstr "Dezactivează jurnalizarea"
+
+msgid "Turn on logging"
+msgstr "Activează jurnalizarea"
+
+msgid "Updated"
+msgstr "Actualizat"
+
+msgid "Updated {0}"
+msgstr "{0} actualizat"
+
+msgid "Updated: {0}"
+msgstr "Actualizat: {0}"
+
+msgid "User account"
+msgstr "Cont utilizator"
+
 msgid "Username"
 msgstr "Nume de utilizator"
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Utilizatorii nu mai pot vedea propria activitate în {0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "Utilizatorii pot acum vedea propria activitate în {0}."
+
+msgid "Users can view own activity log"
+msgstr "Utilizatorii pot vedea propria activitate"
+
+msgid "Users see own activity"
+msgstr "Utilizatorii văd propria activitate"
 
 msgid "Warning"
 msgstr "Avertisment"
 
+msgid "What changed"
+msgstr "Ce s-a schimbat"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Când este oprit, autentificările, deconectările și modificările datelor nu sunt înregistrate."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Când vă autentificați, deconectați sau modificați datele."
+
+msgid "Who can edit"
+msgstr "Cine poate edita"
+
+msgid "You are not allowed to change this setting."
+msgstr "Nu aveți voie să modificați această setare."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Țara dvs. de lucru — comutatoarele se aplică doar acestei țări."
+
+msgid "and more"
+msgstr "și altele"
+
+msgid "changed"
+msgstr "modificat"
+
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "set"
+msgstr "set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "Incomplete"
+msgstr "Incomplete"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

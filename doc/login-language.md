@@ -29,10 +29,15 @@ Minden `languages` sorhoz ICU `Locale::getDisplayName` minden elérhető cél-lo
 
 | API | Szerep |
 |-----|--------|
-| `AdminLanguage::loginOptions($uiLocale)` | login Select2: `{UI nyelv} ({endoním})`; látható országok locale-jai |
+| `AdminLanguage::loginOptions($uiLocale)` | login Select2: `{UI nyelv} ({endoním})`; `languages.visible=1` |
+| `AdminLanguage::fallbackLoginOptions()` | ha a tábla üres / hiba: `BrowserLocale::availableLocales()` + ICU |
 | `AdminCountry::registerOptions()` | register Select2: endonim_name, visible only |
 | `AdminLanguage::options($uiLocale)` | fordított nevek (egyéb UI) |
 | `AdminLanguage::displayName($code, $in)` | egy címke |
 | `AdminLanguage::syncFromCountries()` | tábla + i18n feltöltés |
-| `BrowserLocale::availableLocales()` | login-visible country locale-ok |
+| `BrowserLocale::availableLocales()` | login-visible locale-ok (`languages` vagy fallback: visible countries) |
+
+## Üres login nyelvlista
+
+Ha a Select2 üres: `languages` tábla üres vagy hiányzik az `endonim_name` oszlop → `AdminLanguage::loginOptions` üres listát ad (fallback: ICU). **Javítás:** `php bin/cake migrations migrate` + `php tmp/seed_languages.php`. Migráció visszavonás (`migrate -t`) törli a táblát — utána seed szükséges.
 | `users_auth_locale.js` | Select2 + reload |

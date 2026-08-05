@@ -1093,3 +1093,227 @@ msgstr ""
 
 msgid "Please correct the errors below."
 msgstr ""
+
+#: src/Utility/ActivityLogSetup.php
+msgid "Activity logging enabled"
+msgstr ""
+
+#: src/Utility/ActivityLogSetup.php
+msgid "Users can view own activity log"
+msgstr ""
+
+msgid "Settings for {0}"
+msgstr ""
+
+msgid "Your working country — toggles apply only to this country."
+msgstr ""
+
+msgid "Activity logging"
+msgstr ""
+
+msgid "On"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "Turn off logging"
+msgstr ""
+
+msgid "Turn on logging"
+msgstr ""
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr ""
+
+msgid "Users see own activity"
+msgstr ""
+
+msgid "Hide from users"
+msgstr ""
+
+msgid "Show to users"
+msgstr ""
+
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr ""
+
+msgid "Activity logging has been turned on for {0}."
+msgstr ""
+
+msgid "Activity logging has been turned off for {0}."
+msgstr ""
+
+msgid "Users can now view their own activity in {0}."
+msgstr ""
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr ""
+
+msgid "No working country is set."
+msgstr ""
+
+msgid "You are not allowed to change this setting."
+msgstr ""
+
+msgid "The setting could not be saved. Please try again."
+msgstr ""
+
+msgid "My activity"
+msgstr ""
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr ""
+
+msgid "Browse all activity"
+msgstr ""
+
+msgid "Search activity…"
+msgstr ""
+
+msgid "No activity recorded yet."
+msgstr ""
+
+msgid "Activity details"
+msgstr ""
+
+msgid "What changed"
+msgstr ""
+
+msgid "No further details for this entry."
+msgstr ""
+
+msgid "Record"
+msgstr ""
+
+msgid "Sign-in"
+msgstr ""
+
+msgid "User account"
+msgstr ""
+
+msgid "Application settings"
+msgstr ""
+
+msgid "Sample record"
+msgstr ""
+
+msgid "Parent record"
+msgstr ""
+
+msgid "Activity log"
+msgstr ""
+
+msgid "Account enabled"
+msgstr ""
+
+msgid "Account active"
+msgstr ""
+
+msgid "Endonym"
+msgstr ""
+
+msgid "Language code"
+msgstr ""
+
+msgid "Timezone"
+msgstr ""
+
+msgid "ISO code"
+msgstr ""
+
+msgid "Membership status"
+msgstr ""
+
+msgid "Identifier"
+msgstr ""
+
+msgid "Who can edit"
+msgstr ""
+
+msgid "Signed in"
+msgstr ""
+
+msgid "Signed out"
+msgstr ""
+
+msgid "Updated"
+msgstr ""
+
+msgid "Deleted"
+msgstr ""
+
+msgid "Deleted {0}"
+msgstr ""
+
+msgid "Created {0}"
+msgstr ""
+
+msgid "and more"
+msgstr ""
+
+msgid "Updated: {0}"
+msgstr ""
+
+msgid "Updated {0}"
+msgstr ""
+
+msgid "changed"
+msgstr ""
+
+msgid "Created {0}: {1}"
+msgstr ""
+
+msgid "empty"
+msgstr ""
+
+msgid "unknown"
+msgstr ""
+
+msgid "set"
+msgstr ""
+
+msgid "redacted"
+msgstr ""
+
+msgid "complex value"
+msgstr ""
+
+msgid "no picture"
+msgstr ""
+
+msgid "picture set"
+msgstr ""
+
+msgid "Incomplete"
+msgstr ""
+
+msgid "Pending approval"
+msgstr ""
+
+msgid "Approved"
+msgstr ""
+
+msgid "Changing your club has important consequences"
+msgstr ""
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr ""
+
+msgid "Apply to a different club?"
+msgstr ""
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr ""
+
+msgid "Yes, apply to this club"
+msgstr ""
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr ""
+
+msgid "Do you really want to delete your profile picture?"
+msgstr ""
+
+msgid "Delete picture"
+msgstr ""

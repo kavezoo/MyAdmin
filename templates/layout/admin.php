@@ -69,6 +69,8 @@ window.MyAdmin = window.MyAdmin || {};
 window.MyAdmin.messages = <?= json_encode([
 	'deleteTitle' => __('Delete'),
 	'deleteConfirm' => __('Do you really want to delete the selected record?'),
+	'deleteAvatarTitle' => __('Remove picture'),
+	'deleteAvatarConfirm' => __('Do you really want to delete your profile picture?'),
 	'deleteButton' => __('Delete'),
 	'cancelButton' => __('Cancel'),
 	'unsavedTitle' => __('Unsaved changes'),

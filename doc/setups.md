@@ -23,13 +23,13 @@ Fájl: [`config/schema/setups.sql`](../config/schema/setups.sql)
 |------|-------|------------|
 | `id` | PK | |
 | `country_id` | FK → `countries.id` | Working country |
-| `name` | varchar(255) | Megjelenő név |
+| `name` | varchar(255) | Megjelenő név — **Translate** (`en_GB` kanonikus + `i18n` EAV); UI = oldal locale |
 | `slug` | varchar(255) | Kulcs: `a-z0-9_`; unique **országonként** |
 | `type` | varchar(20) | lásd típusok (+ `secret`) |
 | `edit_by` | varchar(20) DEFAULT `admin` | `superuser` \| `admin` \| `president` |
 | `value` | text NOT NULL | Kanonikus / titkosított string |
-| `visible` | tinyint DEFAULT 1 | DB DEFAULT |
-| `pos` | int DEFAULT 1000 | DB DEFAULT — agent ne állítsa |
+| `visible` | tinyint DEFAULT 1 | DB DEFAULT — **nincs** Admin UI |
+| `pos` | int DEFAULT 1000 | DB DEFAULT — **nincs** Admin UI; agent ne állítsa |
 | `created`, `modified` | datetime | Timestamp |
 
 **Tilos:** külön `value_int` / `value_bool` oszlopok.
@@ -115,12 +115,23 @@ $title = Setup::get('site_title', 'My Admin'); // aktuális ország
 $pwd = Setup::get('smtp_password', '');        // secret → dekriptálva
 ```
 
+### Tevékenységnapló (példa slug-ok)
+
+| Slug | Típus | Jelentés |
+|------|-------|----------|
+| `activity_logging_enabled` | boolean | Naplózás be/ki (új `event_logs` sorok) |
+| `users_activity_log_visible` | boolean | User látja a saját tevékenységét |
+
+`name` mező: angol msgid + `SetupNameI18n` → `i18n` fordítások; megjelenítés UI locale szerint.
+
+Részlet: [event-logs.md](event-logs.md). Seed: `php tmp/seed_activity_log_setups.php`. Fordítások: `php tmp/seed_setup_name_i18n.php`.
+
 ## Fájlok
 
 | Réteg | Útvonal |
 |-------|---------|
 | Schema | `config/schema/setups.sql` |
-| Utility | `SetupValue`, `Setup`, `SetupEditBy`, `AdminCountry` |
+| Utility | `SetupValue`, `Setup`, `SetupEditBy`, `SetupNameI18n`, `AdminCountry` |
 | Auth | `AppRoles`, `CurrentUser`, `SetupAccess` |
 | Model | `SetupsTable` / `Setup` |
 | Controller | `SetupsController` |

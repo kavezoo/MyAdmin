@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Auth\EventLogAccess;
+use App\Auth\SetupAccess;
 use App\Utility\AdminCountry;
+use App\Utility\ActivityLogSetup;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
@@ -133,6 +135,108 @@ class EventLogsController extends AppController
         $this->set('canAdd', false);
         $this->set('canEdit', false);
         $this->set('canDelete', false);
+        $this->setActivityLogSetupViewVars();
+    }
+
+    /**
+     * Toggle activity logging for the Admin working country (Setups).
+     *
+     * @return \Cake\Http\Response
+     */
+    public function toggleActivityLogging(): Response
+    {
+        return $this->toggleActivitySetup(ActivityLogSetup::SLUG_LOGGING_ENABLED, [
+            'on' => __('Activity logging has been turned on for {0}.'),
+            'off' => __('Activity logging has been turned off for {0}.'),
+        ]);
+    }
+
+    /**
+     * Toggle whether users may view their own activity log (Admin working country).
+     *
+     * @return \Cake\Http\Response
+     */
+    public function toggleUsersActivityView(): Response
+    {
+        return $this->toggleActivitySetup(ActivityLogSetup::SLUG_USERS_VIEW_ENABLED, [
+            'on' => __('Users can now view their own activity in {0}.'),
+            'off' => __('Users can no longer view their own activity in {0}.'),
+        ]);
+    }
+
+    /**
+     * @param array{on: string, off: string} $flashMessages
+     */
+    protected function toggleActivitySetup(string $slug, array $flashMessages): Response
+    {
+        $this->request->allowMethod(['post']);
+
+        $countryId = AdminCountry::id($this->getRequest());
+        if ($countryId < 1) {
+            throw new ForbiddenException(__('No working country is set.'));
+        }
+
+        /** @var \App\Model\Table\SetupsTable $setups */
+        $setups = $this->fetchTable('Setups');
+        $setup = $setups->findBySlugAndCountry($slug, $countryId);
+        if ($setup === null) {
+            $setups->ensureActivityLogSetups($countryId);
+            $setup = $setups->findBySlugAndCountry($slug, $countryId);
+        }
+        if ($setup === null || !SetupAccess::canEditValue($setup, $this->getRequest())) {
+            throw new ForbiddenException(__('You are not allowed to change this setting.'));
+        }
+
+        $newState = $setups->toggleBoolean($countryId, $slug);
+        if ($newState === null) {
+            $this->Flash->error(__('The setting could not be saved. Please try again.'));
+
+            return $this->redirectToEventLogIndex();
+        }
+
+        $countryLabel = AdminCountry::label($countryId);
+        $this->Flash->success(__(
+            $newState ? $flashMessages['on'] : $flashMessages['off'],
+            $countryLabel
+        ));
+
+        return $this->redirectToEventLogIndex();
+    }
+
+    protected function redirectToEventLogIndex(): Response
+    {
+        $redirect = $this->request->getData('_redirect');
+        if (is_string($redirect) && $redirect !== '' && str_starts_with($redirect, '/')) {
+            return $this->redirect($redirect);
+        }
+
+        $query = $this->request->getQueryParams();
+
+        return $this->redirect(['action' => 'index', '?' => $query]);
+    }
+
+    protected function setActivityLogSetupViewVars(): void
+    {
+        ActivityLogSetup::ensureRowsForAllCountries();
+
+        $workingCountryId = AdminCountry::id($this->getRequest());
+        $workingCountryLabel = $workingCountryId > 0 ? AdminCountry::label($workingCountryId) : '';
+
+        /** @var \App\Model\Table\SetupsTable $setups */
+        $setups = $this->fetchTable('Setups');
+        $loggingSetup = $workingCountryId > 0
+            ? $setups->findBySlugAndCountry(ActivityLogSetup::SLUG_LOGGING_ENABLED, $workingCountryId)
+            : null;
+        $usersViewSetup = $workingCountryId > 0
+            ? $setups->findBySlugAndCountry(ActivityLogSetup::SLUG_USERS_VIEW_ENABLED, $workingCountryId)
+            : null;
+
+        $this->set('workingCountryId', $workingCountryId);
+        $this->set('workingCountryLabel', $workingCountryLabel);
+        $this->set('activityLoggingEnabled', ActivityLogSetup::isLoggingEnabled($workingCountryId, $this->getRequest()));
+        $this->set('usersActivityLogVisible', ActivityLogSetup::usersCanViewOwn($workingCountryId, $this->getRequest()));
+        $this->set('canToggleActivityLogging', $loggingSetup !== null && SetupAccess::canEditValue($loggingSetup, $this->getRequest()));
+        $this->set('canToggleUsersActivityView', $usersViewSetup !== null && SetupAccess::canEditValue($usersViewSetup, $this->getRequest()));
     }
 
     /**
@@ -213,6 +317,7 @@ class EventLogsController extends AppController
         $this->set('canAdd', false);
         $this->set('canEdit', false);
         $this->set('canDelete', false);
+        $this->setActivityLogSetupViewVars();
     }
 
     protected function resolveFilterCountryId(bool $canFilterCountries): int

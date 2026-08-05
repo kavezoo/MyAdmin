@@ -12,6 +12,7 @@ use App\Service\MembershipService;
 use App\Utility\AdminCountry;
 use App\Utility\AdminLanguage;
 use App\Utility\BrowserLocale;
+use App\Utility\EntityFormErrors;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
@@ -89,7 +90,7 @@ class UsersController extends CakeDCUsersController
             } elseif ($action === 'completeProfile') {
                 $this->set('breadcrumb', __('Complete your profile'));
             } else {
-                $this->set('breadcrumb', __('My event log'));
+                $this->set('breadcrumb', __('My activity'));
                 $this->set('indexListUrl', UsersUrl::actionUrl('eventLog'));
             }
         }
@@ -119,6 +120,9 @@ class UsersController extends CakeDCUsersController
         }
         if ($action === 'profile') {
             $this->prepareProfileViewVars();
+            if ($this->viewBuilder()->getVar('canEditProfile')) {
+                $this->prepareProfileEditViewVars();
+            }
         }
         if ($action === 'completeProfile') {
             $this->prepareCompleteProfileViewVars();
@@ -251,7 +255,7 @@ class UsersController extends CakeDCUsersController
 
         if ($this->getRequest()->is(['post', 'put', 'patch'])) {
             $data = (array)$this->getRequest()->getData();
-            $allowed = ['first_name', 'last_name', 'phone', 'country_id', 'club_id'];
+            $allowed = ['first_name', 'phone', 'country_id', 'club_id'];
             $patch = [];
             foreach ($allowed as $field) {
                 if (array_key_exists($field, $data)) {
@@ -263,6 +267,9 @@ class UsersController extends CakeDCUsersController
             }
             if (isset($patch['club_id'])) {
                 $patch['club_id'] = (int)$patch['club_id'];
+            }
+            if (isset($patch['phone']) && trim((string)$patch['phone']) === '') {
+                $patch['phone'] = '';
             }
 
             $user = $users->patchEntity($user, $patch, [
@@ -280,7 +287,7 @@ class UsersController extends CakeDCUsersController
 
                 return $this->redirect(RoleHome::url(AppRoles::NEW));
             }
-            $this->Flash->error(__('Please correct the errors below.'));
+            $this->flashProfileValidationErrors($user);
         }
 
         $this->set('title', __('Complete your profile'));
@@ -288,6 +295,162 @@ class UsersController extends CakeDCUsersController
         $this->set('canEdit', false);
         $this->set('canAdd', false);
         $this->set('canDelete', false);
+    }
+
+    /**
+     * Own profile — read-only for `new`; editable (+ avatar) for member and above.
+     *
+     * @param mixed $id CakeDC optional user id (only own profile allowed).
+     * @return \Cake\Http\Response|null|void
+     */
+    public function profile($id = null)
+    {
+        $identity = $this->getRequest()->getAttribute('identity');
+        if ($identity === null) {
+            throw new ForbiddenException(__('You must be logged in.'));
+        }
+
+        $userId = $this->identityUserId($identity);
+        if ($userId === '') {
+            throw new ForbiddenException(__('You must be logged in.'));
+        }
+        if ($id !== null && $id !== '' && (string)$id !== $userId) {
+            throw new ForbiddenException(__('You can only edit your own profile.'));
+        }
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->getUsersTable();
+        $user = $users->get($userId, contain: ['Countries', 'Clubs', 'SocialAccounts']);
+
+        $canEditProfile = MembershipProfile::canEditOwnProfile($user);
+        $profileOriginalClubId = (int)$user->get('club_id');
+
+        if ($this->getRequest()->is(['post', 'put', 'patch']) && $canEditProfile) {
+            $previousClubId = (int)$user->get('club_id');
+            $data = (array)$this->getRequest()->getData();
+            $patch = [];
+            foreach (['first_name', 'phone', 'country_id', 'club_id'] as $field) {
+                if (array_key_exists($field, $data)) {
+                    $patch[$field] = $data[$field];
+                }
+            }
+            if (isset($patch['country_id'])) {
+                $patch['country_id'] = (int)$patch['country_id'];
+            }
+            if (isset($patch['club_id'])) {
+                $patch['club_id'] = (int)$patch['club_id'];
+            }
+            if (isset($patch['phone']) && trim((string)$patch['phone']) === '') {
+                $patch['phone'] = '';
+            }
+
+            $user = $users->patchEntity($user, $patch, [
+                'validate' => 'profileEdit',
+                'fields' => ['first_name', 'phone', 'country_id', 'club_id'],
+            ]);
+
+            $newClubId = (int)($user->get('club_id') ?? 0);
+            $clubSwitch = MembershipProfile::isClubSwitch($previousClubId, $newClubId);
+            if ($clubSwitch) {
+                $user->set('role', AppRoles::NEW);
+                $user->set('membership_status', MembershipProfile::STATUS_PENDING);
+                $user->set('application_notified', false);
+            }
+
+            $upload = $this->getRequest()->getUploadedFile('avatar');
+            if ($upload !== null && $upload->getError() !== UPLOAD_ERR_NO_FILE) {
+                $userIdStr = (string)$user->id;
+                try {
+                    UserAvatar::deleteStored((string)$user->get('avatar'), $userIdStr);
+                    $user->set('avatar', UserAvatar::store($userIdStr, $upload));
+                } catch (\Throwable $e) {
+                    $user->setError('avatar', $e->getMessage());
+                }
+            }
+
+            $saveOptions = [];
+            if ($clubSwitch) {
+                $saveOptions['accessibleFields'] = [
+                    'first_name' => true,
+                    'phone' => true,
+                    'country_id' => true,
+                    'club_id' => true,
+                    'avatar' => true,
+                    'role' => true,
+                    'membership_status' => true,
+                    'application_notified' => true,
+                ];
+            }
+
+            if (!$user->hasErrors() && $users->save($user, $saveOptions)) {
+                if ($clubSwitch) {
+                    (new MembershipService())->onClubChanged($user);
+                }
+                $fresh = $users->get($userId, contain: ['Countries', 'Clubs']);
+                if ($this->components()->has('Authentication')) {
+                    $this->Authentication->setIdentity($fresh);
+                }
+                if ($clubSwitch) {
+                    $this->Flash->success(__('Your application to the new club has been submitted. You cannot use the system until the club president approves it.'));
+
+                    return $this->redirect(RoleHome::url(AppRoles::NEW));
+                }
+                $this->Flash->success(__('Your profile has been saved.'));
+
+                return $this->redirect(UsersUrl::actionUrl('profile'));
+            }
+            $this->flashProfileValidationErrors($user);
+        }
+
+        $this->set('title', __('Profile'));
+        $this->set(compact('user'));
+        $this->set('isCurrentUser', true);
+        $this->set('canEditProfile', $canEditProfile);
+        $this->set('canManageAvatar', $canEditProfile);
+        $this->set('needsProfileCompletion', MembershipProfile::needsProfileCompletion($user));
+        $this->set('profileOriginalClubId', $profileOriginalClubId);
+    }
+
+    /**
+     * Remove own profile picture (member+).
+     *
+     * @return \Cake\Http\Response
+     */
+    public function deleteAvatar(): Response
+    {
+        $this->request->allowMethod(['post']);
+
+        $identity = $this->getRequest()->getAttribute('identity');
+        if ($identity === null) {
+            throw new ForbiddenException(__('You must be logged in.'));
+        }
+        $userId = $this->identityUserId($identity);
+        if ($userId === '') {
+            throw new ForbiddenException(__('You must be logged in.'));
+        }
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->getUsersTable();
+        $user = $users->get($userId);
+        if (!MembershipProfile::canEditOwnProfile($user)) {
+            throw new ForbiddenException(__('You are not allowed to change the profile picture yet.'));
+        }
+
+        UserAvatar::deleteStored((string)$user->get('avatar'), (string)$user->id);
+        $user->set('avatar', null);
+        $users->saveOrFail($user, [
+            'accessibleFields' => [
+                'avatar' => true,
+            ],
+        ]);
+
+        $fresh = $users->get($userId, contain: ['Countries', 'Clubs']);
+        if ($this->components()->has('Authentication')) {
+            $this->Authentication->setIdentity($fresh);
+        }
+        $this->Flash->success(__('Profile picture removed.'));
+
+        return $this->redirect(UsersUrl::actionUrl('profile'));
     }
 
     /**
@@ -333,7 +496,7 @@ class UsersController extends CakeDCUsersController
             ]);
         }
 
-        $this->set('title', __('My event log'));
+        $this->set('title', __('My activity'));
         $this->set('eventLogs', $this->paginate($query, [
             'limit' => 50,
             'maxLimit' => 200,
@@ -363,10 +526,10 @@ class UsersController extends CakeDCUsersController
             throw new ForbiddenException(__('You are not allowed to view this event.'));
         }
 
-        $this->set('title', __('Event log'));
+        $this->set('title', __('Activity details'));
         $this->set(compact('eventLog'));
         $this->set('isOwnEventLog', true);
-        $this->render('/Admin/EventLogs/view');
+        $this->render('activity_log_view');
     }
 
     /**
@@ -426,20 +589,34 @@ class UsersController extends CakeDCUsersController
         $this->set('countryLabel', $countryLabel);
     }
 
-    protected function prepareCompleteProfileViewVars(): void
+    protected function prepareProfileEditViewVars(): void
     {
         /** @var \CakeDC\Users\Model\Entity\User|null $user */
         $user = $this->viewBuilder()->getVar('user');
-        $countryId = 0;
+        $storedCountryId = 0;
+        $storedClubId = 0;
         if ($user !== null) {
-            $countryId = (int)($user->get('country_id') ?? 0);
+            $storedCountryId = (int)($user->get('country_id') ?? 0);
+            $storedClubId = (int)($user->get('club_id') ?? 0);
         }
+
+        $selectedCountryId = $storedCountryId;
+        $selectedClubId = $storedClubId;
+        $countryIdForClubs = $storedCountryId;
+        $includeClubId = $storedClubId;
+
         $explicit = $this->getRequest()->getQuery('country_id');
         if (is_numeric($explicit) && (int)$explicit > 0) {
-            $countryId = (int)$explicit;
-            if ($user !== null) {
-                $user->set('country_id', $countryId);
-                $user->set('club_id', 0);
+            $explicitCountryId = (int)$explicit;
+            if ($explicitCountryId !== $storedCountryId) {
+                $selectedCountryId = $explicitCountryId;
+                $countryIdForClubs = $explicitCountryId;
+                $selectedClubId = 0;
+                $includeClubId = 0;
+                if ($user !== null) {
+                    $user->set('country_id', $explicitCountryId);
+                    $user->set('club_id', 0);
+                }
             }
         }
 
@@ -448,8 +625,78 @@ class UsersController extends CakeDCUsersController
         /** @var \App\Model\Table\ClubsTable $clubs */
         $clubs = $this->fetchTable('Clubs');
 
-        $this->set('countryOptions', AdminCountry::optionsWithLocale($uiLocale));
-        $this->set('clubOptions', $clubs->optionsForCountry($countryId));
+        $clubOptions = $clubs->optionsForCountry($countryIdForClubs, $includeClubId);
+
+        $countryOptions = AdminCountry::visibleOptionsWithLocale($uiLocale);
+        if ($selectedCountryId > 0 && !isset($countryOptions[$selectedCountryId])) {
+            $label = AdminCountry::label($selectedCountryId, $uiLocale);
+            if ($label !== '') {
+                $countryOptions = [$selectedCountryId => $label] + $countryOptions;
+            }
+        }
+
+        $this->set('countryOptions', $countryOptions);
+        $this->set('clubOptions', $clubOptions);
+        $this->set('clubOptionsEmpty', $countryIdForClubs > 0 && $clubOptions === []);
+        $this->set('selectedCountryId', $selectedCountryId);
+        $this->set('selectedClubId', $selectedClubId);
+        $this->set('profileUrl', Router::url(UsersUrl::actionUrl('profile')));
+        $this->set('deleteAvatarUrl', Router::url(UsersUrl::actionUrl('deleteAvatar')));
+    }
+
+    protected function identityUserId(mixed $identity): string
+    {
+        if (is_object($identity) && method_exists($identity, 'getIdentifier')) {
+            return (string)$identity->getIdentifier();
+        }
+        if (is_object($identity) && method_exists($identity, 'get')) {
+            return (string)($identity->get('id') ?? '');
+        }
+
+        return '';
+    }
+
+    protected function flashProfileValidationErrors(\Cake\Datasource\EntityInterface $user): void
+    {
+        $this->Flash->error(
+            EntityFormErrors::summaryText(
+                $user,
+                EntityFormErrors::profileFieldLabels(),
+                (string)__('Please correct the errors below.'),
+            )
+        );
+    }
+
+    protected function prepareCompleteProfileViewVars(): void
+    {
+        /** @var \CakeDC\Users\Model\Entity\User|null $user */
+        $user = $this->viewBuilder()->getVar('user');
+        $countryId = 0;
+        $includeClubId = 0;
+        if ($user !== null) {
+            $countryId = (int)($user->get('country_id') ?? 0);
+            $includeClubId = (int)($user->get('club_id') ?? 0);
+        }
+        $explicit = $this->getRequest()->getQuery('country_id');
+        if (is_numeric($explicit) && (int)$explicit > 0) {
+            $countryId = (int)$explicit;
+            if ($user !== null) {
+                $user->set('country_id', $countryId);
+                $user->set('club_id', 0);
+                $includeClubId = 0;
+            }
+        }
+
+        $uiLocale = I18n::getLocale();
+        AdminCountry::applyTranslateLocale($uiLocale);
+        /** @var \App\Model\Table\ClubsTable $clubs */
+        $clubs = $this->fetchTable('Clubs');
+
+        $clubOptions = $clubs->optionsForCountry($countryId, $includeClubId);
+
+        $this->set('countryOptions', AdminCountry::registerOptions());
+        $this->set('clubOptions', $clubOptions);
+        $this->set('clubOptionsEmpty', $countryId > 0 && $clubOptions === []);
         $this->set('selectedCountryId', $countryId);
         $this->set('completeProfileUrl', Router::url(UsersUrl::actionUrl('completeProfile')));
     }

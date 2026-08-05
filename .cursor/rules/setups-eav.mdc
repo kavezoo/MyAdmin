@@ -10,7 +10,7 @@ alwaysApply: false
 
 ## Kötelező
 
-- Tábla: `setups` — `country_id`, `name`, `slug`, `type`, `edit_by`, `value`, `pos`/`visible` DB default
+- Tábla: `setups` — `country_id`, `name` (Translate EAV, UI locale), `slug`, `type`, `edit_by`, `value`; `pos`/`visible` csak DB default, **nincs** Admin UI
 - Unique: `(country_id, slug)`
 - Working country: `AdminCountry` (session + cookie; default HU)
 - Index: csak aktuális ország; címsorban ország neve; Select2 váltó

@@ -73,6 +73,14 @@ class EventLogger
     {
         try {
             $request ??= static::currentRequest();
+            $countryHint = isset($data['country_id']) ? (int)$data['country_id'] : 0;
+            if ($countryHint < 1 && $request !== null) {
+                $countryHint = CurrentUser::countryId($request);
+            }
+            if (!ActivityLogSetup::isLoggingEnabled($countryHint > 0 ? $countryHint : null, $request)) {
+                return;
+            }
+
             $payload = static::normalize($data, $request);
             if ($payload['module'] === '' || $payload['action'] === '') {
                 return;

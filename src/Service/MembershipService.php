@@ -83,6 +83,30 @@ class MembershipService
         return true;
     }
 
+    /**
+     * After profile club switch: notify presidents of the new club (always re-notify).
+     */
+    public function onClubChanged(EntityInterface $user): void
+    {
+        $clubId = (int)$user->get('club_id');
+        if ($clubId < 1) {
+            return;
+        }
+
+        $this->notifyClubPresidents($user);
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->fetchTable('Users');
+        $user->set('application_notified', true);
+        $users->save($user, [
+            'checkRules' => false,
+            'accessibleFields' => [
+                'application_notified' => true,
+                'modified' => true,
+            ],
+        ]);
+    }
+
     protected function notifyClubPresidents(EntityInterface $applicant): void
     {
         $clubId = (int)$applicant->get('club_id');

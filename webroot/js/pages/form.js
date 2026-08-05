@@ -857,18 +857,14 @@
 		}
 
 		/**
-		 * Language tabs: tooltip on tab buttons (hover only — focus would keep caret on the tab).
-		 * Name focus is handled by inline script in form_language_fields (always present with tabs).
+		 * Language tabs: hover-only tooltip on inner span (not on tab toggle — avoids stuck tooltip on focus).
 		 */
 		var $langTabs = $('#formLanguageTabs');
-		if ($langTabs.length && typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
-			$langTabs.find('[data-bs-toggle="tab"]').each(function () {
-				bootstrap.Tooltip.getOrCreateInstance(this, {
-					html: true,
-					placement: 'top',
-					container: 'body',
-					trigger: 'hover'
-				});
+		if ($langTabs.length && App.initHoverOnlyTooltips) {
+			App.initHoverOnlyTooltips($langTabs.find('.js-hover-only-tooltip'));
+			var langTabRoot = $langTabs[0];
+			$langTabs.on('shown.bs.tab mousedown', '[data-bs-toggle="tab"]', function () {
+				App.hideHoverOnlyTooltipsIn(langTabRoot);
 			});
 		}
 

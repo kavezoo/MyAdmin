@@ -7,162 +7,227 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Already have an account? Login"
-msgstr "Hues schonn e Kont? Aloggen"
+msgid "Account active"
+msgstr "Kont aktiv"
 
-msgid "Back to admin"
-msgstr "Zeréck bei den Admin"
+msgid "Account enabled"
+msgstr "Kont aktivéiert"
 
-msgid "Back to login"
-msgstr "Zeréck bei den Login"
+msgid "Activity details"
+msgstr "Detailer vun der Aktivitéit"
 
-msgid "Back to profile"
-msgstr "Zeréck bei de Profil"
+msgid "Activity log"
+msgstr "Aktivitéitsprotokoll"
 
-msgid "Change password"
-msgstr "Passwuert änneren"
+msgid "Activity logging"
+msgstr "Aktivitéitsprotokoll"
 
-msgid "Choose your country by its local name. The country language becomes the site language for your account."
-msgstr "Wiel däi Land nom lokalen Numm. D’Sprooch vum Land gëtt d’Sprooch vun dengem Kont."
+msgid "Activity logging enabled"
+msgstr "Aktivitéitsprotokoll aktivéiert"
 
-msgid "Club"
-msgstr "Club"
+msgid "Activity logging has been turned off for {0}."
+msgstr "Aktivitéitsprotokoll fir {0} desaktivéiert."
 
-msgid "Complete your profile"
-msgstr "Profil komplettéieren"
+msgid "Activity logging has been turned on for {0}."
+msgstr "Aktivitéitsprotokoll fir {0} aktivéiert."
 
-msgid "Confirm password"
-msgstr "Passwuert bestätegen"
+msgid "Application settings"
+msgstr "Applikatiounsastellungen"
 
-msgid "Country"
-msgstr "Land"
+msgid "Approved"
+msgstr "Approved"
 
-msgid "Current password"
-msgstr "Aktuellt Passwuert"
+msgid "Browse all activity"
+msgstr "All Aktivitéit duerchsichen"
 
-msgid "Email"
-msgstr "E-Mail"
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Steiert de Menüpunkt «Meng Aktivitéit» fir Benotzer an dësem Land."
 
-msgid "Email or username"
-msgstr "E-Mail oder Benotzernumm"
+msgid "Created"
+msgstr "Erstallt"
 
-msgid "Enter your email or username and we will send you a link to reset your password."
-msgstr "Gëff deng E-Mail oder de Benotzernumm an; mir schécken e Link fir d’Passwuert zeréckzesetzen."
+msgid "Created {0}"
+msgstr "{0} erstallt"
 
-msgid "Error"
-msgstr "Feeler"
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
 
-msgid "First name"
-msgstr "Virnumm"
+msgid "Deleted"
+msgstr "Geläscht"
 
-msgid "Forgot password?"
-msgstr "Passwuert vergiess?"
+msgid "Deleted {0}"
+msgstr "{0} geläscht"
 
-msgid "I accept the terms of service"
-msgstr "Ech akzeptéieren d’Notzungsbedingunge"
+msgid "Endonym"
+msgstr "Endonym"
 
-msgid "Info"
-msgstr "Info"
+msgid "Hide from users"
+msgstr "Viru Benotzer verstoppen"
 
-msgid "Language"
-msgstr "Sprooch"
+msgid "ISO code"
+msgstr "ISO-Code"
 
-msgid "Last name"
-msgstr "Familljennumm"
+msgid "Identifier"
+msgstr "Identifikator"
 
-msgid "Log out"
-msgstr "Ofmellen"
+msgid "Incomplete"
+msgstr "Incomplete"
 
-msgid "Login"
-msgstr "Aloggen"
+msgid "Language code"
+msgstr "Sproochcode"
 
-msgid "Message"
-msgstr "Message"
+msgid "Membership status"
+msgstr "Membersstatus"
 
-msgid "Name"
-msgstr "Numm"
+msgid "My activity"
+msgstr "Meng Aktivitéit"
 
-msgid "New password"
-msgstr "Neit Passwuert"
+msgid "No activity recorded yet."
+msgstr "Nach keng Aktivitéit protokolléiert."
 
-msgid "No results found."
-msgstr "Keng Resultater fonnt."
+msgid "No further details for this entry."
+msgstr "Keng weider Detailer fir dësen Aentrée."
 
-msgid "Password"
-msgstr "Passwuert"
+msgid "No working country is set."
+msgstr "Keen Aarbechtsland festgeluecht."
 
-msgid "Phone"
-msgstr "Telefon"
+msgid "Off"
+msgstr "Aus"
 
-msgid "Please correct the errors below."
-msgstr "Korrigéier w.e.g. déi follgend Feeler."
+msgid "On"
+msgstr "Un"
 
-msgid "Please enter a valid email."
-msgstr "Gëff w.e.g. eng valabel E-Mail an."
+msgid "Parent record"
+msgstr "Iwwergréifenden Saaz"
 
-msgid "Please enter your email."
-msgstr "Gëff w.e.g. deng E-Mail an."
+msgid "Pending approval"
+msgstr "Pending approval"
 
-msgid "Please enter your first name."
-msgstr "Gëff w.e.g. däi Virnumm an."
+msgid "Record"
+msgstr "Saz"
 
-msgid "Please enter your last name."
-msgstr "Gëff w.e.g. däi Familljennumm an."
+msgid "Sample record"
+msgstr "Beispillsaz"
 
-msgid "Please enter your name."
-msgstr "Gëff w.e.g. däin Numm an."
+msgid "Search activity…"
+msgstr "Aktivitéit sichen…"
 
-msgid "Please fill in the missing details so we can send your membership application to the club president."
-msgstr "Fëll déi feelend Detailer aus, fir dass mir deng Memberufro un de Clubpresident schécke kënnen."
+msgid "Settings for {0}"
+msgstr "Astellungen fir {0}"
 
-msgid "Please select your country."
-msgstr "Wiel w.e.g. däi Land."
+msgid "Show to users"
+msgstr "Benotzer weisen"
 
-msgid "Profile"
-msgstr "Profil"
+msgid "Sign-in"
+msgstr "Umeldung"
 
-msgid "Register"
-msgstr "Registréieren"
+msgid "Signed in"
+msgstr "Ugemellt"
 
-msgid "Remember me"
-msgstr "Erënner mech"
+msgid "Signed out"
+msgstr "Ofgemellt"
 
-msgid "Search..."
-msgstr "Sichen..."
+msgid "The setting could not be saved. Please try again."
+msgstr "D’Astellung konnt net gespäichert ginn. Probéiert et nach eng Kéier."
 
-msgid "Select club..."
-msgstr "Club auswielen..."
+msgid "Timezone"
+msgstr "Zäitzon"
 
-msgid "Select country"
-msgstr "Land auswielen"
+msgid "Turn off logging"
+msgstr "Protokoll ausschalten"
 
-msgid "Select country..."
-msgstr "Land auswielen..."
+msgid "Turn on logging"
+msgstr "Protokoll uschalten"
 
-msgid "Select language..."
-msgstr "Sprooch auswielen..."
+msgid "Updated"
+msgstr "Aktualiséiert"
 
-msgid "Selected language: {0}"
-msgstr "Ausgewielte Sprooch: {0}"
+msgid "Updated {0}"
+msgstr "{0} aktualiséiert"
 
-msgid "Send reset link"
-msgstr "Reset-Link schécken"
+msgid "Updated: {0}"
+msgstr "Aktualiséiert: {0}"
 
-msgid "Social accounts"
-msgstr "Sozial Konten"
+msgid "User account"
+msgstr "Benotzerkont"
 
-msgid "Submit application"
-msgstr "Demande schécken"
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Benotzer kënnen hir eegen Aktivitéit an {0} net méi gesinn."
 
-msgid "Success"
-msgstr "Erfolleg"
+msgid "Users can now view their own activity in {0}."
+msgstr "Benotzer kënnen elo hir eegen Aktivitéit an {0} gesinn."
 
-msgid "The country language (locale) becomes the site language for your account."
-msgstr "D’Sprooch vum Land (Locale) gëtt d’Sprooch vun dengem Kont."
+msgid "Users can view own activity log"
+msgstr "Benotzer kënnen hir eegen Aktivitéit gesinn"
 
-msgid "Username"
-msgstr "Benotzernumm"
+msgid "Users see own activity"
+msgstr "Benotzer gesinn hir eegen Aktivitéit"
 
-msgid "Warning"
-msgstr "Warnung"
+msgid "What changed"
+msgstr "Wat geännert gouf"
 
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Wann aus, ginn nei Umeldungen, Ofmeldungen an Datenaännerungen net protokolléiert."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Wann Dir Iech umellt, ofmellt oder Är Donnéeën ännert."
+
+msgid "Who can edit"
+msgstr "Wien däerf editéieren"
+
+msgid "You are not allowed to change this setting."
+msgstr "Dir däerft dës Astellung net änneren."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Äert Aarbechtsland — d’Schrëfter gëllen nëmme fir dëst Land."
+
+msgid "and more"
+msgstr "an méi"
+
+msgid "changed"
+msgstr "geännert"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "set"
+msgstr "set"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

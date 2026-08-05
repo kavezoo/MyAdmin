@@ -7,162 +7,227 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Already have an account? Login"
-msgstr "Už máte účet? Přihlásit se"
+msgid "Account active"
+msgstr "Účet aktivní"
 
-msgid "Back to admin"
-msgstr "Zpět do administrace"
+msgid "Account enabled"
+msgstr "Účet povolen"
 
-msgid "Back to login"
-msgstr "Zpět na přihlášení"
+msgid "Activity details"
+msgstr "Podrobnosti aktivity"
 
-msgid "Back to profile"
-msgstr "Zpět na profil"
+msgid "Activity log"
+msgstr "Protokol aktivity"
 
-msgid "Change password"
-msgstr "Změnit heslo"
+msgid "Activity logging"
+msgstr "Protokolování aktivity"
 
-msgid "Choose your country by its local name. The country language becomes the site language for your account."
-msgstr "Vyberte zemi podle místního názvu. Jazyk země se stane jazykem vašeho účtu."
+msgid "Activity logging enabled"
+msgstr "Protokolování aktivity zapnuto"
 
-msgid "Club"
-msgstr "Klub"
+msgid "Activity logging has been turned off for {0}."
+msgstr "Protokolování vypnuto pro {0}."
 
-msgid "Complete your profile"
-msgstr "Doplňte profil"
+msgid "Activity logging has been turned on for {0}."
+msgstr "Protokolování zapnuto pro {0}."
 
-msgid "Confirm password"
-msgstr "Potvrzení hesla"
+msgid "Application settings"
+msgstr "Nastavení aplikace"
 
-msgid "Country"
-msgstr "Země"
+msgid "Approved"
+msgstr "Approved"
 
-msgid "Current password"
-msgstr "Aktuální heslo"
+msgid "Browse all activity"
+msgstr "Procházet veškerou aktivitu"
 
-msgid "Email"
-msgstr "E-mail"
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Řídí položku menu „Moje aktivita“ pro uživatele v této zemi."
 
-msgid "Email or username"
-msgstr "E-mail nebo uživatelské jméno"
+msgid "Created"
+msgstr "Vytvořeno"
 
-msgid "Enter your email or username and we will send you a link to reset your password."
-msgstr "Zadejte e-mail nebo uživatelské jméno; pošleme odkaz pro obnovení hesla."
+msgid "Created {0}"
+msgstr "{0} vytvořeno"
 
-msgid "Error"
-msgstr "Chyba"
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
 
-msgid "First name"
-msgstr "Jméno"
+msgid "Deleted"
+msgstr "Smazáno"
 
-msgid "Forgot password?"
-msgstr "Zapomenuté heslo?"
+msgid "Deleted {0}"
+msgstr "{0} smazáno"
 
-msgid "I accept the terms of service"
-msgstr "Souhlasím s podmínkami použití"
+msgid "Endonym"
+msgstr "Endonym"
 
-msgid "Info"
-msgstr "Info"
+msgid "Hide from users"
+msgstr "Skrýt před uživateli"
 
-msgid "Language"
-msgstr "Jazyk"
+msgid "ISO code"
+msgstr "ISO kód"
 
-msgid "Last name"
-msgstr "Příjmení"
+msgid "Identifier"
+msgstr "Identifikátor"
 
-msgid "Log out"
-msgstr "Odhlásit se"
+msgid "Incomplete"
+msgstr "Incomplete"
 
-msgid "Login"
+msgid "Language code"
+msgstr "Kód jazyka"
+
+msgid "Membership status"
+msgstr "Stav členství"
+
+msgid "My activity"
+msgstr "Moje aktivita"
+
+msgid "No activity recorded yet."
+msgstr "Zatím není zaznamenána aktivita."
+
+msgid "No further details for this entry."
+msgstr "Žádné další podrobnosti pro tento záznam."
+
+msgid "No working country is set."
+msgstr "Není nastavena pracovní země."
+
+msgid "Off"
+msgstr "Vyp."
+
+msgid "On"
+msgstr "Zap."
+
+msgid "Parent record"
+msgstr "Nadřazený záznam"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Record"
+msgstr "Záznam"
+
+msgid "Sample record"
+msgstr "Vzorový záznam"
+
+msgid "Search activity…"
+msgstr "Hledat aktivitu…"
+
+msgid "Settings for {0}"
+msgstr "Nastavení pro {0}"
+
+msgid "Show to users"
+msgstr "Zobrazit uživatelům"
+
+msgid "Sign-in"
 msgstr "Přihlášení"
 
-msgid "Message"
-msgstr "Zpráva"
+msgid "Signed in"
+msgstr "Přihlášen"
 
-msgid "Name"
-msgstr "Jméno"
+msgid "Signed out"
+msgstr "Odhlášen"
 
-msgid "New password"
-msgstr "Nové heslo"
+msgid "The setting could not be saved. Please try again."
+msgstr "Nastavení se nepodařilo uložit. Zkuste to znovu."
 
-msgid "No results found."
-msgstr "Nebyly nalezeny žádné výsledky."
+msgid "Timezone"
+msgstr "Časové pásmo"
 
-msgid "Password"
-msgstr "Heslo"
+msgid "Turn off logging"
+msgstr "Vypnout protokolování"
 
-msgid "Phone"
-msgstr "Telefon"
+msgid "Turn on logging"
+msgstr "Zapnout protokolování"
 
-msgid "Please correct the errors below."
-msgstr "Opravte níže uvedené chyby."
+msgid "Updated"
+msgstr "Aktualizováno"
 
-msgid "Please enter a valid email."
-msgstr "Zadejte platný e-mail."
+msgid "Updated {0}"
+msgstr "{0} aktualizováno"
 
-msgid "Please enter your email."
-msgstr "Zadejte svůj e-mail."
+msgid "Updated: {0}"
+msgstr "Aktualizováno: {0}"
 
-msgid "Please enter your first name."
-msgstr "Zadejte jméno."
+msgid "User account"
+msgstr "Uživatelský účet"
 
-msgid "Please enter your last name."
-msgstr "Zadejte příjmení."
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Uživatelé již nemohou vidět vlastní aktivitu v {0}."
 
-msgid "Please enter your name."
-msgstr "Zadejte své jméno."
+msgid "Users can now view their own activity in {0}."
+msgstr "Uživatelé nyní mohou vidět vlastní aktivitu v {0}."
 
-msgid "Please fill in the missing details so we can send your membership application to the club president."
-msgstr "Vyplňte chybějící údaje, abychom mohli odeslat žádost o členství předsedovi klubu."
+msgid "Users can view own activity log"
+msgstr "Uživatelé mohou vidět vlastní aktivitu"
 
-msgid "Please select your country."
-msgstr "Vyberte svou zemi."
+msgid "Users see own activity"
+msgstr "Uživatelé vidí vlastní aktivitu"
 
-msgid "Profile"
-msgstr "Profil"
+msgid "What changed"
+msgstr "Co se změnilo"
 
-msgid "Register"
-msgstr "Registrace"
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Při vypnutí se nezaznamenávají nová přihlášení, odhlášení ani změny dat."
 
-msgid "Remember me"
-msgstr "Zapamatovat si mě"
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Když se přihlásíte, odhlásíte nebo změníte data."
 
-msgid "Search..."
-msgstr "Hledat..."
+msgid "Who can edit"
+msgstr "Kdo může upravovat"
 
-msgid "Select club..."
-msgstr "Vyberte klub..."
+msgid "You are not allowed to change this setting."
+msgstr "Nemáte oprávnění změnit toto nastavení."
 
-msgid "Select country"
-msgstr "Vyberte zemi"
+msgid "Your working country — toggles apply only to this country."
+msgstr "Vaše pracovní země — přepínače platí pouze pro tuto země."
 
-msgid "Select country..."
-msgstr "Vyberte zemi..."
+msgid "and more"
+msgstr "a další"
 
-msgid "Select language..."
-msgstr "Vyberte jazyk..."
+msgid "changed"
+msgstr "změněno"
 
-msgid "Selected language: {0}"
-msgstr "Vybraný jazyk: {0}"
+msgid "complex value"
+msgstr "complex value"
 
-msgid "Send reset link"
-msgstr "Odeslat odkaz"
+msgid "empty"
+msgstr "empty"
 
-msgid "Social accounts"
-msgstr "Sociální účty"
+msgid "no picture"
+msgstr "no picture"
 
-msgid "Submit application"
-msgstr "Odeslat žádost"
+msgid "picture set"
+msgstr "picture set"
 
-msgid "Success"
-msgstr "Úspěch"
+msgid "redacted"
+msgstr "redacted"
 
-msgid "The country language (locale) becomes the site language for your account."
-msgstr "Jazyk země (locale) se stane jazykem vašeho účtu."
+msgid "set"
+msgstr "set"
 
-msgid "Username"
-msgstr "Uživatelské jméno"
+msgid "unknown"
+msgstr "unknown"
 
-msgid "Warning"
-msgstr "Varování"
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
 
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

@@ -1461,3 +1461,227 @@ msgstr "A saját ország nyelve mindig elérhető a form TAB-okon, és itt nem j
 
 msgid "Choose your country by its local name. The country language becomes the site language for your account."
 msgstr "Válaszd az országot a helyi neve alapján. Az ország nyelve lesz a fiókod nyelvezete."
+
+#: src/Utility/ActivityLogSetup.php
+msgid "Activity logging enabled"
+msgstr "Tevékenységnapló bekapcsolva"
+
+#: src/Utility/ActivityLogSetup.php
+msgid "Users can view own activity log"
+msgstr "A felhasználók láthatják a saját tevékenységüket"
+
+msgid "Settings for {0}"
+msgstr "Beállítások: {0}"
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "A munkaországod — a kapcsolók csak erre az országra érvényesek."
+
+msgid "Activity logging"
+msgstr "Tevékenységnapló"
+
+msgid "On"
+msgstr "Be"
+
+msgid "Off"
+msgstr "Ki"
+
+msgid "Turn off logging"
+msgstr "Naplózás kikapcsolása"
+
+msgid "Turn on logging"
+msgstr "Naplózás bekapcsolása"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Kikapcsolva nem rögzülnek új belépések, kilépések és adatváltozások."
+
+msgid "Users see own activity"
+msgstr "Felhasználók látják saját tevékenységüket"
+
+msgid "Hide from users"
+msgstr "Elrejtés a felhasználók elől"
+
+msgid "Show to users"
+msgstr "Megjelenítés a felhasználóknak"
+
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Szabályozza a „Tevékenységem” menüpont megjelenését az ország felhasználóinál."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "A tevékenységnapló bekapcsolva: {0}."
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "A tevékenységnapló kikapcsolva: {0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "A felhasználók most láthatják a saját tevékenységüket: {0}."
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "A felhasználók többé nem láthatják a saját tevékenységüket: {0}."
+
+msgid "No working country is set."
+msgstr "Nincs beállítva munkaország."
+
+msgid "You are not allowed to change this setting."
+msgstr "Nem jogosult ezt a beállítást módosítani."
+
+msgid "The setting could not be saved. Please try again."
+msgstr "A beállítás mentése nem sikerült. Próbálja újra."
+
+msgid "My activity"
+msgstr "Tevékenységem"
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Amikor bejelentkeztél, kiléptél vagy módosítottad az adataidat."
+
+msgid "Browse all activity"
+msgstr "Összes tevékenység böngészése"
+
+msgid "Search activity…"
+msgstr "Tevékenység keresése…"
+
+msgid "No activity recorded yet."
+msgstr "Még nincs rögzített tevékenység."
+
+msgid "Activity details"
+msgstr "Tevékenység részletei"
+
+msgid "What changed"
+msgstr "Mi változott"
+
+msgid "No further details for this entry."
+msgstr "Ehhez a bejegyzéshez nincs további részlet."
+
+msgid "Record"
+msgstr "Rekord"
+
+msgid "Sign-in"
+msgstr "Bejelentkezés"
+
+msgid "User account"
+msgstr "Felhasználói fiók"
+
+msgid "Application settings"
+msgstr "Alkalmazásbeállítások"
+
+msgid "Sample record"
+msgstr "Minta rekord"
+
+msgid "Parent record"
+msgstr "Szülő rekord"
+
+msgid "Activity log"
+msgstr "Tevékenységnapló"
+
+msgid "Account enabled"
+msgstr "Fiók engedélyezve"
+
+msgid "Account active"
+msgstr "Fiók aktív"
+
+msgid "Endonym"
+msgstr "Endoním név"
+
+msgid "Language code"
+msgstr "Nyelvkód"
+
+msgid "Timezone"
+msgstr "Időzón"
+
+msgid "ISO code"
+msgstr "ISO kód"
+
+msgid "Membership status"
+msgstr "Tagság állapota"
+
+msgid "Identifier"
+msgstr "Azonosító"
+
+msgid "Who can edit"
+msgstr "Ki szerkesztheti"
+
+msgid "Signed in"
+msgstr "Bejelentkezve"
+
+msgid "Signed out"
+msgstr "Kijelentkezve"
+
+msgid "Updated"
+msgstr "Frissítve"
+
+msgid "Deleted"
+msgstr "Törölve"
+
+msgid "Deleted {0}"
+msgstr "{0} törölve"
+
+msgid "Created {0}"
+msgstr "{0} létrehozva"
+
+msgid "and more"
+msgstr "és továbbiak"
+
+msgid "Updated: {0}"
+msgstr "Frissítve: {0}"
+
+msgid "Updated {0}"
+msgstr "{0} frissítve"
+
+msgid "changed"
+msgstr "megváltozott"
+
+msgid "Created {0}: {1}"
+msgstr "{0} létrehozva: {1}"
+
+msgid "empty"
+msgstr "üres"
+
+msgid "unknown"
+msgstr "ismeretlen"
+
+msgid "set"
+msgstr "beállítva"
+
+msgid "redacted"
+msgstr "eltávolítva"
+
+msgid "complex value"
+msgstr "összetett érték"
+
+msgid "no picture"
+msgstr "nincs kép"
+
+msgid "picture set"
+msgstr "kép beállítva"
+
+msgid "Incomplete"
+msgstr "Hiányos"
+
+msgid "Pending approval"
+msgstr "Jóváhagyásra vár"
+
+msgid "Approved"
+msgstr "Jóváhagyva"
+
+msgid "Changing your club has important consequences"
+msgstr "A klubváltás fontos hatással jár"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "Ha más klubot választasz és mentesz, a rendszer „new” státuszba helyez. A rendszert addig nem használhatod, amíg a kiválasztott klub elnöke el nem fogadja a jelentkezésedet és tagként regisztrál."
+
+msgid "Apply to a different club?"
+msgstr "Más klubba jelentkezel?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Valóban klubot szeretnél váltani? Mentéskor elveszíted a jelenlegi jogosultságodat, és a rendszert addig nem használhatod, amíg az új klub elnöke el nem fogadja a jelentkezésedet és tagként regisztrál."
+
+msgid "Yes, apply to this club"
+msgstr "Igen, erre a klubba jelentkezem"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Az új klubba szóló jelentkezésed elküldve. A rendszert addig nem használhatod, amíg a klub elnöke jóvá nem hagyja."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Valóban törölni szeretnéd a profilképedet?"
+
+msgid "Delete picture"
+msgstr "Kép törlése"

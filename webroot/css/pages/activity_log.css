@@ -1,0 +1,15 @@
+.activity-log-timeline .activity-log-item {
+	padding: 1rem 1.25rem;
+}
+
+.activity-log-timeline .activity-log-item + .activity-log-item {
+	border-top: 1px solid var(--bs-border-color, #dee2e6);
+}
+
+.activity-log-summary {
+	font-size: 1.05rem;
+}
+
+.activity-log-changes-list li {
+	padding-left: 0.25rem;
+}

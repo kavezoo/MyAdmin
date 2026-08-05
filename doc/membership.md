@@ -18,8 +18,10 @@ Kapcsolódó: [users-auth.md](users-auth.md), Cursor rule `.cursor/rules/users-a
 
 Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 
-- `first_name`, `last_name`, `phone`
-- `country_id` (>0), `club_id` (>0, és a `clubs` táblában az országhoz tartozik)
+- `first_name` (egy „név” mező), `country_id` (>0), `club_id` (>0, `clubs.enabled=1`, `visible=1`) — **telefon opcionális**
+- Klub lista: `ClubsTable::optionsForCountry(country_id)` — csak az adott ország **enabled + visible** klubjai, `pos` majd `name` sorrend.
+- Profil szerkesztés ország select: **minden** `Countries.visible = true` sor (`AdminCountry::visibleOptionsWithLocale`), + a user mentett országa ha hiányzik a listából.
+- Alapértelmezett kijelölés: `users.country_id` és `users.club_id`; országváltás query csak más ország esetén üríti a klubot.
 
 ---
 
@@ -37,13 +39,15 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
    - `role=member`, `membership_status=approved`
    - email a jelentkezőnek login linkkel (`/login`)
 
+**Profil klubváltás (member+):** más klub mentése → `role=new`, `membership_status=pending`, `Authentication::setIdentity` (session role is `new`), clubpresident értesítés; redirect `/new`. **RestrictNewRoleMiddleware:** csak `/new` + profil/auth URL-ek, más prefix → `/new`. Profil továbbra is szerkeszthető (`canEditOwnProfile` minden érvényes role-nál). UI: piros figyelmeztetés + SweetAlert.
+
 ---
 
 ## 3. Adatbázis
 
 | Fájl | Tartalom |
 |------|----------|
-| `config/schema/clubs.sql` | `clubs` tábla |
+| `config/schema/clubs.sql` | `clubs` tábla (`enabled` DEFAULT 1, `visible`, `pos`) |
 | `config/schema/users_membership.sql` | `membership_status`, `application_notified` |
 | `tmp/seed_membership.php` | séma + demo klubok + clubpresident `club_id` |
 
@@ -62,6 +66,7 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 | Jelentkezők | `Clubpresident\ApplicantsController`, sidebar menü |
 | Login redirect | `Application` `EVENT_AFTER_LOGIN` |
 | New gate | `Controller/New/AppController.php` |
+| Role `new` lock | `RestrictNewRoleMiddleware` (auth után) |
 
 Permissions: `completeProfile` a `role => '*'` Users action listában.
 

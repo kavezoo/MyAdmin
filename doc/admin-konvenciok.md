@@ -143,7 +143,7 @@ JS: `webroot/js/pages/form.js`, `webroot/js/app.js` → `confirmLeave`
 ### Form nyelvi TAB-ok (Translate)
 
 Ha van Translate behavior: [form-i18n-tabs.md](form-i18n-tabs.md); rule: `admin-form-i18n-tabs.mdc`.  
-`setFormLanguageTabs()` + `getWithTranslations()` + `form_language_fields`; tooltip = összes visible ország UI locale-ben; **TAB váltás → name fókusz** (`form.js`).
+`setFormLanguageTabs()` + `getWithTranslations()` + `form_language_fields`; tooltip = összes visible ország UI locale-ben (`js-hover-only-tooltip`); **TAB váltás → name fókusz** (`form.js`).
 
 ### Index card header — szűrő + kereső elválasztó
 

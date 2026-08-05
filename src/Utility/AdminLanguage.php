@@ -47,7 +47,7 @@ class AdminLanguage
         }
 
         if ($rows === []) {
-            return [];
+            return static::fallbackLoginOptions($uiLocale);
         }
 
         $meta = [];
@@ -314,6 +314,23 @@ class AdminLanguage
     /**
      * @return array<string, string>
      */
+    protected static function fallbackLoginOptions(string $uiLocale): array
+    {
+        $out = [];
+        foreach (BrowserLocale::availableLocales() as $code) {
+            $out[$code] = static::loginLabel($code, $uiLocale);
+        }
+        if ($out === []) {
+            return static::fallbackOptions($uiLocale);
+        }
+        asort($out, SORT_NATURAL | SORT_FLAG_CASE);
+
+        return $out;
+    }
+
+    /**
+     * @return array<string, string>
+     */
     protected static function fallbackOptions(string $uiLocale): array
     {
         $out = [];
@@ -371,6 +388,9 @@ class AdminLanguage
         $languages = (new self())->fetchTable('Languages');
         /** @var \App\Model\Table\CountriesTable $countries */
         $countries = (new self())->fetchTable('Countries');
+
+        $connection = $languages->getConnection();
+        $connection->execute('DELETE FROM i18n WHERE model = \'Languages\'');
 
         $rows = $countries->find()
             ->select([

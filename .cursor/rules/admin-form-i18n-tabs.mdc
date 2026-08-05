@@ -16,9 +16,9 @@ Részlet: `doc/form-i18n-tabs.md`, `doc/i18n.md`, `doc/country-visibilities.md`.
 
 ## Tooltip
 
-Fülkód / gomb tooltip — **összes** partner az adott nyelven (`country_visibilities`: saját + extras), egymás alatt (`Name (ISO)<br>`), UI locale.  
+Fülkód tooltip — **összes** partner az adott nyelven (`country_visibilities`: saját + extras), egymás alatt (`Name (ISO)<br>`), UI locale.  
 **Saját ország nyelve mindig első.** Csak a felvett nyelvek jelennek meg TAB-ként.
-Gomb marad `data-bs-toggle="tab"`.
+Tab gomb: csak `data-bs-toggle="tab"`. Tooltip: belső `span.js-hover-only-tooltip` + `App.initHoverOnlyTooltips()` (ne `initTooltips` a gombon).
 
 ## TAB → name fókusz
 

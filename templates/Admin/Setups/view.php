@@ -64,13 +64,6 @@ $canDelete = $canDelete ?? true;
 							<?php endif; ?>
 						</dd>
 					</div>
-					<div class="record-view-row"><dt><?= __('Position') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($setup->pos, decimals: 0)) ?></dd></div>
-					<div class="record-view-row">
-						<dt><?= __('Visible') ?></dt>
-						<dd><?= $setup->visible
-							? '<i class="fa fa-check text-success"></i> ' . h(__('Yes'))
-							: '<i class="fa fa-times text-danger"></i> ' . h(__('No')) ?></dd>
-					</div>
 					<div class="record-view-row"><dt><?= __('Created') ?></dt><dd><?= $setup->created ? h(\App\Utility\LocaleDateParser::format($setup->created, 'datetime_short')) : '' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Modified') ?></dt><dd><?= $setup->modified ? h(\App\Utility\LocaleDateParser::format($setup->modified, 'datetime_short')) : '' ?></dd></div>
 				</dl>

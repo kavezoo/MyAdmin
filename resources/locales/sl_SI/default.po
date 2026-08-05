@@ -7,162 +7,227 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Already have an account? Login"
-msgstr "Že imate račun? Prijava"
+msgid "Account active"
+msgstr "Račun aktiven"
 
-msgid "Back to admin"
-msgstr "Nazaj v admin"
+msgid "Account enabled"
+msgstr "Račun omogočen"
 
-msgid "Back to login"
-msgstr "Nazaj na prijavo"
+msgid "Activity details"
+msgstr "Podrobnosti dejavnosti"
 
-msgid "Back to profile"
-msgstr "Nazaj na profil"
+msgid "Activity log"
+msgstr "Dnevnik dejavnosti"
 
-msgid "Change password"
-msgstr "Spremeni geslo"
+msgid "Activity logging"
+msgstr "Beleženje dejavnosti"
 
-msgid "Choose your country by its local name. The country language becomes the site language for your account."
-msgstr "Izberite državo po lokalnem imenu. Jezik države postane jezik vašega računa."
+msgid "Activity logging enabled"
+msgstr "Beleženje dejavnosti omogočeno"
 
-msgid "Club"
-msgstr "Klub"
+msgid "Activity logging has been turned off for {0}."
+msgstr "Beleženje dejavnosti je izklopljeno za {0}."
 
-msgid "Complete your profile"
-msgstr "Dopolnite profil"
+msgid "Activity logging has been turned on for {0}."
+msgstr "Beleženje dejavnosti je vklopljeno za {0}."
 
-msgid "Confirm password"
-msgstr "Potrdi geslo"
+msgid "Application settings"
+msgstr "Nastavitve aplikacije"
 
-msgid "Country"
-msgstr "Država"
+msgid "Approved"
+msgstr "Approved"
 
-msgid "Current password"
-msgstr "Trenutno geslo"
+msgid "Browse all activity"
+msgstr "Prebrskaj vso dejavnost"
 
-msgid "Email"
-msgstr "E-pošta"
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Nadzoruje menijski element »Moja dejavnost« za uporabnike v tej državi."
 
-msgid "Email or username"
-msgstr "E-pošta ali uporabniško ime"
+msgid "Created"
+msgstr "Ustvarjeno"
 
-msgid "Enter your email or username and we will send you a link to reset your password."
-msgstr "Vnesite e-pošto ali uporabniško ime; poslali bomo povezavo za ponastavitev gesla."
+msgid "Created {0}"
+msgstr "{0} ustvarjeno"
 
-msgid "Error"
-msgstr "Napaka"
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
 
-msgid "First name"
-msgstr "Ime"
+msgid "Deleted"
+msgstr "Izbrisano"
 
-msgid "Forgot password?"
-msgstr "Ste pozabili geslo?"
+msgid "Deleted {0}"
+msgstr "{0} izbrisano"
 
-msgid "I accept the terms of service"
-msgstr "Sprejemam pogoje uporabe"
+msgid "Endonym"
+msgstr "Endonim"
 
-msgid "Info"
-msgstr "Info"
+msgid "Hide from users"
+msgstr "Skrij pred uporabniki"
 
-msgid "Language"
-msgstr "Jezik"
+msgid "ISO code"
+msgstr "ISO koda"
 
-msgid "Last name"
-msgstr "Priimek"
+msgid "Identifier"
+msgstr "Identifikator"
 
-msgid "Log out"
-msgstr "Odjava"
+msgid "Incomplete"
+msgstr "Incomplete"
 
-msgid "Login"
+msgid "Language code"
+msgstr "Koda jezika"
+
+msgid "Membership status"
+msgstr "Status članstva"
+
+msgid "My activity"
+msgstr "Moja dejavnost"
+
+msgid "No activity recorded yet."
+msgstr "Še ni zabeležene dejavnosti."
+
+msgid "No further details for this entry."
+msgstr "Ni dodatnih podrobnosti za ta vnos."
+
+msgid "No working country is set."
+msgstr "Delovna država ni nastavljena."
+
+msgid "Off"
+msgstr "Izkl."
+
+msgid "On"
+msgstr "Vkl."
+
+msgid "Parent record"
+msgstr "Nadrejeni zapis"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Record"
+msgstr "Zapis"
+
+msgid "Sample record"
+msgstr "Vzorec zapisa"
+
+msgid "Search activity…"
+msgstr "Iskanje dejavnosti…"
+
+msgid "Settings for {0}"
+msgstr "Nastavitve za {0}"
+
+msgid "Show to users"
+msgstr "Prikaži uporabnikom"
+
+msgid "Sign-in"
 msgstr "Prijava"
 
-msgid "Message"
-msgstr "Sporočilo"
+msgid "Signed in"
+msgstr "Prijavljen"
 
-msgid "Name"
-msgstr "Ime"
+msgid "Signed out"
+msgstr "Odjavljen"
 
-msgid "New password"
-msgstr "Novo geslo"
+msgid "The setting could not be saved. Please try again."
+msgstr "Nastavitve ni bilo mogoče shraniti. Poskusite znova."
 
-msgid "No results found."
-msgstr "Ni zadetkov."
+msgid "Timezone"
+msgstr "Časovni pas"
 
-msgid "Password"
-msgstr "Geslo"
+msgid "Turn off logging"
+msgstr "Izklopi beleženje"
 
-msgid "Phone"
-msgstr "Telefon"
+msgid "Turn on logging"
+msgstr "Vklopi beleženje"
 
-msgid "Please correct the errors below."
-msgstr "Popravite spodnje napake."
+msgid "Updated"
+msgstr "Posodobljeno"
 
-msgid "Please enter a valid email."
-msgstr "Vnesite veljaven e-poštni naslov."
+msgid "Updated {0}"
+msgstr "{0} posodobljeno"
 
-msgid "Please enter your email."
-msgstr "Vnesite svoj e-poštni naslov."
+msgid "Updated: {0}"
+msgstr "Posodobljeno: {0}"
 
-msgid "Please enter your first name."
-msgstr "Vnesite ime."
+msgid "User account"
+msgstr "Uporabniški račun"
 
-msgid "Please enter your last name."
-msgstr "Vnesite priimek."
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Uporabniki ne morejo več videti lastne dejavnosti v {0}."
 
-msgid "Please enter your name."
-msgstr "Vnesite svoje ime."
+msgid "Users can now view their own activity in {0}."
+msgstr "Uporabniki zdaj lahko vidijo lastno dejavnost v {0}."
 
-msgid "Please fill in the missing details so we can send your membership application to the club president."
-msgstr "Izpolnite manjkajoče podatke, da lahko pošljemo prošnjo za članstvo predsedniku kluba."
+msgid "Users can view own activity log"
+msgstr "Uporabniki lahko vidijo lastno dejavnost"
 
-msgid "Please select your country."
-msgstr "Izberite svojo državo."
+msgid "Users see own activity"
+msgstr "Uporabniki vidijo lastno dejavnost"
 
-msgid "Profile"
-msgstr "Profil"
+msgid "What changed"
+msgstr "Kaj se je spremenilo"
 
-msgid "Register"
-msgstr "Registracija"
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Ko je izklopljeno, se novi prijavi, odjavi in spremembe podatkov ne beležijo."
 
-msgid "Remember me"
-msgstr "Zapomni si me"
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Ko se prijavite, odjavite ali spremenite podatke."
 
-msgid "Search..."
-msgstr "Iskanje..."
+msgid "Who can edit"
+msgstr "Kdo lahko ureja"
 
-msgid "Select club..."
-msgstr "Izberite klub..."
+msgid "You are not allowed to change this setting."
+msgstr "Nimate dovoljenja za spremembo te nastavitve."
 
-msgid "Select country"
-msgstr "Izberite državo"
+msgid "Your working country — toggles apply only to this country."
+msgstr "Vaša delovna država — stikala veljajo samo za to državo."
 
-msgid "Select country..."
-msgstr "Izberite državo..."
+msgid "and more"
+msgstr "in več"
 
-msgid "Select language..."
-msgstr "Izberite jezik..."
+msgid "changed"
+msgstr "spremenjeno"
 
-msgid "Selected language: {0}"
-msgstr "Izbrani jezik: {0}"
+msgid "complex value"
+msgstr "complex value"
 
-msgid "Send reset link"
-msgstr "Pošlji povezavo"
+msgid "empty"
+msgstr "empty"
 
-msgid "Social accounts"
-msgstr "Družbeni računi"
+msgid "no picture"
+msgstr "no picture"
 
-msgid "Submit application"
-msgstr "Pošlji prošnjo"
+msgid "picture set"
+msgstr "picture set"
 
-msgid "Success"
-msgstr "Uspeh"
+msgid "redacted"
+msgstr "redacted"
 
-msgid "The country language (locale) becomes the site language for your account."
-msgstr "Jezik države (locale) postane jezik vašega računa."
+msgid "set"
+msgstr "set"
 
-msgid "Username"
-msgstr "Uporabniško ime"
+msgid "unknown"
+msgstr "unknown"
 
-msgid "Warning"
-msgstr "Opozorilo"
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
 
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

@@ -7,162 +7,227 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Already have an account? Login"
-msgstr "Xa tes unha conta? Acceder"
+msgid "Account active"
+msgstr "Conta activa"
 
-msgid "Back to admin"
-msgstr "Volver ao admin"
+msgid "Account enabled"
+msgstr "Conta activada"
 
-msgid "Back to login"
-msgstr "Volver ao acceso"
+msgid "Activity details"
+msgstr "Detalles da actividade"
 
-msgid "Back to profile"
-msgstr "Volver ao perfil"
+msgid "Activity log"
+msgstr "Rexistro de actividade"
 
-msgid "Change password"
-msgstr "Cambiar contrasinal"
+msgid "Activity logging"
+msgstr "Rexistro de actividade"
 
-msgid "Choose your country by its local name. The country language becomes the site language for your account."
-msgstr "Escolla o país polo nome local. A lingua do país pasa a ser a lingua da súa conta."
+msgid "Activity logging enabled"
+msgstr "Rexistro de actividade activado"
 
-msgid "Club"
-msgstr "Club"
+msgid "Activity logging has been turned off for {0}."
+msgstr "Rexistro de actividade desactivado para {0}."
 
-msgid "Complete your profile"
-msgstr "Completar o perfil"
+msgid "Activity logging has been turned on for {0}."
+msgstr "Rexistro de actividade activado para {0}."
 
-msgid "Confirm password"
-msgstr "Confirmar contrasinal"
+msgid "Application settings"
+msgstr "Configuración da aplicación"
 
-msgid "Country"
-msgstr "País"
+msgid "Approved"
+msgstr "Approved"
 
-msgid "Current password"
-msgstr "Contrasinal actual"
+msgid "Browse all activity"
+msgstr "Ver toda a actividade"
 
-msgid "Email"
-msgstr "Correo"
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Controla o elemento de menú «A miña actividade» para usuarios deste país."
 
-msgid "Email or username"
-msgstr "Correo ou nome de usuario"
+msgid "Created"
+msgstr "Creado"
 
-msgid "Enter your email or username and we will send you a link to reset your password."
-msgstr "Introduce o correo ou nome de usuario; enviarémosche unha ligazón para restablecer o contrasinal."
+msgid "Created {0}"
+msgstr "{0} creado"
 
-msgid "Error"
-msgstr "Erro"
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
 
-msgid "First name"
-msgstr "Nome"
+msgid "Deleted"
+msgstr "Eliminado"
 
-msgid "Forgot password?"
-msgstr "Esqueciches o contrasinal?"
+msgid "Deleted {0}"
+msgstr "{0} eliminado"
 
-msgid "I accept the terms of service"
-msgstr "Acepto as condicións de uso"
+msgid "Endonym"
+msgstr "Endónimo"
 
-msgid "Info"
-msgstr "Info"
+msgid "Hide from users"
+msgstr "Ocultar aos usuarios"
 
-msgid "Language"
-msgstr "Idioma"
+msgid "ISO code"
+msgstr "Código ISO"
 
-msgid "Last name"
-msgstr "Apelidos"
+msgid "Identifier"
+msgstr "Identificador"
 
-msgid "Log out"
-msgstr "Saír"
+msgid "Incomplete"
+msgstr "Incomplete"
 
-msgid "Login"
-msgstr "Acceder"
+msgid "Language code"
+msgstr "Código de idioma"
 
-msgid "Message"
-msgstr "Mensaxe"
+msgid "Membership status"
+msgstr "Estado de afiliación"
 
-msgid "Name"
-msgstr "Nome"
+msgid "My activity"
+msgstr "A miña actividade"
 
-msgid "New password"
-msgstr "Novo contrasinal"
+msgid "No activity recorded yet."
+msgstr "Aínda non hai actividade rexistrada."
 
-msgid "No results found."
-msgstr "Non se atoparon resultados."
+msgid "No further details for this entry."
+msgstr "Non hai máis detalles para esta entrada."
 
-msgid "Password"
-msgstr "Contrasinal"
+msgid "No working country is set."
+msgstr "Non hai ningún país de traballo definido."
 
-msgid "Phone"
-msgstr "Teléfono"
+msgid "Off"
+msgstr "Desactivado"
 
-msgid "Please correct the errors below."
-msgstr "Corrixa os erros seguintes."
+msgid "On"
+msgstr "Activado"
 
-msgid "Please enter a valid email."
-msgstr "Introduce un correo válido."
+msgid "Parent record"
+msgstr "Rexistro pai"
 
-msgid "Please enter your email."
-msgstr "Introduce o teu correo."
+msgid "Pending approval"
+msgstr "Pending approval"
 
-msgid "Please enter your first name."
-msgstr "Introduza o seu nome."
+msgid "Record"
+msgstr "Rexistro"
 
-msgid "Please enter your last name."
-msgstr "Introduza os seus apelidos."
+msgid "Sample record"
+msgstr "Rexistro de exemplo"
 
-msgid "Please enter your name."
-msgstr "Introduce o teu nome."
+msgid "Search activity…"
+msgstr "Buscar actividade…"
 
-msgid "Please fill in the missing details so we can send your membership application to the club president."
-msgstr "Cubra os datos que faltan para que poidamos enviar a solicitude de afiliación ao presidente do club."
+msgid "Settings for {0}"
+msgstr "Configuración para {0}"
 
-msgid "Please select your country."
-msgstr "Selecciona o teu país."
+msgid "Show to users"
+msgstr "Mostrar aos usuarios"
 
-msgid "Profile"
-msgstr "Perfil"
+msgid "Sign-in"
+msgstr "Inicio de sesión"
 
-msgid "Register"
-msgstr "Rexistrarse"
+msgid "Signed in"
+msgstr "Sesión iniciada"
 
-msgid "Remember me"
-msgstr "Lembrarme"
+msgid "Signed out"
+msgstr "Sesión pechada"
 
-msgid "Search..."
-msgstr "Buscar..."
+msgid "The setting could not be saved. Please try again."
+msgstr "Non se puido gardar a configuración. Téntao de novo."
 
-msgid "Select club..."
-msgstr "Seleccionar club..."
+msgid "Timezone"
+msgstr "Fuso horario"
 
-msgid "Select country"
-msgstr "Seleccionar país"
+msgid "Turn off logging"
+msgstr "Desactivar rexistro"
 
-msgid "Select country..."
-msgstr "Seleccionar país..."
+msgid "Turn on logging"
+msgstr "Activar rexistro"
 
-msgid "Select language..."
-msgstr "Seleccionar idioma..."
+msgid "Updated"
+msgstr "Actualizado"
 
-msgid "Selected language: {0}"
-msgstr "Idioma seleccionado: {0}"
+msgid "Updated {0}"
+msgstr "{0} actualizado"
 
-msgid "Send reset link"
-msgstr "Enviar ligazón"
+msgid "Updated: {0}"
+msgstr "Actualizado: {0}"
 
-msgid "Social accounts"
-msgstr "Contas sociais"
+msgid "User account"
+msgstr "Conta de usuario"
 
-msgid "Submit application"
-msgstr "Enviar solicitude"
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Os usuarios xa non poden ver a súa propia actividade en {0}."
 
-msgid "Success"
-msgstr "Éxito"
+msgid "Users can now view their own activity in {0}."
+msgstr "Os usuarios agora poden ver a súa propia actividade en {0}."
 
-msgid "The country language (locale) becomes the site language for your account."
-msgstr "A lingua do país (locale) pasa a ser a lingua da túa conta."
+msgid "Users can view own activity log"
+msgstr "Os usuarios poden ver a súa propia actividade"
 
-msgid "Username"
-msgstr "Nome de usuario"
+msgid "Users see own activity"
+msgstr "Os usuarios ven a súa propia actividade"
 
-msgid "Warning"
-msgstr "Aviso"
+msgid "What changed"
+msgstr "Que cambiou"
 
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Cando está desactivado, non se rexistran novos inicios de sesión, peches nin cambios de datos."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Cando inicias sesión, pechas sesión ou modificas os teus datos."
+
+msgid "Who can edit"
+msgstr "Quen pode editar"
+
+msgid "You are not allowed to change this setting."
+msgstr "Non tes permiso para cambiar esta configuración."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "O teu país de traballo — os interruptores aplican só a este país."
+
+msgid "and more"
+msgstr "e máis"
+
+msgid "changed"
+msgstr "modificado"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "set"
+msgstr "set"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

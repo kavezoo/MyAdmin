@@ -7,8 +7,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Account active"
+msgstr "Paskyra aktyvi"
+
+msgid "Account enabled"
+msgstr "Paskyra įjungta"
+
+msgid "Activity details"
+msgstr "Veiklos detalės"
+
+msgid "Activity log"
+msgstr "Veiklos žurnalas"
+
+msgid "Activity logging"
+msgstr "Veiklos registravimas"
+
+msgid "Activity logging enabled"
+msgstr "Veiklos registravimas įjungtas"
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "Veiklos registravimas išjungtas {0}."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "Veiklos registravimas įjungtas {0}."
+
 msgid "Already have an account? Login"
 msgstr "Jau turite paskyrą? Prisijungti"
+
+msgid "Application settings"
+msgstr "Programos nustatymai"
 
 msgid "Back to admin"
 msgstr "Atgal į admin"
@@ -18,6 +45,9 @@ msgstr "Atgal į prisijungimą"
 
 msgid "Back to profile"
 msgstr "Atgal į profilį"
+
+msgid "Browse all activity"
+msgstr "Peržiūrėti visą veiklą"
 
 msgid "Change password"
 msgstr "Keisti slaptažodį"
@@ -34,17 +64,35 @@ msgstr "Užpildykite profilį"
 msgid "Confirm password"
 msgstr "Patvirtinkite slaptažodį"
 
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Valdo meniu elementą „Mano veikla“ naudotojams šioje šalyje."
+
 msgid "Country"
 msgstr "Šalis"
 
+msgid "Created"
+msgstr "Sukurta"
+
+msgid "Created {0}"
+msgstr "{0} sukurta"
+
 msgid "Current password"
 msgstr "Dabartinis slaptažodis"
+
+msgid "Deleted"
+msgstr "Ištrinta"
+
+msgid "Deleted {0}"
+msgstr "{0} ištrinta"
 
 msgid "Email"
 msgstr "El. paštas"
 
 msgid "Email or username"
 msgstr "El. paštas arba naudotojo vardas"
+
+msgid "Endonym"
+msgstr "Endonimas"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Įveskite el. paštą arba naudotojo vardą – atsiųsime slaptažodžio atkūrimo nuorodą."
@@ -58,14 +106,26 @@ msgstr "Vardas"
 msgid "Forgot password?"
 msgstr "Pamiršote slaptažodį?"
 
+msgid "Hide from users"
+msgstr "Slėpti nuo naudotojų"
+
 msgid "I accept the terms of service"
 msgstr "Sutinku su naudojimo sąlygomis"
+
+msgid "ISO code"
+msgstr "ISO kodas"
+
+msgid "Identifier"
+msgstr "Identifikatorius"
 
 msgid "Info"
 msgstr "Info"
 
 msgid "Language"
 msgstr "Kalba"
+
+msgid "Language code"
+msgstr "Kalbos kodas"
 
 msgid "Last name"
 msgstr "Pavardė"
@@ -76,8 +136,14 @@ msgstr "Atsijungti"
 msgid "Login"
 msgstr "Prisijungti"
 
+msgid "Membership status"
+msgstr "Narystės būsena"
+
 msgid "Message"
 msgstr "Žinutė"
+
+msgid "My activity"
+msgstr "Mano veikla"
 
 msgid "Name"
 msgstr "Vardas"
@@ -85,8 +151,26 @@ msgstr "Vardas"
 msgid "New password"
 msgstr "Naujas slaptažodis"
 
+msgid "No activity recorded yet."
+msgstr "Veikla dar neužregistruota."
+
+msgid "No further details for this entry."
+msgstr "Nėra papildomų šio įrašo detalių."
+
 msgid "No results found."
 msgstr "Nieko nerasta."
+
+msgid "No working country is set."
+msgstr "Darbo šalis nenustatyta."
+
+msgid "Off"
+msgstr "Išj."
+
+msgid "On"
+msgstr "Įj."
+
+msgid "Parent record"
+msgstr "Tėvinis įrašas"
 
 msgid "Password"
 msgstr "Slaptažodis"
@@ -121,11 +205,20 @@ msgstr "Pasirinkite šalį."
 msgid "Profile"
 msgstr "Profilis"
 
+msgid "Record"
+msgstr "Įrašas"
+
 msgid "Register"
 msgstr "Registruotis"
 
 msgid "Remember me"
 msgstr "Prisiminti mane"
+
+msgid "Sample record"
+msgstr "Pavyzdinis įrašas"
+
+msgid "Search activity…"
+msgstr "Ieškoti veiklos…"
 
 msgid "Search..."
 msgstr "Ieškoti..."
@@ -148,6 +241,21 @@ msgstr "Pasirinkta kalba: {0}"
 msgid "Send reset link"
 msgstr "Siųsti atkūrimo nuorodą"
 
+msgid "Settings for {0}"
+msgstr "Nustatymai: {0}"
+
+msgid "Show to users"
+msgstr "Rodyti naudotojams"
+
+msgid "Sign-in"
+msgstr "Prisijungimas"
+
+msgid "Signed in"
+msgstr "Prisijungta"
+
+msgid "Signed out"
+msgstr "Atsijungta"
+
 msgid "Social accounts"
 msgstr "Socialinės paskyros"
 
@@ -160,9 +268,125 @@ msgstr "Pavyko"
 msgid "The country language (locale) becomes the site language for your account."
 msgstr "Šalies kalba (locale) taps jūsų paskyros kalba."
 
+msgid "The setting could not be saved. Please try again."
+msgstr "Nepavyko išsaugoti nustatymo. Bandykite dar kartą."
+
+msgid "Timezone"
+msgstr "Laiko juosta"
+
+msgid "Turn off logging"
+msgstr "Išjungti registravimą"
+
+msgid "Turn on logging"
+msgstr "Įjungti registravimą"
+
+msgid "Updated"
+msgstr "Atnaujinta"
+
+msgid "Updated {0}"
+msgstr "{0} atnaujinta"
+
+msgid "Updated: {0}"
+msgstr "Atnaujinta: {0}"
+
+msgid "User account"
+msgstr "Naudotojo paskyra"
+
 msgid "Username"
 msgstr "Naudotojo vardas"
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Naudotojai nebegali matyti savo veiklos {0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "Naudotojai dabar gali matyti savo veiklą {0}."
+
+msgid "Users can view own activity log"
+msgstr "Naudotojai gali matyti savo veiklą"
+
+msgid "Users see own activity"
+msgstr "Naudotojai mato savo veiklą"
 
 msgid "Warning"
 msgstr "Įspėjimas"
 
+msgid "What changed"
+msgstr "Kas pasikeitė"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Išjungus neįrašomi nauji prisijungimai, atsijungimai ar duomenų pakeitimai."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Kai prisijungiate, atsijungiate ar keičiate duomenis."
+
+msgid "Who can edit"
+msgstr "Kas gali redaguoti"
+
+msgid "You are not allowed to change this setting."
+msgstr "Jums neleidžiama keisti šio nustatymo."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Jūsų darbo šalis — jungikliai taikomi tik šiai šaliai."
+
+msgid "and more"
+msgstr "ir daugiau"
+
+msgid "changed"
+msgstr "pakeista"
+
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "set"
+msgstr "set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "Incomplete"
+msgstr "Incomplete"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

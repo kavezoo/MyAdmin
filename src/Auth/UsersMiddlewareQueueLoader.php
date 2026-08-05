@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
+use App\Middleware\RestrictNewRoleMiddleware;
 use App\Middleware\RequireUserEnabledMiddleware;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authorization\AuthorizationServiceProviderInterface;
@@ -30,6 +31,7 @@ class UsersMiddlewareQueueLoader extends CakeDCMiddlewareQueueLoader
             $authorizationServiceProvider,
         );
         $middlewareQueue->add(new RequireUserEnabledMiddleware());
+        $middlewareQueue->add(new RestrictNewRoleMiddleware());
 
         return $middlewareQueue;
     }

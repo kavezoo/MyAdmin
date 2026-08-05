@@ -132,7 +132,7 @@ Minden új táblánál:
 | `pos` PHP-ban növelgetve | DB DEFAULT |
 | Élő `COUNT(*)` lista oszlopra | CounterCache `*_count` |
 | Nyelvi TAB fókusz mindig `#name` | `data-name-target` az adott locale id-jára |
-| Tooltip `span` a tab gombban | Tooltip a tab gombon; name fókusz inline JS |
+| Tooltip `span` a tab gombban | `js-hover-only-tooltip` + `initHoverOnlyTooltips` (ne `title` a gombon) |
 
 ---
 

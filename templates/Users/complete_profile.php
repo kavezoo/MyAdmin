@@ -23,6 +23,7 @@ $this->Html->script('pages/complete_profile', ['block' => 'scriptBottom']);
 
 $countryOptions = $countryOptions ?? [];
 $clubOptions = $clubOptions ?? [];
+$clubOptionsEmpty = (bool)($clubOptionsEmpty ?? false);
 $selectedCountryId = (int)($selectedCountryId ?? 0);
 $completeProfileUrl = (string)($completeProfileUrl ?? $this->Url->build(UsersUrl::actionUrl('completeProfile')));
 ?>
@@ -41,35 +42,33 @@ $completeProfileUrl = (string)($completeProfileUrl ?? $this->Url->build(UsersUrl
 				'id' => 'complete-profile-form',
 			]) ?>
 			<div class="card-body">
+				<?= $this->element('users/form_errors', ['entity' => $user]) ?>
 				<div class="mb-3">
-					<label class="form-label" for="first-name"><?= __('First name') ?></label>
+					<label class="form-label" for="first-name"><?= __('Name') ?></label>
 					<?= $this->Form->control('first_name', [
 						'label' => false,
+						'type' => 'text',
 						'class' => 'form-control',
 						'id' => 'first-name',
 						'required' => true,
-						'autocomplete' => 'given-name',
-					]) ?>
-				</div>
-				<div class="mb-3">
-					<label class="form-label" for="last-name"><?= __('Last name') ?></label>
-					<?= $this->Form->control('last_name', [
-						'label' => false,
-						'class' => 'form-control',
-						'id' => 'last-name',
-						'required' => true,
-						'autocomplete' => 'family-name',
+						'placeholder' => __('Name'),
+						'autocomplete' => 'name',
+						'inputmode' => 'text',
+						'autocapitalize' => 'words',
 					]) ?>
 				</div>
 				<div class="mb-3">
 					<label class="form-label" for="phone"><?= __('Phone') ?></label>
 					<?= $this->Form->control('phone', [
 						'label' => false,
-						'class' => 'form-control',
+						'type' => 'tel',
+						'class' => 'form-control js-phone-intl',
 						'id' => 'phone',
-						'required' => true,
 						'autocomplete' => 'tel',
+						'inputmode' => 'tel',
+						'placeholder' => '+36301234567',
 					]) ?>
+					<div class="form-text"><?= __('Optional. Must start with + followed by digits only (e.g. +36301234567).') ?></div>
 				</div>
 				<div class="mb-3">
 					<label class="form-label" for="country-id"><?= __('Country') ?></label>
@@ -88,6 +87,13 @@ $completeProfileUrl = (string)($completeProfileUrl ?? $this->Url->build(UsersUrl
 				</div>
 				<div class="mb-0">
 					<label class="form-label" for="club-id"><?= __('Club') ?></label>
+					<?php if ($selectedCountryId < 1): ?>
+						<div class="form-text mb-2"><?= __('Select your country first to see available clubs.') ?></div>
+					<?php elseif ($clubOptionsEmpty): ?>
+						<div class="alert alert-warning mb-2">
+							<?= __('There are no clubs registered for this country yet. Please choose another country from the list above.') ?>
+						</div>
+					<?php endif; ?>
 					<?= $this->Form->control('club_id', [
 						'label' => false,
 						'type' => 'select',
@@ -95,7 +101,9 @@ $completeProfileUrl = (string)($completeProfileUrl ?? $this->Url->build(UsersUrl
 						'empty' => __('Select club...'),
 						'class' => 'form-select js-club-select',
 						'id' => 'club-id',
-						'required' => true,
+						'required' => $clubOptions !== [],
+						'disabled' => $clubOptions === [],
+						'value' => (int)($user->club_id ?? 0) > 0 ? (int)$user->club_id : null,
 						'data-placeholder' => __('Select club...'),
 					]) ?>
 				</div>

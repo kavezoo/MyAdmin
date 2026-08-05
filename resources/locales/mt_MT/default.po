@@ -7,8 +7,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Account active"
+msgstr "Kont attiv"
+
+msgid "Account enabled"
+msgstr "Kont attivat"
+
+msgid "Activity details"
+msgstr "Dettalji tal-attività"
+
+msgid "Activity log"
+msgstr "Log tal-attività"
+
+msgid "Activity logging"
+msgstr "Reġistrazzjoni tal-attività"
+
+msgid "Activity logging enabled"
+msgstr "Ir-reġistrazzjoni tal-attività attivata"
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "Ir-reġistrazzjoni tal-attività mitfija għal {0}."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "Ir-reġistrazzjoni tal-attività attivata għal {0}."
+
 msgid "Already have an account? Login"
 msgstr "Diġà għandek kont? Idħol"
+
+msgid "Application settings"
+msgstr "Settings tal-applikazzjoni"
 
 msgid "Back to admin"
 msgstr "Lura għall-admin"
@@ -18,6 +45,9 @@ msgstr "Lura għall-login"
 
 msgid "Back to profile"
 msgstr "Lura għall-profil"
+
+msgid "Browse all activity"
+msgstr "Ibbrawżja l-attività kollha"
 
 msgid "Change password"
 msgstr "Ibdel il-password"
@@ -34,17 +64,35 @@ msgstr "Imla l-profil"
 msgid "Confirm password"
 msgstr "Ikkonferma l-password"
 
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Jikkontrolla l-oġġett tal-menu «L-attività tiegħi» għall-utenti f’dan il-pajjiż."
+
 msgid "Country"
 msgstr "Pajjiż"
 
+msgid "Created"
+msgstr "Maħluq"
+
+msgid "Created {0}"
+msgstr "{0} maħluq"
+
 msgid "Current password"
 msgstr "Password attwali"
+
+msgid "Deleted"
+msgstr "Imħassar"
+
+msgid "Deleted {0}"
+msgstr "{0} imħassar"
 
 msgid "Email"
 msgstr "Email"
 
 msgid "Email or username"
 msgstr "Email jew username"
+
+msgid "Endonym"
+msgstr "Endonimu"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Daħħal l-email jew l-username u nibagħtulek link biex terġa’ tissettja l-password."
@@ -58,14 +106,26 @@ msgstr "Isem"
 msgid "Forgot password?"
 msgstr "Insejt il-password?"
 
+msgid "Hide from users"
+msgstr "Aħbi mill-utenti"
+
 msgid "I accept the terms of service"
 msgstr "Naċċetta t-termini tas-servizz"
+
+msgid "ISO code"
+msgstr "Kodiċi ISO"
+
+msgid "Identifier"
+msgstr "Identifikatur"
 
 msgid "Info"
 msgstr "Info"
 
 msgid "Language"
 msgstr "Lingwa"
+
+msgid "Language code"
+msgstr "Kodiċi tal-lingwa"
 
 msgid "Last name"
 msgstr "Kunjom"
@@ -76,8 +136,14 @@ msgstr "Oħroġ"
 msgid "Login"
 msgstr "Idħol"
 
+msgid "Membership status"
+msgstr "Status ta’ sħubija"
+
 msgid "Message"
 msgstr "Messaġġ"
+
+msgid "My activity"
+msgstr "L-attività tiegħi"
 
 msgid "Name"
 msgstr "Isem"
@@ -85,8 +151,26 @@ msgstr "Isem"
 msgid "New password"
 msgstr "Password ġdida"
 
+msgid "No activity recorded yet."
+msgstr "Għad m’hemm l-ebda attività rreġistrata."
+
+msgid "No further details for this entry."
+msgstr "L-ebda dettall ieħor għal din l-entrata."
+
 msgid "No results found."
 msgstr "Ma nstabu l-ebda riżultati."
+
+msgid "No working country is set."
+msgstr "L-ebda pajjiż tax-xogħol mhux stabbilit."
+
+msgid "Off"
+msgstr "Mitfi"
+
+msgid "On"
+msgstr "Mixgħul"
+
+msgid "Parent record"
+msgstr "Rekord prinċipali"
 
 msgid "Password"
 msgstr "Password"
@@ -121,11 +205,20 @@ msgstr "Jekk jogħġbok agħżel il-pajjiż tiegħek."
 msgid "Profile"
 msgstr "Profil"
 
+msgid "Record"
+msgstr "Rekord"
+
 msgid "Register"
 msgstr "Irreġistra"
 
 msgid "Remember me"
 msgstr "Ftakarni"
+
+msgid "Sample record"
+msgstr "Rekord ta’ eżempju"
+
+msgid "Search activity…"
+msgstr "Fittex attività…"
 
 msgid "Search..."
 msgstr "Fittex..."
@@ -148,6 +241,21 @@ msgstr "Lingwa magħżula: {0}"
 msgid "Send reset link"
 msgstr "Ibgħat il-link tar-reset"
 
+msgid "Settings for {0}"
+msgstr "Settings għal {0}"
+
+msgid "Show to users"
+msgstr "Uri lill-utenti"
+
+msgid "Sign-in"
+msgstr "Login"
+
+msgid "Signed in"
+msgstr "Illoggjat"
+
+msgid "Signed out"
+msgstr "Oħraġ"
+
 msgid "Social accounts"
 msgstr "Kontijiet soċjali"
 
@@ -160,9 +268,125 @@ msgstr "Success"
 msgid "The country language (locale) becomes the site language for your account."
 msgstr "Il-lingwa tal-pajjiż (locale) issir il-lingwa tal-kont tiegħek."
 
+msgid "The setting could not be saved. Please try again."
+msgstr "L-impostazzjoni ma setgħetx tiġi salvata. Erġa’ pprova."
+
+msgid "Timezone"
+msgstr "Timezone"
+
+msgid "Turn off logging"
+msgstr "Itfi r-reġistrazzjoni"
+
+msgid "Turn on logging"
+msgstr "Ixgħel ir-reġistrazzjoni"
+
+msgid "Updated"
+msgstr "Aġġornat"
+
+msgid "Updated {0}"
+msgstr "{0} aġġornat"
+
+msgid "Updated: {0}"
+msgstr "Aġġornat: {0}"
+
+msgid "User account"
+msgstr "Kont tal-utent"
+
 msgid "Username"
 msgstr "Username"
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "L-utenti ma jistgħux jaraw l-attività tagħhom f’{0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "L-utenti issa jistgħu jaraw l-attività tagħhom f’{0}."
+
+msgid "Users can view own activity log"
+msgstr "L-utenti jistgħu jaraw l-attività tagħhom"
+
+msgid "Users see own activity"
+msgstr "L-utenti jaraw l-attività tagħhom"
 
 msgid "Warning"
 msgstr "Twissija"
 
+msgid "What changed"
+msgstr "X’inbidel"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Meta mitfi, ma jirreġistrawx logins, logouts jew bidliet fid-dejta."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Meta tidħol, toħroġ jew tbiddel id-dejta tiegħek."
+
+msgid "Who can edit"
+msgstr "Min jista’ jeditja"
+
+msgid "You are not allowed to change this setting."
+msgstr "M’għandekx permess tibdel din l-impostazzjoni."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Pajjiż tax-xogħol tiegħek — is-switsers japplikaw biss għal dan il-pajjiż."
+
+msgid "and more"
+msgstr "u aktar"
+
+msgid "changed"
+msgstr "mibdul"
+
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "set"
+msgstr "set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "Incomplete"
+msgstr "Incomplete"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

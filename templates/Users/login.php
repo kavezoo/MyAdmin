@@ -76,6 +76,7 @@ $this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => tr
 			'autofocus' => true,
 			'placeholder' => __('Email'),
 			'autocomplete' => 'username',
+			'inputmode' => 'email',
 		]) ?>
 	</div>
 	<div class="mb-3">

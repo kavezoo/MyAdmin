@@ -7,8 +7,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Account active"
+msgstr "Konto virkin"
+
+msgid "Account enabled"
+msgstr "Konto virkin"
+
+msgid "Activity details"
+msgstr "Upplýsingar um virkni"
+
+msgid "Activity log"
+msgstr "Virkniskrá"
+
+msgid "Activity logging"
+msgstr "Virkniskráning"
+
+msgid "Activity logging enabled"
+msgstr "Virkniskráning virkin"
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "Virkniskráning er sløkt fyri {0}."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "Virkniskráning er kveikt fyri {0}."
+
 msgid "Already have an account? Login"
 msgstr "Hevur tú longu eina kontu? Rita inn"
+
+msgid "Application settings"
+msgstr "App stillingar"
 
 msgid "Back to admin"
 msgstr "Aftur til admin"
@@ -18,6 +45,9 @@ msgstr "Aftur til innritan"
 
 msgid "Back to profile"
 msgstr "Aftur til profil"
+
+msgid "Browse all activity"
+msgstr "Kaga all virkni"
 
 msgid "Change password"
 msgstr "Broyt loyniorð"
@@ -34,17 +64,35 @@ msgstr "Fullfíggja profilin"
 msgid "Confirm password"
 msgstr "Vátta loyniorð"
 
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Stýrir valmyndarliðnum «Mín virkni» fyri brúkarar í hesum landi."
+
 msgid "Country"
 msgstr "Land"
 
+msgid "Created"
+msgstr "Stovnað"
+
+msgid "Created {0}"
+msgstr "{0} stovnað"
+
 msgid "Current password"
 msgstr "Núverandi loyniorð"
+
+msgid "Deleted"
+msgstr "Strikað"
+
+msgid "Deleted {0}"
+msgstr "{0} strikað"
 
 msgid "Email"
 msgstr "Teldupostur"
 
 msgid "Email or username"
 msgstr "Teldupostur ella brúkaranavn"
+
+msgid "Endonym"
+msgstr "Endonym"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Skriva teldupost ella brúkaranavn, so senda vit eina leinkju til at nullstilla loyniorðið."
@@ -58,14 +106,26 @@ msgstr "Fornavn"
 msgid "Forgot password?"
 msgstr "Gloymt loyniorð?"
 
+msgid "Hide from users"
+msgstr "Fjal fyri brúkarum"
+
 msgid "I accept the terms of service"
 msgstr "Eg góðtaki treytirnar"
+
+msgid "ISO code"
+msgstr "ISO-kota"
+
+msgid "Identifier"
+msgstr "Kennimerki"
 
 msgid "Info"
 msgstr "Info"
 
 msgid "Language"
 msgstr "Mál"
+
+msgid "Language code"
+msgstr "Málkota"
 
 msgid "Last name"
 msgstr "Eftirnavn"
@@ -76,8 +136,14 @@ msgstr "Rita út"
 msgid "Login"
 msgstr "Rita inn"
 
+msgid "Membership status"
+msgstr "Limaskapstøða"
+
 msgid "Message"
 msgstr "Boð"
+
+msgid "My activity"
+msgstr "Mín virkni"
 
 msgid "Name"
 msgstr "Navn"
@@ -85,8 +151,26 @@ msgstr "Navn"
 msgid "New password"
 msgstr "Nýtt loyniorð"
 
+msgid "No activity recorded yet."
+msgstr "Eingin virkni er skrásett enn."
+
+msgid "No further details for this entry."
+msgstr "Eingar fleiri upplýsingar fyri hesa færslu."
+
 msgid "No results found."
 msgstr "Ongi úrslit funnin."
+
+msgid "No working country is set."
+msgstr "Einki arbeiðsland er sett."
+
+msgid "Off"
+msgstr "Sløkt"
+
+msgid "On"
+msgstr "Kveikt"
+
+msgid "Parent record"
+msgstr "Yvirfærsla"
 
 msgid "Password"
 msgstr "Loyniorð"
@@ -121,11 +205,20 @@ msgstr "Vinarliga vel landið títt."
 msgid "Profile"
 msgstr "Profilur"
 
+msgid "Record"
+msgstr "Færsla"
+
 msgid "Register"
 msgstr "Skráset"
 
 msgid "Remember me"
 msgstr "Minst til meg"
+
+msgid "Sample record"
+msgstr "Dømis færsla"
+
+msgid "Search activity…"
+msgstr "Leita í virkni…"
 
 msgid "Search..."
 msgstr "Leita..."
@@ -148,6 +241,21 @@ msgstr "Valt mál: {0}"
 msgid "Send reset link"
 msgstr "Send nullstillingarleinkju"
 
+msgid "Settings for {0}"
+msgstr "Stillingar fyri {0}"
+
+msgid "Show to users"
+msgstr "Vís brúkarum"
+
+msgid "Sign-in"
+msgstr "Innritan"
+
+msgid "Signed in"
+msgstr "Ritað inn"
+
+msgid "Signed out"
+msgstr "Ritað út"
+
 msgid "Social accounts"
 msgstr "Sosialar kontur"
 
@@ -160,9 +268,125 @@ msgstr "Eydnaðist"
 msgid "The country language (locale) becomes the site language for your account."
 msgstr "Málið í landinum (locale) verður málið á kontuni hjá tær."
 
+msgid "The setting could not be saved. Please try again."
+msgstr "Stillingin kundi ikki verða goymd. Royn aftur."
+
+msgid "Timezone"
+msgstr "Tíðarøki"
+
+msgid "Turn off logging"
+msgstr "Sløkk skráning"
+
+msgid "Turn on logging"
+msgstr "Kveik skráning"
+
+msgid "Updated"
+msgstr "Dagført"
+
+msgid "Updated {0}"
+msgstr "{0} dagført"
+
+msgid "Updated: {0}"
+msgstr "Dagført: {0}"
+
+msgid "User account"
+msgstr "Brúkarakonto"
+
 msgid "Username"
 msgstr "Brúkaranavn"
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Brúkarar kunnu ikki longur síggja egin virkni í {0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "Brúkarar kunnu nú síggja egin virkni í {0}."
+
+msgid "Users can view own activity log"
+msgstr "Brúkarar kunnu síggja egin virkni"
+
+msgid "Users see own activity"
+msgstr "Brúkarar síggja egin virkni"
 
 msgid "Warning"
 msgstr "Ávaring"
 
+msgid "What changed"
+msgstr "Hvat broyttist"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Tá sløkt er, verða nýggjar innritanir, útritanir og dátubroytingar ikki skrádar."
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Tá tú ritar inn, út ella broytir tínar dátur."
+
+msgid "Who can edit"
+msgstr "Hvør kann rætta"
+
+msgid "You are not allowed to change this setting."
+msgstr "Tú hevur ikki loyvi at broyta hesa stilling."
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Títt arbeiðsland — rofnararnir gilda bert fyri hetta landið."
+
+msgid "and more"
+msgstr "og meira"
+
+msgid "changed"
+msgstr "broytt"
+
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "set"
+msgstr "set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "Incomplete"
+msgstr "Incomplete"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

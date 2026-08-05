@@ -77,10 +77,12 @@ $slug = static function (string $locale): string {
 						role="tab"
 						aria-controls="<?= h($paneId) ?>"
 						aria-selected="<?= $isFirst ? 'true' : 'false' ?>"
+					><span
+						class="js-hover-only-tooltip"
 						data-bs-placement="top"
 						data-bs-html="true"
 						title="<?= $tabTooltipHtml ?>"
-					><?= h($tab['code']) ?></button>
+					><?= h($tab['code']) ?></span></button>
 				</li>
 			<?php endforeach; ?>
 		</ul>

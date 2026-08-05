@@ -166,3 +166,227 @@ msgstr "Όνομα χρήστη"
 msgid "Warning"
 msgstr "Προειδοποίηση"
 
+msgid "Activity logging enabled"
+msgstr "Η καταγραφή δραστηριότητας είναι ενεργή"
+
+msgid "Users can view own activity log"
+msgstr "Οι χρήστες μπορούν να βλέπουν τη δική τους δραστηριότητα"
+
+msgid "Settings for {0}"
+msgstr "Ρυθμίσεις για {0}"
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Η χώρα εργασίας σας — οι διακόπτες ισχύουν μόνο για αυτή τη χώρα."
+
+msgid "Activity logging"
+msgstr "Καταγραφή δραστηριότητας"
+
+msgid "On"
+msgstr "Ενεργό"
+
+msgid "Off"
+msgstr "Ανενεργό"
+
+msgid "Turn off logging"
+msgstr "Απενεργοποίηση καταγραφής"
+
+msgid "Turn on logging"
+msgstr "Ενεργοποίηση καταγραφής"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Όταν είναι ανενεργή, δεν καταγράφονται νέες συνδέσεις, αποσυνδέσεις ή αλλαγές δεδομένων."
+
+msgid "Users see own activity"
+msgstr "Οι χρήστες βλέπουν τη δική τους δραστηριότητα"
+
+msgid "Hide from users"
+msgstr "Απόκρυψη από χρήστες"
+
+msgid "Show to users"
+msgstr "Εμφάνιση στους χρήστες"
+
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Ελέγχει το στοιχείο μενού «Η δραστηριότητά μου» για χρήστες σε αυτή τη χώρα."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "Η καταγραφή δραστηριότητας ενεργοποιήθηκε για {0}."
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "Η καταγραφή δραστηριότητας απενεργοποιήθηκε για {0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "Οι χρήστες μπορούν πλέον να βλέπουν τη δική τους δραστηριότητα στο {0}."
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Οι χρήστες δεν μπορούν πλέον να βλέπουν τη δική τους δραστηριότητα στο {0}."
+
+msgid "No working country is set."
+msgstr "Δεν έχει οριστεί χώρα εργασίας."
+
+msgid "You are not allowed to change this setting."
+msgstr "Δεν επιτρέπεται να αλλάξετε αυτή τη ρύθμιση."
+
+msgid "The setting could not be saved. Please try again."
+msgstr "Η ρύθμιση δεν αποθηκεύτηκε. Δοκιμάστε ξανά."
+
+msgid "My activity"
+msgstr "Η δραστηριότητά μου"
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Όταν συνδέεστε, αποσυνδέεστε ή αλλάζετε τα δεδομένα σας."
+
+msgid "Browse all activity"
+msgstr "Περιήγηση σε όλη τη δραστηριότητα"
+
+msgid "Search activity…"
+msgstr "Αναζήτηση δραστηριότητας…"
+
+msgid "No activity recorded yet."
+msgstr "Δεν έχει καταγραφεί ακόμη δραστηριότητα."
+
+msgid "Activity details"
+msgstr "Λεπτομέρειες δραστηριότητας"
+
+msgid "What changed"
+msgstr "Τι άλλαξε"
+
+msgid "No further details for this entry."
+msgstr "Δεν υπάρχουν περαιτέρω λεπτομέρειες για αυτή την εγγραφή."
+
+msgid "Record"
+msgstr "Εγγραφή"
+
+msgid "Sign-in"
+msgstr "Σύνδεση"
+
+msgid "User account"
+msgstr "Λογαριασμός χρήστη"
+
+msgid "Application settings"
+msgstr "Ρυθμίσεις εφαρμογής"
+
+msgid "Sample record"
+msgstr "Δείγμα εγγραφής"
+
+msgid "Parent record"
+msgstr "Γονική εγγραφή"
+
+msgid "Activity log"
+msgstr "Αρχείο δραστηριότητας"
+
+msgid "Account enabled"
+msgstr "Λογαριασμός ενεργοποιημένος"
+
+msgid "Account active"
+msgstr "Λογαριασμός ενεργός"
+
+msgid "Endonym"
+msgstr "Ενδώνυμο"
+
+msgid "Language code"
+msgstr "Κωδικός γλώσσας"
+
+msgid "Timezone"
+msgstr "Ζώνη ώρας"
+
+msgid "ISO code"
+msgstr "Κωδικός ISO"
+
+msgid "Membership status"
+msgstr "Κατάσταση μέλους"
+
+msgid "Identifier"
+msgstr "Αναγνωριστικό"
+
+msgid "Who can edit"
+msgstr "Ποιος μπορεί να επεξεργαστεί"
+
+msgid "Signed in"
+msgstr "Συνδέθηκε"
+
+msgid "Signed out"
+msgstr "Αποσυνδέθηκε"
+
+msgid "Created"
+msgstr "Δημιουργήθηκε"
+
+msgid "Updated"
+msgstr "Ενημερώθηκε"
+
+msgid "Deleted"
+msgstr "Διαγράφηκε"
+
+msgid "Deleted {0}"
+msgstr "{0} διαγράφηκε"
+
+msgid "Created {0}"
+msgstr "{0} δημιουργήθηκε"
+
+msgid "and more"
+msgstr "και άλλα"
+
+msgid "Updated: {0}"
+msgstr "Ενημερώθηκε: {0}"
+
+msgid "Updated {0}"
+msgstr "{0} ενημερώθηκε"
+
+msgid "changed"
+msgstr "άλλαξε"
+
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "set"
+msgstr "set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "Incomplete"
+msgstr "Incomplete"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

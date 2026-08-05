@@ -45,7 +45,7 @@ class AdminTranslate
      */
     public static function applyLocales(?array $aliases = null, ?string $locale = null): void
     {
-        $aliases ??= ['Countries', 'Continents', 'Samples', 'Parents'];
+        $aliases ??= ['Countries', 'Continents', 'Samples', 'Parents', 'Setups'];
         $locator = TableRegistry::getTableLocator();
         foreach ($aliases as $alias) {
             if (!is_string($alias) || $alias === '') {

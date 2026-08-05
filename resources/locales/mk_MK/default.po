@@ -166,3 +166,227 @@ msgstr "Корисничко име"
 msgid "Warning"
 msgstr "Предупредување"
 
+msgid "Activity logging enabled"
+msgstr "Евидентирање на активност е вклучено"
+
+msgid "Users can view own activity log"
+msgstr "Корисниците можат да ја видат сопствената активност"
+
+msgid "Settings for {0}"
+msgstr "Поставки за {0}"
+
+msgid "Your working country — toggles apply only to this country."
+msgstr "Вашата работна земја — прекинувачите важат само за оваа земја."
+
+msgid "Activity logging"
+msgstr "Евидентирање на активност"
+
+msgid "On"
+msgstr "Вкл."
+
+msgid "Off"
+msgstr "Искл."
+
+msgid "Turn off logging"
+msgstr "Исклучи евидентирање"
+
+msgid "Turn on logging"
+msgstr "Вклучи евидентирање"
+
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Кога е исклучено, новите најави, одјави и промени на податоци не се евидентираат."
+
+msgid "Users see own activity"
+msgstr "Корисниците ја гледаат сопствената активност"
+
+msgid "Hide from users"
+msgstr "Сокриј од корисниците"
+
+msgid "Show to users"
+msgstr "Прикажи на корисниците"
+
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Го контролира ставката од менито „Моја активност“ за корисниците во оваа земја."
+
+msgid "Activity logging has been turned on for {0}."
+msgstr "Евидентирањето на активност е вклучено за {0}."
+
+msgid "Activity logging has been turned off for {0}."
+msgstr "Евидентирањето на активност е исклучено за {0}."
+
+msgid "Users can now view their own activity in {0}."
+msgstr "Корисниците сега можат да ја видат сопствената активност во {0}."
+
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Корисниците повеќе не можат да ја видат сопствената активност во {0}."
+
+msgid "No working country is set."
+msgstr "Работната земја не е поставена."
+
+msgid "You are not allowed to change this setting."
+msgstr "Немате дозвола да ја промените оваа поставка."
+
+msgid "The setting could not be saved. Please try again."
+msgstr "Поставката не можеше да се зачува. Обидете се повторно."
+
+msgid "My activity"
+msgstr "Моја активност"
+
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Кога се најавувате, одјавувате или ги менувате податоците."
+
+msgid "Browse all activity"
+msgstr "Прегледај ја целата активност"
+
+msgid "Search activity…"
+msgstr "Пребарај активност…"
+
+msgid "No activity recorded yet."
+msgstr "Сè уште нема евидентирана активност."
+
+msgid "Activity details"
+msgstr "Детали за активноста"
+
+msgid "What changed"
+msgstr "Што се промени"
+
+msgid "No further details for this entry."
+msgstr "Нема дополнителни детали за овој запис."
+
+msgid "Record"
+msgstr "Запис"
+
+msgid "Sign-in"
+msgstr "Најава"
+
+msgid "User account"
+msgstr "Корисничка сметка"
+
+msgid "Application settings"
+msgstr "Поставки на апликацијата"
+
+msgid "Sample record"
+msgstr "Примерен запис"
+
+msgid "Parent record"
+msgstr "Надреден запис"
+
+msgid "Activity log"
+msgstr "Дневник на активност"
+
+msgid "Account enabled"
+msgstr "Сметката е овозможена"
+
+msgid "Account active"
+msgstr "Сметката е активна"
+
+msgid "Endonym"
+msgstr "Ендоним"
+
+msgid "Language code"
+msgstr "Код на јазик"
+
+msgid "Timezone"
+msgstr "Временска зона"
+
+msgid "ISO code"
+msgstr "ISO код"
+
+msgid "Membership status"
+msgstr "Статус на членство"
+
+msgid "Identifier"
+msgstr "Идентификатор"
+
+msgid "Who can edit"
+msgstr "Кој може да уредува"
+
+msgid "Signed in"
+msgstr "Најавен"
+
+msgid "Signed out"
+msgstr "Одјавен"
+
+msgid "Created"
+msgstr "Создадено"
+
+msgid "Updated"
+msgstr "Ажурирано"
+
+msgid "Deleted"
+msgstr "Избришано"
+
+msgid "Deleted {0}"
+msgstr "{0} избришано"
+
+msgid "Created {0}"
+msgstr "{0} создадено"
+
+msgid "and more"
+msgstr "и повеќе"
+
+msgid "Updated: {0}"
+msgstr "Ажурирано: {0}"
+
+msgid "Updated {0}"
+msgstr "{0} ажурирано"
+
+msgid "changed"
+msgstr "променето"
+
+msgid "Created {0}: {1}"
+msgstr "Created {0}: {1}"
+
+msgid "empty"
+msgstr "empty"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "set"
+msgstr "set"
+
+msgid "redacted"
+msgstr "redacted"
+
+msgid "complex value"
+msgstr "complex value"
+
+msgid "no picture"
+msgstr "no picture"
+
+msgid "picture set"
+msgstr "picture set"
+
+msgid "Incomplete"
+msgstr "Incomplete"
+
+msgid "Pending approval"
+msgstr "Pending approval"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Changing your club has important consequences"
+msgstr "Changing your club has important consequences"
+
+msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+
+msgid "Apply to a different club?"
+msgstr "Apply to a different club?"
+
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+
+msgid "Yes, apply to this club"
+msgstr "Yes, apply to this club"
+
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+
+msgid "Do you really want to delete your profile picture?"
+msgstr "Do you really want to delete your profile picture?"
+
+msgid "Delete picture"
+msgstr "Delete picture"

@@ -71,11 +71,11 @@ A label mellett a **gyökér mező** kötelezősége jelenik meg (`Form->require
 
 ## 4. Tooltip (országok)
 
-- Fül gomb: `data-bs-toggle="tab"` (marad)
-- Felirat / gomb `title`: **minden** partner ország az adott nyelven, egymás alatt (`Name (ISO)<br>…`), UI nyelv szerint
-- Init: `MyAdmin.initTooltips()` (layout)
+- Tab **gomb**: csak `data-bs-toggle="tab"` — **nincs** `title` / tooltip attribútum a gombon.
+- Belső `<span class="js-hover-only-tooltip">` a fül kódja körül: `title` = partner országok (`Name (ISO)<br>…`), UI locale szerint.
+- Init: `App.initHoverOnlyTooltips()` (`form.js`) — csak `hover`, explicit `mouseleave` → `hide()`; tab váltáskor `App.hideHoverOnlyTooltipsIn()`.
 
-**Ne** tedd a tooltip `data-bs-toggle`-t ugyanarra az elemre, mint a tabot.
+**Ne** tedd a tooltip `data-bs-toggle="tooltip"`-t ugyanarra az elemre, mint a tabot, és **ne** `App.initTooltips()` a tab gombon (focus trigger → beragadó tooltip).
 
 ---
 
