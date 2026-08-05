@@ -45,9 +45,8 @@ class MembersController extends AppController
         $users = $this->fetchTable('Users');
         $query = $this->scopeToPresidentClub(
             $users->find()->where([
-                'Users.role' => AppRoles::MEMBER,
                 'Users.active' => 1,
-            ])
+            ] + $this->membershipRosterRoleCondition())
         );
 
         $applicants = $this->scopeToPresidentClub(
@@ -194,9 +193,8 @@ class MembersController extends AppController
         $member = $this->scopeToPresidentClub(
             $users->find()->where([
                 'Users.id' => (string)$id,
-                'Users.role' => AppRoles::MEMBER,
                 'Users.active' => 1,
-            ])
+            ] + $this->membershipRosterRoleCondition())
         )->first();
         if ($member === null) {
             return $this->response
@@ -343,10 +341,9 @@ class MembersController extends AppController
         $member = $this->scopeToPresidentClub(
             $users->find()->where([
                 'Users.id' => (string)$id,
-                'Users.role' => AppRoles::MEMBER,
                 'Users.active' => 1,
                 'Users.enabled' => 1,
-            ])
+            ] + $this->membershipRosterRoleCondition())
         )->first();
         if ($member === null) {
             throw new NotFoundException(__('Member not found.'));
@@ -411,9 +408,8 @@ class MembersController extends AppController
         $query = $this->scopeToPresidentClub(
             $users->find()->where([
                 'Users.id' => $id,
-                'Users.role' => AppRoles::MEMBER,
                 'Users.active' => 1,
-            ])
+            ] + $this->membershipRosterRoleCondition())
         );
         if ($containClub) {
             $query->contain(['Clubs']);

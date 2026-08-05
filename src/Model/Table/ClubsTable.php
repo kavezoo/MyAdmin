@@ -42,6 +42,11 @@ class ClubsTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        // Explicit EventLog (also auto-attached in Application) — national club fee date, …
+        if (!$this->hasBehavior('EventLog')) {
+            $this->addBehavior('EventLog');
+        }
+
         $this->belongsTo('Countries', [
             'foreignKey' => 'country_id',
             'joinType' => 'INNER',
@@ -176,6 +181,10 @@ class ClubsTable extends Table
         $validator
             ->boolean('visible')
             ->allowEmptyString('visible');
+
+        $validator
+            ->date('national_membership_fee_date')
+            ->allowEmptyDate('national_membership_fee_date');
 
         return $validator;
     }

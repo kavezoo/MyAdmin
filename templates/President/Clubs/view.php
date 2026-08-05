@@ -7,14 +7,23 @@
  * @var \Cake\Datasource\EntityInterface|null $president
  * @var int $countryId
  * @var string $countryLabel
+ * @var int $membershipYear
  */
 use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
 use App\Utility\MembershipFee;
 
-$this->Html->css(['pages/index', 'pages/users_list_avatar'], ['block' => true]);
+$this->Html->css(['pages/index', 'pages/users_list_avatar', 'pages/membership_fee'], ['block' => true]);
 
 $rowDoubleClickAction = 'modal';
+
+$countryId = (int)($countryId ?? 0);
+$membershipYear = (int)($membershipYear ?? MembershipFee::currentYear());
+$clubEntityFeeLabel = MembershipFee::clubEntityFeeLabel($countryId);
+$feeDate = $club->get(MembershipFee::FIELD_CLUB_ENTITY);
+$feePaid = MembershipFee::isPaidForYear($feeDate, $membershipYear);
+$feeDateFormatted = MembershipFee::paidDateFormatted($feeDate, $membershipYear);
+$feeLastFormatted = MembershipFee::lastPaymentFormatted($feeDate);
 
 $usersGetUrl = $this->Url->build(['action' => 'userRecordGet']);
 $usersEditUrl = $this->Url->build(['prefix' => 'President', 'controller' => 'Members', 'action' => 'edit']);
@@ -186,6 +195,18 @@ $usersTable = ob_get_clean();
 				<div class="clearfix"></div>
 			</div>
 			<div class="card-body">
+				<div class="membership-fee-panel mb-4">
+					<div class="membership-fee-panel__title"><?= __('Membership fees ({0})', $membershipYear) ?></div>
+					<?= $this->element('users/membership_fee_status', [
+						'label' => $clubEntityFeeLabel,
+						'paid' => $feePaid,
+						'membershipYear' => $membershipYear,
+						'dateFormatted' => $feeDateFormatted,
+						'lastPaymentDateFormatted' => $feeLastFormatted,
+						'mode' => 'profile_club',
+					]) ?>
+				</div>
+
 				<dl class="record-view-fields mb-0">
 					<div class="record-view-row"><dt><?= __('ID') ?></dt><dd><?= h($club->id) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h($club->name) ?></dd></div>

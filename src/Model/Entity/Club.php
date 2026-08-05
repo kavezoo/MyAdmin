@@ -15,6 +15,7 @@ use Cake\ORM\Entity;
  * @property bool $visible
  * @property int $pos
  * @property int $user_count
+ * @property \Cake\I18n\Date|null $national_membership_fee_date
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
  * @property \App\Model\Entity\Country|null $country
@@ -32,6 +33,7 @@ class Club extends Entity
         'visible' => true,
         'pos' => true,
         'user_count' => false,
+        'national_membership_fee_date' => true,
         'created' => true,
         'modified' => true,
         'country' => true,

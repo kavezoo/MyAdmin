@@ -258,3 +258,78 @@ msgstr "Nuovo membro"
 
 msgid "Roles"
 msgstr "Ruoli"
+
+msgid "Record club annual membership fee?"
+msgstr "Record club annual membership fee?"
+
+msgid "Do you confirm that this club has paid the annual national membership fee for this year? The payment date will be set to today."
+msgstr "Do you confirm that this club has paid the annual national membership fee for this year? The payment date will be set to today."
+
+msgid "Do you confirm that {0} has paid the annual national membership fee for this year? The payment date will be set to today."
+msgstr "Do you confirm that {0} has paid the annual national membership fee for this year? The payment date will be set to today."
+
+msgid "Record club national fee payment"
+msgstr "Record club national fee payment"
+
+msgid "Club annual membership fee recorded for {0}"
+msgstr "Club annual membership fee recorded for {0}"
+
+msgid "We confirm that the annual membership fee payment for club {0} has been received by the leadership and has been booked."
+msgstr "We confirm that the annual membership fee payment for club {0} has been received by the leadership and has been booked."
+
+msgid "The payment date is {0}. Your club's annual membership fee for {1} is settled, and membership is valid toward {2}."
+msgstr "The payment date is {0}. Your club's annual membership fee for {1} is settled, and membership is valid toward {2}."
+
+msgid "the Hungarian Pipe Club Association (MPE)"
+msgstr "the Hungarian Pipe Club Association (MPE)"
+
+msgid "the national pipe club association"
+msgstr "the national pipe club association"
+
+msgid "This club has already paid the national membership fee for {0}."
+msgstr "This club has already paid the national membership fee for {0}."
+
+msgid "Could not record the club national membership fee payment."
+msgstr "Could not record the club national membership fee payment."
+
+msgid "Club national membership fee payment recorded for {0}."
+msgstr "Club national membership fee payment recorded for {0}."
+
+msgid "The club has not paid the annual national membership fee for {0} yet."
+msgstr "The club has not paid the annual national membership fee for {0} yet."
+
+msgid "Clubs in {0} — membership year {1}"
+msgstr "Clubs in {0} — membership year {1}"
+
+msgid "your club"
+msgstr "your club"
+
+msgid "Club membership fee record created for {0}"
+msgstr "Club membership fee record created for {0}"
+
+msgid "Club membership fee updated for {0}"
+msgstr "Club membership fee updated for {0}"
+
+msgid "club"
+msgstr "club"
+
+msgid "National association membership fee"
+msgstr "National association membership fee"
+
+msgid "Do you confirm that this club has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Do you confirm that this club has paid the national pipe association membership fee for this year? The payment date will be set to today."
+
+msgid "Do you confirm that {0} has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Do you confirm that {0} has paid the national pipe association membership fee for this year? The payment date will be set to today."
+
+msgid "the national pipe association"
+msgstr "the national pipe association"
+
+msgid "National pipe association membership fee"
+msgstr "National pipe association membership fee"
+
+msgid "Do you confirm that this member has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Do you confirm that this member has paid the national pipe association membership fee for this year? The payment date will be set to today."
+
+msgid "Record national membership fee payment?"
+msgstr "Record national membership fee payment?"

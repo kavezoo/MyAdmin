@@ -24,6 +24,11 @@ class EventLogAccess
 
     public static function canSearch(?ServerRequest $request = null): bool
     {
+        // CakeDC `is_superuser` flag (even if Users.role is not `superuser`) — same as Admin panel ACL.
+        if (CurrentUser::isSuperuser($request)) {
+            return true;
+        }
+
         return in_array(CurrentUser::role($request), static::searchRoles(), true);
     }
 

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Controller\President;
 
-use App\Auth\AppRoles;
 use App\Controller\Concerns\PanelMemberListTrait;
 use App\Utility\AdminCountry;
 use App\Utility\MembershipFee;
@@ -47,10 +46,9 @@ class MembersController extends AppController
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->fetchTable('Users');
         $where = [
-            'Users.role' => AppRoles::MEMBER,
             'Users.country_id' => $countryId,
             'Users.active' => 1,
-        ];
+        ] + $this->membershipRosterRoleCondition();
         if ($nationalPaidOnly) {
             $where = array_merge($where, MembershipFee::paidForYearConditions(
                 'Users.' . MembershipFee::FIELD_NATIONAL,
@@ -204,11 +202,10 @@ class MembersController extends AppController
         $member = $users->find()
             ->where([
                 'Users.id' => (string)$id,
-                'Users.role' => AppRoles::MEMBER,
                 'Users.country_id' => $countryId,
                 'Users.active' => 1,
                 'Users.enabled' => 1,
-            ])
+            ] + $this->membershipRosterRoleCondition())
             ->first();
         if ($member === null) {
             throw new NotFoundException(__('Member not found.'));
@@ -268,10 +265,9 @@ class MembersController extends AppController
         $member = $users->find()
             ->where([
                 'Users.id' => (string)$id,
-                'Users.role' => AppRoles::MEMBER,
                 'Users.country_id' => $countryId,
                 'Users.active' => 1,
-            ])
+            ] + $this->membershipRosterRoleCondition())
             ->first();
         if ($member === null) {
             return $this->response

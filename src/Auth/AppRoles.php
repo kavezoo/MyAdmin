@@ -108,6 +108,25 @@ class AppRoles
     }
 
     /**
+     * Roles shown on President / Clubpresident Members lists (fee roster).
+     *
+     * Includes officers who are also club/country members (e.g. clubpresident
+     * must see themselves). Excludes `new` (applicant cards) and admin/superuser.
+     *
+     * @return list<string>
+     */
+    public static function membershipRosterRoles(): array
+    {
+        return [
+            self::MEMBER,
+            self::EDITOR,
+            self::CLUBPRESIDENT,
+            self::PRESIDENT,
+            self::VICEPRESIDENT,
+        ];
+    }
+
+    /**
      * Roles that may use the global header search (Admin Search).
      * President / vicepresident and above; not clubpresident or below.
      *

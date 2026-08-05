@@ -5,6 +5,7 @@ namespace App\Controller\President;
 
 use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
+use App\Utility\ActivityLogLocale;
 use App\Utility\AdminCountry;
 use App\Utility\LocaleDateParser;
 use App\Utility\LocaleNumberParser;
@@ -13,6 +14,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
+use Cake\Mailer\MailerAwareTrait;
 
 /**
  * Country clubs CRUD (president / vice president).
@@ -25,6 +27,8 @@ use Cake\Http\Response;
  */
 class ClubsController extends AppController
 {
+    use MailerAwareTrait;
+
     protected int $indexLimit = 50;
 
     protected int $indexMaxLimit = 500;
@@ -64,6 +68,7 @@ class ClubsController extends AppController
                 'enabled',
                 'visible',
                 'user_count',
+                MembershipFee::FIELD_CLUB_ENTITY,
                 'created',
                 'modified',
             ],
@@ -94,6 +99,7 @@ class ClubsController extends AppController
         $this->set(compact('clubs', 'clubPresidents'));
         $this->set('countryId', $countryId);
         $this->set('countryLabel', AdminCountry::label($countryId));
+        $this->set('membershipYear', MembershipFee::currentYear());
     }
 
     /**
@@ -219,6 +225,7 @@ class ClubsController extends AppController
 
         $this->set(compact('club', 'president', 'countryId'));
         $this->set('countryLabel', AdminCountry::label($countryId));
+        $this->set('membershipYear', MembershipFee::currentYear());
         $this->setCanDeleteFlag($this->Clubs, $club);
         $this->set('title', __('Club details'));
         $this->viewBuilder()->setVar('breadcrumb', __('Clubs'));
@@ -235,6 +242,85 @@ class ClubsController extends AppController
         $club = $this->getScopedClub((string)$id, $countryId);
 
         return $this->deleteEntityOrFail($this->Clubs, $club);
+    }
+
+    /**
+     * Record club annual national association fee (payment date = today).
+     * Emails the club president in the country locale.
+     *
+     * @param string|null $id Club id
+     * @return \Cake\Http\Response|null
+     */
+    public function updateNationalFee(?string $id = null): ?Response
+    {
+        $this->request->allowMethod(['post', 'put', 'patch']);
+        $countryId = $this->requireOfficerCountryId();
+        $club = $this->getScopedClub((string)$id, $countryId);
+
+        $membershipYear = MembershipFee::currentYear();
+        $existingDate = $club->get(MembershipFee::FIELD_CLUB_ENTITY);
+        if (MembershipFee::isPaidForYear($existingDate, $membershipYear)) {
+            $this->Flash->info(__('This club has already paid the national membership fee for {0}.', $membershipYear));
+
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $today = MembershipFee::today();
+        $club = $this->Clubs->patchEntity($club, [
+            MembershipFee::FIELD_CLUB_ENTITY => $today,
+        ], [
+            'accessibleFields' => [
+                MembershipFee::FIELD_CLUB_ENTITY => true,
+            ],
+        ]);
+
+        if (!$this->Clubs->save($club)) {
+            $this->Flash->error(__('Could not record the club national membership fee payment.'));
+
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $this->sendClubNationalFeeEmail($club, $countryId, $membershipYear, $today);
+        $this->Flash->success(__('Club national membership fee payment recorded for {0}.', $membershipYear));
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Notify club president(s) in the country primary locale.
+     */
+    protected function sendClubNationalFeeEmail(
+        EntityInterface $club,
+        int $countryId,
+        int $membershipYear,
+        mixed $paymentDate
+    ): void {
+        try {
+            $president = $this->Clubs->findClubPresident((int)$club->get('id'));
+            if ($president === null) {
+                return;
+            }
+
+            ActivityLogLocale::runForCountry($countryId, function () use (
+                $president,
+                $club,
+                $membershipYear,
+                $paymentDate,
+                $countryId
+            ): void {
+                $associationName = MembershipFee::nationalAssociationName($countryId);
+                $paymentDateFormatted = MembershipFee::lastPaymentFormatted($paymentDate);
+                $this->getMailer('Membership')->send('clubNationalFeeRecorded', [
+                    $president,
+                    $club,
+                    $membershipYear,
+                    $associationName,
+                    $paymentDateFormatted,
+                ]);
+            });
+        } catch (\Throwable $e) {
+            // Fee is saved; email failure must not roll back the payment.
+        }
     }
 
     /**
@@ -278,6 +364,9 @@ class ClubsController extends AppController
                         (int)($club->get('user_count') ?? 0),
                         decimals: 0
                     ),
+                    MembershipFee::FIELD_CLUB_ENTITY => $club->get(MembershipFee::FIELD_CLUB_ENTITY)
+                        ? LocaleDateParser::format($club->get(MembershipFee::FIELD_CLUB_ENTITY), 'date')
+                        : '',
                     'created' => $club->created
                         ? LocaleDateParser::format($club->created, 'datetime_short')
                         : '',

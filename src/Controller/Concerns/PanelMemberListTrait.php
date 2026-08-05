@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Concerns;
 
+use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
 use App\Utility\AdminCountry;
 use App\Utility\MembershipFee;
@@ -14,6 +15,18 @@ use Cake\Http\Response;
  */
 trait PanelMemberListTrait
 {
+    /**
+     * WHERE fragment: active roster roles (member, editor, clubpresident, president, vp).
+     *
+     * @return array<string, mixed>
+     */
+    protected function membershipRosterRoleCondition(): array
+    {
+        return [
+            'Users.role IN' => AppRoles::membershipRosterRoles(),
+        ];
+    }
+
     /**
      * @param list<string> $sortableFields
      * @return array<string, mixed>
@@ -132,6 +145,9 @@ trait PanelMemberListTrait
                 (int)($club->get('user_count') ?? 0),
                 decimals: 0
             ),
+            MembershipFee::FIELD_CLUB_ENTITY => $club->get(MembershipFee::FIELD_CLUB_ENTITY)
+                ? \App\Utility\LocaleDateParser::format($club->get(MembershipFee::FIELD_CLUB_ENTITY), 'date')
+                : '',
             'created' => $club->get('created')
                 ? \App\Utility\LocaleDateParser::format($club->get('created'), 'datetime_short')
                 : '',

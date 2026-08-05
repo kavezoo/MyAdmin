@@ -1769,3 +1769,78 @@ msgstr "Kód:"
 
 msgid "Roles"
 msgstr "Szerepkörök"
+
+msgid "Record club annual membership fee?"
+msgstr "Klub éves tagdíj rögzítése?"
+
+msgid "Do you confirm that this club has paid the annual national membership fee for this year? The payment date will be set to today."
+msgstr "Megerősíted, hogy ez a klub befizette az idei éves országos tagdíjat? A befizetés dátuma a mai nap lesz."
+
+msgid "Do you confirm that {0} has paid the annual national membership fee for this year? The payment date will be set to today."
+msgstr "Megerősíted, hogy a(z) {0} befizette az idei éves országos tagdíjat? A befizetés dátuma a mai nap lesz."
+
+msgid "Record club national fee payment"
+msgstr "Klub MPE tagdíj rögzítése"
+
+msgid "Club annual membership fee recorded for {0}"
+msgstr "Klub éves tagdíj rögzítve: {0}"
+
+msgid "We confirm that the annual membership fee payment for club {0} has been received by the leadership and has been booked."
+msgstr "Visszaigazoljuk, hogy a(z) {0} klub éves tagdíjbefizetése megérkezett a vezetőséghez, és lekönyveltük."
+
+msgid "The payment date is {0}. Your club's annual membership fee for {1} is settled, and membership is valid toward {2}."
+msgstr "A befizetés dátuma: {0}. A klub éves tagdíja {1}-re rendezve van, tagsága érvényes {2} felé."
+
+msgid "the Hungarian Pipe Club Association (MPE)"
+msgstr "a Magyar Pipaclub Egyesület (MPE)"
+
+msgid "the national pipe club association"
+msgstr "az országos pipaklub szövetség"
+
+msgid "This club has already paid the national membership fee for {0}."
+msgstr "Ez a klub már befizette a(z) {0}. évi MPE tagdíjat."
+
+msgid "Could not record the club national membership fee payment."
+msgstr "A klub MPE tagdíj befizetését nem sikerült rögzíteni."
+
+msgid "Club national membership fee payment recorded for {0}."
+msgstr "A klub MPE tagdíj befizetése rögzítve ({0})."
+
+msgid "The club has not paid the annual national membership fee for {0} yet."
+msgstr "A klub még nem fizette be a(z) {0}. évi éves MPE tagdíjat."
+
+msgid "Clubs in {0} — membership year {1}"
+msgstr "Klubok — {0} — tagsági év: {1}"
+
+msgid "your club"
+msgstr "klubod"
+
+msgid "Club membership fee record created for {0}"
+msgstr "Klub tagdíj rekord létrehozva: {0}"
+
+msgid "Club membership fee updated for {0}"
+msgstr "Klub tagdíj frissítve: {0}"
+
+msgid "club"
+msgstr "klub"
+
+msgid "National association membership fee"
+msgstr "Országos szövetségi tagdíj"
+
+msgid "Do you confirm that this club has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Megerősíted, hogy ez a klub befizette az idei MPE tagdíjat? A befizetés dátuma a mai nap lesz."
+
+msgid "Do you confirm that {0} has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Megerősíted, hogy {0} befizette az idei MPE tagdíjat? A befizetés dátuma a mai nap lesz."
+
+msgid "the national pipe association"
+msgstr "az MPE"
+
+msgid "National pipe association membership fee"
+msgstr "MPE tagdíj"
+
+msgid "Do you confirm that this member has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Megerősíted, hogy ez a tag befizette az idei MPE tagdíjat? A befizetés dátuma a mai nap lesz."
+
+msgid "Record national membership fee payment?"
+msgstr "MPE tagdíj rögzítése?"

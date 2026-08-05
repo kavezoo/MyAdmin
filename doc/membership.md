@@ -46,20 +46,21 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 7. **Reject** után a jelentkező nem tud újra belépni (`RequireUserEnabledMiddleware`).
 8. Legacy `/clubpresident/applicants` → redirect a Members indexre (nincs külön Applicants menü).
 
-### Tagdíj dátumok (`users`)
+### Tagdíj dátumok (`users` / `clubs`)
 
-| Mező | Jelentés |
-|------|----------|
-| `club_membership_fee_date` | Helyi klub tagdíj befizetés dátuma (év = dátum éve → érvényes tagság arra az évre) |
-| `national_membership_fee_date` | Országos szövetség tagdíj (Magyarországon: MPE) |
+| Mező | Tábla | Jelentés |
+|------|-------|----------|
+| `club_membership_fee_date` | `users` | Helyi klub tagdíj befizetés dátuma (év = dátum éve → érvényes tagság arra az évre) |
+| `national_membership_fee_date` | `users` | Országos pipa egyesület tagdíj — EN msgid: **National pipe association membership fee**; HU: **MPE tagdíj** |
+| `national_membership_fee_date` | `clubs` | Klub éves tagdíja az országos pipa egyesület felé; Clubs listán ugyanaz a címke (HU: **MPE tagdíj**) |
 
-- Clubpresident: `/clubpresident/members` — **csak** a bejelentkezett user `club_id` klubjának tagjai / jelentkezői (más klub **soha**); klub tagdíj **egy gomb + SWAL** → mai dátum; oszlopban zöld pipa vagy piros „Outstanding” gomb; **Enable / Disable** (SWAL warning/success; napló ha activity logging be van kapcsolva); tiltott tagok (`enabled=0`) is a listán.
+- Clubpresident: `/clubpresident/members` — **csak** a bejelentkezett user `club_id` klubjának tagjai / jelentkezői (más klub **soha**); lista: `membershipRosterRoles` (member, editor, clubpresident, president, vp — **önmaga is**); klub tagdíj **egy gomb + SWAL** → mai dátum; oszlopban zöld pipa vagy piros „Outstanding” gomb; **Enable / Disable** (SWAL warning/success; napló ha activity logging be van kapcsolva); tiltott tagok (`enabled=0`) is a listán.
 - **Lista név:** vastag név + alatta lefordított role (`AppRoles::label` — pl. Tag, Új tag, Klub elnök); element: `users/list_name_cell`.
 - **Edit:** ceruza / modal Edit / view „Edit” → `…/members/edit/{id}` (közös `element/users/member_edit_form`: név, telefon, tagdíj dátum Tempus+Popper; Clubpresident = klub díj; President = országos díj + enabled). Tagdíj dátum változás → `event_logs` ha `activity_logging_enabled`.
-- **President / vicepresident:** `/president/members` — ország `country_id` szerinti tagok (enabled=0 is látszik); országos tagdíj rögzítés (SWAL); **Enable / Disable** gomb (AJAX + SWAL, `users.enabled`); switch „Only national fee paid”; klub tagdíj oszlop csak olvasható.
-- **President Clubs:** `/president/clubs` — ország klubjainak teljes CRUD (name, enabled, visible, pos, **`user_count`** CounterCache); **klubelnök** AJAX Select2: ugyanaz az ország + **nem** `role=new` (member és fölötte bárki, önmaga is) → mentéskor `role=clubpresident` + `club_id`; indexen `user_count` + elnök név → user modal (Edit/View → Members); **view:** Member list félkövér linkek + Related records TAB (Users/Members) + linked modal; törlés tiltva ha `user_count > 0`.
+- **President / vicepresident:** `/president/members` — ország `country_id` szerinti roster (ugyanazok a role-ok, **önmaga is**; enabled=0 is látszik); országos tagdíj rögzítés (SWAL); **Enable / Disable** gomb (AJAX + SWAL, `users.enabled`); switch „Only national fee paid”; klub tagdíj oszlop csak olvasható.
+- **President Clubs:** `/president/clubs` — ország klubjainak teljes CRUD (name, enabled, visible, pos, **`user_count`** CounterCache); **`national_membership_fee_date`** (klub → országos pipa egyesület éves tagdíj, év = dátum éve); index oszlopcímke: `MembershipFee::clubEntityFeeLabel()` → EN *National pipe association membership fee*, HU **MPE tagdíj**; Outstanding gomb / zöld pipa + SWAL → mai dátum; **email** a klubelnöknek (`MembershipMailer::clubNationalFeeRecorded`, szöveg: `__('the national pipe association')` → HU **az MPE**); **napló** ha `activity_logging_enabled` (`MembershipFee::clubEntityActivityDescriptions`); view: tagdíj panel pipával (`profile_club`); **klubelnök** AJAX Select2: ugyanaz az ország + **nem** `role=new` (member és fölötte bárki, önmaga is) → mentéskor `role=clubpresident` + `club_id`; indexen `user_count` + elnök név → user modal (Edit/View → Members); **view:** Member list félkövér linkek + Related records TAB (Users/Members) + linked modal; törlés tiltva ha `user_count > 0`. Admin Clubs CRUD később.
 - **Profil:** feltűnő piros blokk ha nincs befizetve; zöld pipa + dátum ha igen (klub + országos/MPE).
-- **Napló:** `EventLogBehavior` + `ActivityLogSetup::isLoggingEnabled` (ország Setup `activity_logging_enabled`). Tagdíj: `MembershipFee::activityDescriptions`. Jóváhagyás / enable-disable: `MembershipProfile::activityDescriptions` (joined date, role, enabled). Ha a globális naplózás ki van kapcsolva az országra → **nincs** `event_logs` sor.
+- **Napló:** `EventLogBehavior` + `ActivityLogSetup::isLoggingEnabled` (ország Setup `activity_logging_enabled`). User tagdíj: `MembershipFee::activityDescriptions`. **Klub → országos tagdíj** (`clubs.national_membership_fee_date`, pl. Outstanding gomb / `updateNationalFee`): `MembershipFee::clubEntityActivityDescriptions` (module=`Clubs`). Jóváhagyás / enable-disable: `MembershipProfile::activityDescriptions`. Ha a globális naplózás ki van kapcsolva az országra → **nincs** `event_logs` sor.
 
 **Profil klubváltás (member+):** `/edit` oldalon más klub mentése → `role=new`, `membership_status=pending`, **`membership_joined_date` = null**, `Authentication::setIdentity`, clubpresident értesítés; redirect `/new`. **RestrictNewRoleMiddleware:** csak `/new` + profil/auth URL-ek (`/profile`, `/edit`, …), más prefix → `/new`.
 
@@ -69,7 +70,8 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 
 | Fájl | Tartalom |
 |------|----------|
-| `config/schema/clubs.sql` | `clubs` tábla (`enabled` DEFAULT 1, `visible`, `pos`) |
+| `config/schema/clubs.sql` | `clubs` tábla (`enabled` DEFAULT 1, `visible`, `pos`, `national_membership_fee_date`) |
+| `config/Migrations/20260805170000_AddNationalMembershipFeeDateToClubs.php` | klub → országos éves tagdíj dátum |
 | `config/schema/users_membership.sql` | `membership_status`, `membership_joined_date`, `application_notified` |
 | `config/Migrations/20260805150000_AddMembershipJoinedDateToUsers.php` | `membership_joined_date` + backfill approved tagokra |
 | `tmp/seed_membership.php` | séma + demo klubok + clubpresident `club_id` |

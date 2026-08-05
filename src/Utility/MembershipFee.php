@@ -8,7 +8,8 @@ use Cake\I18n\Date;
 use Cake\I18n\I18n;
 
 /**
- * Club + national membership fee payment dates on users.
+ * Club + national membership fee payment dates on users,
+ * and club annual fee paid to the national association (`clubs.national_membership_fee_date`).
  *
  * A non-null date whose calendar year matches the target year means membership is paid for that year.
  */
@@ -18,10 +19,21 @@ class MembershipFee
 
     public const FIELD_NATIONAL = 'national_membership_fee_date';
 
-    /** @var list<string> */
+    /**
+     * Clubs table: annual fee paid by the club to the national association.
+     * Same column name as users national fee; different table.
+     */
+    public const FIELD_CLUB_ENTITY = 'national_membership_fee_date';
+
+    /** @var list<string> User fee date fields */
     public const DATE_FIELDS = [
         self::FIELD_CLUB,
         self::FIELD_NATIONAL,
+    ];
+
+    /** @var list<string> Clubs entity fee date fields */
+    public const CLUB_ENTITY_DATE_FIELDS = [
+        self::FIELD_CLUB_ENTITY,
     ];
 
     public static function currentYear(): int
@@ -34,26 +46,40 @@ class MembershipFee
         return (string)__('Club membership fee');
     }
 
+    /**
+     * Column / form label for the user or club fee paid to the national pipe association.
+     *
+     * EN msgid is country-neutral. Local names (e.g. MPE) belong in translations only.
+     */
     public static function nationalFeeLabel(?int $countryId = null): string
     {
-        $countryId = (int)($countryId ?? 0);
-        if ($countryId > 0) {
-            $iso2 = strtoupper(trim((string)(AdminCountry::iso2Map([$countryId])[$countryId] ?? '')));
-            if ($iso2 === 'HU') {
-                return (string)__('MPE membership fee');
-            }
-        }
-
-        return (string)__('National association membership fee');
+        return (string)__('National pipe association membership fee');
     }
 
     public static function fieldLabel(string $field, ?int $countryId = null): string
     {
         return match ($field) {
             self::FIELD_CLUB => static::clubFeeLabel($countryId),
-            self::FIELD_NATIONAL => static::nationalFeeLabel($countryId),
+            self::FIELD_NATIONAL, self::FIELD_CLUB_ENTITY => static::nationalFeeLabel($countryId),
             default => $field,
         };
+    }
+
+    /**
+     * National pipe association name for emails / copy.
+     * EN is generic; HU (and other) locales supply the local short name (e.g. MPE).
+     */
+    public static function nationalAssociationName(?int $countryId = null): string
+    {
+        return (string)__('the national pipe association');
+    }
+
+    /**
+     * Label for club → national association annual fee (list / view).
+     */
+    public static function clubEntityFeeLabel(?int $countryId = null): string
+    {
+        return static::nationalFeeLabel($countryId);
     }
 
     public static function isPaidForYear(mixed $date, int $year): bool
@@ -155,6 +181,42 @@ class MembershipFee
         $prefix = $created
             ? (string)__('Membership fee record created for {0}', $name !== '' ? $name : __('user'))
             : (string)__('Membership fee updated for {0}', $name !== '' ? $name : __('user'));
+
+        return $prefix . ': ' . implode('; ', $parts);
+    }
+
+    /**
+     * Event log description for Clubs entity fee date changes.
+     *
+     * @param array<string, array{from: mixed, to: mixed}> $changes
+     */
+    public static function clubEntityActivityDescriptions(
+        EntityInterface $club,
+        array $changes,
+        bool $created
+    ): string {
+        $countryId = (int)($club->get('country_id') ?? 0);
+        $name = trim((string)($club->get('name') ?? ''));
+
+        $parts = [];
+        foreach (self::CLUB_ENTITY_DATE_FIELDS as $field) {
+            if (!isset($changes[$field])) {
+                continue;
+            }
+            $pair = $changes[$field];
+            $from = static::toDate($pair['from'] ?? null);
+            $to = static::toDate($pair['to'] ?? null);
+            $label = static::clubEntityFeeLabel($countryId);
+            $parts[] = static::describeChange($label, $from, $to);
+        }
+
+        if ($parts === []) {
+            return '';
+        }
+
+        $prefix = $created
+            ? (string)__('Club membership fee record created for {0}', $name !== '' ? $name : __('club'))
+            : (string)__('Club membership fee updated for {0}', $name !== '' ? $name : __('club'));
 
         return $prefix . ': ' . implode('; ', $parts);
     }

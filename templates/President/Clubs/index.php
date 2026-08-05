@@ -1,17 +1,18 @@
 <?php
 /**
- * President — clubs index (country-scoped).
+ * President — clubs index (country-scoped) + national association fee.
  *
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Club> $clubs
  * @var array<int, \Cake\Datasource\EntityInterface> $clubPresidents
  * @var string $countryLabel
  * @var int $countryId
+ * @var int $membershipYear
  */
 use App\Auth\MembershipProfile;
 use App\Utility\MembershipFee;
 
-$this->Html->css(['pages/index'], ['block' => true]);
+$this->Html->css(['pages/index', 'pages/membership_fee'], ['block' => true]);
 
 /**
  * Row double-click: 'modal' | 'edit' | 'none'
@@ -34,8 +35,13 @@ $showCountColumn = true;
 $showCreatedColumn = true;
 $showModifiedColumn = true;
 
+$countryLabel = (string)($countryLabel ?? '');
+$countryId = (int)($countryId ?? 0);
+$membershipYear = (int)($membershipYear ?? MembershipFee::currentYear());
+$clubEntityFeeLabel = MembershipFee::clubEntityFeeLabel($countryId);
+
 $showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
-$indexColspan = 3; // name, club president, actions
+$indexColspan = 4; // name, club president, national fee, actions
 if ($showIdColumn) {
 	$indexColspan++;
 }
@@ -78,8 +84,8 @@ $userLabels = [
 	'active' => __('Active'),
 	'enabled' => __('Enabled'),
 	MembershipProfile::FIELD_JOINED => __('Member since'),
-	MembershipFee::FIELD_CLUB => MembershipFee::clubFeeLabel((int)($countryId ?? 0)),
-	MembershipFee::FIELD_NATIONAL => MembershipFee::nationalFeeLabel((int)($countryId ?? 0)),
+	MembershipFee::FIELD_CLUB => MembershipFee::clubFeeLabel($countryId),
+	MembershipFee::FIELD_NATIONAL => MembershipFee::nationalFeeLabel($countryId),
 	'created' => __('Created'),
 	'modified' => __('Modified'),
 ];
@@ -99,6 +105,7 @@ $config = [
 		'visible' => __('Visible'),
 		'pos' => __('Position'),
 		'user_count' => __('Members'),
+		MembershipFee::FIELD_CLUB_ENTITY => $clubEntityFeeLabel,
 		'created' => __('Created'),
 		'modified' => __('Modified'),
 	],
@@ -112,10 +119,9 @@ $this->Html->scriptBlock(
 	. ');',
 	['block' => 'script']
 );
-$this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
+$this->Html->script(['pages/index', 'pages/president_clubs'], ['block' => 'scriptBottom']);
 
 $clubPresidents = $clubPresidents ?? [];
-$countryLabel = (string)($countryLabel ?? '');
 
 $membersGetUrl = $this->Url->build(['action' => 'userRecordGet']);
 $membersEditUrl = $this->Url->build(['prefix' => 'President', 'controller' => 'Members', 'action' => 'edit']);
@@ -129,7 +135,7 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 				<div class="float-left">
 					<h3 class="fw-bold"><i class="fa fa-sitemap"></i> <?= __('Clubs') ?></h3>
 					<?php if ($countryLabel !== ''): ?>
-						<div class="text-muted"><?= h(__('Clubs in {0}', $countryLabel)) ?></div>
+						<div class="text-muted"><?= h(__('Clubs in {0} — membership year {1}', $countryLabel, $membershipYear)) ?></div>
 					<?php endif; ?>
 					<?php if ($rowDoubleClickHint !== ''): ?>
 						<?= h($rowDoubleClickHint) ?>
@@ -150,6 +156,7 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 							<?php endif; ?>
 							<th scope="col" class="string name"><?= $this->Paginator->sort('name', __('Name')) ?></th>
 							<th scope="col" class="string club-president"><?= __('Club president') ?></th>
+							<th scope="col" class="date national-fee text-center"><?= $this->Paginator->sort(MembershipFee::FIELD_CLUB_ENTITY, h($clubEntityFeeLabel) . ' (' . h($membershipYear) . ')') ?></th>
 							<?php if ($showPosColumn): ?>
 								<th scope="col" class="number pos"><?= $this->Paginator->sort('pos', __('Position')) ?></th>
 							<?php endif; ?>
@@ -182,6 +189,11 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 							$canDeleteRow = $userCount === 0;
 							$isLastVisited = isset($lastVisitedId) && (int)$lastVisitedId === (int)$club->id;
 							$president = $clubPresidents[(int)$club->id] ?? null;
+							$feeDate = $club->get(MembershipFee::FIELD_CLUB_ENTITY);
+							$feePaid = MembershipFee::isPaidForYear($feeDate, $membershipYear);
+							$feeDateFormatted = MembershipFee::paidDateFormatted($feeDate, $membershipYear);
+							$feeLastFormatted = MembershipFee::lastPaymentFormatted($feeDate);
+							$formId = 'club-national-fee-form-' . (int)$club->id;
 							?>
 							<tr id="record-<?= (int)$club->id ?>" data-id="<?= (int)$club->id ?>" data-can-delete="<?= $canDeleteRow ? '1' : '0' ?>"<?= $isLastVisited ? ' class="last-visited"' : '' ?>>
 								<?php if ($showIdColumn): ?>
@@ -202,6 +214,24 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 											data-title="<?= h(__('Club president')) ?>"
 										><?= h(MembershipProfile::displayName($president)) ?><span class="record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span></a>
 									<?php endif; ?>
+								</td>
+								<td class="date national-fee text-center">
+									<?= $this->Form->create(null, [
+										'url' => ['action' => 'updateNationalFee', $club->id],
+										'id' => $formId,
+										'class' => 'membership-fee-hidden-form',
+									]) ?>
+									<?= $this->Form->end() ?>
+									<?= $this->element('users/membership_fee_status', [
+										'label' => $clubEntityFeeLabel,
+										'paid' => $feePaid,
+										'membershipYear' => $membershipYear,
+										'dateFormatted' => $feeDateFormatted,
+										'lastPaymentDateFormatted' => $feeLastFormatted,
+										'mode' => 'table_club_national_action',
+										'memberName' => (string)$club->name,
+										'formId' => $formId,
+									]) ?>
 								</td>
 								<?php if ($showPosColumn): ?>
 									<td class="number pos text-end"><?= h(\App\Utility\LocaleNumberParser::format($club->pos, decimals: $numberDecimals['integer'])) ?></td>
@@ -295,6 +325,14 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 		</div>
 	</div>
 </div>
-
+<script>
+window.PresidentClubs = {
+	recordTitle: <?= json_encode(__('Record club annual membership fee?'), JSON_UNESCAPED_UNICODE) ?>,
+	recordText: <?= json_encode(__('Do you confirm that this club has paid the national pipe association membership fee for this year? The payment date will be set to today.'), JSON_UNESCAPED_UNICODE) ?>,
+	recordTextNamed: <?= json_encode(__('Do you confirm that {0} has paid the national pipe association membership fee for this year? The payment date will be set to today.'), JSON_UNESCAPED_UNICODE) ?>,
+	recordConfirm: <?= json_encode(__('Yes, record payment'), JSON_UNESCAPED_UNICODE) ?>,
+	recordCancel: <?= json_encode(__('Cancel'), JSON_UNESCAPED_UNICODE) ?>
+};
+</script>
 <?= $this->element('admin/modal_record_view') ?>
 <?= $this->element('admin/modal_linked_record_view') ?>

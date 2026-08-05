@@ -87,4 +87,44 @@ class MembershipMailer extends Mailer
             ->setTemplate('membership_approved')
             ->setLayout('default');
     }
+
+    /**
+     * Notify club president that the club's national annual fee was recorded.
+     *
+     * @param \Cake\Datasource\EntityInterface $president
+     * @param \Cake\Datasource\EntityInterface $club
+     * @param int $membershipYear
+     * @param string $associationName Localized national association name
+     * @param string $paymentDateFormatted Localized payment date
+     */
+    public function clubNationalFeeRecorded(
+        EntityInterface $president,
+        EntityInterface $club,
+        int $membershipYear,
+        string $associationName,
+        string $paymentDateFormatted,
+    ): void {
+        $presidentName = trim((string)($president->get('first_name') ?? ''));
+        $clubName = trim((string)($club->get('name') ?? ''));
+        $email = trim((string)($president->get('email') ?? ''));
+        if ($email === '') {
+            return;
+        }
+
+        $this
+            ->setTo($email)
+            ->setSubject(__('Club annual membership fee recorded for {0}', $clubName !== '' ? $clubName : __('your club')))
+            ->setEmailFormat(Message::MESSAGE_BOTH)
+            ->setViewVars([
+                'presidentName' => $presidentName,
+                'clubName' => $clubName,
+                'membershipYear' => $membershipYear,
+                'associationName' => $associationName,
+                'paymentDateFormatted' => $paymentDateFormatted,
+            ]);
+
+        $this->viewBuilder()
+            ->setTemplate('club_national_fee_recorded')
+            ->setLayout('default');
+    }
 }

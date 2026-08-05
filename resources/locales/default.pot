@@ -1323,3 +1323,78 @@ msgstr ""
 
 msgid "Roles"
 msgstr ""
+
+msgid "Record club annual membership fee?"
+msgstr ""
+
+msgid "Do you confirm that this club has paid the annual national membership fee for this year? The payment date will be set to today."
+msgstr ""
+
+msgid "Do you confirm that {0} has paid the annual national membership fee for this year? The payment date will be set to today."
+msgstr ""
+
+msgid "Record club national fee payment"
+msgstr ""
+
+msgid "Club annual membership fee recorded for {0}"
+msgstr ""
+
+msgid "We confirm that the annual membership fee payment for club {0} has been received by the leadership and has been booked."
+msgstr ""
+
+msgid "The payment date is {0}. Your club's annual membership fee for {1} is settled, and membership is valid toward {2}."
+msgstr ""
+
+msgid "the Hungarian Pipe Club Association (MPE)"
+msgstr ""
+
+msgid "the national pipe club association"
+msgstr ""
+
+msgid "This club has already paid the national membership fee for {0}."
+msgstr ""
+
+msgid "Could not record the club national membership fee payment."
+msgstr ""
+
+msgid "Club national membership fee payment recorded for {0}."
+msgstr ""
+
+msgid "The club has not paid the annual national membership fee for {0} yet."
+msgstr ""
+
+msgid "Clubs in {0} — membership year {1}"
+msgstr ""
+
+msgid "your club"
+msgstr ""
+
+msgid "Club membership fee record created for {0}"
+msgstr ""
+
+msgid "Club membership fee updated for {0}"
+msgstr ""
+
+msgid "club"
+msgstr ""
+
+msgid "National association membership fee"
+msgstr ""
+
+msgid "Do you confirm that this club has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr ""
+
+msgid "Do you confirm that {0} has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr ""
+
+msgid "the national pipe association"
+msgstr ""
+
+msgid "National pipe association membership fee"
+msgstr ""
+
+msgid "Do you confirm that this member has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr ""
+
+msgid "Record national membership fee payment?"
+msgstr ""

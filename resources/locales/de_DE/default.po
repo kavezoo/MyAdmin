@@ -258,3 +258,78 @@ msgstr "Neues Mitglied"
 
 msgid "Roles"
 msgstr "Rollen"
+
+msgid "Record club annual membership fee?"
+msgstr "Jährlichen Club-Mitgliedsbeitrag erfassen?"
+
+msgid "Do you confirm that this club has paid the annual national membership fee for this year? The payment date will be set to today."
+msgstr "Bestätigen Sie, dass dieser Club den jährlichen nationalen Mitgliedsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+
+msgid "Do you confirm that {0} has paid the annual national membership fee for this year? The payment date will be set to today."
+msgstr "Bestätigen Sie, dass {0} den jährlichen nationalen Mitgliedsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+
+msgid "Record club national fee payment"
+msgstr "Nationalen Clubbeitrag erfassen"
+
+msgid "Club annual membership fee recorded for {0}"
+msgstr "Jährlicher Clubbeitrag erfasst für {0}"
+
+msgid "We confirm that the annual membership fee payment for club {0} has been received by the leadership and has been booked."
+msgstr "Wir bestätigen, dass die jährliche Mitgliedsbeitragszahlung des Clubs {0} bei der Leitung eingegangen und verbucht wurde."
+
+msgid "The payment date is {0}. Your club's annual membership fee for {1} is settled, and membership is valid toward {2}."
+msgstr "Das Zahlungsdatum ist {0}. Der jährliche Mitgliedsbeitrag Ihres Clubs für {1} ist beglichen, und die Mitgliedschaft gilt gegenüber {2}."
+
+msgid "the Hungarian Pipe Club Association (MPE)"
+msgstr "dem Ungarischen Pfeifenclub-Verband (MPE)"
+
+msgid "the national pipe club association"
+msgstr "dem nationalen Pfeifenclub-Verband"
+
+msgid "This club has already paid the national membership fee for {0}."
+msgstr "Dieser Club hat den nationalen Mitgliedsbeitrag für {0} bereits gezahlt."
+
+msgid "Could not record the club national membership fee payment."
+msgstr "Die nationale Clubbeitragszahlung konnte nicht erfasst werden."
+
+msgid "Club national membership fee payment recorded for {0}."
+msgstr "Nationale Clubbeitragszahlung für {0} erfasst."
+
+msgid "The club has not paid the annual national membership fee for {0} yet."
+msgstr "Der Club hat den jährlichen nationalen Mitgliedsbeitrag für {0} noch nicht gezahlt."
+
+msgid "Clubs in {0} — membership year {1}"
+msgstr "Clubs in {0} — Mitgliedschaftsjahr {1}"
+
+msgid "your club"
+msgstr "Ihren Club"
+
+msgid "Club membership fee record created for {0}"
+msgstr "Club-Beitragsdatensatz erstellt für {0}"
+
+msgid "Club membership fee updated for {0}"
+msgstr "Club-Beitrag aktualisiert für {0}"
+
+msgid "club"
+msgstr "Club"
+
+msgid "National association membership fee"
+msgstr "Mitgliedsbeitrag des nationalen Verbands"
+
+msgid "Do you confirm that this club has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Bestätigen Sie, dass dieser Club den nationalen Pfeifenverbandsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+
+msgid "Do you confirm that {0} has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Bestätigen Sie, dass {0} den nationalen Pfeifenverbandsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+
+msgid "the national pipe association"
+msgstr "dem nationalen Pfeifenverband"
+
+msgid "National pipe association membership fee"
+msgstr "Mitgliedsbeitrag des nationalen Pfeifenverbands"
+
+msgid "Do you confirm that this member has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Bestätigen Sie, dass dieses Mitglied den nationalen Pfeifenverbandsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+
+msgid "Record national membership fee payment?"
+msgstr "Nationalen Pfeifenverbandsbeitrag erfassen?"

@@ -5,6 +5,77 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-05 — Országos pipa egyesület / MPE tagdíj i18n
+
+### Mi változott / miért
+- EN msgid: **National pipe association membership fee** / **the national pipe association** (nincs MPE az angol forrásban).
+- HU: **MPE tagdíj**, **az MPE** — Clubs/Members listák, SWAL, email, EventLog mezőcímke.
+- Eltávolítva a country_id → HU speciális EN msgid ág (`nationalAssociationName`).
+
+### Érintett
+- `MembershipFee.php`, `EventLogPresenter.php`, President Clubs/Members index, `tmp/membership_fee_locale_extra.php`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — Taglista: roster role-ok (önmaga is)
+
+### Mi változott / miért
+- Members index eddig **csak** `role=member` → klubelnök / elnök / alelnök / editor kimaradt (beleértve a bejelentkezett usert).
+- Most: `AppRoles::membershipRosterRoles()` = member, editor, clubpresident, president, vicepresident. (`new` továbbra is a jelentkező kártyákon.)
+
+### Érintett
+- `src/Auth/AppRoles.php`, `PanelMemberListTrait`, President/Clubpresident `MembersController`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — Admin Event logs menü: is_superuser flag
+
+### Mi változott / miért
+- `EventLogAccess::canSearch`: a CakeDC **`is_superuser`** flag is elég (ne csak `Users.role ∈ {superuser,admin,president,vicepresident}`). Így az Admin Settings → **Event logs** újra megjelenik, ha a belépett usernek van superuser flagje, de a role pl. `member`.
+
+### Érintett
+- `src/Auth/EventLogAccess.php`, `doc/event-logs.md`
+
+---
+
+## 2026-08-05 — Országos tagdíj címke: ne „MPE” az EN msgid
+
+### Mi változott / miért
+- Korábbi lépés: HU → `__('MPE membership fee')` ág eltávolítva. Később pontosítva: EN = **National pipe association membership fee**, HU = **MPE tagdíj** (lásd fenti bejegyzés).
+
+### Érintett
+- `src/Utility/MembershipFee.php`, `tmp/membership_fee_locale_extra.php`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — Clubs: EventLog explicit (tagdíj napló)
+
+### Mi változott / miért
+- `ClubsTable`: explicit `EventLog` behavior (mint Users) — klub országos tagdíj dátum változás biztosan `event_logs`-ba kerül, ha `activity_logging_enabled`.
+
+### Érintett
+- `src/Model/Table/ClubsTable.php`, `doc/membership.md`, `doc/event-logs.md`
+
+---
+
+## 2026-08-05 — Clubs: országos éves tagdíj (President)
+
+### Mi változott / miért
+- `clubs.national_membership_fee_date`: mikor fizette a klub az éves tagdíjat az országos egyesület felé (év = tagsági év, mint a usersnél).
+- President Clubs index: Outstanding gomb / zöld pipa + „Last paid / Has not paid yet”; SWAL → mai dátum (`updateNationalFee`).
+- Clubs view: tagdíj panel pipával (`profile_club`).
+- Elfogadáskor email a klubelnöknek az ország primary locale-ján (HU → MPE / Magyar Pipaclub Egyesület).
+- Napló: `MembershipFee::clubEntityActivityDescriptions` + EventLogBehavior Clubs.
+
+### Érintett
+- Migráció `20260805170000_AddNationalMembershipFeeDateToClubs`, `config/schema/clubs.sql`
+- `MembershipFee`, `ClubsController`, `MembershipMailer`, email templatek
+- `templates/President/Clubs/{index,view}.php`, `membership_fee_status`, `president_clubs.js`
+- `tmp/membership_fee_locale_extra.php` + `build_auth_locale_pos.php`
+- `doc/membership.md`
+
+---
+
 ## 2026-08-05 — Setups: csak superuser
 
 ### Mi változott / miért

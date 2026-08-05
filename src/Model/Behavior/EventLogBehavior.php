@@ -106,11 +106,12 @@ class EventLogBehavior extends Behavior
         $changeSummary = EventLogChanges::summary($changes, 350);
 
         $countryId = 0;
-        if ($alias === 'Users') {
+        if (in_array($alias, ['Users', 'Clubs'], true)) {
             $countryId = (int)($entity->get('country_id') ?? 0);
         }
 
         $feeChanges = [];
+        $clubFeeChanges = [];
         $membershipChanges = [];
         if ($alias === 'Users' && $changes !== []) {
             foreach (MembershipFee::DATE_FIELDS as $feeField) {
@@ -128,6 +129,12 @@ class EventLogBehavior extends Behavior
             ) {
                 if (isset($changes[$membershipField])) {
                     $membershipChanges[$membershipField] = $changes[$membershipField];
+                }
+            }
+        } elseif ($alias === 'Clubs' && $changes !== []) {
+            foreach (MembershipFee::CLUB_ENTITY_DATE_FIELDS as $feeField) {
+                if (isset($changes[$feeField])) {
+                    $clubFeeChanges[$feeField] = $changes[$feeField];
                 }
             }
         }
@@ -172,7 +179,7 @@ class EventLogBehavior extends Behavior
                 }
             }
         } elseif ($feeChanges !== []) {
-            // Membership fee date edit (club / national) — gated by ActivityLogSetup in EventLogger
+            // Membership fee date edit (user club / national) — gated by ActivityLogSetup in EventLogger
             if ($countryId > 0) {
                 $description = ActivityLogLocale::runForCountry(
                     $countryId,
@@ -180,6 +187,27 @@ class EventLogBehavior extends Behavior
                 );
             } else {
                 $description = MembershipFee::activityDescriptions($entity, $feeChanges, $created);
+            }
+            if ($description === '') {
+                $description = sprintf(
+                    '%s %s #%s%s',
+                    $created ? 'Created' : 'Updated',
+                    $alias,
+                    (string)$pk,
+                    $label !== '' ? ' (' . $label . ')' : ''
+                );
+                if ($changeSummary !== '') {
+                    $description .= ': ' . $changeSummary;
+                }
+            }
+        } elseif ($clubFeeChanges !== []) {
+            if ($countryId > 0) {
+                $description = ActivityLogLocale::runForCountry(
+                    $countryId,
+                    fn () => MembershipFee::clubEntityActivityDescriptions($entity, $clubFeeChanges, $created)
+                );
+            } else {
+                $description = MembershipFee::clubEntityActivityDescriptions($entity, $clubFeeChanges, $created);
             }
             if ($description === '') {
                 $description = sprintf(

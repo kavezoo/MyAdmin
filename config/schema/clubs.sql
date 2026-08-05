@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `clubs` (
   `visible` tinyint(1) NOT NULL DEFAULT 1,
   `pos` int(11) NOT NULL DEFAULT 1000,
   `user_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: users with this club_id',
+  `national_membership_fee_date` date DEFAULT NULL COMMENT 'National association club fee paid on (year on date = membership year)',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -16,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `clubs` (
   KEY `visible` (`visible`),
   KEY `enabled` (`enabled`),
   KEY `pos` (`pos`),
+  KEY `national_membership_fee_date` (`national_membership_fee_date`),
   CONSTRAINT `clubs_country_id_fk`
     FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci

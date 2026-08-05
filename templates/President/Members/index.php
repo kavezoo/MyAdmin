@@ -115,6 +115,7 @@ $config = [
 		'visible' => __('Visible'),
 		'pos' => __('Position'),
 		'user_count' => __('Members'),
+		MembershipFee::FIELD_CLUB_ENTITY => $nationalFeeLabel,
 		'created' => __('Created'),
 		'modified' => __('Modified'),
 	],
@@ -127,6 +128,7 @@ $config = [
 			'visible' => __('Visible'),
 			'pos' => __('Position'),
 			'user_count' => __('Members'),
+			MembershipFee::FIELD_CLUB_ENTITY => $nationalFeeLabel,
 			'created' => __('Created'),
 			'modified' => __('Modified'),
 		],
@@ -432,8 +434,8 @@ $this->assign('title', __('Members'));
 <script>
 window.PresidentMembers = {
 	recordTitle: <?= json_encode(__('Record national membership fee payment?'), JSON_UNESCAPED_UNICODE) ?>,
-	recordText: <?= json_encode(__('Do you confirm that this member has paid the national membership fee for this year (e.g. MPE in Hungary)? The payment date will be set to today.'), JSON_UNESCAPED_UNICODE) ?>,
-	recordTextNamed: <?= json_encode(__('Do you confirm that {0} has paid the national membership fee for this year? The payment date will be set to today.'), JSON_UNESCAPED_UNICODE) ?>,
+	recordText: <?= json_encode(__('Do you confirm that this member has paid the national pipe association membership fee for this year? The payment date will be set to today.'), JSON_UNESCAPED_UNICODE) ?>,
+	recordTextNamed: <?= json_encode(__('Do you confirm that {0} has paid the national pipe association membership fee for this year? The payment date will be set to today.'), JSON_UNESCAPED_UNICODE) ?>,
 	recordConfirm: <?= json_encode(__('Yes, record payment'), JSON_UNESCAPED_UNICODE) ?>,
 	recordCancel: <?= json_encode(__('Cancel'), JSON_UNESCAPED_UNICODE) ?>,
 	disableTitle: <?= json_encode(__('Disable member?'), JSON_UNESCAPED_UNICODE) ?>,
