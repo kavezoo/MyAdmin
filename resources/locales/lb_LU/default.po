@@ -8,184 +8,184 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Kont aktiv"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Kont aktivéiert"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Detailer vun der Aktivitéit"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Aktivitéitsprotokoll"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Aktivitéitsprotokoll"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Aktivitéitsprotokoll aktivéiert"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Aktivitéitsprotokoll fir {0} desaktivéiert."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Aktivitéitsprotokoll fir {0} aktivéiert."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Application settings"
-msgstr "Applikatiounsastellungen"
+msgstr "Application settings"
 
 msgid "Approved"
 msgstr "Approved"
 
 msgid "Browse all activity"
-msgstr "All Aktivitéit duerchsichen"
+msgstr "Browse all activity"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Steiert de Menüpunkt «Meng Aktivitéit» fir Benotzer an dësem Land."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Created"
-msgstr "Erstallt"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} erstallt"
+msgstr "Created {0}"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
 
 msgid "Deleted"
-msgstr "Geläscht"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} geläscht"
+msgstr "Deleted {0}"
 
 msgid "Endonym"
 msgstr "Endonym"
 
 msgid "Hide from users"
-msgstr "Viru Benotzer verstoppen"
+msgstr "Hide from users"
 
 msgid "ISO code"
-msgstr "ISO-Code"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identifikator"
+msgstr "Identifier"
 
 msgid "Incomplete"
 msgstr "Incomplete"
 
 msgid "Language code"
-msgstr "Sproochcode"
+msgstr "Language code"
 
 msgid "Membership status"
-msgstr "Membersstatus"
+msgstr "Membership status"
 
 msgid "My activity"
-msgstr "Meng Aktivitéit"
+msgstr "My activity"
 
 msgid "No activity recorded yet."
-msgstr "Nach keng Aktivitéit protokolléiert."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Keng weider Detailer fir dësen Aentrée."
+msgstr "No further details for this entry."
 
 msgid "No working country is set."
-msgstr "Keen Aarbechtsland festgeluecht."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Aus"
+msgstr "Off"
 
 msgid "On"
-msgstr "Un"
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Iwwergréifenden Saaz"
+msgstr "Parent record"
 
 msgid "Pending approval"
 msgstr "Pending approval"
 
 msgid "Record"
-msgstr "Saz"
+msgstr "Record"
 
 msgid "Sample record"
-msgstr "Beispillsaz"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Aktivitéit sichen…"
+msgstr "Search activity…"
 
 msgid "Settings for {0}"
-msgstr "Astellungen fir {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Benotzer weisen"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Umeldung"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Ugemellt"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Ofgemellt"
+msgstr "Signed out"
 
 msgid "The setting could not be saved. Please try again."
-msgstr "D’Astellung konnt net gespäichert ginn. Probéiert et nach eng Kéier."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Zäitzon"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Protokoll ausschalten"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Protokoll uschalten"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Aktualiséiert"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} aktualiséiert"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Aktualiséiert: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Benotzerkont"
+msgstr "User account"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Benotzer kënnen hir eegen Aktivitéit an {0} net méi gesinn."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Benotzer kënnen elo hir eegen Aktivitéit an {0} gesinn."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Benotzer kënnen hir eegen Aktivitéit gesinn"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Benotzer gesinn hir eegen Aktivitéit"
+msgstr "Users see own activity"
 
 msgid "What changed"
-msgstr "Wat geännert gouf"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Wann aus, ginn nei Umeldungen, Ofmeldungen an Datenaännerungen net protokolléiert."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Wann Dir Iech umellt, ofmellt oder Är Donnéeën ännert."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Wien däerf editéieren"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Dir däerft dës Astellung net änneren."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Äert Aarbechtsland — d’Schrëfter gëllen nëmme fir dëst Land."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "an méi"
+msgstr "and more"
 
 msgid "changed"
-msgstr "geännert"
+msgstr "changed"
 
 msgid "complex value"
 msgstr "complex value"
@@ -231,3 +231,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "President"
+
+msgid "Vice president"
+msgstr "Vizepräsident"
+
+msgid "Club president"
+msgstr "Clubpresident"
+
+msgid "Editor"
+msgstr "Editeur"
+
+msgid "Member"
+msgstr "Member"
+
+msgid "New member"
+msgstr "Neie Member"
+
+msgid "Roles"
+msgstr "Rollen"

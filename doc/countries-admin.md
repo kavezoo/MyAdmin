@@ -24,14 +24,16 @@ Index modal: **Additional languages** kapcsolt linklista (`recordGet` → `addit
 
 ## 1. Jogok (rövid)
 
-| Művelet | Superuser | Admin |
-|---------|-----------|-------|
-| Index / view | igen | igen (meta edit jog) |
-| Add / delete | igen | nem |
-| Edit összes mező | igen | nem |
-| Edit `visible` + `pos` | igen | igen |
+| Művelet | Superuser | Admin | Egyéb |
+|---------|-----------|-------|-------|
+| Index / view / menü | igen | igen | **nem** — menü rejtve |
+| Add / delete | igen | nem | nem |
+| Edit összes mező | igen | nem | nem |
+| Edit `visible` + `pos` | igen | igen | nem |
 
-`CurrentUser::isSuperuser()` = `role === superuser` **vagy** CakeDC `is_superuser` (szigorú `1`/`true`).
+- `CountryAccess::canAccessModule()` — sidebar + URL belépés (`admin` / `superuser`).
+- Jog nélkül: **ne** `ForbiddenException` error page → `Flash->warning` (Simple Notify toast) + redirect Dashboard (`Admin\AppController::denyWithFlashWarning`).
+- `CurrentUser::isSuperuser()` = `role === superuser` **vagy** CakeDC `is_superuser` (szigorú `1`/`true`).
 
 ---
 

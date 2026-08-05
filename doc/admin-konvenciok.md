@@ -274,6 +274,7 @@ CSS: `style.css` (zöld kiemelés). A `index.js` modalnál is állítja a class-
 | `Admin.indexState[Alias]` | `sort`, `direction`, `page`, `q`, opcionális `limit` |
 
 - **URL a forrás** (könyvjelzőzhető): sort / direction / **page** (1 is!) / q / limit — `App\View\Helper\PaginatorHelper` (Cake alapból elhagyná a `page=1`-et).
+- Index state helpers: `IndexListCrudTrait` (Admin + President panelek; session kulcs panel szerint).
 - Üres index URL → redirect a mentett kanonikus URL-re (`applyIndexListState` Response).
 - Mentés / „Back to list”: `redirectToIndexList('Alias')` / `$indexListUrl`.
 - Kereső param: `q` (`AdminSearch::queryParam()`).
@@ -357,6 +358,37 @@ Részletek: [crud-utmutato.md](crud-utmutato.md) → `recordGet`.
 - A rendezés a Paginator URL paraméterekből jön: `?sort=field&direction=asc|desc` — és sessionben megmarad.
 - A `th`-okban `$this->Paginator->sort('mezo', 'Címke')`.
 - A `paginate()` hívásban add meg a `sortableFields` listát (különösen associált mezőknél, pl. `Parents.name`).
+
+#### Sort ikonok (zöld ASC / piros DESC) — **minden** index kötelező
+
+CSS: `webroot/css/style.css` — `.table th.{típus} > a.asc::after` / `a.desc::after` (Font Awesome).
+
+| Követelmény | Miért |
+|-------------|--------|
+| `th` típusosztály | `string` / `number` / `currency` / `date` / `datetime` / `time` / `boolean` (+ `id`→`number id`) — **enélkül nincs ikon** |
+| `Paginator->sort('kulcs')` === `sortableFields` elem | **Ugyanaz a string.** Saját CRUD (`Samples`→`name`): rövid név OK. **Idegen Table** (`Members`→`Users` find): mindig `Users.first_name` / `Clubs.name` — eltérés → sort elutasítva → **nincs ASC↔DESC váltás, nincs ikon** |
+| Aktív sort | Ikon az aktuális oszlopon; **2. kattintás** fordítja az irányt |
+
+```php
+// Controller — kulcsok = template sort() első argumentumai (pontos egyezés!)
+// Saját CRUD controller: rövid név
+'sortableFields' => ['id', 'name', 'Parents.name', 'created', 'modified'],
+// Idegen Table (Members → Users): Alias.mező
+'sortableFields' => ['Users.id', 'Users.first_name', 'Users.email', 'Clubs.name', 'Users.created'],
+
+// Template — ugyanaz a kulcs
+<th class="string name"><?= $this->Paginator->sort('Users.first_name', __('Name')) ?></th>
+<th class="boolean active"><?= $this->Paginator->sort('Users.active', __('Active')) ?></th>
+<th class="date club-fee"><?= $this->Paginator->sort('Users.club_membership_fee_date', $label) ?></th>
+```
+
+| `th` osztály | ASC ikon | DESC ikon |
+|--------------|----------|-----------|
+| `string` / `char` | zöld A–Z | piros Z–A |
+| `number` / `currency` | zöld 1–9 | piros 9–1 |
+| `date` / `datetime` / `time` / `boolean` | zöld ↑ | piros ↓ |
+
+**Panel taglisták** (President / Clubpresident Members) ugyanígy — lásd `panel-member-index.mdc`.
 
 ```php
 class ThingsController extends AppController
@@ -655,12 +687,14 @@ Link attribútumok (`.record-modal-link`):
 
 | Attribútum | Szerep |
 |------------|--------|
-| `data-id` | Rekord ID |
-| `data-get-url` | JSON `recordGet` (vagy tábláról öröklődik) |
-| `data-edit-url` / `data-view-url` / `data-delete-url` | Modal footer gombok |
+| `data-id` | Rekord ID (**a megnyitott entitás** PK-ja, pl. klub id — nem a sor tag id-ja) |
+| `data-get-url` | JSON `recordGet` / `clubRecordGet` (vagy tábláról öröklődik) |
+| `data-edit-url` / `data-view-url` / `data-delete-url` | Modal footer → **ugyanazon** entitás controller actionjei (pl. `Clubs/edit`); **tilos** a lista saját `Members` URL-jére visszahullani |
 | `data-delete-form-prefix` | Form id: `#delete-form-{prefix}-{id}` |
 | `data-labels` | Kulcs a `entityFieldLabels` mapben |
 | `data-title` | Modal cím prefix |
+
+Ha a linked entitásnak van saját CRUD-ja, a három URL **kötelező** és a `data-id`-hez tartozik. Üres `data-edit-url` = gomb rejtve (read-only), nem a szülő lista edit URL-je.
 
 CSS: `a.record-modal-link` — `font-weight: 700` + link ikon (mint index `.category-link`).
 
@@ -715,11 +749,11 @@ Delete után a controller **referer**-re irányít (`referer(['action' => 'index
   - Egyszerű `Form->control`: a hiba automatikusan a mező alatt
   - **input-group** (Tempus), **select2-with-add**, **checkbox**: `'error' => false` a controlon, majd a wrapper **után** `<?= $this->element('admin/field_error', ['field' => '…']) ?>` — így nem a naptár ikon / „+” gomb mellé kerül
 - Kapcsolók: Visible / boolean switch-ek
-- **`visible` + `pos` blokk (kötelező, ha mindkettő van):** a többi mező **után** (pl. `logikai` után is), elválasztó csak a `visible` fölött — markup:
+- **`visible` + `pos` blokk (kötelező, ha van — örök):** a többi mező **után** (pl. `enabled` / `logikai` **után** is). Az elválasztó **`<hr>` mindig közvetlenül a `visible` fölött** — soha nem más mező fölött. Markup:
   ```html
   <div class="row"><div class="col-12 col-xxl-11"><hr class="my-4"></div></div>
   ```
-  (mezősor szélessége: label `col-md-2` + mező `col-xxl-9` ≈ `col-xxl-11`; **ne** teljes szélességű bare `<hr>`). Sorrend: **visible → pos**.
+  (mezősor szélessége: label `col-md-2` + mező `col-xxl-9` ≈ `col-xxl-11`; **ne** teljes szélességű bare `<hr>`). Sorrend: **visible → pos**. Csak `pos` van → `<hr>` a `pos` fölött. Rule: `.cursor/rules/admin-form-visible-hr.mdc` (`alwaysApply`).
 - Dátumok: **Tempus Dominus 6** (JeffAdmin5), formátum `yyyy.MM.dd.` / `HH:mm:ss` / `yyyy.MM.dd HH:mm:ss`; mentés: `LocaleDateParser`
 - **Számok (i18n):** inputmask a locale szerint — lásd alább
 - **belongsTo Select2 / list** (pl. Parent): visible + pos/name sorrend — lásd alább

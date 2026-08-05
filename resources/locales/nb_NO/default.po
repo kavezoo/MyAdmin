@@ -8,34 +8,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Konto aktiv"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Konto aktivert"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Aktivitetsdetaljer"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Aktivitetslogg"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Aktivitetslogging"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Aktivitetslogging aktivert"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Aktivitetslogging er slått av for {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Aktivitetslogging er slått på for {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Already have an account? Login"
 msgstr "Har du allerede en konto? Logg inn"
 
 msgid "Application settings"
-msgstr "Applikasjonsinnstillinger"
+msgstr "Application settings"
 
 msgid "Back to admin"
 msgstr "Tilbake til admin"
@@ -47,7 +47,7 @@ msgid "Back to profile"
 msgstr "Tilbake til profil"
 
 msgid "Browse all activity"
-msgstr "Bla gjennom all aktivitet"
+msgstr "Browse all activity"
 
 msgid "Change password"
 msgstr "Endre passord"
@@ -65,25 +65,25 @@ msgid "Confirm password"
 msgstr "Bekreft passord"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Styrer menyelementet «Min aktivitet» for brukere i dette landet."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Country"
 msgstr "Land"
 
 msgid "Created"
-msgstr "Opprettet"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} opprettet"
+msgstr "Created {0}"
 
 msgid "Current password"
 msgstr "Nåværende passord"
 
 msgid "Deleted"
-msgstr "Slettet"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} slettet"
+msgstr "Deleted {0}"
 
 msgid "Email"
 msgstr "E-post"
@@ -107,16 +107,16 @@ msgid "Forgot password?"
 msgstr "Glemt passord?"
 
 msgid "Hide from users"
-msgstr "Skjul for brukere"
+msgstr "Hide from users"
 
 msgid "I accept the terms of service"
 msgstr "Jeg godtar vilkårene"
 
 msgid "ISO code"
-msgstr "ISO-kode"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identifikator"
+msgstr "Identifier"
 
 msgid "Info"
 msgstr "Info"
@@ -125,7 +125,7 @@ msgid "Language"
 msgstr "Språk"
 
 msgid "Language code"
-msgstr "Språkkode"
+msgstr "Language code"
 
 msgid "Last name"
 msgstr "Etternavn"
@@ -137,13 +137,13 @@ msgid "Login"
 msgstr "Logg inn"
 
 msgid "Membership status"
-msgstr "Medlemsstatus"
+msgstr "Membership status"
 
 msgid "Message"
 msgstr "Melding"
 
 msgid "My activity"
-msgstr "Min aktivitet"
+msgstr "My activity"
 
 msgid "Name"
 msgstr "Navn"
@@ -152,25 +152,25 @@ msgid "New password"
 msgstr "Nytt passord"
 
 msgid "No activity recorded yet."
-msgstr "Ingen aktivitet registrert ennå."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Ingen flere detaljer for denne oppføringen."
+msgstr "No further details for this entry."
 
 msgid "No results found."
 msgstr "Ingen resultater."
 
 msgid "No working country is set."
-msgstr "Ingen arbeidsland er satt."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Av"
+msgstr "Off"
 
 msgid "On"
-msgstr "På"
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Overordnet post"
+msgstr "Parent record"
 
 msgid "Password"
 msgstr "Passord"
@@ -206,7 +206,7 @@ msgid "Profile"
 msgstr "Profil"
 
 msgid "Record"
-msgstr "Post"
+msgstr "Record"
 
 msgid "Register"
 msgstr "Registrer"
@@ -215,10 +215,10 @@ msgid "Remember me"
 msgstr "Husk meg"
 
 msgid "Sample record"
-msgstr "Eksempelpost"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Søk i aktivitet…"
+msgstr "Search activity…"
 
 msgid "Search..."
 msgstr "Søk..."
@@ -242,19 +242,19 @@ msgid "Send reset link"
 msgstr "Send tilbakestillingslenke"
 
 msgid "Settings for {0}"
-msgstr "Innstillinger for {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Vis for brukere"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Innlogging"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Innlogget"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Utlogget"
+msgstr "Signed out"
 
 msgid "Social accounts"
 msgstr "Sosiale kontoer"
@@ -269,70 +269,70 @@ msgid "The country language (locale) becomes the site language for your account.
 msgstr "Landets språk (locale) blir språket for kontoen din."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Innstillingen kunne ikke lagres. Prøv igjen."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Tidssone"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Slå av logging"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Slå på logging"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Oppdatert"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} oppdatert"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Oppdatert: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Brukerkonto"
+msgstr "User account"
 
 msgid "Username"
 msgstr "Brukernavn"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Brukere kan ikke lenger se egen aktivitet i {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Brukere kan nå se egen aktivitet i {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Brukere kan se egen aktivitet"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Brukere ser egen aktivitet"
+msgstr "Users see own activity"
 
 msgid "Warning"
 msgstr "Advarsel"
 
 msgid "What changed"
-msgstr "Hva som endret seg"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Når av, registreres ikke nye innlogginger, utlogginger eller dataendringer."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Når du logger inn, logger ut eller endrer dataene dine."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Hvem kan redigere"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Du har ikke tillatelse til å endre denne innstillingen."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Ditt arbeidsland — bryterne gjelder bare dette landet."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "og mer"
+msgstr "and more"
 
 msgid "changed"
-msgstr "endret"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superbruker"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "President"
+
+msgid "Vice president"
+msgstr "Visepresident"
+
+msgid "Club president"
+msgstr "Klubbpresident"
+
+msgid "Editor"
+msgstr "Redaktør"
+
+msgid "Member"
+msgstr "Medlem"
+
+msgid "New member"
+msgstr "Nytt medlem"
+
+msgid "Roles"
+msgstr "Roller"

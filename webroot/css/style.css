@@ -1424,17 +1424,23 @@ a.btn:focus {
 	bottom: 0;
 }
 
-/* Panel switcher — no section titles (overflow in collapsed / mobile sidebar). */
+/* Panel switcher — collapsible “Panels” submenu (all role prefixes). */
 #sidebar-menu .panel-switcher-divider {
 	border-top: 1px solid rgba(255, 255, 255, 0.08);
 	height: 0;
-	margin: 6px 12px;
+	margin: 6px 20px 6px 60px;
 	padding: 0;
 	pointer-events: none;
+	list-style: none;
 }
 
 #main.enlarged .panel-switcher-divider {
 	margin: 6px 8px;
+}
+
+#sidebar-menu .panel-switcher > ul > li > a i {
+	width: 1.1em;
+	text-align: center;
 }
 
 .avatar-circle {

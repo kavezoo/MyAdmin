@@ -231,3 +231,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "President"
+
+msgid "Vice president"
+msgstr "Vice president"
+
+msgid "Club president"
+msgstr "Club president"
+
+msgid "Editor"
+msgstr "Editor"
+
+msgid "Member"
+msgstr "Member"
+
+msgid "New member"
+msgstr "New member"
+
+msgid "Roles"
+msgstr "Roles"

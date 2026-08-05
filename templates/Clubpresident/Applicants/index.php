@@ -89,14 +89,11 @@ $enabledFilterQuery['page'] = '1';
 								?>
 								<tr<?= !$isEnabled ? ' class="text-muted"' : '' ?>>
 									<td class="users-list-name-cell">
-										<div class="d-flex align-items-center gap-2">
-											<?= $this->element('users/list_avatar', [
-												'user' => $applicant,
-												'displayName' => $name,
-												'size' => 40,
-											]) ?>
-											<span class="users-list-name-cell__label"><?= h($name) ?></span>
-										</div>
+										<?= $this->element('users/list_name_cell', [
+											'user' => $applicant,
+											'displayName' => $name,
+											'size' => 40,
+										]) ?>
 									</td>
 									<td><?= h((string)$applicant->email) ?></td>
 									<td><?= h((string)($applicant->phone ?? '')) ?></td>

@@ -48,7 +48,8 @@ Ez a dokumentum a **MyAdmin-ban összerakott** auth / regisztráció / szerepkö
 | Login | `/login` | `login` | **nyelv** (Select2) → **email** + jelszó + Remember me |
 | Regisztráció | `/register` | `login` | **ország** (első) → név → email → jelszó → confirm → role=`new` |
 | Elfelejtett jelszó | `/request-reset-password` | `login` | reference |
-| Profil | `/profile` | **`admin`** | view-stílusú adatlap; vissza a role panel Dashboardjára |
+| Profil (view) | `/profile` | **`admin`** | read-only adatlap; Edit gomb → `/edit` |
+| Profil szerkesztés | `/edit` | **`admin`** | űrlap (név, telefon, ország, klub, avatar); mentés → `/profile` |
 | Profil kiegészítés | `/complete-profile` | **`admin`** | kötelező `new` role-nak (név/phone/country/club) — [membership.md](membership.md) |
 | Jelszócsere | `/change-password` | `login` | current + new + confirm |
 
@@ -65,10 +66,12 @@ Nincs URL nyelv-prefix. Panelek (Admin chrome):
 | `new` | `New` | `/new` | **csak** ez (regisztráció default) |
 | `member`, `editor` | `Member` | `/member` | saját panel |
 | `clubpresident` | `Clubpresident` | `/clubpresident` | saját panel + **Member** |
-| `president`, `vicepresident` | `President` | `/president` | saját panel + **Member**; **Clubpresident** ha `club_id` > 0 |
+| `president`, `vicepresident` | `President` | `/president` | saját panel + **Member**; **Clubpresident** ha `club_id` > 0; **Clubs** CRUD (`/president/clubs`) |
 | `admin`, `superuser` | `Admin` | `/admin` | **csak** ezek; panel váltó → minden role prefix |
 
-**Panel váltás:** `PanelAccess` + `element/panel/switcher` — felfelé/lefelé linkek (ikon: nyíl); **nincs** szekciócím (Officer panels / Member area — mobil overflow). Admin → Member / Clubpresident / President / Admin (**nincs** New).
+**Panel váltás:** `PanelAccess` + `element/panel/switcher` — **„Roles” / hu: Szerepkörök** almenü (összecsukható); felfelé / lefelé linkek nyíl ikonnal. Admin → Member / Clubpresident / President / Admin (**nincs** New). Minden role sidebar ugyanazt az elemet hívja.
+
+**Panel Dashboard:** minden prefix `/…` kezdőlapján a modulok **Bootstrap card**-okban (`panel/dashboard_nav_cards`): cím, szöveges leírás (hova vezet a gomb), gomb. Clubpresident: pending jelentkezők alert + Members card.
 
 - `App\Auth\AppRoles` — szerepkör konstansok / címkék
 - `App\Auth\PanelAccess` — elérhető prefixek, sidebar switcher
@@ -85,7 +88,7 @@ Nincs URL nyelv-prefix. Panelek (Admin chrome):
 Csak `superuser` / `admin` / `president` / `vicepresident` (`AppRoles::globalSearchRoles()` + `header_search.php` + permissions `Admin\Search`).  
 `clubpresident` és lejjebb: **nincs** keresőmező.
 
-Setups modul: továbbra is `SetupAccess` / `setupsModuleRoles()` (Admin panelen).
+Setups modul: **csak superuser** (`SetupAccess::canAccessModule` / `isSuperuser`) — Admin panelen a menü is rejtve más szerepektől.
 
 ---
 
@@ -107,7 +110,7 @@ $this->addPlugin('CakeDC/Users');
 | `Auth.Authenticators.Form…fields.username` | `'email'` |
 | `loginRedirect` | fallback `/login` (tényleges: afterLogin → RoleHome) |
 | `logoutRedirect` | `/login` |
-| `unauthorizedHandler.url` | App Users `login` (`plugin` null) |
+| `unauthorizedHandler.url` | App Users `login` — **`prefix` + `plugin` = `false`** (különben panel prefix öröklődik → `/president/users/login`) |
 
 ### 3.3 `config/permissions.php` — kritikus
 
@@ -191,17 +194,19 @@ Session közben `RequireUserEnabledMiddleware` kidobja a usert, ha `enabled` (va
 2. Profile / Change password / Log out — `.dropdown-item.notify-item`, **0.9rem** (mint a többi header legördülő)
 3. `.profile-dropdown`: min ~280px, max ~420px
 
-### 6.1 Profile oldal (`/users/profile`)
+### 6.1 Profile — view + edit (`/profile`, `/edit`)
 
-- **Minden érvényes role** (beleértve `new`): szerkeszthető — kötelező: **név**, ország, klub; **opcionális** telefon (`+` + ország hívószám + számjegyek; csak prefix → nem mentődik).
+- **`/profile`** (`UsersController::profile` → `templates/Users/view.php`): read-only adatlap (tagdíj státusz / unpaid figyelmeztetés, mezők, social). Footer + breadcrumb **Edit** → `/edit`. Header Profile link ide mutat.
+- **`/edit`** (`UsersController::edit` → `templates/Users/edit.php`): szerkesztő űrlap — kötelező: **név**, ország, klub; **opcionális** telefon (`+` + ország hívószám + számjegyek; csak prefix → nem mentődik). Nincs tagdíj figyelmeztetés. Mentés után redirect `/profile`.
 - Validációs hiba: piros összefoglaló a form felett + mező alatti `error-message` + toast konkrét szöveggel.
 - **Role `new` + hiányos profil:** `/complete-profile` továbbra is kötelező (New panel redirect).
-- **Role `new` (klubváltás / pending):** csak `/new` prefix + profil/auth URL-ek; `RestrictNewRoleMiddleware` — más prefix → `/new`.
+- **Role `new` (klubváltás / pending):** csak `/new` prefix + profil/auth URL-ek (`profile`, `edit`, …); `RestrictNewRoleMiddleware` — más prefix → `/new`.
 - Névmezők title-case mentéskor.
-- **Profilkép:** minden role; ajánlott **1000×1000 px** négyzetes; törlés SweetAlert + `deleteAvatar` POST.
+- **Profilkép:** edit oldalon; ajánlott **1000×1000 px** négyzetes; törlés SweetAlert + `deleteAvatar` POST → visszairányít `/edit`.
 - Fájl: `uploads/avatars/{user.id}.jpg` (pl. UUID); DB: `users.avatar` (ugyanaz az útvonal).
 - **Entitás:** `App\Model\Entity\User` — CakeDC `_getAvatar()` helyett DB útvonal (+ social fallback); header + profil preview `UserAvatar::publicUrlFor`.
 - **Klubváltás:** más klub mentése → `role=new`, pending jelentkezés, clubpresident értesítés; piros figyelmeztetés + SWAL — [membership.md](membership.md).
+- Breadcrumb: profile = view mód (`canEdit`); edit = form Save + View details (nincs Delete).
 
 ---
 

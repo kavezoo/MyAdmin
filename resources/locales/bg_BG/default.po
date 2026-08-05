@@ -167,172 +167,172 @@ msgid "Warning"
 msgstr "Предупреждение"
 
 msgid "Activity logging enabled"
-msgstr "Регистрирането на активност е включено"
+msgstr "Activity logging enabled"
 
 msgid "Users can view own activity log"
-msgstr "Потребителите могат да виждат собствената си активност"
+msgstr "Users can view own activity log"
 
 msgid "Settings for {0}"
-msgstr "Настройки за {0}"
+msgstr "Settings for {0}"
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Вашата работна държава — превключвателите важат само за тази държава."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "Activity logging"
-msgstr "Регистриране на активност"
+msgstr "Activity logging"
 
 msgid "On"
-msgstr "Вкл."
+msgstr "On"
 
 msgid "Off"
-msgstr "Изкл."
+msgstr "Off"
 
 msgid "Turn off logging"
-msgstr "Изключи регистрирането"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Включи регистрирането"
+msgstr "Turn on logging"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Когато е изключено, новите влизания, излизания и промени в данните не се записват."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "Users see own activity"
-msgstr "Потребителите виждат собствената си активност"
+msgstr "Users see own activity"
 
 msgid "Hide from users"
-msgstr "Скрий от потребителите"
+msgstr "Hide from users"
 
 msgid "Show to users"
-msgstr "Покажи на потребителите"
+msgstr "Show to users"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Управлява елемента от менюто „Моята активност“ за потребителите в тази държава."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Регистрирането на активност е включено за {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Регистрирането на активност е изключено за {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Потребителите вече могат да виждат собствената си активност в {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Потребителите вече не могат да виждат собствената си активност в {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "No working country is set."
-msgstr "Не е зададена работна държава."
+msgstr "No working country is set."
 
 msgid "You are not allowed to change this setting."
-msgstr "Нямате право да променяте тази настройка."
+msgstr "You are not allowed to change this setting."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Настройката не можа да бъде запазена. Опитайте отново."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "My activity"
-msgstr "Моята активност"
+msgstr "My activity"
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Когато влизате, излизате или променяте данните си."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Browse all activity"
-msgstr "Прегледай цялата активност"
+msgstr "Browse all activity"
 
 msgid "Search activity…"
-msgstr "Търсене на активност…"
+msgstr "Search activity…"
 
 msgid "No activity recorded yet."
-msgstr "Все още няма записана активност."
+msgstr "No activity recorded yet."
 
 msgid "Activity details"
-msgstr "Подробности за активността"
+msgstr "Activity details"
 
 msgid "What changed"
-msgstr "Какво се промени"
+msgstr "What changed"
 
 msgid "No further details for this entry."
-msgstr "Няма допълнителни подробности за този запис."
+msgstr "No further details for this entry."
 
 msgid "Record"
-msgstr "Запис"
+msgstr "Record"
 
 msgid "Sign-in"
-msgstr "Вход"
+msgstr "Sign-in"
 
 msgid "User account"
-msgstr "Потребителски акаунт"
+msgstr "User account"
 
 msgid "Application settings"
-msgstr "Настройки на приложението"
+msgstr "Application settings"
 
 msgid "Sample record"
-msgstr "Примерен запис"
+msgstr "Sample record"
 
 msgid "Parent record"
-msgstr "Родителски запис"
+msgstr "Parent record"
 
 msgid "Activity log"
-msgstr "Дневник на активността"
+msgstr "Activity log"
 
 msgid "Account enabled"
-msgstr "Акаунтът е активиран"
+msgstr "Account enabled"
 
 msgid "Account active"
-msgstr "Акаунтът е активен"
+msgstr "Account active"
 
 msgid "Endonym"
-msgstr "Ендоним"
+msgstr "Endonym"
 
 msgid "Language code"
-msgstr "Код на езика"
+msgstr "Language code"
 
 msgid "Timezone"
-msgstr "Часова зона"
+msgstr "Timezone"
 
 msgid "ISO code"
-msgstr "ISO код"
+msgstr "ISO code"
 
 msgid "Membership status"
-msgstr "Статус на членство"
+msgstr "Membership status"
 
 msgid "Identifier"
-msgstr "Идентификатор"
+msgstr "Identifier"
 
 msgid "Who can edit"
-msgstr "Кой може да редактира"
+msgstr "Who can edit"
 
 msgid "Signed in"
-msgstr "Влязъл"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Излязъл"
+msgstr "Signed out"
 
 msgid "Created"
-msgstr "Създадено"
+msgstr "Created"
 
 msgid "Updated"
-msgstr "Актуализирано"
+msgstr "Updated"
 
 msgid "Deleted"
-msgstr "Изтрито"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} изтрито"
+msgstr "Deleted {0}"
 
 msgid "Created {0}"
-msgstr "{0} създадено"
+msgstr "Created {0}"
 
 msgid "and more"
-msgstr "и още"
+msgstr "and more"
 
 msgid "Updated: {0}"
-msgstr "Актуализирано: {0}"
+msgstr "Updated: {0}"
 
 msgid "Updated {0}"
-msgstr "{0} актуализирано"
+msgstr "Updated {0}"
 
 msgid "changed"
-msgstr "променено"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Суперпотребител"
+
+msgid "Admin"
+msgstr "Админ"
+
+msgid "President"
+msgstr "Председател"
+
+msgid "Vice president"
+msgstr "Заместник-председател"
+
+msgid "Club president"
+msgstr "Клубен председател"
+
+msgid "Editor"
+msgstr "Редактор"
+
+msgid "Member"
+msgstr "Член"
+
+msgid "New member"
+msgstr "Нов член"
+
+msgid "Roles"
+msgstr "Роли"

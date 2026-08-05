@@ -131,6 +131,9 @@ class AdminSearch
             if (!is_array($meta)) {
                 continue;
             }
+            if (array_key_exists('includeInGlobal', $meta) && $meta['includeInGlobal'] === false) {
+                continue;
+            }
             try {
                 $table = $locator->get($alias);
             } catch (\Throwable $e) {

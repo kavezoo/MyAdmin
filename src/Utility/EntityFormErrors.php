@@ -20,8 +20,8 @@ class EntityFormErrors
         $lines = [];
         foreach ($entity->getErrors() as $field => $errors) {
             $label = $fieldLabels[$field] ?? (string)$field;
-            foreach ($errors as $error) {
-                $lines[] = $label . ': ' . $error;
+            foreach (static::flattenMessages($errors) as $message) {
+                $lines[] = $label . ': ' . $message;
             }
         }
 
@@ -56,5 +56,29 @@ class EntityFormErrors
             'club_id' => (string)__('Club'),
             'avatar' => (string)__('Profile picture'),
         ];
+    }
+
+    /**
+     * @param array|string $errors
+     * @return list<string>
+     */
+    protected static function flattenMessages(array|string $errors): array
+    {
+        if (is_string($errors)) {
+            return [$errors];
+        }
+
+        $messages = [];
+        foreach ($errors as $error) {
+            if (is_array($error)) {
+                foreach (static::flattenMessages($error) as $nested) {
+                    $messages[] = $nested;
+                }
+                continue;
+            }
+            $messages[] = (string)$error;
+        }
+
+        return $messages;
     }
 }

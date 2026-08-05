@@ -28,6 +28,12 @@ trait PanelMemberListTrait
     }
 
     /**
+     * Sort keys for Users-based member lists.
+     *
+     * MembersController is not UsersController — paginate() alias is `Users`.
+     * Use `Users.field` (and `Clubs.name`) in BOTH sortableFields and
+     * `$this->Paginator->sort(...)`, otherwise sort is ignored / direction never toggles.
+     *
      * @return list<string>
      */
     protected function panelMemberSortableFields(bool $withClub = false): array
@@ -77,6 +83,9 @@ trait PanelMemberListTrait
             'club' => $clubName,
             'active' => (bool)$member->get('active'),
             'enabled' => (int)($member->get('enabled') ?? 0) === 1,
+            MembershipProfile::FIELD_JOINED => $member->get(MembershipProfile::FIELD_JOINED)
+                ? \App\Utility\LocaleDateParser::format($member->get(MembershipProfile::FIELD_JOINED), 'date')
+                : '',
             MembershipFee::FIELD_CLUB => $clubFeeDate
                 ? \App\Utility\LocaleDateParser::format($clubFeeDate, 'date')
                 : '',
@@ -99,6 +108,19 @@ trait PanelMemberListTrait
      */
     protected function clubRecordPayload(EntityInterface $club): array
     {
+        $canDelete = false;
+        if (method_exists($this, 'fetchTable')) {
+            try {
+                /** @var \App\Model\Table\ClubsTable $clubs */
+                $clubs = $this->fetchTable('Clubs');
+                if (method_exists($clubs, 'canDelete')) {
+                    $canDelete = $clubs->canDelete($club);
+                }
+            } catch (\Throwable $e) {
+                $canDelete = false;
+            }
+        }
+
         return [
             'id' => $club->get('id'),
             'name' => (string)($club->get('name') ?? ''),
@@ -106,13 +128,17 @@ trait PanelMemberListTrait
             'enabled' => (int)($club->get('enabled') ?? 0) === 1,
             'visible' => (bool)$club->get('visible'),
             'pos' => \App\Utility\LocaleNumberParser::format($club->get('pos'), decimals: 0),
+            'user_count' => \App\Utility\LocaleNumberParser::formatCount(
+                (int)($club->get('user_count') ?? 0),
+                decimals: 0
+            ),
             'created' => $club->get('created')
                 ? \App\Utility\LocaleDateParser::format($club->get('created'), 'datetime_short')
                 : '',
             'modified' => $club->get('modified')
                 ? \App\Utility\LocaleDateParser::format($club->get('modified'), 'datetime_short')
                 : '',
-            'can_delete' => false,
+            'can_delete' => $canDelete,
         ];
     }
 

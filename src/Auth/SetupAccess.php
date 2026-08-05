@@ -9,12 +9,15 @@ use Cake\Http\ServerRequest;
 
 /**
  * Setups module authorization (works before CakeDC Users is installed).
+ *
+ * Module (menu / URL / index): **superuser only** (`role=superuser` or CakeDC `is_superuser`).
+ * Value edits elsewhere (e.g. Event logs toggles) still use {@see canEditValue()} / `edit_by`.
  */
 class SetupAccess
 {
     public static function canAccessModule(?ServerRequest $request = null): bool
     {
-        return in_array(CurrentUser::role($request), AppRoles::setupsModuleRoles(), true);
+        return CurrentUser::isSuperuser($request);
     }
 
     public static function canCreate(?ServerRequest $request = null): bool

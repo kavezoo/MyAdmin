@@ -7,6 +7,7 @@ use App\Auth\EventLogAccess;
 use App\Auth\SetupAccess;
 use App\Utility\AdminCountry;
 use App\Utility\ActivityLogSetup;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
@@ -24,13 +25,15 @@ class EventLogsController extends AppController
     protected int $indexMaxLimit = 500;
 
     /**
-     * @return void
+     * @param \Cake\Event\EventInterface<\Cake\Controller\Controller> $event
+     * @return \Cake\Http\Response|null|void
      */
-    public function initialize(): void
+    public function beforeFilter(EventInterface $event)
     {
-        parent::initialize();
+        parent::beforeFilter($event);
+
         if (!EventLogAccess::canSearch($this->getRequest())) {
-            throw new ForbiddenException(__('You are not allowed to browse event logs.'));
+            return $this->denyWithFlashWarning(__('You are not allowed to browse event logs.'));
         }
     }
 

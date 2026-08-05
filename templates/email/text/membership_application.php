@@ -21,7 +21,7 @@
 <?= __('Club') ?>: <?= $clubName ?>
 
 
-<?= __('Open applicants list') ?>: <?= $listUrl ?>
+<?= __('Open members list') ?>: <?= $listUrl ?>
 
 
 <?= __('Please review the application and approve membership if appropriate.') ?>

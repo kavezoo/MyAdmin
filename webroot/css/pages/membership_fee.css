@@ -77,6 +77,16 @@
 	margin-top: 0.2rem;
 }
 
+.membership-fee-cell__last {
+	margin-top: 0.2rem;
+	max-width: 12rem;
+	margin-left: auto;
+	margin-right: auto;
+	white-space: normal;
+	word-break: break-word;
+	line-height: 1.2;
+}
+
 .membership-fee-record-btn {
 	font-weight: 600;
 }
@@ -88,3 +98,43 @@
 .membership-fee-hidden-form {
 	display: none !important;
 }
+
+/*
+ * Tagdíj oszlopok: hosszú címke (pl. „National association membership fee (2026)”)
+ * — a globális .table th.date nowrap + 8.5rem túl szűk → átfolyás / szétesés.
+ */
+.table th.date.club-fee,
+.table th.date.national-fee,
+.table td.date.club-fee,
+.table td.date.national-fee {
+	width: auto !important;
+	min-width: 10rem !important;
+	max-width: 16rem !important;
+	white-space: normal !important;
+	vertical-align: middle;
+	box-sizing: border-box;
+}
+
+.table thead tr th.date.club-fee,
+.table thead tr th.date.national-fee {
+	white-space: normal !important;
+	line-height: 1.25;
+	text-align: center;
+}
+
+.table th.date.club-fee > a,
+.table th.date.national-fee > a {
+	display: inline-block;
+	white-space: normal !important;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+	max-width: 100%;
+	line-height: 1.25;
+	text-align: center;
+}
+
+/* Actions: ne törjenek külön sorokra a gombok */
+.index-data-table td.actions {
+	white-space: nowrap;
+}
+

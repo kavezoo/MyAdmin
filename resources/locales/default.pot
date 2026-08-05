@@ -1317,3 +1317,9 @@ msgstr ""
 
 msgid "Delete picture"
 msgstr ""
+
+msgid "New member"
+msgstr ""
+
+msgid "Roles"
+msgstr ""

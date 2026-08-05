@@ -1,0 +1,31 @@
+---
+description: Linked/parent modal Edit-View-Delete mindig a megnyitott entitás saját CRUD URL-jére mutat — soha ne a lista sor (pl. tag) URL-jére.
+alwaysApply: true
+---
+
+# Linked modal — Edit / View / Delete = a megnyitott rekord (örök)
+
+Ha indexen / view-n **szülő vagy kapcsolt** rekord linkje (`category-link` / `record-modal-link`) modalban nyílik meg:
+
+## Kötelező
+
+1. `data-id` = **a megnyitott entitás** PK-ja (pl. klub id), **nem** a tábla sorának (pl. tag) id-ja.
+2. `data-get-url` = az entitás JSON endpointja (pl. `clubRecordGet`, `recordGet`).
+3. `data-edit-url` / `data-view-url` / `data-delete-url` = **ugyanazon** entitás controller actionjei  
+   (pl. Taglista → klub modal → `/president/clubs/edit|view|delete` + a **klub** id).
+4. Modal footer Edit / View / Delete a `data-id` + ezekkel az URL-ekkel navigál — **a modalban látott rekord**.
+
+## Tilos (örökre)
+
+- Üres `data-edit-url` / `data-view-url` után a JS **lista** `editUrl`/`viewUrl` (pl. `Members/view`) fallbackje a kapcsolt id-vel → **idegen / rossz rekord**.
+- Tag id-t klub URL-hez, vagy klub id-t tag URL-hez keverni.
+- Feltételezni, hogy a linked modal „örökli” a sor action URL-jeit.
+
+## Engedélyezett kivétel
+
+- Szándékos **read-only** linked modal: `data-edit-url=""` / `data-view-url=""` **explicit** (gomb rejtve) — a JS **nem** eshet vissza a lista URL-jeire (`index.js` `hasOpt('editUrl')` minta).
+
+## Hol
+
+- Minden `category-link` / `record-modal-link` (Admin Samples/Parents, President Members → Clubs, …).
+- Spec: `doc/admin-konvenciok.md` (Linked modal attribútumok), rule `panel-member-index.mdc` §4.

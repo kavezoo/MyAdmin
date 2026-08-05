@@ -73,7 +73,7 @@ class UsersController extends CakeDCUsersController
         $action = (string)$this->getRequest()->getParam('action');
         if (in_array($action, self::AUTH_LAYOUT_ACTIONS, true)) {
             $this->viewBuilder()->setLayout('login');
-        } elseif (in_array($action, ['profile', 'completeProfile', 'eventLog', 'eventLogView'], true)) {
+        } elseif (in_array($action, ['profile', 'edit', 'completeProfile', 'eventLog', 'eventLogView'], true)) {
             $this->viewBuilder()->setLayout('admin');
             $this->applyLoggedInUiLocale();
             $request = $this->getRequest();
@@ -90,8 +90,14 @@ class UsersController extends CakeDCUsersController
             $this->set('canAdd', false);
             $this->set('canEdit', false);
             $this->set('canDelete', false);
+            $this->set('breadcrumbViewUrl', UsersUrl::actionUrl('profile'));
+            $this->set('breadcrumbEditUrl', UsersUrl::actionUrl('edit'));
             if ($action === 'profile') {
                 $this->set('breadcrumb', __('Profile'));
+            } elseif ($action === 'edit') {
+                $this->set('breadcrumb', __('Edit profile'));
+                $this->set('indexListUrl', UsersUrl::actionUrl('profile'));
+                $this->set('breadcrumbBackLabel', __('Back to profile'));
             } elseif ($action === 'completeProfile') {
                 $this->set('breadcrumb', __('Complete your profile'));
             } else {
@@ -125,9 +131,10 @@ class UsersController extends CakeDCUsersController
         }
         if ($action === 'profile') {
             $this->prepareProfileViewVars();
-            if ($this->viewBuilder()->getVar('canEditProfile')) {
-                $this->prepareProfileEditViewVars();
-            }
+        }
+        if ($action === 'edit') {
+            $this->prepareProfileViewVars();
+            $this->prepareProfileEditViewVars();
         }
         if ($action === 'completeProfile') {
             $this->prepareCompleteProfileViewVars();
@@ -305,34 +312,45 @@ class UsersController extends CakeDCUsersController
     }
 
     /**
-     * Own profile — read-only for `new`; editable (+ avatar) for member and above.
+     * Own profile — read-only data sheet (`view.php`). Edit via `edit`.
      *
      * @param mixed $id CakeDC optional user id (only own profile allowed).
      * @return \Cake\Http\Response|null|void
      */
     public function profile($id = null)
     {
-        $identity = $this->getRequest()->getAttribute('identity');
-        if ($identity === null) {
-            throw new ForbiddenException(__('You must be logged in.'));
+        $user = $this->loadOwnProfileUser($id);
+        $canEditProfile = MembershipProfile::canEditOwnProfile($user);
+
+        $this->set('title', __('Profile'));
+        $this->set(compact('user'));
+        $this->set('isCurrentUser', true);
+        $this->set('canEditProfile', $canEditProfile);
+        $this->set('canEdit', $canEditProfile);
+        $this->set('canManageAvatar', $canEditProfile);
+        $this->set('needsProfileCompletion', MembershipProfile::needsProfileCompletion($user));
+        $this->render('view');
+    }
+
+    /**
+     * Edit own profile (details + avatar) — standard CakePHP-style `edit`.
+     *
+     * @param mixed $id Optional user id (only own profile allowed).
+     * @return \Cake\Http\Response|null|void
+     */
+    public function edit($id = null)
+    {
+        $user = $this->loadOwnProfileUser($id);
+        if (!MembershipProfile::canEditOwnProfile($user)) {
+            throw new ForbiddenException(__('You are not allowed to edit your profile yet.'));
         }
 
-        $userId = $this->identityUserId($identity);
-        if ($userId === '') {
-            throw new ForbiddenException(__('You must be logged in.'));
-        }
-        if ($id !== null && $id !== '' && (string)$id !== $userId) {
-            throw new ForbiddenException(__('You can only edit your own profile.'));
-        }
-
+        $userId = (string)$user->id;
+        $profileOriginalClubId = (int)$user->get('club_id');
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->getUsersTable();
-        $user = $users->get($userId, contain: ['Countries', 'Clubs', 'SocialAccounts']);
 
-        $canEditProfile = MembershipProfile::canEditOwnProfile($user);
-        $profileOriginalClubId = (int)$user->get('club_id');
-
-        if ($this->getRequest()->is(['post', 'put', 'patch']) && $canEditProfile) {
+        if ($this->getRequest()->is(['post', 'put', 'patch'])) {
             $previousClubId = (int)$user->get('club_id');
             $data = (array)$this->getRequest()->getData();
             $patch = [];
@@ -349,7 +367,10 @@ class UsersController extends CakeDCUsersController
             }
             $countryIdForPhone = (int)($patch['country_id'] ?? $user->get('country_id') ?? 0);
             if (array_key_exists('phone', $patch)) {
-                $normalizedPhone = PhoneNumber::normalizeForStorage($patch['phone'], PhoneNumber::prefixForCountryId($countryIdForPhone));
+                $normalizedPhone = PhoneNumber::normalizeForStorage(
+                    $patch['phone'],
+                    PhoneNumber::prefixForCountryId($countryIdForPhone)
+                );
                 $patch['phone'] = $normalizedPhone ?? '';
             }
 
@@ -364,14 +385,19 @@ class UsersController extends CakeDCUsersController
                 $user->set('role', AppRoles::NEW);
                 $user->set('membership_status', MembershipProfile::STATUS_PENDING);
                 $user->set('application_notified', false);
+                $user->set(MembershipProfile::FIELD_JOINED, null);
             }
 
             $upload = $this->getRequest()->getUploadedFile('avatar');
             if ($upload !== null && $upload->getError() !== UPLOAD_ERR_NO_FILE) {
                 $userIdStr = (string)$user->id;
                 try {
-                    UserAvatar::deleteStored((string)$user->get('avatar'), $userIdStr);
-                    $user->set('avatar', UserAvatar::store($userIdStr, $upload));
+                    $previousPath = $user->getOriginal('avatar');
+                    if (!is_string($previousPath)) {
+                        $previousPath = null;
+                    }
+                    \App\Utility\UserAvatar::deleteStored($previousPath, $userIdStr);
+                    $user->set('avatar', \App\Utility\UserAvatar::store($userIdStr, $upload));
                 } catch (\Throwable $e) {
                     $user->setError('avatar', $e->getMessage());
                 }
@@ -388,6 +414,7 @@ class UsersController extends CakeDCUsersController
                     'role' => true,
                     'membership_status' => true,
                     'application_notified' => true,
+                    MembershipProfile::FIELD_JOINED => true,
                 ];
             }
 
@@ -411,11 +438,12 @@ class UsersController extends CakeDCUsersController
             $this->flashProfileValidationErrors($user);
         }
 
-        $this->set('title', __('Profile'));
+        $this->set('title', __('Edit profile'));
         $this->set(compact('user'));
         $this->set('isCurrentUser', true);
-        $this->set('canEditProfile', $canEditProfile);
-        $this->set('canManageAvatar', $canEditProfile);
+        $this->set('canEditProfile', true);
+        $this->set('canEdit', true);
+        $this->set('canManageAvatar', true);
         $this->set('needsProfileCompletion', MembershipProfile::needsProfileCompletion($user));
         $this->set('profileOriginalClubId', $profileOriginalClubId);
     }
@@ -445,7 +473,11 @@ class UsersController extends CakeDCUsersController
             throw new ForbiddenException(__('You are not allowed to change the profile picture yet.'));
         }
 
-        UserAvatar::deleteStored((string)$user->get('avatar'), (string)$user->id);
+        $previousPath = $user->getOriginal('avatar');
+        if (!is_string($previousPath)) {
+            $previousPath = null;
+        }
+        \App\Utility\UserAvatar::deleteStored($previousPath, (string)$user->id);
         $user->set('avatar', null);
         $users->saveOrFail($user, [
             'accessibleFields' => [
@@ -459,7 +491,37 @@ class UsersController extends CakeDCUsersController
         }
         $this->Flash->success(__('Profile picture removed.'));
 
-        return $this->redirect(UsersUrl::actionUrl('profile'));
+        return $this->redirect(UsersUrl::actionUrl('edit'));
+    }
+
+    /**
+     * Load the logged-in user for profile view/edit (own record only).
+     *
+     * @param mixed $id Optional id from URL (must match identity).
+     * @return \CakeDC\Users\Model\Entity\User
+     */
+    protected function loadOwnProfileUser(mixed $id = null): \CakeDC\Users\Model\Entity\User
+    {
+        $identity = $this->getRequest()->getAttribute('identity');
+        if ($identity === null) {
+            throw new ForbiddenException(__('You must be logged in.'));
+        }
+
+        $userId = $this->identityUserId($identity);
+        if ($userId === '') {
+            throw new ForbiddenException(__('You must be logged in.'));
+        }
+        if ($id !== null && $id !== '' && (string)$id !== $userId) {
+            throw new ForbiddenException(__('You can only edit your own profile.'));
+        }
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->getUsersTable();
+
+        /** @var \CakeDC\Users\Model\Entity\User $user */
+        $user = $users->get($userId, contain: ['Countries', 'Clubs', 'SocialAccounts']);
+
+        return $user;
     }
 
     /**
@@ -697,6 +759,7 @@ class UsersController extends CakeDCUsersController
         $this->set('defaultPhonePrefix', $defaultPhonePrefix);
         $this->set('countryPhonePrefixes', PhoneNumber::prefixMapForCountryIds(array_map('intval', array_keys($countryOptions))));
         $this->set('profileUrl', Router::url(UsersUrl::actionUrl('profile')));
+        $this->set('editUrl', Router::url(UsersUrl::actionUrl('edit')));
         $this->set('deleteAvatarUrl', Router::url(UsersUrl::actionUrl('deleteAvatar')));
     }
 

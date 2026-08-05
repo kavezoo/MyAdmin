@@ -6,6 +6,7 @@ namespace App\Service;
 use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
 use App\Mailer\MembershipMailer;
+use App\Utility\MembershipFee;
 use Cake\Datasource\EntityInterface;
 use Cake\Log\Log;
 use Cake\Mailer\MailerAwareTrait;
@@ -67,7 +68,16 @@ class MembershipService
         $users = $this->fetchTable('Users');
         $applicant->set('role', AppRoles::MEMBER);
         $applicant->set('membership_status', MembershipProfile::STATUS_APPROVED);
-        if (!$users->save($applicant, ['checkRules' => false])) {
+        $applicant->set(MembershipProfile::FIELD_JOINED, MembershipFee::today());
+        if (!$users->save($applicant, [
+            'checkRules' => false,
+            'accessibleFields' => [
+                'role' => true,
+                'membership_status' => true,
+                MembershipProfile::FIELD_JOINED => true,
+                'modified' => true,
+            ],
+        ])) {
             return false;
         }
 

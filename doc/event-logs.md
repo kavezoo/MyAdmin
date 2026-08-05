@@ -32,6 +32,7 @@ ACL: `App\Auth\EventLogAccess`.
 |--------|----------------|
 | `EVENT_AFTER_LOGIN` / `EVENT_BEFORE_LOGOUT` | `login`, `logout` |
 | `EventLogBehavior` (App Tables) | `add`, `edit`, `delete` + mező diff |
+| Users tagdíj dátum | `club_membership_fee_date` / `national_membership_fee_date` → `MembershipFee::activityDescriptions` (ha `activity_logging_enabled`) |
 
 **Nem naplózott:** ha `activity_logging_enabled = 0`; oldalnézet / index / keresés; `Languages`, `I18n`, `EventLogs` táblák.
 

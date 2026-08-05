@@ -14,9 +14,11 @@ use Cake\ORM\Entity;
  * @property bool $enabled
  * @property bool $visible
  * @property int $pos
+ * @property int $user_count
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
  * @property \App\Model\Entity\Country|null $country
+ * @property \CakeDC\Users\Model\Entity\User[] $users
  */
 class Club extends Entity
 {
@@ -29,8 +31,10 @@ class Club extends Entity
         'enabled' => true,
         'visible' => true,
         'pos' => true,
+        'user_count' => false,
         'created' => true,
         'modified' => true,
         'country' => true,
+        'users' => true,
     ];
 }

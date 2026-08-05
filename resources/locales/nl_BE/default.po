@@ -8,97 +8,97 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Account actief"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Account ingeschakeld"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Activiteitsdetails"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Activiteitenlogboek"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Activiteitslogboek"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Activiteitslogboek ingeschakeld"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Activiteitslogboek uitgeschakeld voor {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Activiteitslogboek ingeschakeld voor {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Application settings"
-msgstr "Applicatie-instellingen"
+msgstr "Application settings"
 
 msgid "Approved"
 msgstr "Approved"
 
 msgid "Browse all activity"
-msgstr "Alle activiteit doorbladeren"
+msgstr "Browse all activity"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Bepaalt het menu-item « Mijn activiteit » voor gebruikers in dit land."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Created"
-msgstr "Aangemaakt"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} aangemaakt"
+msgstr "Created {0}"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
 
 msgid "Deleted"
-msgstr "Verwijderd"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} verwijderd"
+msgstr "Deleted {0}"
 
 msgid "Endonym"
-msgstr "Endoniem"
+msgstr "Endonym"
 
 msgid "Hide from users"
-msgstr "Verbergen voor gebruikers"
+msgstr "Hide from users"
 
 msgid "ISO code"
-msgstr "ISO-code"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identificatie"
+msgstr "Identifier"
 
 msgid "Incomplete"
 msgstr "Incomplete"
 
 msgid "Language code"
-msgstr "Taalcode"
+msgstr "Language code"
 
 msgid "Membership status"
-msgstr "Lidmaatschstatus"
+msgstr "Membership status"
 
 msgid "My activity"
-msgstr "Mijn activiteit"
+msgstr "My activity"
 
 msgid "No activity recorded yet."
-msgstr "Nog geen activiteit geregistreerd."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Geen verdere details voor dit item."
+msgstr "No further details for this entry."
 
 msgid "No working country is set."
-msgstr "Geen werkland ingesteld."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Uit"
+msgstr "Off"
 
 msgid "On"
-msgstr "Aan"
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Bovenliggend record"
+msgstr "Parent record"
 
 msgid "Pending approval"
 msgstr "Pending approval"
@@ -107,85 +107,85 @@ msgid "Record"
 msgstr "Record"
 
 msgid "Sample record"
-msgstr "Voorbeeldrecord"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Activiteit zoeken…"
+msgstr "Search activity…"
 
 msgid "Settings for {0}"
-msgstr "Instellingen voor {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Tonen aan gebruikers"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Aanmelding"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Aangemeld"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Uitgelogd"
+msgstr "Signed out"
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Instelling kon niet worden opgeslagen. Probeer opnieuw."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Tijdzone"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Logboek uitschakelen"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Logboek inschakelen"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Bijgewerkt"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} bijgewerkt"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Bijgewerkt: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Gebruikersaccount"
+msgstr "User account"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Gebruikers kunnen hun activiteit niet meer zien in {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Gebruikers kunnen nu hun activiteit zien in {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Gebruikers kunnen eigen activiteit zien"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Gebruikers zien eigen activiteit"
+msgstr "Users see own activity"
 
 msgid "What changed"
-msgstr "Wat is gewijzigd"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Uitgeschakeld: geen nieuwe logins, logouts of datawijzigingen."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Wanneer u inlogt, uitlogt of gegevens wijzigt."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Wie kan bewerken"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "U mag deze instelling niet wijzigen."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Uw werkland — schakelaars gelden alleen voor dit land."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "en meer"
+msgstr "and more"
 
 msgid "changed"
-msgstr "gewijzigd"
+msgstr "changed"
 
 msgid "complex value"
 msgstr "complex value"
@@ -231,3 +231,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "Voorzitter"
+
+msgid "Vice president"
+msgstr "Vicevoorzitter"
+
+msgid "Club president"
+msgstr "Clubvoorzitter"
+
+msgid "Editor"
+msgstr "Redacteur"
+
+msgid "Member"
+msgstr "Lid"
+
+msgid "New member"
+msgstr "Nieuw lid"
+
+msgid "Roles"
+msgstr "Rollen"

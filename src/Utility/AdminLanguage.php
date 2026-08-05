@@ -451,7 +451,6 @@ class AdminLanguage
         $updated = 0;
         $translations = 0;
         $visible = 0;
-        $pos = 10;
         $now = new DateTime();
 
         foreach ($localeCodes as $code) {
@@ -476,12 +475,12 @@ class AdminLanguage
             $wasNew = $existing === null;
 
             if ($wasNew) {
+                // pos → DB DEFAULT only (do not set)
                 $entity = $languages->newEntity([
                     'code' => $code,
                     'name' => $enName,
                     'endonim_name' => $endonim,
                     'visible' => $isVisible,
-                    'pos' => $code === 'en_GB' ? 1 : ($code === 'en_US' ? 2 : ($code === 'en_CA' ? 3 : $pos)),
                     'created' => $now,
                     'modified' => $now,
                 ]);
@@ -491,9 +490,6 @@ class AdminLanguage
                 $entity->set('endonim_name', $endonim);
                 $entity->set('visible', $isVisible);
                 $entity->set('modified', $now);
-                if (in_array($code, ['en_GB', 'en_US', 'en_CA'], true)) {
-                    $entity->set('pos', $code === 'en_GB' ? 1 : ($code === 'en_US' ? 2 : 3));
-                }
             }
 
             foreach ($targets as $targetLocale) {
@@ -509,10 +505,6 @@ class AdminLanguage
                 } else {
                     $updated++;
                 }
-            }
-
-            if (!in_array($code, ['en_GB', 'en_US', 'en_CA'], true)) {
-                $pos += 10;
             }
         }
 

@@ -132,6 +132,7 @@ class CurrentUser
 
     /**
      * Logged-in user's club (`Users.club_id`), or 0.
+     * Identity first; if missing/zero, fresh DB read (club may have been assigned after login).
      */
     public static function clubId(?ServerRequest $request = null): int
     {
@@ -142,6 +143,33 @@ class CurrentUser
         $raw = static::identityValue($request->getAttribute('identity'), 'club_id');
         if (is_numeric($raw) && (int)$raw > 0) {
             return (int)$raw;
+        }
+
+        $identity = $request->getAttribute('identity');
+        if ($identity === null) {
+            return 0;
+        }
+        $userId = '';
+        if (is_object($identity) && method_exists($identity, 'getIdentifier')) {
+            $userId = (string)$identity->getIdentifier();
+        } else {
+            $userId = (string)(static::identityValue($identity, 'id') ?? '');
+        }
+        if ($userId === '') {
+            return 0;
+        }
+
+        try {
+            $row = \Cake\ORM\TableRegistry::getTableLocator()->get('Users')->find()
+                ->select(['club_id'])
+                ->where(['Users.id' => $userId])
+                ->disableHydration()
+                ->first();
+            if (is_array($row) && isset($row['club_id']) && (int)$row['club_id'] > 0) {
+                return (int)$row['club_id'];
+            }
+        } catch (\Throwable $e) {
+            return 0;
         }
 
         return 0;

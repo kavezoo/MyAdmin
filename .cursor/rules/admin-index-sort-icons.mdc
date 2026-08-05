@@ -1,0 +1,19 @@
+---
+description: Index sort ASC/DESC ikonok — th típusosztály + sortableFields egyezés
+globs: templates/**/index.php,src/Controller/**/*Controller.php
+alwaysApply: false
+---
+
+# Index sort ikonok (kötelező minden index.php-nál)
+
+Zöld ASC / piros DESC Font Awesome ikon a fejléc sort linken (`webroot/css/style.css`).
+
+## Checklist
+
+1. Minden sortolható `th`-n **típusosztály**: `string` | `number` | `currency` | `date` | `datetime` | `time` | `boolean` (ID: `number id`).
+2. `$this->Paginator->sort('kulcs', …)` első argumentuma **===** a controller `sortableFields` listájában lévő kulcs.
+3. Saját CRUD (`SamplesController` → Samples Table): rövid név (`name`) OK.
+4. **Idegen Table** (pl. `MembersController` → `Users` find): **`Users.first_name`**, `Clubs.name` — mindkét helyen Alias.mező. Rövid `first_name` → sort elutasítva → **nem fordul ASC↔DESC**, nincs ikon.
+5. Ellenőrzés: 1. katt → lista rendez + `a.asc`/`a.desc`; 2. katt ugyanarra → ellenkező irány.
+
+Részlet + táblázat: `doc/admin-konvenciok.md` → „Sort ikonok”. Panel taglista: `panel-member-index.mdc`.

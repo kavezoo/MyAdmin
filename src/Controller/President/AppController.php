@@ -4,15 +4,48 @@ declare(strict_types=1);
 namespace App\Controller\President;
 
 use App\Auth\CurrentUser;
+use App\Controller\Concerns\IndexListCrudTrait;
 use App\Controller\PanelAppController;
 use ArrayIterator;
 use Cake\Datasource\Paging\PaginatedResultSet;
+use Cake\Event\EventInterface;
 
 /**
  * Shared helpers for president / vice president controllers.
  */
 abstract class AppController extends PanelAppController
 {
+    use IndexListCrudTrait;
+
+    protected const LAST_VISITED_SESSION_KEY = 'President.lastVisited';
+
+    protected const INDEX_STATE_SESSION_KEY = 'President.indexState';
+
+    protected function indexStateSessionKey(): string
+    {
+        return self::INDEX_STATE_SESSION_KEY;
+    }
+
+    protected function lastVisitedSessionKey(): string
+    {
+        return self::LAST_VISITED_SESSION_KEY;
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface $event
+     * @return void
+     */
+    public function beforeRender(EventInterface $event): void
+    {
+        parent::beforeRender($event);
+
+        $controller = (string)$this->request->getParam('controller');
+        if ($controller === '' || $controller === 'Dashboard') {
+            return;
+        }
+        $this->set('indexListUrl', $this->indexListUrl($controller));
+    }
+
     /**
      * Empty paginated set for index_pagination (CakePHP 5 PaginatorHelper).
      */

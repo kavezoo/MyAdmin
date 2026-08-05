@@ -7,6 +7,7 @@ use App\Utility\ActivityLogLocale;
 use App\Utility\EventLogChanges;
 use App\Utility\EventLogger;
 use App\Utility\MembershipFee;
+use App\Auth\MembershipProfile;
 use ArrayObject;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -110,19 +111,88 @@ class EventLogBehavior extends Behavior
         }
 
         $feeChanges = [];
+        $membershipChanges = [];
         if ($alias === 'Users' && $changes !== []) {
             foreach (MembershipFee::DATE_FIELDS as $feeField) {
                 if (isset($changes[$feeField])) {
                     $feeChanges[$feeField] = $changes[$feeField];
                 }
             }
+            foreach (
+                [
+                    MembershipProfile::FIELD_JOINED,
+                    'role',
+                    'membership_status',
+                    'enabled',
+                ] as $membershipField
+            ) {
+                if (isset($changes[$membershipField])) {
+                    $membershipChanges[$membershipField] = $changes[$membershipField];
+                }
+            }
         }
 
-        if ($feeChanges !== [] && $countryId > 0) {
-            $description = ActivityLogLocale::runForCountry(
-                $countryId,
-                fn () => MembershipFee::activityDescriptions($entity, $feeChanges, $created)
-            );
+        if ($membershipChanges !== []) {
+            if ($countryId > 0) {
+                $description = ActivityLogLocale::runForCountry(
+                    $countryId,
+                    fn () => MembershipProfile::activityDescriptions($entity, $membershipChanges, $created)
+                );
+            } else {
+                $description = MembershipProfile::activityDescriptions($entity, $membershipChanges, $created);
+            }
+            if ($description === '' && $feeChanges !== []) {
+                $description = $countryId > 0
+                    ? ActivityLogLocale::runForCountry(
+                        $countryId,
+                        fn () => MembershipFee::activityDescriptions($entity, $feeChanges, $created)
+                    )
+                    : MembershipFee::activityDescriptions($entity, $feeChanges, $created);
+            }
+            if ($description === '') {
+                $description = sprintf(
+                    '%s %s #%s%s',
+                    $created ? 'Created' : 'Updated',
+                    $alias,
+                    (string)$pk,
+                    $label !== '' ? ' (' . $label . ')' : ''
+                );
+                if ($changeSummary !== '') {
+                    $description .= ': ' . $changeSummary;
+                }
+            } elseif ($feeChanges !== []) {
+                $feeDesc = $countryId > 0
+                    ? ActivityLogLocale::runForCountry(
+                        $countryId,
+                        fn () => MembershipFee::activityDescriptions($entity, $feeChanges, $created)
+                    )
+                    : MembershipFee::activityDescriptions($entity, $feeChanges, $created);
+                if ($feeDesc !== '') {
+                    $description .= '; ' . $feeDesc;
+                }
+            }
+        } elseif ($feeChanges !== []) {
+            // Membership fee date edit (club / national) — gated by ActivityLogSetup in EventLogger
+            if ($countryId > 0) {
+                $description = ActivityLogLocale::runForCountry(
+                    $countryId,
+                    fn () => MembershipFee::activityDescriptions($entity, $feeChanges, $created)
+                );
+            } else {
+                $description = MembershipFee::activityDescriptions($entity, $feeChanges, $created);
+            }
+            if ($description === '') {
+                $description = sprintf(
+                    '%s %s #%s%s',
+                    $created ? 'Created' : 'Updated',
+                    $alias,
+                    (string)$pk,
+                    $label !== '' ? ' (' . $label . ')' : ''
+                );
+                if ($changeSummary !== '') {
+                    $description .= ': ' . $changeSummary;
+                }
+            }
         } else {
             $description = sprintf(
                 '%s %s #%s%s',

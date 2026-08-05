@@ -8,34 +8,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Kont attiv"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Kont attivat"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Dettalji tal-attività"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Log tal-attività"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Reġistrazzjoni tal-attività"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Ir-reġistrazzjoni tal-attività attivata"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Ir-reġistrazzjoni tal-attività mitfija għal {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Ir-reġistrazzjoni tal-attività attivata għal {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Already have an account? Login"
 msgstr "Diġà għandek kont? Idħol"
 
 msgid "Application settings"
-msgstr "Settings tal-applikazzjoni"
+msgstr "Application settings"
 
 msgid "Back to admin"
 msgstr "Lura għall-admin"
@@ -47,7 +47,7 @@ msgid "Back to profile"
 msgstr "Lura għall-profil"
 
 msgid "Browse all activity"
-msgstr "Ibbrawżja l-attività kollha"
+msgstr "Browse all activity"
 
 msgid "Change password"
 msgstr "Ibdel il-password"
@@ -65,25 +65,25 @@ msgid "Confirm password"
 msgstr "Ikkonferma l-password"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Jikkontrolla l-oġġett tal-menu «L-attività tiegħi» għall-utenti f’dan il-pajjiż."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Country"
 msgstr "Pajjiż"
 
 msgid "Created"
-msgstr "Maħluq"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} maħluq"
+msgstr "Created {0}"
 
 msgid "Current password"
 msgstr "Password attwali"
 
 msgid "Deleted"
-msgstr "Imħassar"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} imħassar"
+msgstr "Deleted {0}"
 
 msgid "Email"
 msgstr "Email"
@@ -92,7 +92,7 @@ msgid "Email or username"
 msgstr "Email jew username"
 
 msgid "Endonym"
-msgstr "Endonimu"
+msgstr "Endonym"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Daħħal l-email jew l-username u nibagħtulek link biex terġa’ tissettja l-password."
@@ -107,16 +107,16 @@ msgid "Forgot password?"
 msgstr "Insejt il-password?"
 
 msgid "Hide from users"
-msgstr "Aħbi mill-utenti"
+msgstr "Hide from users"
 
 msgid "I accept the terms of service"
 msgstr "Naċċetta t-termini tas-servizz"
 
 msgid "ISO code"
-msgstr "Kodiċi ISO"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identifikatur"
+msgstr "Identifier"
 
 msgid "Info"
 msgstr "Info"
@@ -125,7 +125,7 @@ msgid "Language"
 msgstr "Lingwa"
 
 msgid "Language code"
-msgstr "Kodiċi tal-lingwa"
+msgstr "Language code"
 
 msgid "Last name"
 msgstr "Kunjom"
@@ -137,13 +137,13 @@ msgid "Login"
 msgstr "Idħol"
 
 msgid "Membership status"
-msgstr "Status ta’ sħubija"
+msgstr "Membership status"
 
 msgid "Message"
 msgstr "Messaġġ"
 
 msgid "My activity"
-msgstr "L-attività tiegħi"
+msgstr "My activity"
 
 msgid "Name"
 msgstr "Isem"
@@ -152,25 +152,25 @@ msgid "New password"
 msgstr "Password ġdida"
 
 msgid "No activity recorded yet."
-msgstr "Għad m’hemm l-ebda attività rreġistrata."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "L-ebda dettall ieħor għal din l-entrata."
+msgstr "No further details for this entry."
 
 msgid "No results found."
 msgstr "Ma nstabu l-ebda riżultati."
 
 msgid "No working country is set."
-msgstr "L-ebda pajjiż tax-xogħol mhux stabbilit."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Mitfi"
+msgstr "Off"
 
 msgid "On"
-msgstr "Mixgħul"
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Rekord prinċipali"
+msgstr "Parent record"
 
 msgid "Password"
 msgstr "Password"
@@ -206,7 +206,7 @@ msgid "Profile"
 msgstr "Profil"
 
 msgid "Record"
-msgstr "Rekord"
+msgstr "Record"
 
 msgid "Register"
 msgstr "Irreġistra"
@@ -215,10 +215,10 @@ msgid "Remember me"
 msgstr "Ftakarni"
 
 msgid "Sample record"
-msgstr "Rekord ta’ eżempju"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Fittex attività…"
+msgstr "Search activity…"
 
 msgid "Search..."
 msgstr "Fittex..."
@@ -242,19 +242,19 @@ msgid "Send reset link"
 msgstr "Ibgħat il-link tar-reset"
 
 msgid "Settings for {0}"
-msgstr "Settings għal {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Uri lill-utenti"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Login"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Illoggjat"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Oħraġ"
+msgstr "Signed out"
 
 msgid "Social accounts"
 msgstr "Kontijiet soċjali"
@@ -269,70 +269,70 @@ msgid "The country language (locale) becomes the site language for your account.
 msgstr "Il-lingwa tal-pajjiż (locale) issir il-lingwa tal-kont tiegħek."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "L-impostazzjoni ma setgħetx tiġi salvata. Erġa’ pprova."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
 msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Itfi r-reġistrazzjoni"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Ixgħel ir-reġistrazzjoni"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Aġġornat"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} aġġornat"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Aġġornat: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Kont tal-utent"
+msgstr "User account"
 
 msgid "Username"
 msgstr "Username"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "L-utenti ma jistgħux jaraw l-attività tagħhom f’{0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "L-utenti issa jistgħu jaraw l-attività tagħhom f’{0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "L-utenti jistgħu jaraw l-attività tagħhom"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "L-utenti jaraw l-attività tagħhom"
+msgstr "Users see own activity"
 
 msgid "Warning"
 msgstr "Twissija"
 
 msgid "What changed"
-msgstr "X’inbidel"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Meta mitfi, ma jirreġistrawx logins, logouts jew bidliet fid-dejta."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Meta tidħol, toħroġ jew tbiddel id-dejta tiegħek."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Min jista’ jeditja"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "M’għandekx permess tibdel din l-impostazzjoni."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Pajjiż tax-xogħol tiegħek — is-switsers japplikaw biss għal dan il-pajjiż."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "u aktar"
+msgstr "and more"
 
 msgid "changed"
-msgstr "mibdul"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "President"
+
+msgid "Vice president"
+msgstr "Viċi president"
+
+msgid "Club president"
+msgstr "President tal-klabb"
+
+msgid "Editor"
+msgstr "Editur"
+
+msgid "Member"
+msgstr "Membru"
+
+msgid "New member"
+msgstr "Membru ġdid"
+
+msgid "Roles"
+msgstr "Rwoli"

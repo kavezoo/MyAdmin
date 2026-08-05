@@ -5,7 +5,6 @@ namespace App\Controller\Admin;
 
 use App\Auth\CountryAccess;
 use App\Utility\AdminCountry;
-use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\I18n\I18n;
 
@@ -94,8 +93,8 @@ class CountriesController extends AppController
      */
     public function index()
     {
-        if (!CountryAccess::canEditMeta()) {
-            throw new ForbiddenException(__('You are not allowed to access countries.'));
+        if (!CountryAccess::canAccessModule()) {
+            return $this->denyWithFlashWarning(__('You are not allowed to access countries.'));
         }
 
         $this->set('title', __('Countries'));
@@ -170,7 +169,7 @@ class CountriesController extends AppController
     public function add()
     {
         if (!CountryAccess::canAdd()) {
-            throw new ForbiddenException(__('Only a superuser can add countries.'));
+            return $this->denyWithFlashWarning(__('Only a superuser can add countries.'));
         }
 
         $this->setTranslateLocales();
@@ -230,7 +229,7 @@ class CountriesController extends AppController
     public function edit(?string $id = null)
     {
         if (!CountryAccess::canEditMeta()) {
-            throw new ForbiddenException(__('You are not allowed to edit countries.'));
+            return $this->denyWithFlashWarning(__('You are not allowed to edit countries.'));
         }
 
         $this->setTranslateLocales();
@@ -294,8 +293,8 @@ class CountriesController extends AppController
      */
     public function view(?string $id = null)
     {
-        if (!CountryAccess::canEditMeta()) {
-            throw new ForbiddenException(__('You are not allowed to access countries.'));
+        if (!CountryAccess::canAccessModule()) {
+            return $this->denyWithFlashWarning(__('You are not allowed to access countries.'));
         }
 
         $this->setTranslateLocales();
@@ -324,7 +323,7 @@ class CountriesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         if (!CountryAccess::canDelete()) {
-            throw new ForbiddenException(__('Only a superuser can delete countries.'));
+            return $this->denyWithFlashWarning(__('Only a superuser can delete countries.'));
         }
 
         return $this->deleteEntityOrFail($this->Countries, $this->Countries->get($id));
@@ -339,7 +338,7 @@ class CountriesController extends AppController
     public function recordGet(?string $id = null): Response
     {
         $this->request->allowMethod(['get']);
-        if (!CountryAccess::canEditMeta()) {
+        if (!CountryAccess::canAccessModule()) {
             return $this->response
                 ->withStatus(403)
                 ->withType('application/json')

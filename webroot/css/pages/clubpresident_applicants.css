@@ -1,0 +1,34 @@
+/**
+ * Clubpresident pending applicants — outer panel card + nested 20rem cards
+ * (ValiAdmin card sample: header + body, inner cards in a flex wrap).
+ */
+.applicants-cards-panel .applicant-card {
+	width: 20rem;
+	max-width: 100%;
+	flex: 0 0 auto;
+}
+
+.applicants-cards-panel .applicant-card i {
+	font-size: inherit;
+	margin-top: 0;
+}
+
+.applicants-cards-panel .applicant-card__img {
+	height: 10rem;
+	object-fit: cover;
+	object-position: center;
+}
+
+.applicants-cards-panel .applicant-card__img--placeholder {
+	height: 10rem;
+}
+
+.applicants-cards-panel .applicant-card__img--placeholder i {
+	font-size: 3rem;
+}
+
+@media (max-width: 575.98px) {
+	.applicants-cards-panel .applicant-card {
+		width: 100%;
+	}
+}

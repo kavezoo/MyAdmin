@@ -72,7 +72,7 @@ return [
         [
             'role' => '*',
             'controller' => 'Users',
-            'action' => ['profile', 'completeProfile', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword', 'eventLog', 'eventLogView', 'deleteAvatar'],
+            'action' => ['profile', 'edit', 'completeProfile', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword', 'eventLog', 'eventLogView', 'deleteAvatar'],
         ],
         // Admin prefix — only admin / superuser (full panel)
         [
@@ -100,7 +100,7 @@ return [
             'action' => '*',
         ],
         [
-            'role' => 'clubpresident',
+            'role' => ['clubpresident', 'president', 'vicepresident'],
             'prefix' => 'Clubpresident',
             'controller' => '*',
             'action' => '*',

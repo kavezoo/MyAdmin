@@ -64,7 +64,7 @@ class AppRoles
             self::CLUBPRESIDENT => __('Club president'),
             self::EDITOR => __('Editor'),
             self::MEMBER => __('Member'),
-            self::NEW => __('New'),
+            self::NEW => __('New member'),
             default => $role,
         };
     }
@@ -96,6 +96,7 @@ class AppRoles
 
     /**
      * Roles that may open the Setups module (menu + URL).
+     * Only superuser — see {@see \App\Auth\SetupAccess::canAccessModule()}.
      *
      * @return list<string>
      */
@@ -103,9 +104,6 @@ class AppRoles
     {
         return [
             self::SUPERUSER,
-            self::ADMIN,
-            self::PRESIDENT,
-            self::VICEPRESIDENT,
         ];
     }
 

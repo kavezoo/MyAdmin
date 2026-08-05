@@ -334,7 +334,7 @@ msgstr "Pozíció"
 #: ./templates/Admin/Samples/index.php:95
 #: ./templates/Admin/Samples/view.php:48
 msgid "Created"
-msgstr "Létrehozva"
+msgstr "Created"
 
 #: ./templates/Admin/Cities/index.php:24
 #: ./templates/Admin/Cities/index.php:64
@@ -1151,7 +1151,7 @@ msgstr "Alelnök"
 
 #: ./src/Auth/AppRoles.php:64
 msgid "Club president"
-msgstr "Klubelnök"
+msgstr "Klub elnök"
 
 #: ./src/Auth/AppRoles.php:65
 msgid "Editor"
@@ -1248,6 +1248,24 @@ msgstr "Új jelszó"
 
 msgid "Back to profile"
 msgstr "Vissza a profilhoz"
+
+msgid "Edit profile"
+msgstr "Profil szerkesztése"
+
+msgid "View members"
+msgstr "Tagok megtekintése"
+
+msgid "New membership applications"
+msgstr "Új tagsági jelentkezések"
+
+msgid "There is 1 new membership application waiting for your decision."
+msgstr "1 új tagsági jelentkezés vár a döntésedre."
+
+msgid "There are {0} new membership applications waiting for your decision."
+msgstr "{0} új tagsági jelentkezés vár a döntésedre."
+
+msgid "Review applicants"
+msgstr "Jelentkezők áttekintése"
 
 msgid "Back to admin"
 msgstr "Vissza az Adminba"
@@ -1464,224 +1482,290 @@ msgstr "Válaszd az országot a helyi neve alapján. Az ország nyelve lesz a fi
 
 #: src/Utility/ActivityLogSetup.php
 msgid "Activity logging enabled"
-msgstr "Tevékenységnapló bekapcsolva"
+msgstr "Activity logging enabled"
 
 #: src/Utility/ActivityLogSetup.php
 msgid "Users can view own activity log"
-msgstr "A felhasználók láthatják a saját tevékenységüket"
+msgstr "Users can view own activity log"
 
 msgid "Settings for {0}"
-msgstr "Beállítások: {0}"
+msgstr "Settings for {0}"
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "A munkaországod — a kapcsolók csak erre az országra érvényesek."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "Activity logging"
-msgstr "Tevékenységnapló"
+msgstr "Activity logging"
 
 msgid "On"
-msgstr "Be"
+msgstr "On"
 
 msgid "Off"
-msgstr "Ki"
+msgstr "Off"
 
 msgid "Turn off logging"
-msgstr "Naplózás kikapcsolása"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Naplózás bekapcsolása"
+msgstr "Turn on logging"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Kikapcsolva nem rögzülnek új belépések, kilépések és adatváltozások."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "Users see own activity"
-msgstr "Felhasználók látják saját tevékenységüket"
+msgstr "Users see own activity"
 
 msgid "Hide from users"
-msgstr "Elrejtés a felhasználók elől"
+msgstr "Hide from users"
 
 msgid "Show to users"
-msgstr "Megjelenítés a felhasználóknak"
+msgstr "Show to users"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Szabályozza a „Tevékenységem” menüpont megjelenését az ország felhasználóinál."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "A tevékenységnapló bekapcsolva: {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "A tevékenységnapló kikapcsolva: {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "A felhasználók most láthatják a saját tevékenységüket: {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "A felhasználók többé nem láthatják a saját tevékenységüket: {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "No working country is set."
-msgstr "Nincs beállítva munkaország."
+msgstr "No working country is set."
 
 msgid "You are not allowed to change this setting."
-msgstr "Nem jogosult ezt a beállítást módosítani."
+msgstr "You are not allowed to change this setting."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "A beállítás mentése nem sikerült. Próbálja újra."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "My activity"
-msgstr "Tevékenységem"
+msgstr "My activity"
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Amikor bejelentkeztél, kiléptél vagy módosítottad az adataidat."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Browse all activity"
-msgstr "Összes tevékenység böngészése"
+msgstr "Browse all activity"
 
 msgid "Search activity…"
-msgstr "Tevékenység keresése…"
+msgstr "Search activity…"
 
 msgid "No activity recorded yet."
-msgstr "Még nincs rögzített tevékenység."
+msgstr "No activity recorded yet."
 
 msgid "Activity details"
-msgstr "Tevékenység részletei"
+msgstr "Activity details"
 
 msgid "What changed"
-msgstr "Mi változott"
+msgstr "What changed"
 
 msgid "No further details for this entry."
-msgstr "Ehhez a bejegyzéshez nincs további részlet."
+msgstr "No further details for this entry."
 
 msgid "Record"
-msgstr "Rekord"
+msgstr "Record"
 
 msgid "Sign-in"
-msgstr "Bejelentkezés"
+msgstr "Sign-in"
 
 msgid "User account"
-msgstr "Felhasználói fiók"
+msgstr "User account"
 
 msgid "Application settings"
-msgstr "Alkalmazásbeállítások"
+msgstr "Application settings"
 
 msgid "Sample record"
-msgstr "Minta rekord"
+msgstr "Sample record"
 
 msgid "Parent record"
-msgstr "Szülő rekord"
+msgstr "Parent record"
 
 msgid "Activity log"
-msgstr "Tevékenységnapló"
+msgstr "Activity log"
 
 msgid "Account enabled"
-msgstr "Fiók engedélyezve"
+msgstr "Account enabled"
 
 msgid "Account active"
-msgstr "Fiók aktív"
+msgstr "Account active"
 
 msgid "Endonym"
-msgstr "Endoním név"
+msgstr "Endonym"
 
 msgid "Language code"
-msgstr "Nyelvkód"
+msgstr "Language code"
 
 msgid "Timezone"
-msgstr "Időzón"
+msgstr "Timezone"
 
 msgid "ISO code"
-msgstr "ISO kód"
+msgstr "ISO code"
 
 msgid "Membership status"
-msgstr "Tagság állapota"
+msgstr "Membership status"
 
 msgid "Identifier"
-msgstr "Azonosító"
+msgstr "Identifier"
 
 msgid "Who can edit"
-msgstr "Ki szerkesztheti"
+msgstr "Who can edit"
 
 msgid "Signed in"
-msgstr "Bejelentkezve"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Kijelentkezve"
+msgstr "Signed out"
 
 msgid "Updated"
-msgstr "Frissítve"
+msgstr "Updated"
 
 msgid "Deleted"
-msgstr "Törölve"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} törölve"
+msgstr "Deleted {0}"
 
 msgid "Created {0}"
-msgstr "{0} létrehozva"
+msgstr "Created {0}"
 
 msgid "and more"
-msgstr "és továbbiak"
+msgstr "and more"
 
 msgid "Updated: {0}"
-msgstr "Frissítve: {0}"
+msgstr "Updated: {0}"
 
 msgid "Updated {0}"
-msgstr "{0} frissítve"
+msgstr "Updated {0}"
 
 msgid "changed"
-msgstr "megváltozott"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
-msgstr "{0} létrehozva: {1}"
+msgstr "Created {0}: {1}"
 
 msgid "empty"
-msgstr "üres"
+msgstr "empty"
 
 msgid "unknown"
-msgstr "ismeretlen"
+msgstr "unknown"
 
 msgid "set"
-msgstr "beállítva"
+msgstr "set"
 
 msgid "redacted"
-msgstr "eltávolítva"
+msgstr "redacted"
 
 msgid "complex value"
-msgstr "összetett érték"
+msgstr "complex value"
 
 msgid "no picture"
-msgstr "nincs kép"
+msgstr "no picture"
 
 msgid "picture set"
-msgstr "kép beállítva"
+msgstr "picture set"
 
 msgid "Incomplete"
-msgstr "Hiányos"
+msgstr "Incomplete"
 
 msgid "Pending approval"
-msgstr "Jóváhagyásra vár"
+msgstr "Pending approval"
 
 msgid "Approved"
-msgstr "Jóváhagyva"
+msgstr "Approved"
 
 msgid "Changing your club has important consequences"
-msgstr "A klubváltás fontos hatással jár"
+msgstr "Changing your club has important consequences"
 
 msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
-msgstr "Ha más klubot választasz és mentesz, a rendszer „new” státuszba helyez. A rendszert addig nem használhatod, amíg a kiválasztott klub elnöke el nem fogadja a jelentkezésedet és tagként regisztrál."
+msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
 
 msgid "Apply to a different club?"
-msgstr "Más klubba jelentkezel?"
+msgstr "Apply to a different club?"
 
 msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
-msgstr "Valóban klubot szeretnél váltani? Mentéskor elveszíted a jelenlegi jogosultságodat, és a rendszert addig nem használhatod, amíg az új klub elnöke el nem fogadja a jelentkezésedet és tagként regisztrál."
+msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
 
 msgid "Yes, apply to this club"
-msgstr "Igen, erre a klubba jelentkezem"
+msgstr "Yes, apply to this club"
 
 msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
-msgstr "Az új klubba szóló jelentkezésed elküldve. A rendszert addig nem használhatod, amíg a klub elnöke jóvá nem hagyja."
+msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
 
 msgid "Do you really want to delete your profile picture?"
-msgstr "Valóban törölni szeretnéd a profilképedet?"
+msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
-msgstr "Kép törlése"
+msgstr "Delete picture"
+
+msgid "New member"
+msgstr "Új tag"
+
+msgid "Languages"
+msgstr "Nyelvek"
+
+msgid "Only visible languages"
+msgstr "Csak a látható nyelvek"
+
+msgid "New language"
+msgstr "Új nyelv"
+
+msgid "Edit language"
+msgstr "Nyelv szerkesztése"
+
+msgid "Language details"
+msgstr "Nyelv részletei"
+
+msgid "The language has been saved."
+msgstr "A nyelv mentése sikerült."
+
+msgid "Go to Languages"
+msgstr "Nyelvek megnyitása"
+
+msgid "You are not allowed to access languages."
+msgstr "Nincs jogosultságod a nyelvekhez."
+
+msgid "Only a superuser can add languages."
+msgstr "Csak superuser adhat hozzá nyelvet."
+
+msgid "You are not allowed to edit languages."
+msgstr "Nincs jogosultságod nyelvek szerkesztéséhez."
+
+msgid "Only a superuser can delete languages."
+msgstr "Csak superuser törölhet nyelvet."
+
+msgid "Cannot delete this language because it is required by the system ({0})."
+msgstr "Ez a nyelv nem törölhető, mert a rendszerhez szükséges ({0})."
+
+msgid "Cannot delete this language because one or more countries use it as primary locale."
+msgstr "Ez a nyelv nem törölhető, mert egy vagy több ország ezt használja elsődleges locale-ként."
+
+msgid "Locale code used for UI translations (e.g. hu_HU, en_US)."
+msgstr "Locale kód a UI fordításokhoz (pl. hu_HU, en_US)."
+
+msgid "English canonical name (also stored as Translate default locale)."
+msgstr "Angol kanonikus név (Translate alapértelmezett locale is)."
+
+msgid "Endonym — how the language name is written in itself (e.g. magyar, Deutsch)."
+msgstr "Endoním — a nyelv neve saját magán (pl. magyar, Deutsch)."
+
+msgid "Visible languages appear in the login language selector."
+msgstr "A látható nyelvek jelennek meg a bejelentkezési nyelvválasztóban."
+
+msgid "Manage UI languages for the login selector: code, name, endonym and visibility."
+msgstr "UI nyelvek kezelése a bejelentkezési választóhoz: kód, név, endoním és láthatóság."
+
+msgid "Code"
+msgstr "Kód"
+
+msgid "Code:"
+msgstr "Kód:"
+
+msgid "Roles"
+msgstr "Szerepkörök"

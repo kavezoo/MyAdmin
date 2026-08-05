@@ -8,184 +8,184 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Tili aktiivinen"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Tili käytössä"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Toiminnan tiedot"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Toimintaloki"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Toimintaloki"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Toimintaloki käytössä"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Toimintaloki poistettu käytöstä maalta {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Toimintaloki otettu käyttöön maalle {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Application settings"
-msgstr "Sovellusasetukset"
+msgstr "Application settings"
 
 msgid "Approved"
 msgstr "Approved"
 
 msgid "Browse all activity"
-msgstr "Selaa kaikkea toimintaa"
+msgstr "Browse all activity"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Hallitsee «Oma toimintani» -valikkokohtaa tämän maan käyttäjille."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Created"
-msgstr "Luotu"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} luotu"
+msgstr "Created {0}"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
 
 msgid "Deleted"
-msgstr "Poistettu"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} poistettu"
+msgstr "Deleted {0}"
 
 msgid "Endonym"
-msgstr "Endonyymi"
+msgstr "Endonym"
 
 msgid "Hide from users"
-msgstr "Piilota käyttäjiltä"
+msgstr "Hide from users"
 
 msgid "ISO code"
-msgstr "ISO-koodi"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Tunniste"
+msgstr "Identifier"
 
 msgid "Incomplete"
 msgstr "Incomplete"
 
 msgid "Language code"
-msgstr "Kielikoodi"
+msgstr "Language code"
 
 msgid "Membership status"
-msgstr "Jäsenyyden tila"
+msgstr "Membership status"
 
 msgid "My activity"
-msgstr "Oma toimintani"
+msgstr "My activity"
 
 msgid "No activity recorded yet."
-msgstr "Toimintaa ei ole vielä tallennettu."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Ei lisätietoja tälle merkinnälle."
+msgstr "No further details for this entry."
 
 msgid "No working country is set."
-msgstr "Työmaata ei ole asetettu."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Pois"
+msgstr "Off"
 
 msgid "On"
-msgstr "Päällä"
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Ylätason tietue"
+msgstr "Parent record"
 
 msgid "Pending approval"
 msgstr "Pending approval"
 
 msgid "Record"
-msgstr "Tietue"
+msgstr "Record"
 
 msgid "Sample record"
-msgstr "Esimerkkitietue"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Hae toimintaa…"
+msgstr "Search activity…"
 
 msgid "Settings for {0}"
-msgstr "Asetukset: {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Näytä käyttäjille"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Kirjautuminen"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Kirjautunut"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Kirjautunut ulos"
+msgstr "Signed out"
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Asetusta ei voitu tallentaa. Yritä uudelleen."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Aikavyöhyke"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Poista lokitus käytöstä"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Ota lokitus käyttöön"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Päivitetty"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} päivitetty"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Päivitetty: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Käyttäjätili"
+msgstr "User account"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Käyttäjät eivät voi enää nähdä omaa toimintaansa maassa {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Käyttäjät voivat nyt nähdä oman toimintansa maassa {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Käyttäjät voivat nähdä oman toimintansa"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Käyttäjät näkevät oman toimintansa"
+msgstr "Users see own activity"
 
 msgid "What changed"
-msgstr "Mitä muuttui"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Kun pois päältä, uusia kirjautumisia, uloskirjautumisia tai tietomuutoksia ei tallenneta."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Kun kirjaudut sisään, ulos tai muutat tietojasi."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Kuka voi muokata"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Sinulla ei ole oikeutta muuttaa tätä asetusta."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Työmaasi — kytkimet koskevat vain tätä maata."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "ja lisää"
+msgstr "and more"
 
 msgid "changed"
-msgstr "muutettu"
+msgstr "changed"
 
 msgid "complex value"
 msgstr "complex value"
@@ -231,3 +231,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Pääkäyttäjä"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "Puheenjohtaja"
+
+msgid "Vice president"
+msgstr "Varapuheenjohtaja"
+
+msgid "Club president"
+msgstr "Kerhon puheenjohtaja"
+
+msgid "Editor"
+msgstr "Toimittaja"
+
+msgid "Member"
+msgstr "Jäsen"
+
+msgid "New member"
+msgstr "Uusi jäsen"
+
+msgid "Roles"
+msgstr "Roolit"

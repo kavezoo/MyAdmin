@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Auth\AppRoles;
+use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -12,11 +15,16 @@ use Cake\Validation\Validator;
 /**
  * Clubs Table.
  *
+ * Club president = Users row with role `clubpresident` and `club_id` = this club
+ * (no FK on clubs — assignment via {@see assignClubPresident()}).
+ * `user_count` = CounterCache from Users.club_id.
+ *
  * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
  */
 class ClubsTable extends Table
 {
+    use PreventsDeleteWithChildrenTrait;
     use UsesDatabaseColumnDefaultsTrait;
 
     /**
@@ -42,6 +50,105 @@ class ClubsTable extends Table
         $this->hasMany('Users', [
             'foreignKey' => 'club_id',
             'className' => 'Users',
+            'dependent' => false,
+        ]);
+    }
+
+    protected function relatedChildrenCountField(): string
+    {
+        return 'user_count';
+    }
+
+    /**
+     * @deprecated Use {@see countRelatedChildren()} / `user_count` CounterCache.
+     */
+    public function countRelatedUsers(EntityInterface $entity): int
+    {
+        return $this->countRelatedChildren($entity);
+    }
+
+    /**
+     * Current club president user (role=clubpresident + club_id), or null.
+     *
+     * @return \Cake\Datasource\EntityInterface|null
+     */
+    public function findClubPresident(int $clubId): ?EntityInterface
+    {
+        if ($clubId < 1) {
+            return null;
+        }
+
+        return $this->Users->find()
+            ->where([
+                'Users.club_id' => $clubId,
+                'Users.role' => AppRoles::CLUBPRESIDENT,
+            ])
+            ->orderBy(['Users.modified' => 'DESC'])
+            ->first();
+    }
+
+    /**
+     * Assign (or clear) club president for a club in one country.
+     *
+     * Previous clubpresident(s) for this club → role `member` (keep club_id).
+     * Selected user → role `clubpresident`, club_id set.
+     */
+    public function assignClubPresident(int $clubId, int $countryId, ?string $userId): bool
+    {
+        if ($clubId < 1 || $countryId < 1) {
+            return false;
+        }
+
+        $userId = $userId !== null ? trim($userId) : '';
+        $previous = $this->Users->find()
+            ->where([
+                'Users.club_id' => $clubId,
+                'Users.role' => AppRoles::CLUBPRESIDENT,
+                'Users.country_id' => $countryId,
+            ])
+            ->all();
+
+        foreach ($previous as $prev) {
+            if ($userId !== '' && (string)$prev->get('id') === $userId) {
+                continue;
+            }
+            $prev->set('role', AppRoles::MEMBER);
+            if (!$this->Users->save($prev, [
+                'checkRules' => false,
+                'accessibleFields' => [
+                    'role' => true,
+                    'modified' => true,
+                ],
+            ])) {
+                return false;
+            }
+        }
+
+        if ($userId === '') {
+            return true;
+        }
+
+        $user = $this->Users->find()
+            ->where([
+                'Users.id' => $userId,
+                'Users.country_id' => $countryId,
+                'Users.role !=' => AppRoles::NEW,
+            ])
+            ->first();
+        if ($user === null) {
+            return false;
+        }
+
+        $user->set('club_id', $clubId);
+        $user->set('role', AppRoles::CLUBPRESIDENT);
+
+        return (bool)$this->Users->save($user, [
+            'checkRules' => false,
+            'accessibleFields' => [
+                'club_id' => true,
+                'role' => true,
+                'modified' => true,
+            ],
         ]);
     }
 

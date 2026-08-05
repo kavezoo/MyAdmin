@@ -24,7 +24,7 @@ class RebuildCounterCachesCommand extends Command
     {
         $parser->setDescription(
             'Rebuild CounterCache fields: Parents.sample_count, Samples.city_count,'
-            . ' Cities.sample_count, Countries.user_count.'
+            . ' Cities.sample_count, Countries.user_count, Clubs.user_count.'
         );
 
         return $parser;
@@ -58,6 +58,9 @@ class RebuildCounterCachesCommand extends Command
 
         $io->out('Updating Countries.user_count (Users → Countries CounterCache)…');
         $users->getBehavior('CounterCache')->updateCounterCache('Countries');
+
+        $io->out('Updating Clubs.user_count (Users → Clubs CounterCache)…');
+        $users->getBehavior('CounterCache')->updateCounterCache('Clubs');
 
         $io->success('CounterCache rebuild finished.');
 

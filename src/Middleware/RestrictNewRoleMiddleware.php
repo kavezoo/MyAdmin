@@ -38,6 +38,7 @@ class RestrictNewRoleMiddleware implements MiddlewareInterface
      */
     protected const ALLOWED_USER_ACTIONS = [
         'profile',
+        'edit',
         'completeprofile',
         'deleteavatar',
         'logout',

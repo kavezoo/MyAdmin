@@ -27,7 +27,7 @@ $numberDecimals = [
 /**
  * Optional index columns (true = show, false = hide).
  */
-$showIdColumn = true;
+$showIdColumn = false;
 $showClubColumn = true;
 $showActiveColumn = true;
 $showEnabledColumn = true;
@@ -92,6 +92,7 @@ $memberRecordLabels = [
 	'club' => __('Club'),
 	'active' => __('Active'),
 	'enabled' => __('Enabled'),
+	MembershipProfile::FIELD_JOINED => __('Member since'),
 	MembershipFee::FIELD_CLUB => $clubFeeLabel,
 	MembershipFee::FIELD_NATIONAL => $nationalFeeLabel,
 	'created' => __('Created'),
@@ -102,7 +103,7 @@ $config = [
 	'rowDoubleClickAction' => $rowDoubleClickAction,
 	'recordGetUrl' => $this->Url->build(['action' => 'recordGet']),
 	'categoryGetUrl' => $this->Url->build(['action' => 'clubRecordGet']),
-	'editUrl' => $this->Url->build(['action' => 'view']),
+	'editUrl' => $this->Url->build(['action' => 'edit']),
 	'viewUrl' => $this->Url->build(['action' => 'view']),
 	'deleteUrl' => '',
 	'recordFieldLabels' => $memberRecordLabels,
@@ -113,6 +114,7 @@ $config = [
 		'enabled' => __('Enabled'),
 		'visible' => __('Visible'),
 		'pos' => __('Position'),
+		'user_count' => __('Members'),
 		'created' => __('Created'),
 		'modified' => __('Modified'),
 	],
@@ -124,11 +126,17 @@ $config = [
 			'enabled' => __('Enabled'),
 			'visible' => __('Visible'),
 			'pos' => __('Position'),
+			'user_count' => __('Members'),
 			'created' => __('Created'),
 			'modified' => __('Modified'),
 		],
 	],
 ];
+
+$clubEditUrl = $this->Url->build(['prefix' => 'President', 'controller' => 'Clubs', 'action' => 'edit']);
+$clubViewUrl = $this->Url->build(['prefix' => 'President', 'controller' => 'Clubs', 'action' => 'view']);
+$clubDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 'Clubs', 'action' => 'delete']);
+$clubGetUrl = $this->Url->build(['action' => 'clubRecordGet']);
 $this->Html->scriptBlock(
 	'window.MyAdmin = window.MyAdmin || {}; window.MyAdmin.config = Object.assign(window.MyAdmin.config || {}, '
 	. json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
@@ -185,34 +193,34 @@ $this->assign('title', __('Members'));
 						<thead>
 							<tr>
 								<?php if ($showIdColumn): ?>
-									<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
+									<th scope="col" class="number id"><?= $this->Paginator->sort('Users.id', '#') ?></th>
 								<?php endif; ?>
 								<?php if ($showClubColumn): ?>
 									<th scope="col" class="string category-id"><?= $this->Paginator->sort('Clubs.name', __('Club')) ?></th>
 								<?php endif; ?>
-								<th scope="col" class="string name"><?= $this->Paginator->sort('first_name', __('Name')) ?></th>
-								<th scope="col" class="string email"><?= $this->Paginator->sort('email', __('Email')) ?></th>
+								<th scope="col" class="string name"><?= $this->Paginator->sort('Users.first_name', __('Name')) ?></th>
+								<th scope="col" class="string email"><?= $this->Paginator->sort('Users.email', __('Email')) ?></th>
 								<?php if ($showActiveColumn): ?>
-									<th scope="col" class="boolean active"><?= $this->Paginator->sort('active', __('Active')) ?></th>
+									<th scope="col" class="boolean active"><?= $this->Paginator->sort('Users.active', __('Active')) ?></th>
 								<?php endif; ?>
 								<?php if ($showEnabledColumn): ?>
-									<th scope="col" class="boolean enabled"><?= $this->Paginator->sort('enabled', __('Enabled')) ?></th>
+									<th scope="col" class="boolean enabled"><?= $this->Paginator->sort('Users.enabled', __('Enabled')) ?></th>
 								<?php endif; ?>
 								<?php if ($showPosColumn): ?>
-									<th scope="col" class="number pos"><?= $this->Paginator->sort('pos', __('Position')) ?></th>
+									<th scope="col" class="number pos"><?= $this->Paginator->sort('Users.pos', __('Position')) ?></th>
 								<?php endif; ?>
 								<?php if ($showVisibleColumn): ?>
-									<th scope="col" class="boolean visible"><?= $this->Paginator->sort('visible', __('Visible')) ?></th>
+									<th scope="col" class="boolean visible"><?= $this->Paginator->sort('Users.visible', __('Visible')) ?></th>
 								<?php endif; ?>
-								<th scope="col" class="date club-fee text-center"><?= $this->Paginator->sort(MembershipFee::FIELD_CLUB, h($clubFeeLabel) . ' (' . h($membershipYear) . ')') ?></th>
-								<th scope="col" class="date national-fee text-center"><?= $this->Paginator->sort(MembershipFee::FIELD_NATIONAL, h($nationalFeeLabel) . ' (' . h($membershipYear) . ')') ?></th>
+								<th scope="col" class="date club-fee text-center"><?= $this->Paginator->sort('Users.' . MembershipFee::FIELD_CLUB, h($clubFeeLabel) . ' (' . h($membershipYear) . ')') ?></th>
+								<th scope="col" class="date national-fee text-center"><?= $this->Paginator->sort('Users.' . MembershipFee::FIELD_NATIONAL, h($nationalFeeLabel) . ' (' . h($membershipYear) . ')') ?></th>
 								<?php if ($showTimestampColumn): ?>
 									<th scope="col" class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
 										<?php if ($showCreatedColumn): ?>
-											<?= $this->Paginator->sort('created', __('Created')) ?>
+											<?= $this->Paginator->sort('Users.created', __('Created')) ?>
 										<?php endif; ?>
 										<?php if ($showModifiedColumn): ?>
-											<?= $this->Paginator->sort('modified', __('Modified')) ?>
+											<?= $this->Paginator->sort('Users.modified', __('Modified')) ?>
 										<?php endif; ?>
 									</th>
 								<?php endif; ?>
@@ -242,8 +250,11 @@ $this->assign('title', __('Members'));
 								$nationalFeePaid = MembershipFee::isPaidForYear($nationalFeeDate, $membershipYear);
 								$clubFeeDateFormatted = MembershipFee::paidDateFormatted($clubFeeDate, $membershipYear);
 								$nationalFeeDateFormatted = MembershipFee::paidDateFormatted($nationalFeeDate, $membershipYear);
+								$clubLastPaymentFormatted = MembershipFee::lastPaymentFormatted($clubFeeDate);
+								$nationalLastPaymentFormatted = MembershipFee::lastPaymentFormatted($nationalFeeDate);
+								$isEnabled = (int)($member->enabled ?? 0) === 1;
 								?>
-								<tr id="record-<?= h($memberId) ?>" data-id="<?= h($memberId) ?>" data-can-delete="0">
+								<tr id="record-<?= h($memberId) ?>" data-id="<?= h($memberId) ?>" data-can-delete="0"<?= !$isEnabled ? ' class="table-secondary"' : '' ?>>
 									<?php if ($showIdColumn): ?>
 										<td class="number id"><?= h($memberId) ?></td>
 									<?php endif; ?>
@@ -253,10 +264,10 @@ $this->assign('title', __('Members'));
 												<a href="#"
 													class="category-link record-modal-link"
 													data-id="<?= (int)$clubIdRow ?>"
-													data-get-url="<?= h($this->Url->build(['action' => 'clubRecordGet'])) ?>"
-													data-view-url=""
-													data-edit-url=""
-													data-delete-url=""
+													data-get-url="<?= h($clubGetUrl) ?>"
+													data-edit-url="<?= h($clubEditUrl) ?>"
+													data-view-url="<?= h($clubViewUrl) ?>"
+													data-delete-url="<?= h($clubDeleteUrl) ?>"
 													data-labels="club"
 													data-title="<?= h(__('Club details')) ?>"
 												>
@@ -266,14 +277,11 @@ $this->assign('title', __('Members'));
 										</td>
 									<?php endif; ?>
 									<td class="string name users-list-name-cell">
-										<div class="d-flex align-items-center gap-2">
-											<?= $this->element('users/list_avatar', [
-												'user' => $member,
-												'displayName' => $name,
-												'size' => 40,
-											]) ?>
-											<span class="users-list-name-cell__label"><?= h($name) ?></span>
-										</div>
+										<?= $this->element('users/list_name_cell', [
+											'user' => $member,
+											'displayName' => $name,
+											'size' => 40,
+										]) ?>
 									</td>
 									<td class="string email"><?= h((string)$member->email) ?></td>
 									<?php if ($showActiveColumn): ?>
@@ -284,8 +292,8 @@ $this->assign('title', __('Members'));
 										</td>
 									<?php endif; ?>
 									<?php if ($showEnabledColumn): ?>
-										<td class="boolean enabled text-center">
-											<?= (int)($member->enabled ?? 0) === 1
+										<td class="boolean enabled text-center js-member-enabled-cell">
+											<?= $isEnabled
 												? '<i class="fa fa-check text-success"></i>'
 												: '<i class="fa fa-times text-danger"></i>' ?>
 										</td>
@@ -302,6 +310,7 @@ $this->assign('title', __('Members'));
 											'paid' => $clubFeePaid,
 											'membershipYear' => $membershipYear,
 											'dateFormatted' => $clubFeeDateFormatted,
+											'lastPaymentDateFormatted' => $clubLastPaymentFormatted,
 											'mode' => 'table',
 										]) ?>
 									</td>
@@ -317,6 +326,7 @@ $this->assign('title', __('Members'));
 											'paid' => $nationalFeePaid,
 											'membershipYear' => $membershipYear,
 											'dateFormatted' => $nationalFeeDateFormatted,
+											'lastPaymentDateFormatted' => $nationalLastPaymentFormatted,
 											'mode' => 'table_national_action',
 											'memberName' => $name,
 											'formId' => $formId,
@@ -352,7 +362,7 @@ $this->assign('title', __('Members'));
 										) ?>
 										<?= $this->Html->link(
 											'<i class="fa fa-pencil"></i>',
-											['action' => 'view', $memberId],
+											['action' => 'edit', $memberId],
 											[
 												'escape' => false,
 												'role' => 'button',
@@ -363,6 +373,37 @@ $this->assign('title', __('Members'));
 												'title' => $tooltipEdit,
 											]
 										) ?>
+										<?php if ($isEnabled): ?>
+											<button
+												type="button"
+												class="btn btn-outline-warning js-member-toggle-enabled"
+												data-id="<?= h($memberId) ?>"
+												data-enabled="1"
+												data-name="<?= h($name) ?>"
+												data-url="<?= h($this->Url->build(['action' => 'toggleEnabled', $memberId])) ?>"
+												data-bs-toggle="tooltip"
+												data-bs-placement="top"
+												data-bs-html="true"
+												title="<?= h('<b>' . __('Disable') . '</b><br>' . __('Disable this member account (cannot log in).')) ?>"
+											>
+												<i class="fa fa-ban"></i>
+											</button>
+										<?php else: ?>
+											<button
+												type="button"
+												class="btn btn-outline-success js-member-toggle-enabled"
+												data-id="<?= h($memberId) ?>"
+												data-enabled="0"
+												data-name="<?= h($name) ?>"
+												data-url="<?= h($this->Url->build(['action' => 'toggleEnabled', $memberId])) ?>"
+												data-bs-toggle="tooltip"
+												data-bs-placement="top"
+												data-bs-html="true"
+												title="<?= h('<b>' . __('Enable') . '</b><br>' . __('Enable this member account (can log in again).')) ?>"
+											>
+												<i class="fa fa-check"></i>
+											</button>
+										<?php endif; ?>
 										<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
 											<a role="button" href="#" class="btn btn-secondary disabled" tabindex="-1" aria-disabled="true">
 												<i class="fa fa-trash"></i>
@@ -394,7 +435,16 @@ window.PresidentMembers = {
 	recordText: <?= json_encode(__('Do you confirm that this member has paid the national membership fee for this year (e.g. MPE in Hungary)? The payment date will be set to today.'), JSON_UNESCAPED_UNICODE) ?>,
 	recordTextNamed: <?= json_encode(__('Do you confirm that {0} has paid the national membership fee for this year? The payment date will be set to today.'), JSON_UNESCAPED_UNICODE) ?>,
 	recordConfirm: <?= json_encode(__('Yes, record payment'), JSON_UNESCAPED_UNICODE) ?>,
-	recordCancel: <?= json_encode(__('Cancel'), JSON_UNESCAPED_UNICODE) ?>
+	recordCancel: <?= json_encode(__('Cancel'), JSON_UNESCAPED_UNICODE) ?>,
+	disableTitle: <?= json_encode(__('Disable member?'), JSON_UNESCAPED_UNICODE) ?>,
+	disableText: <?= json_encode(__('Do you really want to disable {0}? The member will not be able to log in.'), JSON_UNESCAPED_UNICODE) ?>,
+	disableConfirm: <?= json_encode(__('Yes, disable'), JSON_UNESCAPED_UNICODE) ?>,
+	enableTitle: <?= json_encode(__('Enable member?'), JSON_UNESCAPED_UNICODE) ?>,
+	enableText: <?= json_encode(__('Do you really want to enable {0}? The member will be able to log in again.'), JSON_UNESCAPED_UNICODE) ?>,
+	enableConfirm: <?= json_encode(__('Yes, enable'), JSON_UNESCAPED_UNICODE) ?>,
+	disableLabel: <?= json_encode(__('Disable'), JSON_UNESCAPED_UNICODE) ?>,
+	enableLabel: <?= json_encode(__('Enable'), JSON_UNESCAPED_UNICODE) ?>,
+	toggleError: <?= json_encode(__('Could not update the member account.'), JSON_UNESCAPED_UNICODE) ?>
 };
 </script>
 <?= $this->element('admin/modal_record_view') ?>

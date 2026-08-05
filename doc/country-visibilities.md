@@ -16,7 +16,7 @@ Seed: `php tmp/seed_country_visibilities.php` (TRUNCATE + minden ország ↔ ön
 
 ## Saját ország szabály
 
-- Minden országhoz **mindig** van `country_id = visible_country_id` sor (`ensureSelfVisibility`, pos=1).
+- Minden országhoz **mindig** van `country_id = visible_country_id` sor (`ensureSelfVisibility`; **`pos` = DB DEFAULT 1000** — nem állítjuk kézzel).
 - A Select2 listában a **saját ország nem jelenik meg** (csak tárolva).
 - Mentéskor a saját sor **nem törölhető** (`ensureSelfFirst` + utólagos `ensureSelfVisibility`).
 

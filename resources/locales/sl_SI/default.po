@@ -8,184 +8,184 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Račun aktiven"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Račun omogočen"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Podrobnosti dejavnosti"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Dnevnik dejavnosti"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Beleženje dejavnosti"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Beleženje dejavnosti omogočeno"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Beleženje dejavnosti je izklopljeno za {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Beleženje dejavnosti je vklopljeno za {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Application settings"
-msgstr "Nastavitve aplikacije"
+msgstr "Application settings"
 
 msgid "Approved"
 msgstr "Approved"
 
 msgid "Browse all activity"
-msgstr "Prebrskaj vso dejavnost"
+msgstr "Browse all activity"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Nadzoruje menijski element »Moja dejavnost« za uporabnike v tej državi."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Created"
-msgstr "Ustvarjeno"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} ustvarjeno"
+msgstr "Created {0}"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
 
 msgid "Deleted"
-msgstr "Izbrisano"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} izbrisano"
+msgstr "Deleted {0}"
 
 msgid "Endonym"
-msgstr "Endonim"
+msgstr "Endonym"
 
 msgid "Hide from users"
-msgstr "Skrij pred uporabniki"
+msgstr "Hide from users"
 
 msgid "ISO code"
-msgstr "ISO koda"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identifikator"
+msgstr "Identifier"
 
 msgid "Incomplete"
 msgstr "Incomplete"
 
 msgid "Language code"
-msgstr "Koda jezika"
+msgstr "Language code"
 
 msgid "Membership status"
-msgstr "Status članstva"
+msgstr "Membership status"
 
 msgid "My activity"
-msgstr "Moja dejavnost"
+msgstr "My activity"
 
 msgid "No activity recorded yet."
-msgstr "Še ni zabeležene dejavnosti."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Ni dodatnih podrobnosti za ta vnos."
+msgstr "No further details for this entry."
 
 msgid "No working country is set."
-msgstr "Delovna država ni nastavljena."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Izkl."
+msgstr "Off"
 
 msgid "On"
-msgstr "Vkl."
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Nadrejeni zapis"
+msgstr "Parent record"
 
 msgid "Pending approval"
 msgstr "Pending approval"
 
 msgid "Record"
-msgstr "Zapis"
+msgstr "Record"
 
 msgid "Sample record"
-msgstr "Vzorec zapisa"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Iskanje dejavnosti…"
+msgstr "Search activity…"
 
 msgid "Settings for {0}"
-msgstr "Nastavitve za {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Prikaži uporabnikom"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Prijava"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Prijavljen"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Odjavljen"
+msgstr "Signed out"
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Nastavitve ni bilo mogoče shraniti. Poskusite znova."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Časovni pas"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Izklopi beleženje"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Vklopi beleženje"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Posodobljeno"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} posodobljeno"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Posodobljeno: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Uporabniški račun"
+msgstr "User account"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Uporabniki ne morejo več videti lastne dejavnosti v {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Uporabniki zdaj lahko vidijo lastno dejavnost v {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Uporabniki lahko vidijo lastno dejavnost"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Uporabniki vidijo lastno dejavnost"
+msgstr "Users see own activity"
 
 msgid "What changed"
-msgstr "Kaj se je spremenilo"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Ko je izklopljeno, se novi prijavi, odjavi in spremembe podatkov ne beležijo."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Ko se prijavite, odjavite ali spremenite podatke."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Kdo lahko ureja"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Nimate dovoljenja za spremembo te nastavitve."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Vaša delovna država — stikala veljajo samo za to državo."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "in več"
+msgstr "and more"
 
 msgid "changed"
-msgstr "spremenjeno"
+msgstr "changed"
 
 msgid "complex value"
 msgstr "complex value"
@@ -231,3 +231,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "Predsednik"
+
+msgid "Vice president"
+msgstr "Podpredsednik"
+
+msgid "Club president"
+msgstr "Predsednik kluba"
+
+msgid "Editor"
+msgstr "Urednik"
+
+msgid "Member"
+msgstr "Član"
+
+msgid "New member"
+msgstr "Novi član"
+
+msgid "Roles"
+msgstr "Vloge"

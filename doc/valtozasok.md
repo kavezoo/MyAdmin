@@ -5,6 +5,455 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-05 — Setups: csak superuser
+
+### Mi változott / miért
+- Setups modul (sidebar, dashboard kártya, `/admin/setups`): **csak superuser** (`SetupAccess::canAccessModule` = `CurrentUser::isSuperuser`).
+- `AppRoles::setupsModuleRoles()` → csak `superuser`.
+
+### Érintett
+- `src/Auth/SetupAccess.php`, `src/Auth/AppRoles.php`
+- `doc/setups.md`, `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Sidebar: Panels → Roles (Szerepkörök)
+
+### Mi változott / miért
+- Prefix váltó főmenü msgid: **Roles** (hu: **Szerepkörök**); fordítások minden `languages.visible` locale-ra.
+
+### Érintett
+- `templates/element/panel/switcher.php`, `tmp/role_locale_extra.php`, `resources/locales/**/default.po`
+- `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Admin Languages CRUD (Countries fölött)
+
+### Mi változott / miért
+- Teljes Admin CRUD a `languages` táblára (Countries mintára): index visible-only, form, view, modal, kereső.
+- Sidebar Settings: **Languages** közvetlenül **Countries** fölött; Dashboard kártya is.
+- ACL: `LanguageAccess` (superuser teljes; admin csak visible+pos). Törlés tiltva `en_GB`/`hu_HU` + ha ország primary locale.
+
+### Érintett
+- `src/Auth/LanguageAccess.php`, `src/Controller/Admin/LanguagesController.php`
+- `src/Model/Table/LanguagesTable.php` (canDelete + i18n cleanup)
+- `templates/Admin/Languages/{index,form,view}.php`
+- `templates/element/admin/sidebar.php`, `Admin/Dashboard/index.php`, `config/admin_search.php`
+- `doc/languages-admin.md`, `doc/login-language.md`, `doc/README.md`, `resources/locales/hu_HU/default.po`
+
+---
+
+## 2026-08-05 — Admin sidebar Settings vissza (Setups/Countries)
+
+### Mi változott / miért
+- Korábbi ACL-szűrés elrejthette a teljes **Settings** almenüt; vissza a korábbi kinézet: Settings mindig látszik, Countries mindig a listában, Setups/Event logs továbbra is jog szerint.
+
+### Érintett
+- `templates/element/admin/sidebar.php`
+
+---
+
+## 2026-08-05 — User lista: vastag név + lefordított role
+
+### Mi változott / miért
+- Members / Applicants index: név **vastag**, alatta `AppRoles::label()` (pl. Elnök, Alelnök, Klub elnök, Tag, Új tag).
+- Közös element: `templates/element/users/list_name_cell.php`.
+- `new` role msgid: **New member** (hu: Új tag); Club president hu: **Klub elnök**.
+- Fordítások: `tmp/role_locale_extra.php` → `php tmp/build_auth_locale_pos.php` minden `languages.visible=1` locale-ra.
+
+### Érintett
+- `templates/element/users/list_name_cell.php`, `webroot/css/pages/users_list_avatar.css`
+- `templates/{President,Clubpresident}/Members/index.php`, Applicants, applicant_cards, Clubs view
+- `src/Auth/AppRoles.php`, `tmp/role_locale_extra.php`, `tmp/build_auth_locale_pos.php`, `resources/locales/**`
+- `doc/i18n.md`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — Member edit: Tempus popper + tagdíj napló
+
+### Mi változott / miért
+- Clubpresident/President member edit: Tempus Dominus betölti a **`popper.js`-t** (Samples mintára) — naptár helyes pozícióban jelenik meg; fee mező picker id stabilizálva.
+- Tagdíj dátum változás: `EventLogBehavior` + `MembershipFee::activityDescriptions`; írás csak ha Setups `activity_logging_enabled` engedi (`EventLogger` / `ActivityLogSetup`).
+- Users Table: explicit `EventLog` behavior; fee-only változás country_id nélkül is kap leírást.
+
+### Érintett
+- `templates/element/users/member_edit_form.php`
+- `webroot/js/pages/form.js`
+- `src/Model/Table/UsersTable.php`
+- `src/Model/Behavior/EventLogBehavior.php`
+- `doc/membership.md`, `doc/event-logs.md`
+
+---
+
+## 2026-08-05 — Dashboard nav cardok a vezérlőpult keretben
+
+### Mi változott / miért
+- Minden role panel Dashboard: a navigációs cardok a **Dashboard card-body**-ban vannak (nem külön blokk a keret alatt).
+
+### Érintett
+- `templates/{Admin,President,Clubpresident,Member,New}/Dashboard/index.php`
+- `doc/struktura.md`
+
+---
+
+## 2026-08-05 — Member Dashboard: csak Profil card
+
+### Mi változott / miért
+- Member panel Dashboard: nincs külön „Edit profile” card — elég a Profil megtekintése; a szerkesztés onnan elérhető.
+
+### Érintett
+- `templates/Member/Dashboard/index.php`
+
+---
+
+## 2026-08-05 — Clubpresident Members: enable/disable + SWAL
+
+### Mi változott / miért
+- Clubpresident taglista: Enable/Disable gomb (mint President); SWAL **warning** (tiltás) / **success** (engedélyezés); AJAX `toggleEnabled`.
+- Lista mutatja a tiltott tagokat is (`enabled=0`); napló: Users mentés → `EventLogBehavior` + `MembershipProfile` (ha az ország activity logging be van kapcsolva).
+- President SWAL enable ikon is `success` (korábban `question`).
+
+### Érintett
+- `src/Controller/Clubpresident/MembersController.php`
+- `templates/Clubpresident/Members/index.php`
+- `webroot/js/pages/clubpresident_members.js`, `president_members.js`
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Klubelnök: nem lehet `new` role
+
+### Mi változott / miért
+- Select2 + `assignClubPresident`: ország-szűrés mellett **kizárva** a `role=new`; member és fölötte bárki (elnök/alelnök is) választható.
+
+### Érintett
+- `src/Controller/President/ClubsController.php` (`userOptions`)
+- `src/Model/Table/ClubsTable.php` (`assignClubPresident`)
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Clubs: `user_count` + Members related tab
+
+### Mi változott / miért
+- `clubs.user_count` (a `created` előtt) — CounterCache a `Users` Table-en (`Clubs` → `user_count`); törlésvédelem: `PreventsDeleteWithChildrenTrait`.
+- Index: sortolható Members oszlop = `user_count` (nincs élő COUNT map).
+- View: Member list félkövér modal-linkek + Related records TAB; modal Edit/View → `/president/members/…`; Delete gomb disabled (`can_delete: false`).
+- Rebuild: `bin/cake rebuild_counter_caches` frissíti a `Clubs.user_count`-ot is.
+
+### Érintett
+- `config/Migrations/20260805160000_AddUserCountToClubs.php`, `config/schema/clubs.sql`
+- `src/Model/Table/UsersTable.php`, `ClubsTable.php`, `Entity/Club.php`
+- `src/Controller/President/ClubsController.php`, `MembersController.php` (`findScopedMember` ország-scope)
+- `templates/President/Clubs/{index,view}.php`
+- `src/Command/RebuildCounterCachesCommand.php`, `PanelMemberListTrait`
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Örök: form `<hr>` mindig a `visible` fölött
+
+### Mi változott / miért
+- Rögzítve: `visible` + `pos` speciális blokk; az elválasztó **`<hr class="my-4">` mindig közvetlenül a `visible` fölött** (soha `enabled` / más mező fölött).
+- Clubs form javítva: `enabled` → `<hr>` → `visible` → `pos`.
+
+### Érintett
+- `.cursor/rules/admin-form-visible-hr.mdc` (`alwaysApply`)
+- `.cursor/rules/uj-projekt-sema.mdc`
+- `templates/President/Clubs/form.php`
+- `doc/admin-konvenciok.md`, `doc/README.md`, `doc/uj-projekt-sema-playbook.md`
+
+---
+
+## 2026-08-05 — Klubelnök Select2: csak ország-szűrés
+
+### Mi változott / miért
+- `/president/clubs` form klubelnök AJAX: megszűnt a `role IN (member, clubpresident, editor)` + active/enabled szűrés (ez zárta ki a bejelentkezett elnököt/alelnököt is).
+- Szűrés **csak** `Users.country_id` = bejelentkezett user adatlapjának országa; a teljes országos lista kereshető (önmaga is).
+- `assignClubPresident` lookup: szintén csak ország + id (nincs `active=1` kötelező).
+
+### Érintett
+- `src/Controller/President/ClubsController.php` (`userOptions`)
+- `src/Model/Table/ClubsTable.php` (`assignClubPresident`)
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Jelentkező kártyák: külső panel card
+
+### Mi változott / miért
+- Clubpresident Members: pending jelentkezők nem „szabadon” a tábla fölött, hanem ValiAdmin mintájú **külső card** (header cím + leírás, body-ban nested `20rem` kártyák flex-wrap).
+
+### Érintett
+- `templates/element/clubpresident/applicant_cards.php`
+- `webroot/css/pages/clubpresident_applicants.css`
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Clubpresident/President Members: layout + edit űrlap
+
+### Mi változott / miért
+- `/clubpresident/members` layout: tagdíj oszlopok CSS (`!important` a globális 8.5rem/nowrap fölött), applicant kártyák nem örökölnek óriás ikont, footer a `card-footer`-ban; Created/Modified alapból rejtve (kevesebb vízszintes nyomás).
+- Ceruza / modal Edit → **`edit`** (nem `view`): közös `users/member_edit_form` (név, telefon, tagdíj dátum Tempus; President: + enabled + országos díj).
+- `MembershipFee::*` dátum paraméterei `mixed` + `toDate()` — DateTime nem dob TypeError-t a listán.
+- View breadcrumb/footer: Edit → edit; `canDelete=false`.
+
+### Érintett
+- `src/Controller/{Clubpresident,President}/MembersController.php`
+- `templates/{Clubpresident,President}/Members/{index,view,form}.php`
+- `templates/element/users/member_edit_form.php`
+- `webroot/css/pages/membership_fee.css`, `clubpresident_applicants.css`
+- `src/Utility/MembershipFee.php`
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Dashboard: navigációs card-ok
+
+### Mi változott / miért
+- Minden role panel Dashboard: a gombok **card**-okban (cím + leírás + gomb), egyértelmű hova ugrik.
+- Közös element: `panel/dashboard_nav_cards`.
+
+### Érintett
+- `templates/element/panel/dashboard_nav_cards.php`
+- `templates/{Admin,President,Clubpresident,Member,New}/Dashboard/index.php`
+- `doc/users-auth.md`, `doc/struktura.md`
+
+---
+
+## 2026-08-05 — Panel váltás: „Panels” almenü
+
+### Mi változott / miért
+- Prefix váltó linkek (Admin / Member / Clubpresident / President) egy **összecsukható „Panels”** almenüben — egyértelmű, hogy nem a panel saját menüpontjai.
+- Egy helyen: `element/panel/switcher` — minden prefix sidebar.
+
+### Érintett
+- `templates/element/panel/switcher.php`, `webroot/css/style.css`, `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Örök szabály: linked modal = megnyitott rekord URL
+
+### Mi változott / miért
+- Rögzítve: linked/szülő modal Edit/View/Delete **mindig** a modalban látott entitás CRUD URL-je + annak `data-id`-ja; lista sor URL-jére visszahullás tilos.
+
+### Érintett
+- `.cursor/rules/admin-linked-modal-urls.mdc` (alwaysApply)
+- `doc/README.md` (Rögzített döntések)
+
+---
+
+## 2026-08-05 — Taglista klub modal: Edit/View → Clubs rekord
+
+### Mi változott / miért
+- President Members: klub linked modal **Edit / View / Delete** a megnyitott klubra mutat (`/president/clubs/edit|view|delete/{id}`), nem a tag `Members` URL-jére.
+- `index.js` linked modal: explicit `editUrl`/`viewUrl` soha nem esik vissza a sor (tag) URL-jeire.
+- `clubRecordPayload.can_delete` = `ClubsTable::canDelete()`.
+
+### Érintett
+- `templates/President/Members/index.php`, `webroot/js/pages/index.js`
+- `src/Controller/Concerns/PanelMemberListTrait.php`, `.cursor/rules/panel-member-index.mdc`
+
+---
+
+## 2026-08-05 — Clubpresident: csak saját klub tagjai
+
+### Mi változott / miért
+- Clubpresident prefix: taglista / jelentkezők / approve / reject / tagdíj / modal **szigorúan** `Users.club_id` = bejelentkezett user klubja (DB-ből, nem stale identity).
+- `scopeToPresidentClub()` + `beforeFilter` (nincs klub → Dashboard figyelmeztetés).
+- `CurrentUser::clubId()` DB fallback, ha a session identity még 0.
+
+### Érintett
+- `src/Controller/Clubpresident/AppController.php`, `MembersController.php`, `DashboardController.php`
+- `src/Auth/CurrentUser.php`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — President Clubs CRUD
+
+### Mi változott / miért
+- Teljes klub admin a **President** prefix alatt (`/president/clubs`): index / add / edit / view / delete, keresés, lapozás, last-visited, modal, duplaklikk.
+- Ország-scope: `officerCountryId()`. Klubelnök: AJAX Select2 (`userOptions`) → `users.role=clubpresident` + `users.club_id` (nincs FK a `clubs` táblán).
+- Index változók: `$rowDoubleClickAction`, `$showIdColumn` / pos / enabled / visible / count / created / modified; th sort ikonok típussal.
+- `IndexListCrudTrait`: Admin + President közös index-állapot / search / last-visited (session: `Admin.*` / `President.*`).
+- Breadcrumb Home → `panelHomeUrl`. Linked modal: üres `data-edit-url` nem esik vissza a szülő edit URL-re.
+
+### Érintett
+- `src/Controller/Concerns/IndexListCrudTrait.php`, `Admin/AppController.php`, `President/AppController.php`
+- `src/Controller/President/ClubsController.php`, `ClubsTable.php`
+- `templates/President/Clubs/{index,form,view}.php`, `element/president/sidebar.php`, `element/admin/breadcrumb.php`
+- `webroot/js/pages/president_clubs_form.js`, `webroot/js/pages/index.js`
+- `config/admin_search.php` (Clubs, `includeInGlobal => false`), `AdminSearch.php`
+- `doc/membership.md`, `doc/users-auth.md`, `doc/struktura.md`
+
+---
+
+## 2026-08-05 — `pos` = csak DB DEFAULT 1000 (megerősítve)
+
+### Mi változott / miért
+- Örök szabály megerősítve: `pos` **mindig** séma DEFAULT (**1000**); felhasználó írhatja át a formon.
+- Eltávolítva a vak `pos` írás: `CountriesTable::ensurePartnerVisibility` / `replaceVisibleCountryIds` (`$pos += 10`, self `pos=1`); `AdminLanguage` sync (`en_GB=1`…, `$pos += 10`); `seed_country_visibilities.php` (`pos => 1`).
+- Élő DB: minden `pos` oszlopos tábla → `UPDATE … SET pos = 1000`.
+
+### Érintett
+- `.cursor/rules/pos-db-default.mdc`, `doc/README.md`, `doc/struktura.md`, `doc/country-visibilities.md`, `doc/uj-projekt-sema-playbook.md`
+- `src/Model/Table/CountriesTable.php`, `src/Utility/AdminLanguage.php`, `tmp/seed_country_visibilities.php`
+
+---
+
+## 2026-08-05 — Profil edit: nincs tagdíj figyelmeztetés
+
+### Mi változott / miért
+- Tagdíj unpaid figyelmeztetés csak a profil **nézeten** (`view.php`); az **edit** űrlapról levettük a membership fee panelt.
+
+### Érintett
+- `templates/Users/edit.php`
+
+---
+
+## 2026-08-05 — Clubpresident Dashboard: tagok gomb + jelentkező alert
+
+### Mi változott / miért
+- Dashboard: „View members” gomb (nem szöveges link).
+- Ha van pending jelentkező: `alert-success` (cím, szöveg, gomb → Members / kártyák).
+
+### Érintett
+- `src/Controller/Clubpresident/DashboardController.php`
+- `templates/Clubpresident/Dashboard/index.php`
+
+---
+
+## 2026-08-05 — Clubpresident kártyák + joined date; President enable AJAX
+
+### Mi változott / miért
+- Clubpresident: nincs külön Applicants lista — **Members** oldalon pending jelentkezők Bootstrap kártyákon (Approve/Reject SWAL); `membership_joined_date` = elfogadás dátuma + logikai „csatlakozott”.
+- President taglista: Enable/Disable (`users.enabled`) AJAX + SWAL; napló `EventLogBehavior` + `activity_logging_enabled` Setup szerint.
+- Legacy `/clubpresident/applicants` → Members redirect; email link Members-re.
+
+### Érintett
+- Migráció `20260805150000_AddMembershipJoinedDateToUsers`, `MembershipService`, `MembershipProfile`
+- `Clubpresident/MembersController`, `applicant_cards` element, sidebar
+- `President/MembersController::toggleEnabled`, `president_members.js`
+- `EventLogBehavior`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — Profil: view + edit szétválasztás
+
+### Mi változott / miért
+- Standard CakePHP mintára: `/profile` = read-only `view.php`; `/edit` = szerkesztő `edit.php`.
+- Footer + breadcrumb Edit; mentés után vissza a view-ra; avatar törlés → edit.
+- Permissions + `RestrictNewRoleMiddleware` + `/edit/*` route.
+
+### Érintett
+- `src/Controller/UsersController.php`, `templates/Users/view.php`, `templates/Users/edit.php`
+- `templates/element/admin/breadcrumb.php`, `config/routes.php`, `config/permissions.php`
+- `src/Middleware/RestrictNewRoleMiddleware.php`, `webroot/js/pages/users_profile.js`
+- `doc/users-auth.md`, `doc/membership.md`
+
+---
+
+## 2026-08-05 — Profil avatar: FQCN + hibamező string
+
+### Mi változott / miért
+- Avatar feltöltés: `UserAvatar` hívás FQCN (`\App\Utility\UserAvatar`), előző DB útvonal `getOriginal('avatar')`.
+- `profile.php`: `getError('avatar')` tömb → Array to string; most `implode`.
+- `EntityFormErrors`: nested hibák flatten.
+- `User::_setAvatar(mixed)`: formból jövő UploadedFile ne dobjon TypeError-t.
+
+### Érintett
+- `src/Controller/UsersController.php`, `templates/Users/profile.php`
+- `src/Utility/EntityFormErrors.php`, `src/Model/Entity/User.php`
+
+---
+
+## 2026-08-05 — Profil avatar: hiányzó UserAvatar use
+
+### Mi változott / miért
+- `UsersController` avatar feltöltés: hiányzott `use App\Utility\UserAvatar` → `App\Controller\UserAvatar` not found.
+
+### Érintett
+- `src/Controller/UsersController.php`
+
+---
+
+## 2026-08-05 — Taglista sort: Users.alias kulcs (irányváltás)
+
+### Mi változott / miért
+- Members nem Users controller — rövid `first_name` sort kulcs + whitelist eltérés miatt a Paginator elutasította a sortot → **nem váltott ASC/DESC**.
+- Fix: template + `sortableFields` egyaránt `Users.*` / `Clubs.name`.
+
+### Érintett
+- `PanelMemberListTrait`, `President/Clubpresident Members/index.php`
+- `doc/admin-konvenciok.md`, `.cursor/rules/admin-index-sort-icons.mdc`, `panel-member-index.mdc`
+
+---
+
+## 2026-08-05 — Taglista sort ikonok: sortableFields egyezés
+
+### Mi változott / miért
+- Members `sortableFields` eddig `Users.first_name` volt, a template `sort('first_name')` — Paginator elutasította → nem volt `a.asc`/`a.desc` → hiányzott a zöld/piros ikon.
+- Fix: rövid mezőnevek a whitelistben; dokumentáció + rule minden indexhez.
+
+### Érintett
+- `src/Controller/Concerns/PanelMemberListTrait.php`
+- `doc/admin-konvenciok.md`, `doc/membership.md`
+- `.cursor/rules/admin-index-sort-icons.mdc`, `panel-member-index.mdc`
+
+---
+
+## 2026-08-05 — Countries: tiltott hozzáférés toast + menü elrejtés
+
+### Mi változott / miért
+- Jog nélkül `/admin/countries` → Simple Notify warning toast + Dashboard (nem CakePHP Forbidden error page).
+- Sidebar Countries csak `CountryAccess::canAccessModule()` esetén; üres Settings csoport elrejtve.
+- `denyWithFlashWarning()` az Admin AppControllerben (újrafelhasználható).
+
+### Érintett
+- `src/Auth/CountryAccess.php`, `Admin/AppController.php`, `CountriesController.php`
+- `SetupsController`, `EventLogsController` (ugyanaz a soft-deny minta)
+- `templates/element/admin/sidebar.php`, `doc/countries-admin.md`
+
+---
+
+## 2026-08-05 — Taglista: ID rejtve, tagdíj oszlop címke törés
+
+### Mi változott / miért
+- Members index: `$showIdColumn = false` (UUID hosszú, felesleges a listán).
+- Tagdíj `th` / cellák: szélesebb oszlop + `white-space: normal` (globális `.date` nowrap helyett).
+
+### Érintett
+- `templates/President/Members/index.php`, `Clubpresident/Members/index.php`
+- `webroot/css/pages/membership_fee.css`
+
+---
+
+## 2026-08-05 — Auth redirect: ne örökölje a panel prefixet
+
+### Mi változott / miért
+- Bejelentkezetlen `/president` (és más panel) → `unauthorizedHandler` login URL-jében hiányzott `prefix => false` → Router `/president/users/login`-re ment → MissingController.
+- Fix: `config/users.php` → `prefix` + `plugin` = `false` (CakeDC `UsersUrl::actionUrl` minta).
+
+### Érintett
+- `config/users.php`, `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Tagdíj lista: utolsó fizetés dátum a piros gomb alatt
+
+### Mi változott
+- Outstanding / nem fizetett oszlop: tárolt dátum → „Last paid on …”; null → „Has not paid yet”.
+- `MembershipFee::lastPaymentFormatted`, `membership_fee_status` + President/Clubpresident index.
+
+### Érintett
+- `src/Utility/MembershipFee.php`, `templates/element/users/membership_fee_status.php`
+- `templates/President/Members/index.php`, `Clubpresident/Members/index.php`
+- `webroot/css/pages/membership_fee.css`
+
+---
+
 ## 2026-08-05 — Taglisták: Admin index minta (sort, modal, club link)
 
 ### Mi változott / miért

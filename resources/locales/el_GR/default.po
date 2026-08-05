@@ -167,172 +167,172 @@ msgid "Warning"
 msgstr "Προειδοποίηση"
 
 msgid "Activity logging enabled"
-msgstr "Η καταγραφή δραστηριότητας είναι ενεργή"
+msgstr "Activity logging enabled"
 
 msgid "Users can view own activity log"
-msgstr "Οι χρήστες μπορούν να βλέπουν τη δική τους δραστηριότητα"
+msgstr "Users can view own activity log"
 
 msgid "Settings for {0}"
-msgstr "Ρυθμίσεις για {0}"
+msgstr "Settings for {0}"
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Η χώρα εργασίας σας — οι διακόπτες ισχύουν μόνο για αυτή τη χώρα."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "Activity logging"
-msgstr "Καταγραφή δραστηριότητας"
+msgstr "Activity logging"
 
 msgid "On"
-msgstr "Ενεργό"
+msgstr "On"
 
 msgid "Off"
-msgstr "Ανενεργό"
+msgstr "Off"
 
 msgid "Turn off logging"
-msgstr "Απενεργοποίηση καταγραφής"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Ενεργοποίηση καταγραφής"
+msgstr "Turn on logging"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Όταν είναι ανενεργή, δεν καταγράφονται νέες συνδέσεις, αποσυνδέσεις ή αλλαγές δεδομένων."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "Users see own activity"
-msgstr "Οι χρήστες βλέπουν τη δική τους δραστηριότητα"
+msgstr "Users see own activity"
 
 msgid "Hide from users"
-msgstr "Απόκρυψη από χρήστες"
+msgstr "Hide from users"
 
 msgid "Show to users"
-msgstr "Εμφάνιση στους χρήστες"
+msgstr "Show to users"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Ελέγχει το στοιχείο μενού «Η δραστηριότητά μου» για χρήστες σε αυτή τη χώρα."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Η καταγραφή δραστηριότητας ενεργοποιήθηκε για {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Η καταγραφή δραστηριότητας απενεργοποιήθηκε για {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Οι χρήστες μπορούν πλέον να βλέπουν τη δική τους δραστηριότητα στο {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Οι χρήστες δεν μπορούν πλέον να βλέπουν τη δική τους δραστηριότητα στο {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "No working country is set."
-msgstr "Δεν έχει οριστεί χώρα εργασίας."
+msgstr "No working country is set."
 
 msgid "You are not allowed to change this setting."
-msgstr "Δεν επιτρέπεται να αλλάξετε αυτή τη ρύθμιση."
+msgstr "You are not allowed to change this setting."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Η ρύθμιση δεν αποθηκεύτηκε. Δοκιμάστε ξανά."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "My activity"
-msgstr "Η δραστηριότητά μου"
+msgstr "My activity"
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Όταν συνδέεστε, αποσυνδέεστε ή αλλάζετε τα δεδομένα σας."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Browse all activity"
-msgstr "Περιήγηση σε όλη τη δραστηριότητα"
+msgstr "Browse all activity"
 
 msgid "Search activity…"
-msgstr "Αναζήτηση δραστηριότητας…"
+msgstr "Search activity…"
 
 msgid "No activity recorded yet."
-msgstr "Δεν έχει καταγραφεί ακόμη δραστηριότητα."
+msgstr "No activity recorded yet."
 
 msgid "Activity details"
-msgstr "Λεπτομέρειες δραστηριότητας"
+msgstr "Activity details"
 
 msgid "What changed"
-msgstr "Τι άλλαξε"
+msgstr "What changed"
 
 msgid "No further details for this entry."
-msgstr "Δεν υπάρχουν περαιτέρω λεπτομέρειες για αυτή την εγγραφή."
+msgstr "No further details for this entry."
 
 msgid "Record"
-msgstr "Εγγραφή"
+msgstr "Record"
 
 msgid "Sign-in"
-msgstr "Σύνδεση"
+msgstr "Sign-in"
 
 msgid "User account"
-msgstr "Λογαριασμός χρήστη"
+msgstr "User account"
 
 msgid "Application settings"
-msgstr "Ρυθμίσεις εφαρμογής"
+msgstr "Application settings"
 
 msgid "Sample record"
-msgstr "Δείγμα εγγραφής"
+msgstr "Sample record"
 
 msgid "Parent record"
-msgstr "Γονική εγγραφή"
+msgstr "Parent record"
 
 msgid "Activity log"
-msgstr "Αρχείο δραστηριότητας"
+msgstr "Activity log"
 
 msgid "Account enabled"
-msgstr "Λογαριασμός ενεργοποιημένος"
+msgstr "Account enabled"
 
 msgid "Account active"
-msgstr "Λογαριασμός ενεργός"
+msgstr "Account active"
 
 msgid "Endonym"
-msgstr "Ενδώνυμο"
+msgstr "Endonym"
 
 msgid "Language code"
-msgstr "Κωδικός γλώσσας"
+msgstr "Language code"
 
 msgid "Timezone"
-msgstr "Ζώνη ώρας"
+msgstr "Timezone"
 
 msgid "ISO code"
-msgstr "Κωδικός ISO"
+msgstr "ISO code"
 
 msgid "Membership status"
-msgstr "Κατάσταση μέλους"
+msgstr "Membership status"
 
 msgid "Identifier"
-msgstr "Αναγνωριστικό"
+msgstr "Identifier"
 
 msgid "Who can edit"
-msgstr "Ποιος μπορεί να επεξεργαστεί"
+msgstr "Who can edit"
 
 msgid "Signed in"
-msgstr "Συνδέθηκε"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Αποσυνδέθηκε"
+msgstr "Signed out"
 
 msgid "Created"
-msgstr "Δημιουργήθηκε"
+msgstr "Created"
 
 msgid "Updated"
-msgstr "Ενημερώθηκε"
+msgstr "Updated"
 
 msgid "Deleted"
-msgstr "Διαγράφηκε"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} διαγράφηκε"
+msgstr "Deleted {0}"
 
 msgid "Created {0}"
-msgstr "{0} δημιουργήθηκε"
+msgstr "Created {0}"
 
 msgid "and more"
-msgstr "και άλλα"
+msgstr "and more"
 
 msgid "Updated: {0}"
-msgstr "Ενημερώθηκε: {0}"
+msgstr "Updated: {0}"
 
 msgid "Updated {0}"
-msgstr "{0} ενημερώθηκε"
+msgstr "Updated {0}"
 
 msgid "changed"
-msgstr "άλλαξε"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Υπερχρήστης"
+
+msgid "Admin"
+msgstr "Διαχειριστής"
+
+msgid "President"
+msgstr "Πρόεδρος"
+
+msgid "Vice president"
+msgstr "Αντιπρόεδρος"
+
+msgid "Club president"
+msgstr "Πρόεδρος συλλόγου"
+
+msgid "Editor"
+msgstr "Συντάκτης"
+
+msgid "Member"
+msgstr "Μέλος"
+
+msgid "New member"
+msgstr "Νέο μέλος"
+
+msgid "Roles"
+msgstr "Ρόλοι"

@@ -16,6 +16,6 @@
 	<li><?= h(__('Club')) ?>: <strong><?= h($clubName) ?></strong></li>
 </ul>
 <p>
-	<a href="<?= h($listUrl) ?>"><?= h(__('Open applicants list')) ?></a>
+	<a href="<?= h($listUrl) ?>"><?= h(__('Open members list')) ?></a>
 </p>
 <p><?= h(__('Please review the application and approve membership if appropriate.')) ?></p>

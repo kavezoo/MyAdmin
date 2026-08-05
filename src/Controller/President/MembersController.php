@@ -50,7 +50,6 @@ class MembersController extends AppController
             'Users.role' => AppRoles::MEMBER,
             'Users.country_id' => $countryId,
             'Users.active' => 1,
-            'Users.enabled' => 1,
         ];
         if ($nationalPaidOnly) {
             $where = array_merge($where, MembershipFee::paidForYearConditions(
@@ -75,6 +74,53 @@ class MembersController extends AppController
     }
 
     /**
+     * Edit member (contact + national fee + enabled).
+     *
+     * @param string|null $id User id
+     * @return \Cake\Http\Response|null|void
+     */
+    public function edit(?string $id = null)
+    {
+        $this->set('canEdit', true);
+        $this->set('canAdd', false);
+        $this->set('canDelete', false);
+
+        $member = $this->findScopedMember((string)$id, containClub: true);
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->fetchTable('Users');
+        $countryId = (int)($member->get('country_id') ?? 0);
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            try {
+                $member = $users->patchEntity($member, $this->request->getData(), [
+                    'accessibleFields' => [
+                        'first_name' => true,
+                        'phone' => true,
+                        'enabled' => true,
+                        MembershipFee::FIELD_NATIONAL => true,
+                    ],
+                ]);
+                if ($users->save($member)) {
+                    $this->Flash->success(__('The member has been saved.'));
+
+                    return $this->redirect(['action' => 'index']);
+                }
+            } catch (\Throwable $e) {
+                // Unexpected errors → user-facing flash
+            }
+            $this->Flash->error(__('The record could not be saved. Please try again.'));
+        }
+
+        $this->set(compact('member'));
+        $this->set('feeField', MembershipFee::FIELD_NATIONAL);
+        $this->set('feeLabel', MembershipFee::nationalFeeLabel($countryId));
+        $this->set('showEnabled', true);
+        $this->set('title', __('Edit member'));
+        $this->set('breadcrumb', __('Members'));
+        $this->render('form');
+    }
+
+    /**
      * Read-only member details.
      *
      * @param string|null $id User id
@@ -82,6 +128,9 @@ class MembersController extends AppController
      */
     public function view(?string $id = null)
     {
+        $this->set('canEdit', true);
+        $this->set('canAdd', false);
+        $this->set('canDelete', false);
         $member = $this->findScopedMember((string)$id, containClub: true);
         $this->set(compact('member'));
         $this->set('title', __('Member details'));
@@ -193,6 +242,86 @@ class MembersController extends AppController
     }
 
     /**
+     * AJAX: enable / disable member account (`users.enabled`).
+     *
+     * Event log is written by EventLogBehavior when Activity logging is on for the country.
+     *
+     * @param string|null $id User id
+     * @return \Cake\Http\Response
+     */
+    public function toggleEnabled(?string $id = null): Response
+    {
+        $this->request->allowMethod(['post', 'put', 'patch']);
+        $countryId = $this->officerCountryId();
+        if ($countryId < 1) {
+            return $this->response
+                ->withType('application/json')
+                ->withStatus(403)
+                ->withStringBody(json_encode([
+                    'ok' => false,
+                    'message' => (string)__('Your account is not assigned to a country yet.'),
+                ]));
+        }
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->fetchTable('Users');
+        $member = $users->find()
+            ->where([
+                'Users.id' => (string)$id,
+                'Users.role' => AppRoles::MEMBER,
+                'Users.country_id' => $countryId,
+                'Users.active' => 1,
+            ])
+            ->first();
+        if ($member === null) {
+            return $this->response
+                ->withType('application/json')
+                ->withStatus(404)
+                ->withStringBody(json_encode([
+                    'ok' => false,
+                    'message' => (string)__('Member not found.'),
+                ]));
+        }
+
+        $raw = $this->request->getData('enabled');
+        if ($raw === null) {
+            $raw = $this->request->getQuery('enabled');
+        }
+        if ($raw === null || $raw === '') {
+            $enabled = !((int)($member->get('enabled') ?? 0) === 1);
+        } else {
+            $enabled = in_array((string)$raw, ['1', 'true', 'on', 'yes'], true);
+        }
+
+        $member->set('enabled', $enabled);
+        if (!$users->save($member, [
+            'checkRules' => false,
+            'accessibleFields' => [
+                'enabled' => true,
+                'modified' => true,
+            ],
+        ])) {
+            return $this->response
+                ->withType('application/json')
+                ->withStatus(422)
+                ->withStringBody(json_encode([
+                    'ok' => false,
+                    'message' => (string)__('Could not update the member account.'),
+                ]));
+        }
+
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody(json_encode([
+                'ok' => true,
+                'enabled' => $enabled,
+                'message' => $enabled
+                    ? (string)__('Member account enabled.')
+                    : (string)__('Member account disabled.'),
+            ]));
+    }
+
+    /**
      * Index filter: only members with national fee paid for current year (default off = all).
      */
     protected function resolveNationalPaidOnly(): bool
@@ -235,10 +364,7 @@ class MembersController extends AppController
         $query = $users->find()
             ->where([
                 'Users.id' => $id,
-                'Users.role' => AppRoles::MEMBER,
                 'Users.country_id' => $countryId,
-                'Users.active' => 1,
-                'Users.enabled' => 1,
             ]);
         if ($containClub) {
             $query->contain(['Clubs']);

@@ -8,34 +8,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Reikningur virkur"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Reikningur virkur"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Upplýsingar um virkni"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Virkniskrá"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Virkniskráning"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Virkniskráning virk"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Virkniskráning slökkt fyrir {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Virkniskráning kveikt fyrir {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Already have an account? Login"
 msgstr "Ertu þegar með reikning? Skrá inn"
 
 msgid "Application settings"
-msgstr "Forritsstillingar"
+msgstr "Application settings"
 
 msgid "Back to admin"
 msgstr "Til baka í admin"
@@ -47,7 +47,7 @@ msgid "Back to profile"
 msgstr "Til baka í prófíl"
 
 msgid "Browse all activity"
-msgstr "Skoða alla virkni"
+msgstr "Browse all activity"
 
 msgid "Change password"
 msgstr "Breyta lykilorði"
@@ -65,25 +65,25 @@ msgid "Confirm password"
 msgstr "Staðfesta lykilorð"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Stýrir valmyndaratriðinu «Mín virkni» fyrir notendur í þessu landi."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Country"
 msgstr "Land"
 
 msgid "Created"
-msgstr "Búið til"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} búið til"
+msgstr "Created {0}"
 
 msgid "Current password"
 msgstr "Núverandi lykilorð"
 
 msgid "Deleted"
-msgstr "Eytt"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} eytt"
+msgstr "Deleted {0}"
 
 msgid "Email"
 msgstr "Netfang"
@@ -107,16 +107,16 @@ msgid "Forgot password?"
 msgstr "Gleymt lykilorð?"
 
 msgid "Hide from users"
-msgstr "Fela fyrir notendum"
+msgstr "Hide from users"
 
 msgid "I accept the terms of service"
 msgstr "Ég samþykki notkunarskilmála"
 
 msgid "ISO code"
-msgstr "ISO-kóði"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Auðkenni"
+msgstr "Identifier"
 
 msgid "Info"
 msgstr "Upplýsingar"
@@ -125,7 +125,7 @@ msgid "Language"
 msgstr "Tungumál"
 
 msgid "Language code"
-msgstr "Tungumálakóði"
+msgstr "Language code"
 
 msgid "Last name"
 msgstr "Eftirnafn"
@@ -137,13 +137,13 @@ msgid "Login"
 msgstr "Skrá inn"
 
 msgid "Membership status"
-msgstr "Aðildarstaða"
+msgstr "Membership status"
 
 msgid "Message"
 msgstr "Skilaboð"
 
 msgid "My activity"
-msgstr "Mín virkni"
+msgstr "My activity"
 
 msgid "Name"
 msgstr "Nafn"
@@ -152,25 +152,25 @@ msgid "New password"
 msgstr "Nýtt lykilorð"
 
 msgid "No activity recorded yet."
-msgstr "Engin virkni skráð enn."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Engar frekari upplýsingar fyrir þessa færslu."
+msgstr "No further details for this entry."
 
 msgid "No results found."
 msgstr "Engar niðurstöður."
 
 msgid "No working country is set."
-msgstr "Ekkert vinnuland er stillt."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Slökkt"
+msgstr "Off"
 
 msgid "On"
-msgstr "Kveikt"
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Yfirfærsla"
+msgstr "Parent record"
 
 msgid "Password"
 msgstr "Lykilorð"
@@ -206,7 +206,7 @@ msgid "Profile"
 msgstr "Prófíll"
 
 msgid "Record"
-msgstr "Færsla"
+msgstr "Record"
 
 msgid "Register"
 msgstr "Nýskráning"
@@ -215,10 +215,10 @@ msgid "Remember me"
 msgstr "Muna eftir mér"
 
 msgid "Sample record"
-msgstr "Sýnisfærsla"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Leita í virkni…"
+msgstr "Search activity…"
 
 msgid "Search..."
 msgstr "Leita..."
@@ -242,19 +242,19 @@ msgid "Send reset link"
 msgstr "Senda endurstillingartengil"
 
 msgid "Settings for {0}"
-msgstr "Stillingar fyrir {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Sýna notendum"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Innskráning"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Skráður inn"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Skráður út"
+msgstr "Signed out"
 
 msgid "Social accounts"
 msgstr "Samfélagsreikningar"
@@ -269,70 +269,70 @@ msgid "The country language (locale) becomes the site language for your account.
 msgstr "Tungumál landsins (locale) verður tungumál reikningsins þíns."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Ekki tókst að vista stillinguna. Reyndu aftur."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Tímabelti"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Slökkva á skráningu"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Kveikja á skráningu"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Uppfært"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} uppfært"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Uppfært: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Notandareikningur"
+msgstr "User account"
 
 msgid "Username"
 msgstr "Notandanafn"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Notendur geta ekki lengur séð eigin virkni í {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Notendur geta nú séð eigin virkni í {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Notendur geta séð eigin virkni"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Notendur sjá eigin virkni"
+msgstr "Users see own activity"
 
 msgid "Warning"
 msgstr "Aðvörun"
 
 msgid "What changed"
-msgstr "Hvað breyttist"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Þegar slökkt er skráast ekki ný innskráning, útskráning eða breytingar á gögnum."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Þegar þú skráir þig inn, út eða breytir gögnum."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Hver getur breytt"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Þú hefur ekki leyfi til að breyta þessari stillingu."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Vinnulandið þitt — rofarnir gilda aðeins fyrir þetta land."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "og meira"
+msgstr "and more"
 
 msgid "changed"
-msgstr "breytt"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Ofurnotandi"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "Forseti"
+
+msgid "Vice president"
+msgstr "Varaforseti"
+
+msgid "Club president"
+msgstr "Klúbbsforseti"
+
+msgid "Editor"
+msgstr "Ritstjóri"
+
+msgid "Member"
+msgstr "Meðlimur"
+
+msgid "New member"
+msgstr "Nýr meðlimur"
+
+msgid "Roles"
+msgstr "Hlutverk"

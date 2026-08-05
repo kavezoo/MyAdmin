@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `clubs` (
   `enabled` tinyint(1) unsigned NOT NULL DEFAULT 1 COMMENT '0 = not selectable on profile',
   `visible` tinyint(1) NOT NULL DEFAULT 1,
   `pos` int(11) NOT NULL DEFAULT 1000,
+  `user_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: users with this club_id',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   PRIMARY KEY (`id`),

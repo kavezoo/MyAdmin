@@ -543,10 +543,14 @@
 			var $table = $el.closest('table.related-records-table');
 			var labelsKey = $el.attr('data-labels') || ($table.length ? $table.attr('data-labels') : '') || '';
 			var pick = function (attr, fallback) {
-				return $el.attr(attr)
-					|| ($table.length ? $table.attr(attr) : '')
-					|| fallback
-					|| '';
+				// Explicit attribute (even empty) wins — empty means “no URL”, do not fall back.
+				if ($el.length && $el[0].hasAttribute(attr)) {
+					return $el.attr(attr) || '';
+				}
+				if ($table.length && $table[0].hasAttribute(attr)) {
+					return $table.attr(attr) || '';
+				}
+				return fallback || '';
 			};
 
 			return {
@@ -568,16 +572,25 @@
 				return;
 			}
 
+			var hasOpt = function (key) {
+				return Object.prototype.hasOwnProperty.call(options, key);
+			};
+
+			// Linked parent/child: edit/view/delete MUST target that entity's controller.
+			// Explicit options (even empty string) win — never fall back to the index row's URLs.
 			linkedContext = {
 				id: recordId,
 				getUrl: options.getUrl || options.url || categoryGetUrl,
-				editUrl: options.editUrl || parentEditUrl,
-				viewUrl: options.viewUrl || parentViewUrl,
-				deleteUrl: options.deleteUrl || parentDeleteUrl || '',
+				editUrl: hasOpt('editUrl') ? (options.editUrl || '') : (parentEditUrl || ''),
+				viewUrl: hasOpt('viewUrl') ? (options.viewUrl || '') : (parentViewUrl || ''),
+				deleteUrl: hasOpt('deleteUrl') ? (options.deleteUrl || '') : (parentDeleteUrl || ''),
 				deleteFormPrefix: options.deleteFormPrefix || '',
 				fieldLabels: options.fieldLabels || categoryFieldLabels,
 				sourceTable: options.sourceTable || ''
 			};
+
+			$('#btn-linked-edit').toggleClass('d-none', !linkedContext.editUrl);
+			$('#btn-linked-view').toggleClass('d-none', !linkedContext.viewUrl);
 
 			$pendingLastVisitedRow = (options.$row && options.$row.length) ? options.$row : null;
 
@@ -661,14 +674,14 @@
 		});
 
 		$('#btn-linked-view').on('click', function () {
-			if (!linkedContext.id) {
+			if (!linkedContext.id || !linkedContext.viewUrl) {
 				return;
 			}
 			window.location.href = entityUrl(linkedContext.viewUrl, linkedContext.id);
 		});
 
 		$('#btn-linked-edit').on('click', function () {
-			if (!linkedContext.id) {
+			if (!linkedContext.id || !linkedContext.editUrl) {
 				return;
 			}
 			window.location.href = entityUrl(linkedContext.editUrl, linkedContext.id);

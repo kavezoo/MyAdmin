@@ -6,13 +6,19 @@ $controller = (string)$this->request->getParam('controller');
 $action = (string)$this->request->getParam('action');
 $isIndex = $action === 'index';
 $isForm = in_array($action, ['add', 'edit'], true);
-$isView = $action === 'view';
+$isView = in_array($action, ['view', 'profile'], true);
 $id = $this->request->getParam('pass.0');
 
 $indexUrl = $this->Url->build($this->get('indexListUrl') ?? ['action' => 'index']);
 $addUrl = $this->Url->build(['action' => 'add']);
-$editUrl = $id ? $this->Url->build(['action' => 'edit', $id]) : '#';
-$viewUrl = $id ? $this->Url->build(['action' => 'view', $id]) : '#';
+$editUrlOverride = $this->get('breadcrumbEditUrl');
+$viewUrlOverride = $this->get('breadcrumbViewUrl');
+$editUrl = $editUrlOverride !== null
+	? $this->Url->build($editUrlOverride)
+	: ($id ? $this->Url->build(['action' => 'edit', $id]) : '#');
+$viewUrl = $viewUrlOverride !== null
+	? $this->Url->build($viewUrlOverride)
+	: ($id ? $this->Url->build(['action' => 'view', $id]) : '#');
 
 $canDelete = (bool)$this->get('canDelete', true);
 $canAdd = (bool)$this->get('canAdd', true);
@@ -23,6 +29,8 @@ $tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete th
 $crumbTitle = $this->fetch('breadcrumb') ?: ($this->get('breadcrumb') ?? $controller);
 $showBack = !$isIndex && (bool)$this->get('showBreadcrumbBack', true);
 $backLabel = (string)($this->get('breadcrumbBackLabel') ?? __('Back to list'));
+$showProfileStyleActions = $controller === 'Users' && in_array($action, ['profile', 'edit'], true);
+$homeUrl = $this->get('panelHomeUrl') ?? ['prefix' => 'Admin', 'controller' => 'Dashboard', 'action' => 'index'];
 ?>
 <div class="row">
 	<div class="col-xl-12">
@@ -46,38 +54,40 @@ $backLabel = (string)($this->get('breadcrumbBackLabel') ?? __('Back to list'));
 					</button>
 				<?php endif; ?>
 
-				<?php if ($isView && $id && $canEdit): ?>
+				<?php if ($isView && $canEdit && ($id || $editUrlOverride !== null)): ?>
 					<a role="button" href="<?= h($editUrl) ?>" class="btn btn-primary" id="btn-edit" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h('<b>' . __('Edit') . '</b><br>' . __('Edit the selected record.')) ?>">
 						<span class="btn-label"><i class="fa fa-pencil"></i></span><?= __('Edit') ?>
 					</a>
 				<?php endif; ?>
 
-				<?php if (($isView || $isForm) && $id): ?>
+				<?php if (($isView || $isForm) && ($id || $showProfileStyleActions)): ?>
 					<a role="button" href="<?= h($viewUrl) ?>" class="btn btn-info<?= $isView ? ' d-none' : '' ?>" id="btn-view" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h('<b>' . __('View details') . '</b><br>' . __('View the selected record.')) ?>">
 						<span class="btn-label"><i class="fa fa-eye"></i></span><?= __('View details') ?>
 					</a>
-					<?php if ($canDelete): ?>
-						<?= $this->Form->create(null, [
-							'url' => ['action' => 'delete', $id],
-							'id' => 'delete-form-current',
-							'class' => 'd-none js-row-delete-form',
-						]) ?>
-						<?= $this->Form->end() ?>
-						<a role="button" href="#" class="btn btn-danger" id="btn-delete" data-delete-form="#delete-form-current" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h($tooltipDeleteOk) ?>">
-							<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
-						</a>
-					<?php else: ?>
-						<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
-							<a role="button" href="#" class="btn btn-secondary disabled" id="btn-delete" tabindex="-1" aria-disabled="true">
+					<?php if (!$showProfileStyleActions): ?>
+						<?php if ($canDelete): ?>
+							<?= $this->Form->create(null, [
+								'url' => ['action' => 'delete', $id],
+								'id' => 'delete-form-current',
+								'class' => 'd-none js-row-delete-form',
+							]) ?>
+							<?= $this->Form->end() ?>
+							<a role="button" href="#" class="btn btn-danger" id="btn-delete" data-delete-form="#delete-form-current" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h($tooltipDeleteOk) ?>">
 								<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
 							</a>
-						</span>
+						<?php else: ?>
+							<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
+								<a role="button" href="#" class="btn btn-secondary disabled" id="btn-delete" tabindex="-1" aria-disabled="true">
+									<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
+								</a>
+							</span>
+						<?php endif; ?>
 					<?php endif; ?>
 				<?php endif; ?>
 			</div>
 			<ol class="breadcrumb float-right">
 				<li class="breadcrumb-item">
-					<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Dashboard', 'action' => 'index']) ?>" class="text-secondary fw-bold"><?= __('Home') ?></a>
+					<a href="<?= $this->Url->build($homeUrl) ?>" class="text-secondary fw-bold"><?= __('Home') ?></a>
 				</li>
 				<li class="breadcrumb-item active"><?= h($crumbTitle) ?></li>
 			</ol>

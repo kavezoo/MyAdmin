@@ -1,0 +1,42 @@
+---
+description: Form visible+pos blokk — a &lt;hr&gt; mindig a visible fölött (örök).
+alwaysApply: true
+---
+
+# Form — `<hr>` mindig a `visible` fölött (örök)
+
+A **`visible`** és **`pos`** speciális mezők (szinte minden táblán). A formon a **többi mező után** jönnek, sorrend: **visible → pos**.
+
+## Kötelező
+
+Az elválasztó **`<hr class="my-4">`** **közvetlenül a `visible` mezősor előtt** áll — soha nem más mező (pl. `enabled`, `logikai`, Select2) fölött.
+
+```html
+<!-- … minden más mező (name, enabled, kapcsolatok, …) … -->
+
+<div class="row">
+	<div class="col-12 col-xxl-11">
+		<hr class="my-4">
+	</div>
+</div>
+
+<!-- visible switch -->
+<!-- pos integer -->
+```
+
+## Tilos
+
+- `<hr>` az `enabled` / más boolean / tartalmi mező **fölött**, ha utána még jön a `visible`
+- Bare teljes szélességű `<hr>` (mindig `row` + `col-12 col-xxl-11`)
+- `pos` a `visible` **előtt**
+- Extra `<hr>` a `visible`–`pos` között, vagy a `pos` után „dísznek”
+
+## Ha csak az egyik van
+
+- Csak `visible` (nincs `pos`): `<hr>` továbbra is a `visible` fölött.
+- Csak `pos` (nincs `visible`): `<hr>` a `pos` fölött.
+- Egyik sem: **nincs** ez a záró `<hr>` blokk.
+
+## Spec
+
+`doc/admin-konvenciok.md` (Form → visible + pos), `doc/README.md` Rögzített döntések.

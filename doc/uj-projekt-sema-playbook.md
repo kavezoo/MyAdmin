@@ -35,7 +35,7 @@ Cursor rule: `.cursor/rules/uj-projekt-sema.mdc` (`alwaysApply`).
 | `DATE` / `TIME` / `DATETIME` | Tempus Dominus 6 + `dateFormat`; mentés dátum MW | middleware, admin-konvenciok |
 | `BOOLEAN` / `TINYINT(1)` | form-switch; index boolean oszlop | admin-oldal |
 | `visible` | Switch; lista végén `visible` → `pos`; Countries: visible-only szűrő | admin-konvenciok, countries-admin |
-| `pos` | DB **DEFAULT** — agent **soha** ne növelgesse | `pos-db-default` |
+| `pos` | DB **DEFAULT `1000`** — agent **soha** ne növelgesse / ne írja | `pos-db-default` |
 | `*_count` | **CounterCache** (ne élő COUNT) | minta-tanulsagok, crud-utmutato |
 | `created` / `modified` | Timestamp behavior; form header editnél | — |
 | Oszlop DEFAULT (DB) | `UsesDatabaseColumnDefaultsTrait` + séma DEFAULT | minta-tanulsagok |
@@ -44,7 +44,7 @@ Cursor rule: `.cursor/rules/uj-projekt-sema.mdc` (`alwaysApply`).
 
 | Kapcsolat | Index / lista | Form | View | Törlés |
 |-----------|---------------|------|------|--------|
-| **belongsTo** | Oszlop / join; Translate assoc → locale sort | Select2 lista: `visible` + `pos`/`name`; opcionális „+” ha egyszerű create | Félkövér link → AJAX modal | Szülőn CounterCache a gyerekből |
+| **belongsTo** | Oszlop / join; Translate assoc → locale sort | Select2 lista: `visible` + `pos`/`name`; opcionális „+” ha egyszerű create | Félkövér link → AJAX modal; Edit/View = **szülő** CRUD URL + szülő id (`admin-linked-modal-urls`) | Szülőn CounterCache a gyerekből |
 | **hasMany** | Szülőn `*_count` oszlop | — | Gyerek **tab sheet** (üres is) | `PreventsDeleteWithChildrenTrait` ha `*_count > 0` → disabled Delete |
 | **belongsToMany** | Mindkét oldalon `*_count` | **Mindkét** formon multiple Select2; üres `_ids` → `[]`; through + `cascadeCallbacks` + `saveStrategy: replace` | Tab / modal lista | Through CounterCache mindkét irány |
 | **Nincs gyerek** | — | — | — | Delete mindig danger + Swal |
@@ -69,7 +69,7 @@ Cursor rule: `.cursor/rules/uj-projekt-sema.mdc` (`alwaysApply`).
 | Kötelező mező: piros `*` a label **előtt**, szóköz nélkül | `FormHelper::adminLabel` / `requiredMark` — validator alapján |
 | Mentetlen leave Swal | dirty → `confirmLeave`; clean → nincs kérdés |
 | Mezőhiba a control **alatt** | AppView Admin templates + `field_error` összetett widgetnél |
-| `visible` → `pos` a form végén + `hr` | Ha mindkét oszlop van |
+| `visible` → `pos` a form végén; **`<hr>` mindig a `visible` fölött** | Ha van `visible` / `pos` oszlop — rule: `admin-form-visible-hr.mdc` |
 | Flash | Simple Notify toast (Admin + login) |
 
 ### 1.5 Index UX (minden lista)

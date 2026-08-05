@@ -16,7 +16,7 @@ use CakeDC\Users\Model\Table\UsersTable as CakeDCUsersTable;
 /**
  * App Users table — CakeDC Users + country_id + club_id + membership onboarding.
  *
- * CounterCache: Countries.user_count (registration / country change / delete).
+ * CounterCache: Countries.user_count, Clubs.user_count (registration / country|club change / delete).
  *
  * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
  * @property \App\Model\Table\ClubsTable&\Cake\ORM\Association\BelongsTo $Clubs
@@ -39,10 +39,15 @@ class UsersTable extends CakeDCUsersTable
             'className' => 'Clubs',
             'joinType' => 'LEFT',
         ]);
-        // Countries.user_count — child (belongsTo) side CounterCache
+        // Child-side CounterCache for parent count columns
         $this->addBehavior('CounterCache', [
             'Countries' => ['user_count'],
+            'Clubs' => ['user_count'],
         ]);
+        // Explicit EventLog (also auto-attached in Application) — membership fee dates, enabled, …
+        if (!$this->hasBehavior('EventLog')) {
+            $this->addBehavior('EventLog');
+        }
     }
 
     public function validationDefault(Validator $validator): Validator

@@ -8,34 +8,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Llogaria aktive"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Llogaria e aktivizuar"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Detajet e aktivitetit"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Regjistri i aktivitetit"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Regjistrimi i aktivitetit"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Regjistrimi i aktivitetit i aktivizuar"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Regjistrimi i aktivitetit u çaktivizua për {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Regjistrimi i aktivitetit u aktivizua për {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Already have an account? Login"
 msgstr "Keni tashmë një llogari? Hyr"
 
 msgid "Application settings"
-msgstr "Cilësimet e aplikacionit"
+msgstr "Application settings"
 
 msgid "Back to admin"
 msgstr "Kthehu te admin"
@@ -47,7 +47,7 @@ msgid "Back to profile"
 msgstr "Kthehu te profili"
 
 msgid "Browse all activity"
-msgstr "Shfletoni të gjithë aktivitetin"
+msgstr "Browse all activity"
 
 msgid "Change password"
 msgstr "Ndrysho fjalëkalimin"
@@ -65,25 +65,25 @@ msgid "Confirm password"
 msgstr "Konfirmo fjalëkalimin"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Kontrollon elementin e menusë «Aktiviteti im» për përdoruesit në këtë vend."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Country"
 msgstr "Shteti"
 
 msgid "Created"
-msgstr "Krijuar"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} krijuar"
+msgstr "Created {0}"
 
 msgid "Current password"
 msgstr "Fjalëkalimi aktual"
 
 msgid "Deleted"
-msgstr "Fshirë"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} fshirë"
+msgstr "Deleted {0}"
 
 msgid "Email"
 msgstr "Email"
@@ -92,7 +92,7 @@ msgid "Email or username"
 msgstr "Email ose emri i përdoruesit"
 
 msgid "Endonym"
-msgstr "Endonim"
+msgstr "Endonym"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Vendosni emailin ose emrin e përdoruesit dhe do t’ju dërgojmë një lidhje për rivendosjen e fjalëkalimit."
@@ -107,16 +107,16 @@ msgid "Forgot password?"
 msgstr "Keni harruar fjalëkalimin?"
 
 msgid "Hide from users"
-msgstr "Fshih nga përdoruesit"
+msgstr "Hide from users"
 
 msgid "I accept the terms of service"
 msgstr "Pranoj kushtet e shërbimit"
 
 msgid "ISO code"
-msgstr "Kodi ISO"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identifikues"
+msgstr "Identifier"
 
 msgid "Info"
 msgstr "Info"
@@ -125,7 +125,7 @@ msgid "Language"
 msgstr "Gjuha"
 
 msgid "Language code"
-msgstr "Kodi i gjuhës"
+msgstr "Language code"
 
 msgid "Last name"
 msgstr "Mbiemri"
@@ -137,13 +137,13 @@ msgid "Login"
 msgstr "Hyr"
 
 msgid "Membership status"
-msgstr "Statusi i anëtarësimit"
+msgstr "Membership status"
 
 msgid "Message"
 msgstr "Mesazh"
 
 msgid "My activity"
-msgstr "Aktiviteti im"
+msgstr "My activity"
 
 msgid "Name"
 msgstr "Emri"
@@ -152,25 +152,25 @@ msgid "New password"
 msgstr "Fjalëkalimi i ri"
 
 msgid "No activity recorded yet."
-msgstr "Ende nuk është regjistruar aktivitet."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Nuk ka detaje të tjera për këtë hyrje."
+msgstr "No further details for this entry."
 
 msgid "No results found."
 msgstr "Nuk u gjetën rezultate."
 
 msgid "No working country is set."
-msgstr "Nuk është vendosur vend pune."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Joaktiv"
+msgstr "Off"
 
 msgid "On"
-msgstr "Aktiv"
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Regjistrim prind"
+msgstr "Parent record"
 
 msgid "Password"
 msgstr "Fjalëkalimi"
@@ -206,7 +206,7 @@ msgid "Profile"
 msgstr "Profili"
 
 msgid "Record"
-msgstr "Regjistrim"
+msgstr "Record"
 
 msgid "Register"
 msgstr "Regjistrohu"
@@ -215,10 +215,10 @@ msgid "Remember me"
 msgstr "Më mbaj mend"
 
 msgid "Sample record"
-msgstr "Regjistrim shembull"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Kërko aktivitet…"
+msgstr "Search activity…"
 
 msgid "Search..."
 msgstr "Kërko..."
@@ -242,19 +242,19 @@ msgid "Send reset link"
 msgstr "Dërgo lidhjen e rivendosjes"
 
 msgid "Settings for {0}"
-msgstr "Cilësimet për {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Shfaq te përdoruesit"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Hyrje"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "I kyçur"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "I çkyçur"
+msgstr "Signed out"
 
 msgid "Social accounts"
 msgstr "Llogaritë sociale"
@@ -269,70 +269,70 @@ msgid "The country language (locale) becomes the site language for your account.
 msgstr "Gjuha e shtetit (locale) bëhet gjuha e llogarisë suaj."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Cilësimi nuk u ruajt. Provoni përsëri."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Zona kohore"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Çaktivizo regjistrimin"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Aktivizo regjistrimin"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Përditësuar"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} përditësuar"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Përditësuar: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Llogaria e përdoruesit"
+msgstr "User account"
 
 msgid "Username"
 msgstr "Emri i përdoruesit"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Përdoruesit nuk mund më të shohin aktivitetin e tyre në {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Përdoruesit tani mund të shohin aktivitetin e tyre në {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Përdoruesit mund të shohin aktivitetin e tyre"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Përdoruesit shohin aktivitetin e tyre"
+msgstr "Users see own activity"
 
 msgid "Warning"
 msgstr "Paralajmërim"
 
 msgid "What changed"
-msgstr "Çfarë ndryshoi"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Kur është joaktiv, hyrjet, daljet dhe ndryshimet e të dhënave nuk regjistrohen."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Kur hyni, dilni ose ndryshoni të dhënat tuaja."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Kush mund të redaktojë"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Nuk ju lejohet të ndryshoni këtë cilësim."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Vendi juaj i punës — ndërprerësit vlejnë vetëm për këtë vend."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "dhe më shumë"
+msgstr "and more"
 
 msgid "changed"
-msgstr "ndryshuar"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "President"
+
+msgid "Vice president"
+msgstr "Nënpresident"
+
+msgid "Club president"
+msgstr "President klubi"
+
+msgid "Editor"
+msgstr "Redaktor"
+
+msgid "Member"
+msgstr "Anëtar"
+
+msgid "New member"
+msgstr "Anëtar i ri"
+
+msgid "Roles"
+msgstr "Rolet"

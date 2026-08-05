@@ -3,17 +3,20 @@
  * @var \App\View\AppView $this
  */
 use App\Auth\EventLogAccess;
+use App\Auth\LanguageAccess;
 use App\Auth\SetupAccess;
 
 $controller = (string)$this->request->getParam('controller');
 $isSamples = $controller === 'Samples';
 $isParents = $controller === 'Parents';
 $isCities = $controller === 'Cities';
+$isLanguages = $controller === 'Languages';
 $isCountries = $controller === 'Countries';
 $isSetups = $controller === 'Setups';
 $isEventLogs = $controller === 'EventLogs';
 $isDashboard = $controller === 'Dashboard';
 $showSetupsMenu = SetupAccess::canAccessModule($this->request);
+$showLanguagesMenu = LanguageAccess::canAccessModule($this->request);
 $showEventLogsMenu = EventLogAccess::canSearch($this->request);
 ?>
 <!-- Left Sidebar -->
@@ -45,13 +48,18 @@ $showEventLogsMenu = EventLogAccess::canSearch($this->request);
 				</li>
 
 				<li class="submenu">
-					<a href="#"<?= (($showSetupsMenu && $isSetups) || $isCountries || ($showEventLogsMenu && $isEventLogs)) ? ' class="active"' : '' ?>>
+					<a href="#"<?= (($showSetupsMenu && $isSetups) || ($showLanguagesMenu && $isLanguages) || $isCountries || ($showEventLogsMenu && $isEventLogs)) ? ' class="active"' : '' ?>>
 						<i class="fa fa-fw fa-cogs"></i> <span> <?= __('Settings') ?> </span> <span class="menu-arrow"></span>
 					</a>
 					<ul class="list-unstyled">
 						<?php if ($showSetupsMenu): ?>
 							<li<?= $isSetups ? ' class="active"' : '' ?>>
 								<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Setups', 'action' => 'index']) ?>"><?= __('Setups') ?></a>
+							</li>
+						<?php endif; ?>
+						<?php if ($showLanguagesMenu): ?>
+							<li<?= $isLanguages ? ' class="active"' : '' ?>>
+								<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Languages', 'action' => 'index']) ?>"><?= __('Languages') ?></a>
 							</li>
 						<?php endif; ?>
 						<li<?= $isCountries ? ' class="active"' : '' ?>>

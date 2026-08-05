@@ -541,25 +541,24 @@ class CountriesTable extends Table
         $junction->deleteAll(['country_id' => $countryId]);
 
         $this->ensureSelfVisibility($countryId);
-        $pos = 10;
         foreach ($extras as $visibleId) {
-            $this->ensurePartnerVisibility($countryId, $visibleId, preferredPos: $pos);
-            $pos += 10;
+            $this->ensurePartnerVisibility($countryId, $visibleId);
         }
     }
 
     /**
-     * Ensure junction row: country always sees itself (visible=1, pos=1).
+     * Ensure junction row: country always sees itself (visible=1; pos = DB DEFAULT).
      */
     public function ensureSelfVisibility(int $countryId): void
     {
-        $this->ensurePartnerVisibility($countryId, $countryId, preferredPos: 1);
+        $this->ensurePartnerVisibility($countryId, $countryId);
     }
 
     /**
      * Insert or re-enable a single visibility edge.
+     * Never sets `pos` — DB DEFAULT (1000) / user edits only.
      */
-    public function ensurePartnerVisibility(int $countryId, int $visibleCountryId, ?int $preferredPos = null): void
+    public function ensurePartnerVisibility(int $countryId, int $visibleCountryId): void
     {
         if ($countryId < 1 || $visibleCountryId < 1) {
             return;
@@ -571,11 +570,7 @@ class CountriesTable extends Table
             'country_id' => $countryId,
             'visible_country_id' => $visibleCountryId,
         ])) {
-            $fields = ['visible' => true];
-            if ($preferredPos !== null) {
-                $fields['pos'] = $preferredPos;
-            }
-            $junction->updateAll($fields, [
+            $junction->updateAll(['visible' => true], [
                 'country_id' => $countryId,
                 'visible_country_id' => $visibleCountryId,
             ]);
@@ -587,7 +582,6 @@ class CountriesTable extends Table
             'country_id' => $countryId,
             'visible_country_id' => $visibleCountryId,
             'visible' => true,
-            'pos' => $preferredPos ?? ($countryId === $visibleCountryId ? 1 : 1000),
         ]);
         $junction->save($entity);
     }

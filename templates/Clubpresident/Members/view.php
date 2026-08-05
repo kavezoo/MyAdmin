@@ -5,6 +5,7 @@
  */
 $this->Html->css(['pages/index'], ['block' => true]);
 $this->assign('title', __('Member details'));
+$memberId = (string)$member->get('id');
 ?>
 <div class="row mt-3">
 	<div class="col-12 p-2 pt-0">
@@ -20,6 +21,11 @@ $this->assign('title', __('Member details'));
 					'<span class="btn-label"><i class="fa fa-arrow-left"></i></span>' . __('Back to list'),
 					['action' => 'index'],
 					['escape' => false, 'class' => 'btn btn-outline-secondary']
+				) ?>
+				<?= $this->Html->link(
+					'<span class="btn-label"><i class="fa fa-pencil"></i></span>' . __('Edit'),
+					['action' => 'edit', $memberId],
+					['escape' => false, 'class' => 'btn btn-primary ms-2']
 				) ?>
 			</div>
 		</div>

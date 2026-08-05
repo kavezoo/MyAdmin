@@ -18,11 +18,13 @@ Ha **új projektet** indítunk, **éles DB**-re építünk, vagy **új CRUD** mo
 | Translate szöveg | Form nyelvi TAB + `data-name-target` fókusz; index `AdminTranslate` (tilos COALESCE) |
 | date/time/datetime | Tempus + dátum middleware |
 | int/decimal | inputmask + szám middleware; pénz → `formatCurrency` |
-| `pos` | DB DEFAULT only |
+| `pos` | DB DEFAULT **1000** only — agent soha ne állítsa (`pos-db-default.mdc`) |
+| `visible` + `pos` | Form végén; **`<hr>` mindig a `visible` fölött** (`admin-form-visible-hr.mdc`) |
 | `*_count` / gyerek | CounterCache + Delete disabled ha > 0 |
 | belongsTo | Select2 visible+pos/name; opcionális „+” |
 | HABTM | Mindkét form multiple Select2 + through CounterCache |
 | Ország→ország láthatóság | `country_visibilities`; TAB = saját + extras; **self lock** — `country-visibilities.md` |
+| Linked / szülő modal | Edit/View/Delete = **megnyitott** entitás CRUD + annak id (`admin-linked-modal-urls`) |
 | Eseménynapló | `event_logs` append-only; login/HTTP/CRUD; ország ACL — `event-logs.md` |
 | Minden form | `#form-horizontal`, `adminLabel` kötelező `*`, unsaved leave |
 | Countries-szerű ref | visible-only, oszlopszabályok — `countries-admin.md` |

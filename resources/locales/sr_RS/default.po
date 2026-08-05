@@ -8,172 +8,172 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Налог активан"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Налог омогућен"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Детаљи активности"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Дневник активности"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Евидентирање активности"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Евидентирање активности укључено"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Евидентирање активности искључено је за {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Евидентирање активности укључено је за {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Application settings"
-msgstr "Подешавања апликације"
+msgstr "Application settings"
 
 msgid "Browse all activity"
-msgstr "Прегледај сву активност"
+msgstr "Browse all activity"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Управља ставком менија „Моја активност“ за кориснике у овој земљи."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Created"
-msgstr "Креирано"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} креирано"
+msgstr "Created {0}"
 
 msgid "Deleted"
-msgstr "Обрисано"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} обрисано"
+msgstr "Deleted {0}"
 
 msgid "Endonym"
-msgstr "Ендоним"
+msgstr "Endonym"
 
 msgid "Hide from users"
-msgstr "Сакриј од корисника"
+msgstr "Hide from users"
 
 msgid "ISO code"
-msgstr "ISO код"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Идентификатор"
+msgstr "Identifier"
 
 msgid "Language code"
-msgstr "Код језика"
+msgstr "Language code"
 
 msgid "Membership status"
-msgstr "Статус чланства"
+msgstr "Membership status"
 
 msgid "My activity"
-msgstr "Моја активност"
+msgstr "My activity"
 
 msgid "No activity recorded yet."
-msgstr "Још нема евидентиране активности."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Нема додатних детаља за овај запис."
+msgstr "No further details for this entry."
 
 msgid "No working country is set."
-msgstr "Радна земља није постављена."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Искљ."
+msgstr "Off"
 
 msgid "On"
-msgstr "Укљ."
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Надређени запис"
+msgstr "Parent record"
 
 msgid "Record"
-msgstr "Запис"
+msgstr "Record"
 
 msgid "Sample record"
-msgstr "Узорак записа"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Претражи активност…"
+msgstr "Search activity…"
 
 msgid "Settings for {0}"
-msgstr "Подешавања за {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Прикажи корисницима"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Пријава"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Пријављен"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Одјављен"
+msgstr "Signed out"
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Подешавање није могло бити сачувано. Покушајте поново."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Временска зона"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Искључи евидентирање"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Укључи евидентирање"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Ажурирано"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} ажурирано"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Ажурирано: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Кориснички налог"
+msgstr "User account"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Корисници више не могу видети сопствену активност у {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Корисници сада могу видети сопствену активност у {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Корисници могу видети сопствену активност"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Корисници виде сопствену активност"
+msgstr "Users see own activity"
 
 msgid "What changed"
-msgstr "Шта се променило"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Када је искључено, нове пријаве, одјаве и промене података се не бележе."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Када се пријавите, одјавите или промените податке."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Ко може уређивати"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Немате дозволу да промените ово подешавање."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Ваша радна земља — прекидачи важе само за ову земљу."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "и више"
+msgstr "and more"
 
 msgid "changed"
-msgstr "промењено"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -231,3 +231,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "Председник"
+
+msgid "Vice president"
+msgstr "Потпредседник"
+
+msgid "Club president"
+msgstr "Председник клуба"
+
+msgid "Editor"
+msgstr "Уредник"
+
+msgid "Member"
+msgstr "Члан"
+
+msgid "New member"
+msgstr "Нови члан"
+
+msgid "Roles"
+msgstr "Улоге"

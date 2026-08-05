@@ -68,9 +68,11 @@ return [
         'AuthorizationMiddleware' => [
             'unauthorizedHandler' => [
                 'className' => 'CakeDC/Users.DefaultRedirect',
-                // App UsersController (plugin null), not CakeDC/Users plugin route.
+                // App UsersController — MUST set prefix/plugin false so Router does not
+                // inherit the current panel prefix (e.g. /president/users/login).
                 'url' => [
-                    'plugin' => null,
+                    'prefix' => false,
+                    'plugin' => false,
                     'controller' => 'Users',
                     'action' => 'login',
                 ],

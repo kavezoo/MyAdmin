@@ -32,6 +32,9 @@ return function (RouteBuilder $routes): void {
         // / → login (locale from BrowserLocale / user after auth)
         $builder->connect('/', ['controller' => 'Locales', 'action' => 'home']);
         $builder->connect('/pages/*', 'Pages::display');
+        // Own profile edit (parallel to CakeDC `/profile`)
+        $builder->connect('/edit/*', ['controller' => 'Users', 'action' => 'edit'])
+            ->setPass(['id']);
         $builder->fallbacks();
     });
 };

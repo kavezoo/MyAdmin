@@ -6,9 +6,14 @@ namespace App\Controller\Clubpresident;
 use App\Controller\PanelAppController;
 use ArrayIterator;
 use Cake\Datasource\Paging\PaginatedResultSet;
+use Cake\Event\EventInterface;
+use Cake\ORM\Query\SelectQuery;
 
 /**
  * Shared helpers for club president controllers.
+ *
+ * Scope: every Users query under this prefix is limited to
+ * `Users.club_id` = the logged-in user's club (never other clubs).
  */
 abstract class AppController extends PanelAppController
 {
@@ -31,19 +36,44 @@ abstract class AppController extends PanelAppController
         ]);
     }
 
+    /**
+     * Deny Clubpresident content when the user has no club assigned.
+     * Dashboard may still render the warning; other actions redirect home.
+     *
+     * @param \Cake\Event\EventInterface $event
+     * @return \Cake\Http\Response|null|void
+     */
+    public function beforeFilter(EventInterface $event)
+    {
+        parent::beforeFilter($event);
+
+        $controller = (string)$this->request->getParam('controller');
+        $action = (string)$this->request->getParam('action');
+        if ($controller === 'Dashboard' && $action === 'index') {
+            return null;
+        }
+
+        if ($this->presidentClubId() > 0) {
+            return null;
+        }
+
+        $this->Flash->warning(__('Your account is not assigned to a club yet. Contact an administrator.'));
+
+        return $this->redirect([
+            'prefix' => 'Clubpresident',
+            'controller' => 'Dashboard',
+            'action' => 'index',
+        ]);
+    }
+
+    /**
+     * Logged-in user's club id — always from DB (authoritative), not stale identity.
+     */
     protected function presidentClubId(): int
     {
         $identity = $this->getRequest()->getAttribute('identity');
         if ($identity === null) {
             return 0;
-        }
-
-        $clubId = 0;
-        if (method_exists($identity, 'get')) {
-            $clubId = (int)($identity->get('club_id') ?? 0);
-        }
-        if ($clubId > 0) {
-            return $clubId;
         }
 
         $userId = '';
@@ -64,5 +94,21 @@ abstract class AppController extends PanelAppController
             ->first();
 
         return $row !== null ? (int)($row->get('club_id') ?? 0) : 0;
+    }
+
+    /**
+     * Restrict a Users query to the president's own club.
+     *
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
+     */
+    protected function scopeToPresidentClub(SelectQuery $query): SelectQuery
+    {
+        $clubId = $this->presidentClubId();
+        if ($clubId < 1) {
+            return $query->where(['1 = 0']);
+        }
+
+        return $query->where(['Users.club_id' => $clubId]);
     }
 }

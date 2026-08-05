@@ -26,6 +26,22 @@
 	min-width: 12rem;
 }
 
+.users-list-name-cell__text {
+	min-width: 0;
+	line-height: 1.25;
+}
+
 .users-list-name-cell__label {
+	display: block;
+	font-weight: 700;
 	line-height: 1.3;
+}
+
+.users-list-name-cell__role {
+	display: block;
+	margin-top: 0.1rem;
+	font-size: 0.8125rem;
+	font-weight: 400;
+	color: #6c757d;
+	line-height: 1.2;
 }

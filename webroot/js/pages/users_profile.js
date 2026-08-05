@@ -111,7 +111,7 @@
 		}
 
 		var profileCfg = window.UsersProfile || {};
-		var $profileForm = $('#profile-form');
+		var $profileForm = $('#form-horizontal, #profile-form');
 		if ($profileForm.length && $club.length) {
 			var originalClubId = String(profileCfg.originalClubId || '0');
 			var clubSwitchConfirmed = false;

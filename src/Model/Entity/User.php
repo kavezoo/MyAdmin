@@ -32,9 +32,15 @@ class User extends PluginUser
         return null;
     }
 
-    protected function _setAvatar(?string $avatar): ?string
+    /**
+     * @param mixed $avatar Stored web path string; ignore upload objects from form binding.
+     */
+    protected function _setAvatar(mixed $avatar): ?string
     {
         if ($avatar === null || $avatar === '') {
+            return null;
+        }
+        if (!is_string($avatar)) {
             return null;
         }
 

@@ -8,184 +8,184 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Účet aktivní"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Účet povolen"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Podrobnosti aktivity"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Protokol aktivity"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Protokolování aktivity"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Protokolování aktivity zapnuto"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Protokolování vypnuto pro {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Protokolování zapnuto pro {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Application settings"
-msgstr "Nastavení aplikace"
+msgstr "Application settings"
 
 msgid "Approved"
 msgstr "Approved"
 
 msgid "Browse all activity"
-msgstr "Procházet veškerou aktivitu"
+msgstr "Browse all activity"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Řídí položku menu „Moje aktivita“ pro uživatele v této zemi."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Created"
-msgstr "Vytvořeno"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} vytvořeno"
+msgstr "Created {0}"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
 
 msgid "Deleted"
-msgstr "Smazáno"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} smazáno"
+msgstr "Deleted {0}"
 
 msgid "Endonym"
 msgstr "Endonym"
 
 msgid "Hide from users"
-msgstr "Skrýt před uživateli"
+msgstr "Hide from users"
 
 msgid "ISO code"
-msgstr "ISO kód"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identifikátor"
+msgstr "Identifier"
 
 msgid "Incomplete"
 msgstr "Incomplete"
 
 msgid "Language code"
-msgstr "Kód jazyka"
+msgstr "Language code"
 
 msgid "Membership status"
-msgstr "Stav členství"
+msgstr "Membership status"
 
 msgid "My activity"
-msgstr "Moje aktivita"
+msgstr "My activity"
 
 msgid "No activity recorded yet."
-msgstr "Zatím není zaznamenána aktivita."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Žádné další podrobnosti pro tento záznam."
+msgstr "No further details for this entry."
 
 msgid "No working country is set."
-msgstr "Není nastavena pracovní země."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Vyp."
+msgstr "Off"
 
 msgid "On"
-msgstr "Zap."
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Nadřazený záznam"
+msgstr "Parent record"
 
 msgid "Pending approval"
 msgstr "Pending approval"
 
 msgid "Record"
-msgstr "Záznam"
+msgstr "Record"
 
 msgid "Sample record"
-msgstr "Vzorový záznam"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Hledat aktivitu…"
+msgstr "Search activity…"
 
 msgid "Settings for {0}"
-msgstr "Nastavení pro {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Zobrazit uživatelům"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Přihlášení"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Přihlášen"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Odhlášen"
+msgstr "Signed out"
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Nastavení se nepodařilo uložit. Zkuste to znovu."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Časové pásmo"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Vypnout protokolování"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Zapnout protokolování"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Aktualizováno"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} aktualizováno"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Aktualizováno: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Uživatelský účet"
+msgstr "User account"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Uživatelé již nemohou vidět vlastní aktivitu v {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Uživatelé nyní mohou vidět vlastní aktivitu v {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Uživatelé mohou vidět vlastní aktivitu"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Uživatelé vidí vlastní aktivitu"
+msgstr "Users see own activity"
 
 msgid "What changed"
-msgstr "Co se změnilo"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Při vypnutí se nezaznamenávají nová přihlášení, odhlášení ani změny dat."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Když se přihlásíte, odhlásíte nebo změníte data."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Kdo může upravovat"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Nemáte oprávnění změnit toto nastavení."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Vaše pracovní země — přepínače platí pouze pro tuto země."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "a další"
+msgstr "and more"
 
 msgid "changed"
-msgstr "změněno"
+msgstr "changed"
 
 msgid "complex value"
 msgstr "complex value"
@@ -231,3 +231,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "Předseda"
+
+msgid "Vice president"
+msgstr "Místopředseda"
+
+msgid "Club president"
+msgstr "Předseda klubu"
+
+msgid "Editor"
+msgstr "Editor"
+
+msgid "Member"
+msgstr "Člen"
+
+msgid "New member"
+msgstr "Nový člen"
+
+msgid "Roles"
+msgstr "Role"

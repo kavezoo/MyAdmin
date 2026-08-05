@@ -6,7 +6,8 @@
  * @var string $label Fee type label
  * @var bool $paid Paid for membership year
  * @var int $membershipYear
- * @var string $dateFormatted Localized payment date (when paid)
+ * @var string $dateFormatted Localized payment date (when paid for membership year)
+ * @var string $lastPaymentDateFormatted Stored fee date (any year); empty if never paid
  * @var string $mode profile|table|table_action
  * @var string $memberName For SWAL (table_action)
  * @var string $formId Hidden POST form id (table_action)
@@ -16,10 +17,15 @@ $label = (string)($label ?? '');
 $paid = (bool)($paid ?? false);
 $membershipYear = (int)($membershipYear ?? \App\Utility\MembershipFee::currentYear());
 $dateFormatted = (string)($dateFormatted ?? '');
+$lastPaymentDateFormatted = (string)($lastPaymentDateFormatted ?? '');
 $mode = (string)($mode ?? 'profile');
 $memberName = (string)($memberName ?? '');
 $formId = (string)($formId ?? '');
 $memberId = (string)($memberId ?? '');
+
+$lastPaymentHint = $lastPaymentDateFormatted !== ''
+	? __('Last paid on {0}', $lastPaymentDateFormatted)
+	: __('Has not paid yet');
 
 if ($mode === 'profile'): ?>
 	<div class="membership-fee-status membership-fee-status--profile <?= $paid ? 'membership-fee-status--paid' : 'membership-fee-status--unpaid' ?>">
@@ -70,6 +76,7 @@ if ($mode === 'profile'): ?>
 				<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
 				<span class="ms-1"><?= h(__('Outstanding')) ?></span>
 			</button>
+			<div class="membership-fee-cell__last small text-muted mt-1"><?= h($lastPaymentHint) ?></div>
 		</div>
 	<?php endif; ?>
 <?php elseif ($mode === 'table_action'): ?>
@@ -95,6 +102,7 @@ if ($mode === 'profile'): ?>
 				<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
 				<span class="ms-1"><?= h(__('Outstanding')) ?></span>
 			</button>
+			<div class="membership-fee-cell__last small text-muted mt-1"><?= h($lastPaymentHint) ?></div>
 		</div>
 	<?php endif; ?>
 <?php else: /* table — read-only national column */ ?>
@@ -111,6 +119,7 @@ if ($mode === 'profile'): ?>
 				<i class="fa fa-times-circle" aria-hidden="true"></i>
 				<span class="visually-hidden"><?= h(__('Not paid')) ?></span>
 			</span>
+			<div class="membership-fee-cell__last small text-muted mt-1"><?= h($lastPaymentHint) ?></div>
 		<?php endif; ?>
 	</div>
 <?php endif; ?>

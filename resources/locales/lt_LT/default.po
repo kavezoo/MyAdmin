@@ -8,34 +8,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Paskyra aktyvi"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Paskyra įjungta"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Veiklos detalės"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Veiklos žurnalas"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Veiklos registravimas"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Veiklos registravimas įjungtas"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Veiklos registravimas išjungtas {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Veiklos registravimas įjungtas {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Already have an account? Login"
 msgstr "Jau turite paskyrą? Prisijungti"
 
 msgid "Application settings"
-msgstr "Programos nustatymai"
+msgstr "Application settings"
 
 msgid "Back to admin"
 msgstr "Atgal į admin"
@@ -47,7 +47,7 @@ msgid "Back to profile"
 msgstr "Atgal į profilį"
 
 msgid "Browse all activity"
-msgstr "Peržiūrėti visą veiklą"
+msgstr "Browse all activity"
 
 msgid "Change password"
 msgstr "Keisti slaptažodį"
@@ -65,25 +65,25 @@ msgid "Confirm password"
 msgstr "Patvirtinkite slaptažodį"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Valdo meniu elementą „Mano veikla“ naudotojams šioje šalyje."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Country"
 msgstr "Šalis"
 
 msgid "Created"
-msgstr "Sukurta"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} sukurta"
+msgstr "Created {0}"
 
 msgid "Current password"
 msgstr "Dabartinis slaptažodis"
 
 msgid "Deleted"
-msgstr "Ištrinta"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} ištrinta"
+msgstr "Deleted {0}"
 
 msgid "Email"
 msgstr "El. paštas"
@@ -92,7 +92,7 @@ msgid "Email or username"
 msgstr "El. paštas arba naudotojo vardas"
 
 msgid "Endonym"
-msgstr "Endonimas"
+msgstr "Endonym"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Įveskite el. paštą arba naudotojo vardą – atsiųsime slaptažodžio atkūrimo nuorodą."
@@ -107,16 +107,16 @@ msgid "Forgot password?"
 msgstr "Pamiršote slaptažodį?"
 
 msgid "Hide from users"
-msgstr "Slėpti nuo naudotojų"
+msgstr "Hide from users"
 
 msgid "I accept the terms of service"
 msgstr "Sutinku su naudojimo sąlygomis"
 
 msgid "ISO code"
-msgstr "ISO kodas"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identifikatorius"
+msgstr "Identifier"
 
 msgid "Info"
 msgstr "Info"
@@ -125,7 +125,7 @@ msgid "Language"
 msgstr "Kalba"
 
 msgid "Language code"
-msgstr "Kalbos kodas"
+msgstr "Language code"
 
 msgid "Last name"
 msgstr "Pavardė"
@@ -137,13 +137,13 @@ msgid "Login"
 msgstr "Prisijungti"
 
 msgid "Membership status"
-msgstr "Narystės būsena"
+msgstr "Membership status"
 
 msgid "Message"
 msgstr "Žinutė"
 
 msgid "My activity"
-msgstr "Mano veikla"
+msgstr "My activity"
 
 msgid "Name"
 msgstr "Vardas"
@@ -152,25 +152,25 @@ msgid "New password"
 msgstr "Naujas slaptažodis"
 
 msgid "No activity recorded yet."
-msgstr "Veikla dar neužregistruota."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Nėra papildomų šio įrašo detalių."
+msgstr "No further details for this entry."
 
 msgid "No results found."
 msgstr "Nieko nerasta."
 
 msgid "No working country is set."
-msgstr "Darbo šalis nenustatyta."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Išj."
+msgstr "Off"
 
 msgid "On"
-msgstr "Įj."
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Tėvinis įrašas"
+msgstr "Parent record"
 
 msgid "Password"
 msgstr "Slaptažodis"
@@ -206,7 +206,7 @@ msgid "Profile"
 msgstr "Profilis"
 
 msgid "Record"
-msgstr "Įrašas"
+msgstr "Record"
 
 msgid "Register"
 msgstr "Registruotis"
@@ -215,10 +215,10 @@ msgid "Remember me"
 msgstr "Prisiminti mane"
 
 msgid "Sample record"
-msgstr "Pavyzdinis įrašas"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Ieškoti veiklos…"
+msgstr "Search activity…"
 
 msgid "Search..."
 msgstr "Ieškoti..."
@@ -242,19 +242,19 @@ msgid "Send reset link"
 msgstr "Siųsti atkūrimo nuorodą"
 
 msgid "Settings for {0}"
-msgstr "Nustatymai: {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Rodyti naudotojams"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Prisijungimas"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Prisijungta"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Atsijungta"
+msgstr "Signed out"
 
 msgid "Social accounts"
 msgstr "Socialinės paskyros"
@@ -269,70 +269,70 @@ msgid "The country language (locale) becomes the site language for your account.
 msgstr "Šalies kalba (locale) taps jūsų paskyros kalba."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Nepavyko išsaugoti nustatymo. Bandykite dar kartą."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Laiko juosta"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Išjungti registravimą"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Įjungti registravimą"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Atnaujinta"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} atnaujinta"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Atnaujinta: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Naudotojo paskyra"
+msgstr "User account"
 
 msgid "Username"
 msgstr "Naudotojo vardas"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Naudotojai nebegali matyti savo veiklos {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Naudotojai dabar gali matyti savo veiklą {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Naudotojai gali matyti savo veiklą"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Naudotojai mato savo veiklą"
+msgstr "Users see own activity"
 
 msgid "Warning"
 msgstr "Įspėjimas"
 
 msgid "What changed"
-msgstr "Kas pasikeitė"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Išjungus neįrašomi nauji prisijungimai, atsijungimai ar duomenų pakeitimai."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Kai prisijungiate, atsijungiate ar keičiate duomenis."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Kas gali redaguoti"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Jums neleidžiama keisti šio nustatymo."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Jūsų darbo šalis — jungikliai taikomi tik šiai šaliai."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "ir daugiau"
+msgstr "and more"
 
 msgid "changed"
-msgstr "pakeista"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "Prezidentas"
+
+msgid "Vice president"
+msgstr "Viceprezidentas"
+
+msgid "Club president"
+msgstr "Klubo prezidentas"
+
+msgid "Editor"
+msgstr "Redaktorius"
+
+msgid "Member"
+msgstr "Narys"
+
+msgid "New member"
+msgstr "Naujas narys"
+
+msgid "Roles"
+msgstr "Rolės"

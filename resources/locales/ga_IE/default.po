@@ -8,34 +8,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Cuntas gníomhach"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Cuntas cumasaithe"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Sonraí gníomhaíochta"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Log gníomhaíochta"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Logáil gníomhaíochta"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Logáil gníomhaíochta cumasaithe"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Logáil ghníomhaíochta casta as do {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Logáil ghníomhaíochta casta air do {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Already have an account? Login"
 msgstr "An bhfuil cuntas agat cheana? Logáil isteach"
 
 msgid "Application settings"
-msgstr "Socruithe feidhmchláir"
+msgstr "Application settings"
 
 msgid "Back to admin"
 msgstr "Ar ais chuig an riarachán"
@@ -47,7 +47,7 @@ msgid "Back to profile"
 msgstr "Ar ais chuig an bpróifíl"
 
 msgid "Browse all activity"
-msgstr "Brabhsáil an ghníomhaíocht go léir"
+msgstr "Browse all activity"
 
 msgid "Change password"
 msgstr "Athraigh an pasfhocal"
@@ -65,25 +65,25 @@ msgid "Confirm password"
 msgstr "Deimhnigh an pasfhocal"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Rialaíonn míre roghchláir «Mo ghníomhaíocht» d’úsáideoirí sa tír seo."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Country"
 msgstr "Tír"
 
 msgid "Created"
-msgstr "Cruthaithe"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} cruthaithe"
+msgstr "Created {0}"
 
 msgid "Current password"
 msgstr "Pasfhocal reatha"
 
 msgid "Deleted"
-msgstr "Scriosta"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} scriosta"
+msgstr "Deleted {0}"
 
 msgid "Email"
 msgstr "Ríomhphost"
@@ -92,7 +92,7 @@ msgid "Email or username"
 msgstr "Ríomhphost nó ainm úsáideora"
 
 msgid "Endonym"
-msgstr "Endainm"
+msgstr "Endonym"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Cuir isteach do ríomhphost nó ainm úsáideora agus seolfaimid nasc chun do phasfhocal a athshocrú."
@@ -107,16 +107,16 @@ msgid "Forgot password?"
 msgstr "Pasfhocal dearmadta?"
 
 msgid "Hide from users"
-msgstr "Folaigh ó úsáideoirí"
+msgstr "Hide from users"
 
 msgid "I accept the terms of service"
 msgstr "Glacaim le téarmaí an tseirbhís"
 
 msgid "ISO code"
-msgstr "Cód ISO"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Aitheantóir"
+msgstr "Identifier"
 
 msgid "Info"
 msgstr "Eolas"
@@ -125,7 +125,7 @@ msgid "Language"
 msgstr "Teanga"
 
 msgid "Language code"
-msgstr "Cód teanga"
+msgstr "Language code"
 
 msgid "Last name"
 msgstr "Sloinne"
@@ -137,13 +137,13 @@ msgid "Login"
 msgstr "Logáil isteach"
 
 msgid "Membership status"
-msgstr "Stádas ballraíochta"
+msgstr "Membership status"
 
 msgid "Message"
 msgstr "Teachtaireacht"
 
 msgid "My activity"
-msgstr "Mo ghníomhaíocht"
+msgstr "My activity"
 
 msgid "Name"
 msgstr "Ainm"
@@ -152,25 +152,25 @@ msgid "New password"
 msgstr "Pasfhocal nua"
 
 msgid "No activity recorded yet."
-msgstr "Níl aon ghníomhaíocht taifeadta fós."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Níl aon tuilleadh sonraí don iontráil seo."
+msgstr "No further details for this entry."
 
 msgid "No results found."
 msgstr "Níor aimsíodh torthaí."
 
 msgid "No working country is set."
-msgstr "Níl aon tír oibre socraithe."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "As"
+msgstr "Off"
 
 msgid "On"
-msgstr "Ar"
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Taifead tuismitheora"
+msgstr "Parent record"
 
 msgid "Password"
 msgstr "Pasfhocal"
@@ -206,7 +206,7 @@ msgid "Profile"
 msgstr "Próifíl"
 
 msgid "Record"
-msgstr "Taifead"
+msgstr "Record"
 
 msgid "Register"
 msgstr "Cláraigh"
@@ -215,10 +215,10 @@ msgid "Remember me"
 msgstr "Cuimhnigh orm"
 
 msgid "Sample record"
-msgstr "Taifead samplach"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Cuardaigh gníomhaíocht…"
+msgstr "Search activity…"
 
 msgid "Search..."
 msgstr "Cuardaigh..."
@@ -242,19 +242,19 @@ msgid "Send reset link"
 msgstr "Seol nasc athshocraithe"
 
 msgid "Settings for {0}"
-msgstr "Socruithe do {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Taispeáin d’úsáideoirí"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Logáil isteach"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Logáilte isteach"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Logáilte amach"
+msgstr "Signed out"
 
 msgid "Social accounts"
 msgstr "Cuntais shóisialta"
@@ -269,70 +269,70 @@ msgid "The country language (locale) becomes the site language for your account.
 msgstr "Beidh teanga na tíre (locale) mar theanga do chuntais."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Níorbh fhéidir an socrú a shábháil. Bain triail eile as."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Crios ama"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Múch an logáil"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Cas ar an logáil"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Nuashonraithe"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} nuashonraithe"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Nuashonraithe: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Cuntas úsáideora"
+msgstr "User account"
 
 msgid "Username"
 msgstr "Ainm úsáideora"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Ní féidir le húsáideoirí a ngníomhaíocht féin a fheiceáil a thuilleadh i {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Is féidir le húsáideoirí a ngníomhaíocht féin a fheiceáil anois i {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Is féidir le húsáideoirí a ngníomhaíocht féin a fheiceáil"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Feiceann úsáideoirí a ngníomhaíocht féin"
+msgstr "Users see own activity"
 
 msgid "Warning"
 msgstr "Rabhadh"
 
 msgid "What changed"
-msgstr "Cad a d’athraigh"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Nuair atá sé múchta, ní thaifeadtar logáil isteach nua, logáil amach ná athruithe ar shonraí."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Nuair a logálann tú isteach, amach nó nuair a athraíonn tú do shonraí."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Cé atá in ann eagarthóireacht a dhéanamh"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Níl cead agat an socrú seo a athrú."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Do thír oibre — ní bhaineann na scoránaigh ach leis an tír seo."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "agus tuilleadh"
+msgstr "and more"
 
 msgid "changed"
-msgstr "athraithe"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Sárúsáideoir"
+
+msgid "Admin"
+msgstr "Riarthóir"
+
+msgid "President"
+msgstr "Uachtarán"
+
+msgid "Vice president"
+msgstr "Leasuachtarán"
+
+msgid "Club president"
+msgstr "Uachtarán an chlub"
+
+msgid "Editor"
+msgstr "Eagarthóir"
+
+msgid "Member"
+msgstr "Ball"
+
+msgid "New member"
+msgstr "Ball nua"
+
+msgid "Roles"
+msgstr "Róil"

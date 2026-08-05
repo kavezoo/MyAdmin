@@ -270,7 +270,7 @@ Részlet: [middleware.md](middleware.md).
 - `#name` autofocus + `form.js` (+ `pages/form` CSS)
 - Config: `numberFormat` + `dateFormat` (`jsConfig()`), ha van szám/dátum
 - `newEntityWithSchemaDefaults()`; `pos`/`visible`/… = DB DEFAULT
-- **`visible` + `pos`:** form végén; csak a `visible` fölött `<div class="row"><div class="col-12 col-xxl-11"><hr class="my-4"></div></div>`; sorrend **visible → pos**
+- **`visible` + `pos` (örök):** form végén; **`<hr>` mindig közvetlenül a `visible` fölött** (soha `enabled` / más mező fölött) — `<div class="row"><div class="col-12 col-xxl-11"><hr class="my-4"></div></div>`; sorrend **visible → pos**; rule: `admin-form-visible-hr.mdc`
 - belongsTo lista: `visible` + `pos` ASC, `name` ASC; editnél aktuális is
 - HABTM: `related._ids` mindkét oldalon; hiányzó `_ids` → `[]`
 - try/catch → Flash (Notify); Select2 create → JSON `message`

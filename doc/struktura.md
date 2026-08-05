@@ -30,9 +30,11 @@ $this->viewBuilder()->setLayout('admin');
 | New | `/new` | `src/Controller/New/`, `templates/New/` |
 | Member | `/member` | `src/Controller/Member/`, `templates/Member/` |
 | Clubpresident | `/clubpresident` | `…/Clubpresident/` |
-| President | `/president` | `…/President/` |
+| President | `/president` | `…/President/` — Members + **Clubs** CRUD |
 
 Sidebar elementek: `templates/element/{admin,new,member,clubpresident,president}/sidebar.php`.  
+Dashboard navigáció: `templates/element/panel/dashboard_nav_cards.php` — card cím + leírás + gomb; a **Dashboard card-body**-ban (nem külön keret alatt).
+Tag szerkesztés (Clubpresident/President): `templates/element/users/member_edit_form.php`.
 Spec: [users-auth.md](users-auth.md).
 
 ## Element inventory (`templates/element/admin/`)
@@ -64,6 +66,7 @@ Spec: [users-auth.md](users-auth.md).
 |------------|--------|
 | `Admin\AppController` | CRUD helpers + panel chrome + index state / search / lastVisited |
 | `PanelAppController` | New/Member/Clubpresident/President közös layout |
+| `IndexListCrudTrait` | Admin + President index állapot / keresés / last-visited / delete helpers |
 | `Admin\DashboardController` | `/admin` kezdőlap |
 | `Admin\SearchController` | Globális keresés (`/admin/search`) — role-gated |
 
@@ -74,6 +77,7 @@ Spec: [users-auth.md](users-auth.md).
 | `SetupsController` | Típusos beállítások CRUD (`SetupValue`) — [setups.md](setups.md) |
 | `CitiesController` | Teljes CRUD + `recordGet` + HABTM `samples._ids` (CounterCache tartja a `sample_count`-ot) |
 | `CountriesController` | Lista / view / edit; **csak** `visible` + `pos`; contain Continents; i18n csak megjelenítés |
+| `LanguagesController` | UI locale CRUD; **LanguageAccess**; visible-only index; Translate `name` |
 | `ContinentsTable` | Földrészek (seed); Translate → `i18n`; hasMany Countries |
 | `SamplesController` | Teljes CRUD + `recordGet` (Cities ASC) + `select2Create` / `select2CreateCity` + `setFormOptions` (Parent: visible + pos/name; Cities list) + `parentGet` |
 | `ParentsController` | CRUD + `recordGet` + gyerekvédelem |
@@ -92,7 +96,7 @@ Spec: [users-auth.md](users-auth.md).
 | `CountriesTable` | ISO `iso2` + primary `locale` + `continent_id` → Continents; Translate → `i18n` (`name`); Admin: csak `visible`/`pos`; continent seed: `php tmp/seed_continents.php` |
 | `I18nTable` | CakePHP Translate EAV (`config/schema/i18n.sql`) |
 | Számláló mező (`*_count`) | CounterCache tartja; create-kor `0` ha NOT NULL + nincs DB DEFAULT; megjelenítés: `formatCount` (0/null → üres) |
-| `pos` / `visible` / `logikai` | **DB DEFAULT** — PHP-ban **ne** hardkódolj; `UsesDatabaseColumnDefaultsTrait` + `newEntityWithSchemaDefaults()`. Üres form → unset. `beforeMarshal` `$data` = `ArrayObject` → `getArrayCopy()`. **`pos`:** az agent soha ne állítsa (rule: `pos-db-default.mdc`) |
+| `pos` / `visible` / `logikai` | **DB DEFAULT** — PHP-ban **ne** hardkódolj; `UsesDatabaseColumnDefaultsTrait` + `newEntityWithSchemaDefaults()`. Üres form → unset. `beforeMarshal` `$data` = `ArrayObject` → `getArrayCopy()`. **`pos`:** mindig séma DEFAULT (**`1000`**); az agent soha ne állítsa / ne növelgesse (rule: `pos-db-default.mdc`) |
 | Pénznem UI | `LocaleNumberParser::formatCurrency()` — HUF, ICU (hu: `Ft` utótag; en: `HUF` előtag) |
 | Admin keresés | `config/admin_search.php` + `App\Utility\AdminSearch` — index / globális szöveges mezők; Search Google UI + lapozás |
 | Lapozó | `admin/index_pagination` FA «‹›»; `App\View\Helper\PaginatorHelper` (`page=1` az URL-ben) |

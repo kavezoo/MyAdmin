@@ -67,7 +67,7 @@ Megjelenítés: `AppRoles::labeled($role)` → `admin — Admin` (msgid angol, f
 | `CurrentUser::role()` | identity → `Configure` `App.devRole` → debug=`superuser`, különben `new` |
 | `SetupAccess` | Setups menü / URL / create / country / edit value |
 
-**Setups hozzáférés:** csak `superuser`, `admin`, `president`, `vicepresident`. Ország Select2, új rekord, törlés, meta mezők: csak `superuser`.
+**Setups hozzáférés:** modul (menü / URL / CRUD) **csak superuser** (`SetupAccess::canAccessModule` / `CurrentUser::isSuperuser`). Ország Select2, új rekord, törlés, meta mezők: szintén csak `superuser`. Érték szerkesztés `edit_by` szerint (pl. Event logs kapcsolók) — nem a teljes Setups modul.
 
 ## `edit_by` (`App\Utility\SetupEditBy`)
 

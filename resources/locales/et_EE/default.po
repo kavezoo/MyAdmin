@@ -8,34 +8,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Konto aktiivne"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Konto lubatud"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Tegevuse üksikasjad"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Tegevuse logi"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Tegevuse logimine"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Tegevuse logimine on lubatud"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Tegevuse logimine on keelatud riigis {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Tegevuse logimine on lubatud riigis {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Already have an account? Login"
 msgstr "Konto juba olemas? Logi sisse"
 
 msgid "Application settings"
-msgstr "Rakenduse seaded"
+msgstr "Application settings"
 
 msgid "Back to admin"
 msgstr "Tagasi admini"
@@ -47,7 +47,7 @@ msgid "Back to profile"
 msgstr "Tagasi profiilile"
 
 msgid "Browse all activity"
-msgstr "Sirvi kogu tegevust"
+msgstr "Browse all activity"
 
 msgid "Change password"
 msgstr "Muuda parooli"
@@ -65,25 +65,25 @@ msgid "Confirm password"
 msgstr "Kinnita parool"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Juhib menüüpunkti «Minu tegevus» kasutajatele selles riigis."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Country"
 msgstr "Riik"
 
 msgid "Created"
-msgstr "Loodud"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} loodud"
+msgstr "Created {0}"
 
 msgid "Current password"
 msgstr "Praegune parool"
 
 msgid "Deleted"
-msgstr "Kustutatud"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} kustutatud"
+msgstr "Deleted {0}"
 
 msgid "Email"
 msgstr "E-post"
@@ -92,7 +92,7 @@ msgid "Email or username"
 msgstr "E-post või kasutajanimi"
 
 msgid "Endonym"
-msgstr "Endonüüm"
+msgstr "Endonym"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Sisesta e-post või kasutajanimi — saadame parooli lähtestamise lingi."
@@ -107,16 +107,16 @@ msgid "Forgot password?"
 msgstr "Unustasid parooli?"
 
 msgid "Hide from users"
-msgstr "Peida kasutajate eest"
+msgstr "Hide from users"
 
 msgid "I accept the terms of service"
 msgstr "Nõustun kasutustingimustega"
 
 msgid "ISO code"
-msgstr "ISO-kood"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identifikaator"
+msgstr "Identifier"
 
 msgid "Info"
 msgstr "Info"
@@ -125,7 +125,7 @@ msgid "Language"
 msgstr "Keel"
 
 msgid "Language code"
-msgstr "Keelekood"
+msgstr "Language code"
 
 msgid "Last name"
 msgstr "Perekonnanimi"
@@ -137,13 +137,13 @@ msgid "Login"
 msgstr "Logi sisse"
 
 msgid "Membership status"
-msgstr "Liikmestaatus"
+msgstr "Membership status"
 
 msgid "Message"
 msgstr "Teade"
 
 msgid "My activity"
-msgstr "Minu tegevus"
+msgstr "My activity"
 
 msgid "Name"
 msgstr "Nimi"
@@ -152,25 +152,25 @@ msgid "New password"
 msgstr "Uus parool"
 
 msgid "No activity recorded yet."
-msgstr "Tegevust pole veel salvestatud."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Selle kirje kohta pole täiendavaid üksikasju."
+msgstr "No further details for this entry."
 
 msgid "No results found."
 msgstr "Tulemusi ei leitud."
 
 msgid "No working country is set."
-msgstr "Tööriiki pole määratud."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Väljas"
+msgstr "Off"
 
 msgid "On"
-msgstr "Sees"
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Ülemkirje"
+msgstr "Parent record"
 
 msgid "Password"
 msgstr "Parool"
@@ -206,7 +206,7 @@ msgid "Profile"
 msgstr "Profiil"
 
 msgid "Record"
-msgstr "Kirje"
+msgstr "Record"
 
 msgid "Register"
 msgstr "Registreeru"
@@ -215,10 +215,10 @@ msgid "Remember me"
 msgstr "Jäta mind meelde"
 
 msgid "Sample record"
-msgstr "Näidiskirje"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Otsi tegevust…"
+msgstr "Search activity…"
 
 msgid "Search..."
 msgstr "Otsi..."
@@ -242,19 +242,19 @@ msgid "Send reset link"
 msgstr "Saada lähtestamislink"
 
 msgid "Settings for {0}"
-msgstr "Seaded: {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Näita kasutajatele"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Sisselogimine"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Sisse logitud"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Välja logitud"
+msgstr "Signed out"
 
 msgid "Social accounts"
 msgstr "Sotsiaalkontod"
@@ -269,70 +269,70 @@ msgid "The country language (locale) becomes the site language for your account.
 msgstr "Riigi keel (locale) muutub teie konto keeleks."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Seadet ei saanud salvestada. Proovige uuesti."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Ajavöönd"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Lülita logimine välja"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Lülita logimine sisse"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Uuendatud"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} uuendatud"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Uuendatud: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Kasutajakonto"
+msgstr "User account"
 
 msgid "Username"
 msgstr "Kasutajanimi"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Kasutajad ei saa enam vaadata oma tegevust riigis {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Kasutajad saavad nüüd vaadata oma tegevust riigis {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Kasutajad saavad vaadata oma tegevust"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Kasutajad näevad oma tegevust"
+msgstr "Users see own activity"
 
 msgid "Warning"
 msgstr "Hoiatus"
 
 msgid "What changed"
-msgstr "Mis muutus"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Kui väljas, ei salvestata uusi sisselogimisi, väljalogimisi ega andmemuutusi."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Kui logite sisse, välja või muudate andmeid."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Kes saab muuta"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Teil pole lubatud seda seadet muuta."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Teie tööriik — lülitid kehtivad ainult selle riigi kohta."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "ja veel"
+msgstr "and more"
 
 msgid "changed"
-msgstr "muudetud"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "President"
+
+msgid "Vice president"
+msgstr "Asepresident"
+
+msgid "Club president"
+msgstr "Klubi president"
+
+msgid "Editor"
+msgstr "Toimetaja"
+
+msgid "Member"
+msgstr "Liige"
+
+msgid "New member"
+msgstr "Uus liige"
+
+msgid "Roles"
+msgstr "Rollid"

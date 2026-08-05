@@ -8,34 +8,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Account active"
-msgstr "Račun aktivan"
+msgstr "Account active"
 
 msgid "Account enabled"
-msgstr "Račun omogućen"
+msgstr "Account enabled"
 
 msgid "Activity details"
-msgstr "Detalji aktivnosti"
+msgstr "Activity details"
 
 msgid "Activity log"
-msgstr "Dnevnik aktivnosti"
+msgstr "Activity log"
 
 msgid "Activity logging"
-msgstr "Evidentiranje aktivnosti"
+msgstr "Activity logging"
 
 msgid "Activity logging enabled"
-msgstr "Evidentiranje aktivnosti uključeno"
+msgstr "Activity logging enabled"
 
 msgid "Activity logging has been turned off for {0}."
-msgstr "Evidentiranje aktivnosti isključeno je za {0}."
+msgstr "Activity logging has been turned off for {0}."
 
 msgid "Activity logging has been turned on for {0}."
-msgstr "Evidentiranje aktivnosti uključeno je za {0}."
+msgstr "Activity logging has been turned on for {0}."
 
 msgid "Already have an account? Login"
 msgstr "Već imate račun? Prijava"
 
 msgid "Application settings"
-msgstr "Postavke aplikacije"
+msgstr "Application settings"
 
 msgid "Back to admin"
 msgstr "Nazad na admin"
@@ -47,7 +47,7 @@ msgid "Back to profile"
 msgstr "Nazad na profil"
 
 msgid "Browse all activity"
-msgstr "Pregledaj svu aktivnost"
+msgstr "Browse all activity"
 
 msgid "Change password"
 msgstr "Promijeni lozinku"
@@ -65,25 +65,25 @@ msgid "Confirm password"
 msgstr "Potvrdi lozinku"
 
 msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Upravlja stavkom izbornika „Moja aktivnost“ za korisnike u ovoj državi."
+msgstr "Controls the “My activity” menu item for users in this country."
 
 msgid "Country"
 msgstr "Država"
 
 msgid "Created"
-msgstr "Kreirano"
+msgstr "Created"
 
 msgid "Created {0}"
-msgstr "{0} kreirano"
+msgstr "Created {0}"
 
 msgid "Current password"
 msgstr "Trenutna lozinka"
 
 msgid "Deleted"
-msgstr "Obrisano"
+msgstr "Deleted"
 
 msgid "Deleted {0}"
-msgstr "{0} obrisano"
+msgstr "Deleted {0}"
 
 msgid "Email"
 msgstr "E-pošta"
@@ -92,7 +92,7 @@ msgid "Email or username"
 msgstr "E-pošta ili korisničko ime"
 
 msgid "Endonym"
-msgstr "Endonim"
+msgstr "Endonym"
 
 msgid "Enter your email or username and we will send you a link to reset your password."
 msgstr "Unesite e-poštu ili korisničko ime i poslat ćemo link za resetovanje lozinke."
@@ -107,16 +107,16 @@ msgid "Forgot password?"
 msgstr "Zaboravljena lozinka?"
 
 msgid "Hide from users"
-msgstr "Sakrij od korisnika"
+msgstr "Hide from users"
 
 msgid "I accept the terms of service"
 msgstr "Prihvatam uslove korištenja"
 
 msgid "ISO code"
-msgstr "ISO kod"
+msgstr "ISO code"
 
 msgid "Identifier"
-msgstr "Identifikator"
+msgstr "Identifier"
 
 msgid "Info"
 msgstr "Info"
@@ -125,7 +125,7 @@ msgid "Language"
 msgstr "Jezik"
 
 msgid "Language code"
-msgstr "Kod jezika"
+msgstr "Language code"
 
 msgid "Last name"
 msgstr "Prezime"
@@ -137,13 +137,13 @@ msgid "Login"
 msgstr "Prijava"
 
 msgid "Membership status"
-msgstr "Status članstva"
+msgstr "Membership status"
 
 msgid "Message"
 msgstr "Poruka"
 
 msgid "My activity"
-msgstr "Moja aktivnost"
+msgstr "My activity"
 
 msgid "Name"
 msgstr "Ime"
@@ -152,25 +152,25 @@ msgid "New password"
 msgstr "Nova lozinka"
 
 msgid "No activity recorded yet."
-msgstr "Još nema zabilježene aktivnosti."
+msgstr "No activity recorded yet."
 
 msgid "No further details for this entry."
-msgstr "Nema dodatnih detalja za ovaj zapis."
+msgstr "No further details for this entry."
 
 msgid "No results found."
 msgstr "Nema rezultata."
 
 msgid "No working country is set."
-msgstr "Radna država nije postavljena."
+msgstr "No working country is set."
 
 msgid "Off"
-msgstr "Isklj."
+msgstr "Off"
 
 msgid "On"
-msgstr "Uklj."
+msgstr "On"
 
 msgid "Parent record"
-msgstr "Nadređeni zapis"
+msgstr "Parent record"
 
 msgid "Password"
 msgstr "Lozinka"
@@ -206,7 +206,7 @@ msgid "Profile"
 msgstr "Profil"
 
 msgid "Record"
-msgstr "Zapis"
+msgstr "Record"
 
 msgid "Register"
 msgstr "Registracija"
@@ -215,10 +215,10 @@ msgid "Remember me"
 msgstr "Zapamti me"
 
 msgid "Sample record"
-msgstr "Uzorak zapisa"
+msgstr "Sample record"
 
 msgid "Search activity…"
-msgstr "Pretraži aktivnost…"
+msgstr "Search activity…"
 
 msgid "Search..."
 msgstr "Pretraga..."
@@ -242,19 +242,19 @@ msgid "Send reset link"
 msgstr "Pošalji link za resetovanje"
 
 msgid "Settings for {0}"
-msgstr "Postavke za {0}"
+msgstr "Settings for {0}"
 
 msgid "Show to users"
-msgstr "Prikaži korisnicima"
+msgstr "Show to users"
 
 msgid "Sign-in"
-msgstr "Prijava"
+msgstr "Sign-in"
 
 msgid "Signed in"
-msgstr "Prijavljen"
+msgstr "Signed in"
 
 msgid "Signed out"
-msgstr "Odjavljen"
+msgstr "Signed out"
 
 msgid "Social accounts"
 msgstr "Društveni računi"
@@ -269,70 +269,70 @@ msgid "The country language (locale) becomes the site language for your account.
 msgstr "Jezik države (locale) postaje jezik vašeg računa."
 
 msgid "The setting could not be saved. Please try again."
-msgstr "Postavka nije mogla biti sačuvana. Pokušajte ponovo."
+msgstr "The setting could not be saved. Please try again."
 
 msgid "Timezone"
-msgstr "Vremenska zona"
+msgstr "Timezone"
 
 msgid "Turn off logging"
-msgstr "Isključi evidentiranje"
+msgstr "Turn off logging"
 
 msgid "Turn on logging"
-msgstr "Uključi evidentiranje"
+msgstr "Turn on logging"
 
 msgid "Updated"
-msgstr "Ažurirano"
+msgstr "Updated"
 
 msgid "Updated {0}"
-msgstr "{0} ažurirano"
+msgstr "Updated {0}"
 
 msgid "Updated: {0}"
-msgstr "Ažurirano: {0}"
+msgstr "Updated: {0}"
 
 msgid "User account"
-msgstr "Korisnički račun"
+msgstr "User account"
 
 msgid "Username"
 msgstr "Korisničko ime"
 
 msgid "Users can no longer view their own activity in {0}."
-msgstr "Korisnici više ne mogu vidjeti vlastitu aktivnost u {0}."
+msgstr "Users can no longer view their own activity in {0}."
 
 msgid "Users can now view their own activity in {0}."
-msgstr "Korisnici sada mogu vidjeti vlastitu aktivnost u {0}."
+msgstr "Users can now view their own activity in {0}."
 
 msgid "Users can view own activity log"
-msgstr "Korisnici mogu vidjeti vlastitu aktivnost"
+msgstr "Users can view own activity log"
 
 msgid "Users see own activity"
-msgstr "Korisnici vide vlastitu aktivnost"
+msgstr "Users see own activity"
 
 msgid "Warning"
 msgstr "Upozorenje"
 
 msgid "What changed"
-msgstr "Šta se promijenilo"
+msgstr "What changed"
 
 msgid "When off, new login/logout and data changes are not recorded."
-msgstr "Kada je isključeno, novi prijavi, odjavi i promjene podataka se ne bilježe."
+msgstr "When off, new login/logout and data changes are not recorded."
 
 msgid "When you signed in, signed out, or changed your data."
-msgstr "Kada se prijavite, odjavite ili promijenite podatke."
+msgstr "When you signed in, signed out, or changed your data."
 
 msgid "Who can edit"
-msgstr "Ko može uređivati"
+msgstr "Who can edit"
 
 msgid "You are not allowed to change this setting."
-msgstr "Nemate dozvolu za promjenu ove postavke."
+msgstr "You are not allowed to change this setting."
 
 msgid "Your working country — toggles apply only to this country."
-msgstr "Vaša radna država — prekidači vrijede samo za ovu državu."
+msgstr "Your working country — toggles apply only to this country."
 
 msgid "and more"
-msgstr "i više"
+msgstr "and more"
 
 msgid "changed"
-msgstr "promijenjeno"
+msgstr "changed"
 
 msgid "Created {0}: {1}"
 msgstr "Created {0}: {1}"
@@ -390,3 +390,30 @@ msgstr "Do you really want to delete your profile picture?"
 
 msgid "Delete picture"
 msgstr "Delete picture"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "President"
+msgstr "Predsjednik"
+
+msgid "Vice president"
+msgstr "Potpredsjednik"
+
+msgid "Club president"
+msgstr "Predsjednik kluba"
+
+msgid "Editor"
+msgstr "Urednik"
+
+msgid "Member"
+msgstr "Član"
+
+msgid "New member"
+msgstr "Novi član"
+
+msgid "Roles"
+msgstr "Uloge"

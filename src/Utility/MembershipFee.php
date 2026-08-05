@@ -56,8 +56,9 @@ class MembershipFee
         };
     }
 
-    public static function isPaidForYear(?Date $date, int $year): bool
+    public static function isPaidForYear(mixed $date, int $year): bool
     {
+        $date = static::toDate($date);
         if ($date === null) {
             return false;
         }
@@ -65,8 +66,9 @@ class MembershipFee
         return (int)$date->format('Y') === $year;
     }
 
-    public static function paymentDisplay(?Date $date, int $year): string
+    public static function paymentDisplay(mixed $date, int $year): string
     {
+        $date = static::toDate($date);
         if (!static::isPaidForYear($date, $year)) {
             return (string)__('Not paid for {0}', $year);
         }
@@ -77,9 +79,23 @@ class MembershipFee
     /**
      * Localized date string when paid for year; empty otherwise.
      */
-    public static function paidDateFormatted(?Date $date, int $year): string
+    public static function paidDateFormatted(mixed $date, int $year): string
     {
+        $date = static::toDate($date);
         if (!static::isPaidForYear($date, $year)) {
+            return '';
+        }
+
+        return LocaleDateParser::format($date, 'date', I18n::getLocale());
+    }
+
+    /**
+     * Localized stored payment date (any year); empty when the field is null.
+     */
+    public static function lastPaymentFormatted(mixed $date): string
+    {
+        $date = static::toDate($date);
+        if ($date === null) {
             return '';
         }
 

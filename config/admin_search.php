@@ -74,6 +74,17 @@ return [
                     'name',
                 ],
             ],
+            'Languages' => [
+                'label' => 'Languages',
+                'controller' => 'Languages',
+                'titleField' => 'name',
+                'labelsKey' => 'language',
+                'fields' => [
+                    'code',
+                    'name',
+                    'endonim_name',
+                ],
+            ],
             'Countries' => [
                 'label' => 'Countries',
                 'controller' => 'Countries',
@@ -109,6 +120,19 @@ return [
                     'url',
                     'ip',
                     'actor_role',
+                ],
+            ],
+            /**
+             * President prefix CRUD — index `q` search only (not Admin global `/admin/search`).
+             */
+            'Clubs' => [
+                'label' => 'Clubs',
+                'controller' => 'Clubs',
+                'titleField' => 'name',
+                'labelsKey' => 'club',
+                'includeInGlobal' => false,
+                'fields' => [
+                    'name',
                 ],
             ],
             // Continents: nincs külön Admin CRUD index — globális kereséshez később felvehető:

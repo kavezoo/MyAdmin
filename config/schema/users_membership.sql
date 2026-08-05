@@ -2,7 +2,10 @@
 ALTER TABLE `users`
   ADD COLUMN `membership_status` varchar(20) NOT NULL DEFAULT 'incomplete'
     COMMENT 'incomplete|pending|approved' AFTER `role`,
+  ADD COLUMN `membership_joined_date` date DEFAULT NULL
+    COMMENT 'Member since (non-null = application approved)' AFTER `membership_status`,
   ADD COLUMN `application_notified` tinyint(1) unsigned NOT NULL DEFAULT 0
-    COMMENT '1 = clubpresident notified about application' AFTER `membership_status`,
+    COMMENT '1 = clubpresident notified about application' AFTER `membership_joined_date`,
   ADD KEY `membership_status` (`membership_status`),
+  ADD KEY `membership_joined_date` (`membership_joined_date`),
   ADD KEY `club_membership` (`club_id`, `membership_status`);

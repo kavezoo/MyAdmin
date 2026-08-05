@@ -5,11 +5,20 @@ namespace App\Auth;
 
 /**
  * Countries Admin access:
+ * - Module (index/view/sidebar): admin or superuser
  * - superuser (Users.role `superuser` OR CakeDC is_superuser=1): add, delete, full edit
  * - admin: edit visible + pos only
  */
 class CountryAccess
 {
+    /**
+     * Sidebar + URL: open Countries module at all.
+     */
+    public static function canAccessModule(?\Cake\Http\ServerRequest $request = null): bool
+    {
+        return static::canEditMeta($request);
+    }
+
     public static function canAdd(?\Cake\Http\ServerRequest $request = null): bool
     {
         return CurrentUser::isSuperuser($request);
@@ -33,8 +42,10 @@ class CountryAccess
      */
     public static function canEditMeta(?\Cake\Http\ServerRequest $request = null): bool
     {
-        $role = CurrentUser::role($request);
+        if (CurrentUser::isSuperuser($request)) {
+            return true;
+        }
 
-        return $role === AppRoles::SUPERUSER || $role === AppRoles::ADMIN;
+        return CurrentUser::role($request) === AppRoles::ADMIN;
     }
 }

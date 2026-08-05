@@ -31,7 +31,7 @@ class MembershipMailer extends Mailer
         }
         $listUrl = Router::url([
             'prefix' => 'Clubpresident',
-            'controller' => 'Applicants',
+            'controller' => 'Members',
             'action' => 'index',
             '_full' => true,
         ]);

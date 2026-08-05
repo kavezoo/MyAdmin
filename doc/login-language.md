@@ -2,9 +2,11 @@
 
 Login: **nyelv** Select2 (nem ország). Regisztráció: továbbra is **ország**.
 
-Kapcsolódó: [users-auth.md](users-auth.md), [i18n.md](i18n.md).  
+Kapcsolódó: [users-auth.md](users-auth.md), [i18n.md](i18n.md), **[languages-admin.md](languages-admin.md)** (Admin CRUD).  
 Schema: [`config/schema/languages.sql`](../config/schema/languages.sql).  
 Seed: `php tmp/seed_languages.php` (`AdminLanguage::syncFromCountries`).
+
+**Admin:** `/admin/languages` — Settings menü, Countries fölött (`LanguageAccess`).
 
 ## Viselkedés
 

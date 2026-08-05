@@ -12,7 +12,6 @@ use App\Utility\SetupEditBy;
 use App\Utility\SetupNameI18n;
 use App\Utility\SetupValue;
 use Cake\Event\EventInterface;
-use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 
 /**
@@ -38,7 +37,7 @@ class SetupsController extends AppController
         parent::beforeFilter($event);
 
         if (!SetupAccess::canAccessModule($this->request)) {
-            throw new ForbiddenException(__('You are not allowed to access Setups.'));
+            return $this->denyWithFlashWarning(__('You are not allowed to access Setups.'));
         }
 
         $this->set('canAdd', SetupAccess::canCreate($this->request));
@@ -125,7 +124,7 @@ class SetupsController extends AppController
     public function add()
     {
         if (!SetupAccess::canCreate($this->request)) {
-            throw new ForbiddenException(__('Only a Superuser may create setups.'));
+            return $this->denyWithFlashWarning(__('Only a Superuser may create setups.'));
         }
 
         $setup = $this->newEntityWithSchemaDefaults($this->Setups);
@@ -180,7 +179,7 @@ class SetupsController extends AppController
         $this->rememberLastVisited('Setups', $setup->id);
 
         if (!SetupAccess::canEditValue($setup, $this->request)) {
-            throw new ForbiddenException(__('You are not allowed to edit this setup.'));
+            return $this->denyWithFlashWarning(__('You are not allowed to edit this setup.'));
         }
 
         $canMeta = SetupAccess::canEditMetadata($this->request);
@@ -270,7 +269,7 @@ class SetupsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         if (!SetupAccess::canDelete($this->request)) {
-            throw new ForbiddenException(__('Only a Superuser may delete setups.'));
+            return $this->denyWithFlashWarning(__('Only a Superuser may delete setups.'));
         }
 
         return $this->deleteEntityOrFail($this->Setups, $this->Setups->get($id));

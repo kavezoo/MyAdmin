@@ -1,25 +1,33 @@
 ---
-description: A pos mező mindig az adatbázis DEFAULT értéke — az agent soha ne állítsa / ne írja felül.
+description: A pos mező mindig az adatbázis DEFAULT (1000) — az agent soha ne állítsa / ne írja felül.
 alwaysApply: true
 ---
 
-# `pos` mező = csak DB DEFAULT
+# `pos` mező = csak DB DEFAULT (örök)
 
-A **`pos`** (pozíció) oszlop értéke **mindig** az adatbázis séma **DEFAULT**-jából jön (tipikusan `1000`).
+A **`pos`** (pozíció) oszlop értéke **mindig** az adatbázis séma **DEFAULT**-jából jön.
+
+**Alapértelmezés minden táblán: `1000`.** Új rekordnál és seednél is ez érvényesül. A felhasználó a formon átírhatja, ha akarja — az agent / seed / sync **soha** ne állítson semmi mást.
 
 ## Kötelező
 
-- Új rekordnál **ne** állíts `pos`-t PHP-ban / controllerben / `beforeSave`-ben / seed scriptben „kézzel” (pl. `1000`, `10`, `$pos += 10`).
-- Üres formmező → hagyd üresen / unseteld → INSERT-nél a DB DEFAULT érvényesül (`UsesDatabaseColumnDefaultsTrait` + `newEntityWithSchemaDefaults()`).
-- A felhasználó majd átírja a formon, ha akarja.
+- Új rekordnál **ne** állíts `pos`-t PHP-ban / controllerben / `beforeSave`-ben / seed scriptben / sync utility-ben.
+- Üres formmező → hagyd üresen / unseteld → INSERT-nél a DB DEFAULT (`1000`) érvényesül (`UsesDatabaseColumnDefaultsTrait` + `newEntityWithSchemaDefaults()`).
+- Élő DB-ben a `pos` tipikusan **1000** minden soron, amíg a felhasználó mást nem ír.
 
-## Tilos
+## Tilos (örökre)
 
-- ` $entity->pos = 1000 `
-- ` 'pos' => 1000 ` create/save adatban
-- Seed / migráció közben országonként / soronként növekvő `pos` kiosztása „szép sorrendhez”
+- `$entity->pos = 1000` / `'pos' => 1000` create/save adatban (a DEFAULT elég)
+- `$entity->pos = 1` / `10` / `$pos += 10` „szép sorrendhez”
+- Seed / migráció / `AdminLanguage::sync*` / `ensurePartnerVisibility` közben országonként / nyelvenként növekvő `pos`
+- Self-visibility vagy „kiemelt” sor (`en_GB`) külön `pos=1` / `2` / `3`
 - Bármilyen „okos” alapértelmezés a DB DEFAULT helyett
 
-## Kivétel
+## Engedélyezett
 
-Csak ha a felhasználó **explicit** kéri, hogy a `pos` értéket módosítsd vagy számold.
+- Form / Admin UI: a felhasználó **explicit** módosítja a `pos` mezőt és menti.
+- Csak ha a felhasználó **explicit** kéri az agenttől, hogy a `pos` értéket módosítsd vagy számold.
+
+## Dokumentáció
+
+`doc/struktura.md`, `doc/uj-projekt-sema-playbook.md`, `doc/README.md` (Rögzített döntések), `doc/valtozasok.md`.

@@ -15,6 +15,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | **Kódba nyúlás — API cheat sheet** | **[MyAdminUsage.md](MyAdminUsage.md)** (`Setup::get`, …) |
 | UI / asset / view részletszabály | [admin-konvenciok.md](admin-konvenciok.md) |
 | **Countries Admin lista** | **[countries-admin.md](countries-admin.md)** |
+| **Languages Admin** | **[languages-admin.md](languages-admin.md)** |
 | **Ország→ország láthatóság** | **[country-visibilities.md](country-visibilities.md)** |
 | **Eseménynapló** | **[event-logs.md](event-logs.md)** |
 | **Login nyelv** | **[login-language.md](login-language.md)** |
@@ -37,6 +38,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | [i18n.md](i18n.md) | `__()` szabály, locale, .po, Translate keresés/sort |
 | **[form-i18n-tabs.md](form-i18n-tabs.md)** | **Form nyelvi TAB-ok** + ország tooltip + Cake 5.3 buktatók |
 | **[countries-admin.md](countries-admin.md)** | **Countries index**: visible-only, oszlopsorrend, CSS, i18n |
+| **[languages-admin.md](languages-admin.md)** | **Languages Admin**: login UI locale CRUD, ACL, visible-only |
 | **[country-visibilities.md](country-visibilities.md)** | **Saját + plusz nyelvek** (`country_visibilities`); TAB/login |
 | **[event-logs.md](event-logs.md)** | **Eseménynapló** (`event_logs`); login/CRUD/HTTP; ország ACL |
 | **[login-language.md](login-language.md)** | Login **nyelv** Select2; `languages` + i18n nevek; register = ország |
@@ -65,6 +67,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | `admin-form-required.mdc` | Kötelező mező piros `*` (adminLabel) |
 | `uj-projekt-sema.mdc` | **alwaysApply** — új/éles projekt: séma + kapcsolatok szerint minden megoldás |
 | `pos-db-default.mdc` | `pos` mindig DB DEFAULT |
+| `admin-linked-modal-urls.mdc` | Linked modal Edit/View/Delete = megnyitott entitás CRUD URL (örök) |
 
 Új projektbe másold a `doc/` **és** a `.cursor/rules/` mappát.
 
@@ -93,9 +96,10 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - **Setups (ha kell):** EAV `setups` + `SetupValue`; slug csak `a-z0-9_`; olvasás: `Setup::get('slug', $default)` — [setups.md](setups.md); rule: `setups-eav.mdc`
 - Számok megjelenítése: `LocaleNumberParser::format()` / `formatCount()`; pénz: **`formatCurrency()`** (HUF, locale pozíció: hu `… Ft`, en `HUF …`) — rule: `penznem-formatcurrency.mdc`
 - View: bake-szerű `dl` + gyerek **tab sheet**; belongsTo/HABTM/name **félkövér link** → AJAX modal; Edit lábléc: **`.record-view-footer-actions`** (adatoszlop alatt); `$rowDoubleClickAction` a kapcsolt táblán
-- Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon; **belongsTo lista**: `visible` + `pos`/`name` sorrend; form végén **`visible` → `pos`** + `visible` fölött mezőszélességű `<hr>`; `fetchTable()`, ne Association
+- **Linked / szülő modal:** `data-id` + `data-edit-url` / `data-view-url` / `data-delete-url` = **a megnyitott rekord** saját CRUD-ja (pl. taglista klub → `Clubs/edit/{klubId}`); **tilos** a lista sor URL-jére visszahullani — rule: `admin-linked-modal-urls.mdc`
+- Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon; **belongsTo lista**: `visible` + `pos`/`name` sorrend; form végén **`visible` → `pos`**; **`<hr>` mindig közvetlenül a `visible` fölött** (soha más mező fölött) — rule: `admin-form-visible-hr.mdc`; `fetchTable()`, ne Association
 - Oszlop DEFAULT (`pos`, `visible`, …): **DB séma** + `UsesDatabaseColumnDefaultsTrait` — ne PHP hardcode
-- **`pos`:** mindig DB DEFAULT — az agent **soha** ne állítsa / ne növelgesse; a felhasználó írja át ha kell (rule: `.cursor/rules/pos-db-default.mdc`)
+- **`pos`:** mindig DB DEFAULT (**általában `1000`**, minden táblán) — az agent **soha** ne állítsa / ne növelgesse / ne írjon `1`/`10`/`$pos += 10`-et; a felhasználó írja át a formon ha kell (rule: `.cursor/rules/pos-db-default.mdc`)
 - **`*_count`:** **CounterCache** (hasMany → gyerek Table; HABTM → through + `cascadeCallbacks`); törlésvédelem: `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()`; **ne** élő COUNT / controller `count(_ids)`
 - Modal kapcsolt névlisták: utolsó **20** (`modified DESC`), megjelenítés **ABC ASC**; view tab lehet teljes ABC lista
 
