@@ -49,6 +49,7 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 | `national_membership_fee_date` | Országos szövetség tagdíj (Magyarországon: MPE) |
 
 - Clubpresident: `/clubpresident/members` — klub tagdíj **egy gomb + SWAL** → mai dátum; oszlopban zöld pipa vagy piros „Outstanding” gomb.
+- **President / vicepresident:** `/president/members` — ország `country_id` szerinti tagok; országos tagdíj rögzítés (SWAL); switch „Only national fee paid”; klub tagdíj oszlop csak olvasható.
 - **Profil:** feltűnő piros blokk ha nincs befizetve; zöld pipa + dátum ha igen (klub + országos/MPE).
 - **Napló:** `EventLogBehavior` + `MembershipFee::activityDescriptions` — klub országának nyelvén (`ActivityLogLocale`); megadás / törlés / módosítás. Külön tagdíj napló tábla később.
 
@@ -78,6 +79,7 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 | Profil form | `UsersController::completeProfile`, `templates/Users/complete_profile.php` |
 | Jelentkezők | `Clubpresident\ApplicantsController`, sidebar menü |
 | Aktív tagok / tagdíj | `Clubpresident\MembersController`, `MembershipFee` |
+| Taglista index minta | `templates/President/Members/index.php`, `PanelMemberListTrait`, rule `.cursor/rules/panel-member-index.mdc` |
 | Login redirect | `Application` `EVENT_AFTER_LOGIN` |
 | New gate | `Controller/New/AppController.php` |
 | Role `new` lock | `RestrictNewRoleMiddleware` (auth után) |
@@ -98,9 +100,27 @@ Transport: `config/app.php` / `app_local.php` `Email` + `EmailTransport`.
 ## 6. Ellenőrzőlista
 
 - [ ] `php tmp/seed_membership.php` (clubs + oszlopok)
+- [ ] Taglista index: sort linkek, modal, szülő club link (President)
 - [ ] Clubpresident usernek van `club_id` (seed vagy manuális)
 - [ ] Új regisztráció → login → complete profile kötelező
 - [ ] Mentés után clubpresident kap emailt (vagy log, ha nincs transport)
 - [ ] Approve → role `member` + email login linkkel
 - [ ] Reject → `enabled=0`; elutasított user oldalfrissítéskor login redirect
 - [ ] Új tag újra belép → Member panel
+
+---
+
+## 7. Taglisták (President / Clubpresident)
+
+A **Members** index **Admin index playbook** — nem egyszerű HTML tábla.
+
+| Elem | Kötelező |
+|------|----------|
+| Fejléc változók | `$rowDoubleClickAction`, `$showIdColumn`, `$showCreatedColumn`, … |
+| Sort | Minden oszlop: `Paginator::sort` |
+| Szülő (Club) | ID után: `category-link` → `clubRecordGet` + linked modal |
+| Logikai | `active`, `enabled`: pipa / X |
+| Modal | `recordGet`, gombok (törlés letiltva), `pages/index.js` |
+| Controller | `sortableFields`, `recordGet`, `view`, ACL scope |
+
+Részletes checklist: `.cursor/rules/panel-member-index.mdc`, minta: `templates/President/Members/index.php`.

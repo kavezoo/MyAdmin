@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Clubpresident;
 
 use App\Auth\AppRoles;
+use App\Controller\Concerns\PanelMemberListTrait;
 use App\Utility\MembershipFee;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
@@ -14,6 +15,8 @@ use Cake\Http\Response;
  */
 class MembersController extends AppController
 {
+    use PanelMemberListTrait;
+
     /**
      * Active members of the president's club.
      *
@@ -43,8 +46,7 @@ class MembersController extends AppController
                 'Users.club_id' => $clubId,
                 'Users.active' => 1,
                 'Users.enabled' => 1,
-            ])
-            ->orderBy(['Users.first_name' => 'ASC', 'Users.email' => 'ASC']);
+            ]);
 
         $clubName = '';
         $clubCountryId = 0;
@@ -61,11 +63,44 @@ class MembersController extends AppController
 
         $this->set('title', __('Active members'));
         $this->set('breadcrumb', __('Active members'));
-        $this->set('members', $this->paginate($query, [
-            'limit' => 50,
-            'maxLimit' => 200,
-        ]));
+        $this->set('members', $this->paginate(
+            $query,
+            $this->panelMemberPaginateOptions($this->panelMemberSortableFields(false))
+        ));
         $this->set(compact('clubName', 'clubId', 'clubCountryId', 'membershipYear'));
+    }
+
+    /**
+     * Read-only member details.
+     *
+     * @param string|null $id User id
+     * @return \Cake\Http\Response|null|void
+     */
+    public function view(?string $id = null)
+    {
+        $member = $this->findScopedMember((string)$id, containClub: true);
+        $this->set(compact('member'));
+        $this->set('title', __('Member details'));
+        $this->set('breadcrumb', __('Active members'));
+    }
+
+    /**
+     * JSON: member row for index modal.
+     *
+     * @param string|null $id User id
+     * @return \Cake\Http\Response
+     */
+    public function recordGet(?string $id = null): Response
+    {
+        $this->request->allowMethod(['get']);
+
+        try {
+            $member = $this->findScopedMember((string)$id, containClub: true);
+        } catch (NotFoundException) {
+            return $this->jsonRecordNotFound();
+        }
+
+        return $this->jsonRecordResponse($this->memberRecordPayload($member));
     }
 
     /**
@@ -105,10 +140,8 @@ class MembersController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        $feeDate = MembershipFee::today();
-
         $member = $users->patchEntity($member, [
-            MembershipFee::FIELD_CLUB => $feeDate,
+            MembershipFee::FIELD_CLUB => MembershipFee::today(),
         ], [
             'accessibleFields' => [
                 MembershipFee::FIELD_CLUB => true,
@@ -124,5 +157,38 @@ class MembersController extends AppController
         $this->Flash->success(__('Club membership fee payment recorded for {0}.', $membershipYear));
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * @param bool $containClub
+     * @return \Cake\Datasource\EntityInterface
+     */
+    protected function findScopedMember(string $id, bool $containClub = false): \Cake\Datasource\EntityInterface
+    {
+        $clubId = $this->presidentClubId();
+        if ($clubId < 1) {
+            throw new ForbiddenException(__('Your account is not assigned to a club yet.'));
+        }
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->fetchTable('Users');
+        $query = $users->find()
+            ->where([
+                'Users.id' => $id,
+                'Users.role' => AppRoles::MEMBER,
+                'Users.club_id' => $clubId,
+                'Users.active' => 1,
+                'Users.enabled' => 1,
+            ]);
+        if ($containClub) {
+            $query->contain(['Clubs']);
+        }
+
+        $member = $query->first();
+        if ($member === null) {
+            throw new NotFoundException(__('Member not found.'));
+        }
+
+        return $member;
     }
 }

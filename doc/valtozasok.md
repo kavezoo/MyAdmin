@@ -5,11 +5,72 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-05 — Taglisták: Admin index minta (sort, modal, club link)
+
+### Mi változott / miért
+- President / Clubpresident Members index: `Paginator::sort`, opcionális oszlop kapcsolók, dupla katt modal, `recordGet` / `clubRecordGet`, club szülő link linked modalban.
+- Törlés gomb letiltva; logikai mezők pipa/X; dokumentáció + rule hogy ne maradjon le.
+
+### Érintett
+- `templates/President/Members/index.php`, `Clubpresident/Members/index.php`, `Members/view.php`
+- `src/Controller/Concerns/PanelMemberListTrait.php`, `President/Clubpresident MembersController`
+- `webroot/js/pages/index.js`, `doc/membership.md`, `.cursor/rules/panel-member-index.mdc`
+
+---
+
+## 2026-08-05 — Panel váltó: szekiócímek eltávolítva (mobil overflow)
+
+### Mi változott / miért
+- Sidebar panel váltóból kikerültek „Officer panels” / „Member area” / „Role panels” feliratok — összecsukott (mobil) sidebarban kilógtak a fő tartalomra.
+- Csoportok között vékony elválasztó; irány továbbra is nyíl ikon.
+
+### Érintett
+- `templates/element/panel/switcher.php`, `webroot/css/style.css`, `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — Panel váltó: nincs New link a sidebarban
+
+### Mi változott / miért
+- Admin (és más) sidebar panel váltóból kikerült a `/new` prefix — onboarding panel nem célzott admin váltás.
+
+### Érintett
+- `src/Auth/PanelAccess.php`, `doc/users-auth.md`
+
+---
+
+## 2026-08-05 — President prefix: országos tagok lista + MPE tagdíj
+
+### Mi változott / miért
+- `/president/members`: ország tagjai, avatar, klub + országos tagdíj oszlopok.
+- Országos díj: piros gomb + SWAL → mai dátum; befizetve zöld pipa (clubpresident minta).
+- Switch: csak befizetett országos tagdíj / minden tag.
+
+### Érintett
+- `src/Controller/President/MembersController.php`, `President/AppController.php`
+- `templates/President/Members/index.php`, `president/sidebar.php`
+- `webroot/js/pages/president_members.js`, `membership_fee_status` (`table_national_action`)
+- `doc/membership.md`
+
+---
+
+## 2026-08-05 — Taglisták: profilkép vagy avatar placeholder
+
+### Mi változott / miért
+- Aktív tagok + jelentkezők lista: `users/list_avatar` element — feltöltött kép vagy szürke fa-user placeholder.
+- CSS: `pages/users_list_avatar.css`.
+
+### Érintett
+- `templates/element/users/list_avatar.php`
+- `templates/Clubpresident/Members/index.php`, `Applicants/index.php`
+
+---
+
 ## 2026-08-05 — Admin prefix: csak admin/superuser; panel váltó minden role-ra
 
 ### Mi változott / miért
 - `/admin` csak `admin` + `superuser` (president/vp Search/EventLogs jogok levéve).
-- `PanelAccess::canUseAdminPanel`; admin sidebar → váltás New/Member/Clubpresident/President/Admin.
+- `PanelAccess::canUseAdminPanel`; admin sidebar → váltás Member / Clubpresident / President / Admin (**nincs** New).
 - Más panelek menüjében **nincs** Admin link.
 
 ### Érintett

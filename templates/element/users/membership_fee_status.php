@@ -47,6 +47,31 @@ if ($mode === 'profile'): ?>
 			</div>
 		<?php endif; ?>
 	</div>
+<?php elseif ($mode === 'table_national_action'): ?>
+	<?php if ($paid): ?>
+		<div class="membership-fee-cell membership-fee-cell--paid text-center">
+			<span class="membership-fee-cell__check" title="<?= h(__('Paid on {0}', $dateFormatted)) ?>">
+				<i class="fa fa-check-circle" aria-hidden="true"></i>
+				<span class="visually-hidden"><?= h(__('Paid')) ?></span>
+			</span>
+			<?php if ($dateFormatted !== ''): ?>
+				<div class="membership-fee-cell__date small text-muted"><?= h($dateFormatted) ?></div>
+			<?php endif; ?>
+		</div>
+	<?php else: ?>
+		<div class="membership-fee-cell membership-fee-cell--unpaid text-center">
+			<button
+				type="button"
+				class="btn btn-sm btn-danger membership-fee-record-btn js-record-national-fee"
+				data-form-id="<?= h($formId) ?>"
+				data-member-name="<?= h($memberName) ?>"
+				title="<?= h(__('Record national fee payment')) ?>"
+			>
+				<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+				<span class="ms-1"><?= h(__('Outstanding')) ?></span>
+			</button>
+		</div>
+	<?php endif; ?>
 <?php elseif ($mode === 'table_action'): ?>
 	<?php if ($paid): ?>
 		<div class="membership-fee-cell membership-fee-cell--paid text-center">

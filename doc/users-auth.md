@@ -68,7 +68,7 @@ Nincs URL nyelv-prefix. Panelek (Admin chrome):
 | `president`, `vicepresident` | `President` | `/president` | saját panel + **Member**; **Clubpresident** ha `club_id` > 0 |
 | `admin`, `superuser` | `Admin` | `/admin` | **csak** ezek; panel váltó → minden role prefix |
 
-**Panel váltás:** `PanelAccess` + `element/panel/switcher` — felfelé menü alsó panelekből; Clubpresident link csak ha van klub (vagy admin). **Admin** prefix és menü link **csak** `admin` / `superuser`; admin sidebar → összes role panel.
+**Panel váltás:** `PanelAccess` + `element/panel/switcher` — felfelé/lefelé linkek (ikon: nyíl); **nincs** szekciócím (Officer panels / Member area — mobil overflow). Admin → Member / Clubpresident / President / Admin (**nincs** New).
 
 - `App\Auth\AppRoles` — szerepkör konstansok / címkék
 - `App\Auth\PanelAccess` — elérhető prefixek, sidebar switcher

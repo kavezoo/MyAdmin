@@ -11,9 +11,8 @@ use Cake\Routing\Router;
  */
 class PanelAccess
 {
-    /** @var list<string> */
+    /** @var list<string> Admin panel switcher targets (no `/new` — onboarding only). */
     public const ALL_ROLE_PREFIXES = [
-        'New',
         'Member',
         'Clubpresident',
         'President',
@@ -155,6 +154,10 @@ class PanelAccess
 
         foreach (static::accessiblePrefixes($request) as $prefix) {
             if (strcasecmp($prefix, $currentPrefix) === 0) {
+                continue;
+            }
+
+            if (strcasecmp($prefix, 'New') === 0) {
                 continue;
             }
 

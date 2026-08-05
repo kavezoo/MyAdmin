@@ -11,7 +11,7 @@
 use App\Auth\MembershipProfile;
 use App\Utility\AdminCountry;
 
-$this->Html->css(['pages/index'], ['block' => true]);
+$this->Html->css(['pages/index', 'pages/users_list_avatar'], ['block' => true]);
 $this->Html->script('pages/clubpresident_applicants', ['block' => 'scriptBottom']);
 $this->assign('title', __('Applicants'));
 
@@ -88,7 +88,16 @@ $enabledFilterQuery['page'] = '1';
 								$isEnabled = (int)($applicant->enabled ?? 0) === 1;
 								?>
 								<tr<?= !$isEnabled ? ' class="text-muted"' : '' ?>>
-									<td><?= h($name) ?></td>
+									<td class="users-list-name-cell">
+										<div class="d-flex align-items-center gap-2">
+											<?= $this->element('users/list_avatar', [
+												'user' => $applicant,
+												'displayName' => $name,
+												'size' => 40,
+											]) ?>
+											<span class="users-list-name-cell__label"><?= h($name) ?></span>
+										</div>
+									</td>
 									<td><?= h((string)$applicant->email) ?></td>
 									<td><?= h((string)($applicant->phone ?? '')) ?></td>
 									<td><?= h($countryLabel) ?></td>

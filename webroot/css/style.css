@@ -1422,7 +1422,20 @@ a.btn:focus {
 	background-color: #f16854;
 	color: #fff;
 	bottom: 0;
-}	
+}
+
+/* Panel switcher — no section titles (overflow in collapsed / mobile sidebar). */
+#sidebar-menu .panel-switcher-divider {
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	height: 0;
+	margin: 6px 12px;
+	padding: 0;
+	pointer-events: none;
+}
+
+#main.enlarged .panel-switcher-divider {
+	margin: 6px 8px;
+}
 
 .avatar-circle {
     border-radius: 50%;

@@ -1,0 +1,31 @@
+/**
+ * Round avatars in user member / applicant tables.
+ */
+.users-list-avatar {
+	flex-shrink: 0;
+	width: var(--users-list-avatar-size, 40px);
+	height: var(--users-list-avatar-size, 40px);
+}
+
+.users-list-avatar__img {
+	width: var(--users-list-avatar-size, 40px);
+	height: var(--users-list-avatar-size, 40px);
+	object-fit: cover;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.users-list-avatar__placeholder {
+	width: var(--users-list-avatar-size, 40px);
+	height: var(--users-list-avatar-size, 40px);
+	background: #f1f3f5;
+	font-size: calc(var(--users-list-avatar-size, 40px) * 0.45);
+	line-height: 1;
+}
+
+.users-list-name-cell {
+	min-width: 12rem;
+}
+
+.users-list-name-cell__label {
+	line-height: 1.3;
+}

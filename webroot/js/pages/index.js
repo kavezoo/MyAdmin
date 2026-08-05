@@ -74,7 +74,7 @@
 		};
 
 		var formatRecordValue = function (key, value) {
-			if (key === 'logikai' || key === 'visible' || key === 'valid') {
+			if (key === 'logikai' || key === 'visible' || key === 'valid' || key === 'active' || key === 'enabled') {
 				return value
 					? '<i class="fa fa-check text-success"></i> <span class="text-dark">' + (msg.yes || 'Yes') + '</span>'
 					: '<i class="fa fa-times text-danger"></i> <span class="text-dark">' + (msg.no || 'No') + '</span>';

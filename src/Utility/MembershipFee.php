@@ -92,6 +92,19 @@ class MembershipFee
     }
 
     /**
+     * WHERE fragments for “paid for calendar year” on a date column.
+     *
+     * @return array<string, string>
+     */
+    public static function paidForYearConditions(string $field, int $year): array
+    {
+        return [
+            $field . ' >=' => sprintf('%04d-01-01', $year),
+            $field . ' <=' => sprintf('%04d-12-31', $year),
+        ];
+    }
+
+    /**
      * Human description for event_logs (call inside ActivityLogLocale::runForCountry).
      *
      * @param array<string, array{from: mixed, to: mixed}> $changes
