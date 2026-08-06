@@ -23,8 +23,7 @@ class RebuildCounterCachesCommand extends Command
     protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser->setDescription(
-            'Rebuild CounterCache fields: Parents.sample_count, Samples.city_count,'
-            . ' Cities.sample_count, Countries.user_count, Clubs.user_count.'
+            'Rebuild CounterCache fields: Countries.user_count, Clubs.user_count.'
         );
 
         return $parser;
@@ -37,24 +36,11 @@ class RebuildCounterCachesCommand extends Command
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $samples = $this->fetchTable('Samples');
-        $citiesSamples = $this->fetchTable('CitiesSamples');
         $users = $this->fetchTable('Users');
-        $parents = $this->fetchTable('Parents');
         $countries = $this->fetchTable('Countries');
-        $cities = $this->fetchTable('Cities');
 
         // Translate LEFT JOIN makes ORDER BY id ambiguous during CounterCache parent scans.
-        $this->withoutTranslate($parents);
         $this->withoutTranslate($countries);
-        $this->withoutTranslate($samples);
-        $this->withoutTranslate($cities);
-
-        $io->out('Updating Parents.sample_count (Samples → Parents CounterCache)…');
-        $samples->getBehavior('CounterCache')->updateCounterCache('Parents');
-
-        $io->out('Updating Samples.city_count + Cities.sample_count (CitiesSamples CounterCache)…');
-        $citiesSamples->getBehavior('CounterCache')->updateCounterCache();
 
         $io->out('Updating Countries.user_count (Users → Countries CounterCache)…');
         $users->getBehavior('CounterCache')->updateCounterCache('Countries');

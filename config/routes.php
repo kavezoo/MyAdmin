@@ -35,6 +35,7 @@ return function (RouteBuilder $routes): void {
         // Own profile edit (parallel to CakeDC `/profile`)
         $builder->connect('/edit/*', ['controller' => 'Users', 'action' => 'edit'])
             ->setPass(['id']);
+        $builder->connect('/complete-profile', ['controller' => 'Users', 'action' => 'completeProfile']);
         // Profile / complete-profile: AJAX club list by country
         $builder->connect('/clubs-for-country', ['controller' => 'Users', 'action' => 'clubsForCountry']);
         $builder->fallbacks();

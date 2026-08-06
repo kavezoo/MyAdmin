@@ -39,13 +39,13 @@ class AdminTranslate
     }
 
     /**
-     * Apply UI locale to all known Translate tables (Countries, Continents, Samples, Parents).
+     * Apply UI locale to all known Translate tables (Countries, Continents, Setups).
      *
      * @param list<string>|null $aliases
      */
     public static function applyLocales(?array $aliases = null, ?string $locale = null): void
     {
-        $aliases ??= ['Countries', 'Continents', 'Samples', 'Parents', 'Setups'];
+        $aliases ??= ['Countries', 'Continents', 'Setups'];
         $locator = TableRegistry::getTableLocator();
         foreach ($aliases as $alias) {
             if (!is_string($alias) || $alias === '') {
@@ -114,7 +114,7 @@ class AdminTranslate
      * but ORDER BY uses translated content (+ canonical fallback).
      *
      * @param list<string> $fields Logical sort keys (as in Paginator->sort())
-     * @param array<string, \Cake\ORM\Table> $associationTables e.g. ['Parents' => $parentsTable]
+     * @param array<string, \Cake\ORM\Table> $associationTables e.g. ['Continents' => $continentsTable]
      * @return array<int|string, list<string>|string>
      */
     public static function sortableFields(Table $table, array $fields, array $associationTables = []): array

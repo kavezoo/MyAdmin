@@ -67,7 +67,7 @@ class AdminCountry
 
     /**
      * Apply page locale to Countries (+ Continents) Translate behaviors.
-     * Also applies Samples / Parents via {@see AdminTranslate::applyLocales()}.
+     * Also applies Setups via {@see AdminTranslate::applyLocales()}.
      */
     public static function applyTranslateLocale(?string $locale = null): void
     {
@@ -78,7 +78,7 @@ class AdminCountry
         if ($countries->hasAssociation('Continents') && $countries->Continents->hasBehavior('Translate')) {
             $countries->Continents->getBehavior('Translate')->setLocale($locale);
         }
-        AdminTranslate::applyLocales(['Samples', 'Parents', 'Setups'], $locale);
+        AdminTranslate::applyLocales(['Setups'], $locale);
     }
 
     /**

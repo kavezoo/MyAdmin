@@ -102,9 +102,6 @@ window.MyAdmin.messages = <?= json_encode([
 	'from' => __('From'),
 	'to' => __('To'),
 	'custom' => __('Custom'),
-	'selectCities' => __('Select cities...'),
-	'selectSamples' => __('Select samples...'),
-	'deleteParentHint' => __('Delete the parent from the Parents list.'),
 	'table' => __('Table'),
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 </script>

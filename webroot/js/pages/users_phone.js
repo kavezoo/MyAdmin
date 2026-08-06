@@ -138,6 +138,18 @@
 		}
 		initAll(cfg);
 
+		// form.js may register after this file — resolve API inside the timeout
+		window.setTimeout(function () {
+			if (window.MyAdmin && typeof window.MyAdmin.recaptureFormBaseline === 'function') {
+				window.MyAdmin.recaptureFormBaseline();
+			}
+		}, 0);
+		window.setTimeout(function () {
+			if (window.MyAdmin && typeof window.MyAdmin.recaptureFormBaseline === 'function') {
+				window.MyAdmin.recaptureFormBaseline();
+			}
+		}, 350);
+
 		$('form').on('submit', function () {
 			var $phone = $(this).find('.js-phone-intl');
 			if (!$phone.length) {

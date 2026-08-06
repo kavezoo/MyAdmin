@@ -10,10 +10,10 @@ declare(strict_types=1);
  * 3. `titleField`: a találatlistában megjelenő fő címke (általában `name`).
  * 4. `label`: msgid a `__()`-hez (angol forrás).
  * 5. `controller`: Admin controller név (URL / redirect).
- * 6. `labelsKey`: `entityFieldLabels` kulcs a Search modalhoz (sample / parent / city / country).
+ * 6. `labelsKey`: `entityFieldLabels` kulcs a Search modalhoz (country / setup / …).
  *
  * Az index kereső csak az adott model `fields` mezőiben keres (saját oszlopok).
- * Translate-es mezőknél (Countries/Samples/Parents `name`, …) a keresés és a
+ * Translate-es mezőknél (Countries `name`, …) a keresés és a
  * rendezés az **UI locale** fordításán fut (`AdminTranslate` / `translationField`),
  * plusz fallback a kanonikus (angol) oszlopra.
  * A header (globális) kereső végigmegy az összes itt felsorolt modelen;
@@ -47,33 +47,6 @@ return [
          * }>
          */
         'models' => [
-            'Samples' => [
-                'label' => 'Samples',
-                'controller' => 'Samples',
-                'titleField' => 'name',
-                'labelsKey' => 'sample',
-                'fields' => [
-                    'name',
-                ],
-            ],
-            'Parents' => [
-                'label' => 'Parents',
-                'controller' => 'Parents',
-                'titleField' => 'name',
-                'labelsKey' => 'parent',
-                'fields' => [
-                    'name',
-                ],
-            ],
-            'Cities' => [
-                'label' => 'Cities',
-                'controller' => 'Cities',
-                'titleField' => 'name',
-                'labelsKey' => 'city',
-                'fields' => [
-                    'name',
-                ],
-            ],
             'Languages' => [
                 'label' => 'Languages',
                 'controller' => 'Languages',

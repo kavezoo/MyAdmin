@@ -19,7 +19,7 @@ Teljes spec: **`doc/users-auth.md`** (§0 baseline / képlékeny). Greenfield: *
 8. Login: **nyelv** Select2 = endoním (saját nyelv neve) + látható országok locale-jai; Register: **ország** = `endonim_name` + csak `visible`; `users.country_id`. Belépés után UI = login nyelv (session/cookie).
 9. Belépés: CakeDC **`active`** + app **`enabled`** (`findActive`); session: `RequireUserEnabledMiddleware`.
 10. App ACL „superuser” = **`Users.role === superuser` VAGY** CakeDC **`is_superuser`** (szigorú 1/true). Flag `0` → nincs teljes Countries jog. **Setups modul** (menü/URL): **csak** superuser (`SetupAccess::canAccessModule`).
-11. Tagság: `new` → kötelező `/complete-profile` → clubpresident Approve → `member` — **`doc/membership.md`**.
+11. Tagság: `new` → kötelező `/complete-profile` → clubpresident Approve → `member` — **`doc/membership.md`**; **greenfield:** **`doc/membership-greenfield.md`** + `membership-greenfield.mdc`.
 12. Auth login URL (`unauthorizedHandler.url`, `UsersUrl::actionUrl`): **mindig** `prefix => false` + `plugin => false` — különben panel URL-ről (`/president`) a Router `/president/users/login`-re örököl.
 
 ## Képlékeny (projektenként)

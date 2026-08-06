@@ -1,335 +1,3240 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: MyAdmin Auth\n"
+"Project-Id-Version: MyAdmin\n"
+"POT-Creation-Date: 2026-08-06 14:46+0200\n"
+"PO-Revision-Date: 2026-08-06 14:46+0200\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Account active"
-msgstr "Account active"
-
-msgid "Account enabled"
-msgstr "Account enabled"
-
-msgid "Activity details"
-msgstr "Activity details"
-
-msgid "Activity log"
-msgstr "Activity log"
-
-msgid "Activity logging"
-msgstr "Activity logging"
-
-msgid "Activity logging enabled"
-msgstr "Activity logging enabled"
-
-msgid "Activity logging has been turned off for {0}."
-msgstr "Activity logging has been turned off for {0}."
-
-msgid "Activity logging has been turned on for {0}."
-msgstr "Activity logging has been turned on for {0}."
-
-msgid "Application settings"
-msgstr "Application settings"
-
-msgid "Approved"
-msgstr "Approved"
-
-msgid "Browse all activity"
-msgstr "Browse all activity"
-
-msgid "Controls the “My activity” menu item for users in this country."
-msgstr "Controls the “My activity” menu item for users in this country."
-
-msgid "Created"
-msgstr "Created"
-
-msgid "Created {0}"
-msgstr "Created {0}"
-
-msgid "Created {0}: {1}"
-msgstr "Created {0}: {1}"
-
-msgid "Deleted"
-msgstr "Deleted"
-
-msgid "Deleted {0}"
-msgstr "Deleted {0}"
-
-msgid "Endonym"
-msgstr "Endonym"
-
-msgid "Hide from users"
-msgstr "Hide from users"
-
-msgid "ISO code"
-msgstr "ISO code"
-
-msgid "Identifier"
-msgstr "Identifier"
-
-msgid "Incomplete"
-msgstr "Incomplete"
-
-msgid "Language code"
-msgstr "Language code"
-
-msgid "Membership status"
-msgstr "Membership status"
-
-msgid "My activity"
-msgstr "My activity"
-
-msgid "No activity recorded yet."
-msgstr "No activity recorded yet."
-
-msgid "No further details for this entry."
-msgstr "No further details for this entry."
-
-msgid "No working country is set."
-msgstr "No working country is set."
-
-msgid "Off"
-msgstr "Off"
-
-msgid "On"
-msgstr "On"
-
-msgid "Parent record"
-msgstr "Parent record"
-
-msgid "Pending approval"
-msgstr "Pending approval"
-
-msgid "Record"
-msgstr "Record"
-
-msgid "Sample record"
-msgstr "Sample record"
-
-msgid "Search activity…"
-msgstr "Search activity…"
-
-msgid "Settings for {0}"
-msgstr "Settings for {0}"
-
-msgid "Show to users"
-msgstr "Show to users"
-
-msgid "Sign-in"
-msgstr "Sign-in"
-
-msgid "Signed in"
-msgstr "Signed in"
-
-msgid "Signed out"
-msgstr "Signed out"
-
-msgid "The setting could not be saved. Please try again."
-msgstr "The setting could not be saved. Please try again."
-
-msgid "Timezone"
-msgstr "Timezone"
-
-msgid "Turn off logging"
-msgstr "Turn off logging"
-
-msgid "Turn on logging"
-msgstr "Turn on logging"
-
-msgid "Updated"
-msgstr "Updated"
-
-msgid "Updated {0}"
-msgstr "Updated {0}"
-
-msgid "Updated: {0}"
-msgstr "Updated: {0}"
-
-msgid "User account"
-msgstr "User account"
-
-msgid "Users can no longer view their own activity in {0}."
-msgstr "Users can no longer view their own activity in {0}."
-
-msgid "Users can now view their own activity in {0}."
-msgstr "Users can now view their own activity in {0}."
-
-msgid "Users can view own activity log"
-msgstr "Users can view own activity log"
-
-msgid "Users see own activity"
-msgstr "Users see own activity"
-
-msgid "What changed"
-msgstr "What changed"
-
-msgid "When off, new login/logout and data changes are not recorded."
-msgstr "When off, new login/logout and data changes are not recorded."
-
-msgid "When you signed in, signed out, or changed your data."
-msgstr "When you signed in, signed out, or changed your data."
-
-msgid "Who can edit"
-msgstr "Who can edit"
-
-msgid "You are not allowed to change this setting."
-msgstr "You are not allowed to change this setting."
-
-msgid "Your working country — toggles apply only to this country."
-msgstr "Your working country — toggles apply only to this country."
-
-msgid "and more"
-msgstr "and more"
-
-msgid "changed"
-msgstr "changed"
-
-msgid "complex value"
-msgstr "complex value"
-
-msgid "empty"
-msgstr "empty"
-
-msgid "no picture"
-msgstr "no picture"
-
-msgid "picture set"
-msgstr "picture set"
-
-msgid "redacted"
-msgstr "redacted"
-
-msgid "set"
-msgstr "set"
-
-msgid "unknown"
-msgstr "unknown"
-
-msgid "Changing your club has important consequences"
-msgstr "Changing your club has important consequences"
-
-msgid "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
-msgstr "If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
-
-msgid "Apply to a different club?"
-msgstr "Apply to a different club?"
-
-msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
-msgstr "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
-
-msgid "Yes, apply to this club"
-msgstr "Yes, apply to this club"
-
-msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
-msgstr "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
-
-msgid "Do you really want to delete your profile picture?"
-msgstr "Do you really want to delete your profile picture?"
-
-msgid "Delete picture"
-msgstr "Delete picture"
-
+#: ./src/Application.php:202
+msgid "User logged in"
+msgstr "Benutzer angemeldet"
+
+#: ./src/Application.php:239
+msgid "User logged out"
+msgstr "Benutzer abgemeldet"
+
+#: ./src/Auth/AppRoles.php:60
+#: ./templates/Users/edit.php:230
+#: ./templates/Users/view.php:112
+#: ./templates/Users/view.php:153
+#: ./templates/element/admin/header.php:33
 msgid "Superuser"
 msgstr "Superuser"
 
+#: ./src/Auth/AppRoles.php:61
+#: ./src/Auth/RoleHome.php:74
+#: ./src/Auth/RoleHome.php:75
+#: ./src/Controller/Admin/AppController.php:57
+#: ./templates/element/admin/header.php:16
+#: ./templates/layout/admin.php:11
+#: ./templates/layout/admin.php:20
 msgid "Admin"
 msgstr "Admin"
 
+#: ./src/Auth/AppRoles.php:62
 msgid "President"
 msgstr "Präsident"
 
+#: ./src/Auth/AppRoles.php:63
 msgid "Vice president"
 msgstr "Vizepräsident"
 
+#: ./src/Auth/AppRoles.php:64
+#: ./templates/President/Clubs/index.php:103
+#: ./templates/President/Clubs/index.php:158
+#: ./templates/President/Clubs/index.php:214
+#: ./templates/President/Clubs/view.php:215
+#: ./templates/President/Clubs/view.php:230
 msgid "Club president"
-msgstr "Klubpräsident"
+msgstr "Clubpräsident"
 
+#: ./src/Auth/AppRoles.php:65
 msgid "Editor"
 msgstr "Redakteur"
 
+#: ./src/Auth/AppRoles.php:66
 msgid "Member"
 msgstr "Mitglied"
 
+#: ./src/Auth/AppRoles.php:67
 msgid "New member"
 msgstr "Neues Mitglied"
 
-msgid "Roles"
-msgstr "Rollen"
+#: ./src/Auth/MembershipProfile.php:42
+#: ./src/Utility/EntityFormErrors.php:53
+#: ./src/Utility/EventLogPresenter.php:78
+#: ./src/Utility/EventLogPresenter.php:90
+#: ./templates/Admin/Countries/index.php:74
+#: ./templates/Admin/Countries/index.php:100
+#: ./templates/Admin/Countries/index.php:169
+#: ./templates/Admin/Countries/view.php:31
+#: ./templates/Admin/Countries/view.php:64
+#: ./templates/Admin/Countries/view.php:119
+#: ./templates/Admin/Countries/view.php:212
+#: ./templates/Admin/Languages/index.php:69
+#: ./templates/Admin/Languages/index.php:80
+#: ./templates/Admin/Languages/index.php:145
+#: ./templates/Admin/Languages/view.php:30
+#: ./templates/Admin/Search/index.php:26
+#: ./templates/Admin/Search/index.php:36
+#: ./templates/Admin/Search/index.php:47
+#: ./templates/Admin/Setups/index.php:60
+#: ./templates/Admin/Setups/index.php:121
+#: ./templates/Admin/Setups/view.php:47
+#: ./templates/Clubpresident/Applicants/index.php:67
+#: ./templates/Clubpresident/Members/index.php:90
+#: ./templates/Clubpresident/Members/index.php:144
+#: ./templates/President/Clubs/index.php:78
+#: ./templates/President/Clubs/index.php:101
+#: ./templates/President/Clubs/index.php:157
+#: ./templates/President/Clubs/view.php:39
+#: ./templates/President/Clubs/view.php:89
+#: ./templates/President/Clubs/view.php:212
+#: ./templates/President/Members/index.php:91
+#: ./templates/President/Members/index.php:116
+#: ./templates/President/Members/index.php:129
+#: ./templates/President/Members/index.php:223
+#: ./templates/Users/complete_profile.php:52
+#: ./templates/Users/complete_profile.php:59
+#: ./templates/Users/edit.php:145
+#: ./templates/Users/edit.php:152
+#: ./templates/Users/register.php:52
+#: ./templates/Users/register.php:59
+#: ./templates/Users/view.php:143
+#: ./templates/element/users/member_view_fields.php:26
+#: ./templates/email/html/membership_application.php:14
+#: ./templates/email/text/membership_application.php:17
+msgid "Name"
+msgstr "Name"
 
-msgid "Record club annual membership fee?"
-msgstr "Jährlichen Club-Mitgliedsbeitrag erfassen?"
+#: ./src/Auth/MembershipProfile.php:43
+#: ./src/Utility/EntityFormErrors.php:55
+#: ./src/Utility/EventLogPresenter.php:64
+#: ./src/Utility/EventLogPresenter.php:83
+#: ./templates/Admin/EventLogs/index.php:75
+#: ./templates/Admin/EventLogs/view.php:81
+#: ./templates/Admin/Setups/view.php:40
+#: ./templates/Clubpresident/Applicants/index.php:70
+#: ./templates/Clubpresident/Members/index.php:94
+#: ./templates/President/Clubs/index.php:82
+#: ./templates/President/Clubs/index.php:102
+#: ./templates/President/Clubs/view.php:43
+#: ./templates/President/Clubs/view.php:213
+#: ./templates/President/Members/index.php:95
+#: ./templates/President/Members/index.php:117
+#: ./templates/President/Members/index.php:130
+#: ./templates/Users/complete_profile.php:81
+#: ./templates/Users/edit.php:176
+#: ./templates/Users/register.php:35
+#: ./templates/Users/view.php:156
+#: ./templates/element/users/member_view_fields.php:38
+msgid "Country"
+msgstr "Land"
 
-msgid "Do you confirm that this club has paid the annual national membership fee for this year? The payment date will be set to today."
-msgstr "Bestätigen Sie, dass dieser Club den jährlichen nationalen Mitgliedsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+#: ./src/Auth/MembershipProfile.php:44
+#: ./src/Utility/EntityFormErrors.php:56
+#: ./src/Utility/EventLogPresenter.php:65
+#: ./src/Utility/EventLogPresenter.php:84
+#: ./templates/Clubpresident/Members/index.php:95
+#: ./templates/President/Clubs/index.php:83
+#: ./templates/President/Clubs/view.php:44
+#: ./templates/President/Members/index.php:96
+#: ./templates/President/Members/index.php:221
+#: ./templates/Users/complete_profile.php:97
+#: ./templates/Users/edit.php:194
+#: ./templates/Users/view.php:159
+#: ./templates/element/users/member_view_fields.php:41
+#: ./templates/email/html/membership_application.php:16
+#: ./templates/email/text/membership_application.php:21
+msgid "Club"
+msgstr "Club"
 
-msgid "Do you confirm that {0} has paid the annual national membership fee for this year? The payment date will be set to today."
-msgstr "Bestätigen Sie, dass {0} den jährlichen nationalen Mitgliedsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+#: ./src/Auth/MembershipProfile.php:85
+#: ./src/Utility/MembershipFee.php:215
+#: ./src/Utility/MembershipFee.php:216
+msgid "user"
+msgstr "Benutzer"
 
-msgid "Record club national fee payment"
-msgstr "Nationalen Clubbeitrag erfassen"
+#: ./src/Auth/MembershipProfile.php:99
+msgid "Membership approved — member since {0}"
+msgstr "Mitgliedschaft genehmigt — Mitglied seit {0}"
 
-msgid "Club annual membership fee recorded for {0}"
-msgstr "Jährlicher Clubbeitrag erfasst für {0}"
+#: ./src/Auth/MembershipProfile.php:101
+msgid "Membership join date cleared"
+msgstr "Beitrittsdatum gelöscht"
 
-msgid "We confirm that the annual membership fee payment for club {0} has been received by the leadership and has been booked."
-msgstr "Wir bestätigen, dass die jährliche Mitgliedsbeitragszahlung des Clubs {0} bei der Leitung eingegangen und verbucht wurde."
+#: ./src/Auth/MembershipProfile.php:103
+msgid "Membership join date changed"
+msgstr "Beitrittsdatum geändert"
 
-msgid "The payment date is {0}. Your club's annual membership fee for {1} is settled, and membership is valid toward {2}."
-msgstr "Das Zahlungsdatum ist {0}. Der jährliche Mitgliedsbeitrag Ihres Clubs für {1} ist beglichen, und die Mitgliedschaft gilt gegenüber {2}."
+#: ./src/Auth/MembershipProfile.php:112
+msgid "Approved as club member"
+msgstr "Als Clubmitglied genehmigt"
 
-msgid "the Hungarian Pipe Club Association (MPE)"
-msgstr "dem Ungarischen Pfeifenclub-Verband (MPE)"
+#: ./src/Auth/MembershipProfile.php:133
+#: ./src/Utility/EventLogPresenter.php:86
+msgid "Account enabled"
+msgstr "Konto aktiviert"
 
-msgid "the national pipe club association"
-msgstr "dem nationalen Pfeifenclub-Verband"
+#: ./src/Auth/MembershipProfile.php:135
+msgid "Account disabled"
+msgstr "Konto deaktiviert"
 
+#: ./src/Auth/MembershipProfile.php:144
+msgid "Membership record created for {0}"
+msgstr "Mitgliedschaftsdatensatz erstellt für {0}"
+
+#: ./src/Auth/MembershipProfile.php:145
+msgid "Membership updated for {0}"
+msgstr "Mitgliedschaft aktualisiert für {0}"
+
+#: ./src/Controller/Admin/CountriesController.php:97
+#: ./src/Controller/Admin/CountriesController.php:297
+#: ./src/Controller/Admin/CountriesController.php:347
+msgid "You are not allowed to access countries."
+msgstr "Sie dürfen nicht auf Länder zugreifen."
+
+#: ./src/Controller/Admin/CountriesController.php:100
+#: ./src/Controller/Admin/CountriesController.php:101
+#: ./src/Controller/Admin/CountriesController.php:221
+#: ./src/Controller/Admin/CountriesController.php:286
+#: ./src/Controller/Admin/CountriesController.php:315
+#: ./templates/Admin/Countries/index.php:126
+#: ./templates/Admin/Dashboard/index.php:36
+#: ./templates/element/admin/sidebar.php:46
+msgid "Countries"
+msgstr "Länder"
+
+#: ./src/Controller/Admin/CountriesController.php:172
+msgid "Only a superuser can add countries."
+msgstr "Nur ein Superuser kann Länder hinzufügen."
+
+#: ./src/Controller/Admin/CountriesController.php:206
+#: ./src/Controller/Admin/CountriesController.php:272
+msgid "The country has been saved."
+msgstr "Das Land wurde gespeichert."
+
+#: ./src/Controller/Admin/CountriesController.php:213
+#: ./src/Controller/Admin/CountriesController.php:279
+#: ./src/Controller/Admin/LanguagesController.php:190
+#: ./src/Controller/Admin/LanguagesController.php:245
+#: ./src/Controller/Admin/SetupsController.php:162
+#: ./src/Controller/Admin/SetupsController.php:229
+#: ./src/Controller/Clubpresident/MembersController.php:121
+#: ./src/Controller/President/ClubsController.php:144
+#: ./src/Controller/President/ClubsController.php:191
+#: ./src/Controller/President/MembersController.php:152
+msgid "The record could not be saved. Please try again."
+msgstr "Der Datensatz konnte nicht gespeichert werden. Bitte versuchen Sie es erneut."
+
+#: ./src/Controller/Admin/CountriesController.php:220
+#: ./templates/Admin/Countries/form.php:64
+msgid "New country"
+msgstr "Neues Land"
+
+#: ./src/Controller/Admin/CountriesController.php:232
+msgid "You are not allowed to edit countries."
+msgstr "Sie dürfen Länder nicht bearbeiten."
+
+#: ./src/Controller/Admin/CountriesController.php:285
+#: ./templates/Admin/Countries/form.php:64
+msgid "Edit country"
+msgstr "Land bearbeiten"
+
+#: ./src/Controller/Admin/CountriesController.php:314
+#: ./templates/Admin/Countries/index.php:93
+#: ./templates/Admin/Countries/view.php:198
+msgid "Country details"
+msgstr "Landdetails"
+
+#: ./src/Controller/Admin/CountriesController.php:326
+msgid "Only a superuser can delete countries."
+msgstr "Nur ein Superuser kann Länder löschen."
+
+#: ./src/Controller/Admin/CountriesController.php:360
+#: ./src/Controller/Admin/EventLogsController.php:311
+#: ./src/Controller/Admin/LanguagesController.php:316
+#: ./src/Controller/Admin/SetupsController.php:295
+#: ./src/Controller/Concerns/PanelMemberListTrait.php:178
+#: ./src/Controller/President/ClubsController.php:705
+#: ./src/Controller/UsersController.php:647
+msgid "Record not found."
+msgstr "Datensatz nicht gefunden."
+
+#: ./src/Controller/Admin/DashboardController.php:16
+#: ./src/Controller/Admin/DashboardController.php:17
+#: ./src/Controller/Clubpresident/DashboardController.php:32
+#: ./src/Controller/Clubpresident/DashboardController.php:33
+#: ./src/Controller/Member/DashboardController.php:13
+#: ./src/Controller/Member/DashboardController.php:14
+#: ./src/Controller/New/DashboardController.php:61
+#: ./src/Controller/President/DashboardController.php:13
+#: ./src/Controller/President/DashboardController.php:14
+#: ./src/Controller/UsersController.php:89
+#: ./templates/Admin/Dashboard/index.php:10
+#: ./templates/Admin/Dashboard/index.php:59
+#: ./templates/Clubpresident/Dashboard/index.php:9
+#: ./templates/Clubpresident/Dashboard/index.php:53
+#: ./templates/Member/Dashboard/index.php:9
+#: ./templates/Member/Dashboard/index.php:26
+#: ./templates/New/Dashboard/index.php:15
+#: ./templates/New/Dashboard/index.php:42
+#: ./templates/President/Dashboard/index.php:7
+#: ./templates/President/Dashboard/index.php:32
+#: ./templates/Users/view.php:79
+#: ./templates/element/admin/sidebar.php:26
+#: ./templates/element/clubpresident/sidebar.php:19
+#: ./templates/element/member/sidebar.php:17
+#: ./templates/element/new/sidebar.php:21
+#: ./templates/element/president/sidebar.php:21
+msgid "Dashboard"
+msgstr "Übersicht"
+
+#: ./src/Controller/Admin/EventLogsController.php:36
+msgid "You are not allowed to browse event logs."
+msgstr "Sie dürfen Ereignisprotokolle nicht durchsuchen."
+
+#: ./src/Controller/Admin/EventLogsController.php:45
+#: ./src/Controller/Admin/EventLogsController.php:46
+#: ./src/Controller/Admin/EventLogsController.php:318
+#: ./templates/Admin/Dashboard/index.php:46
+#: ./templates/Admin/EventLogs/index.php:51
+#: ./templates/element/admin/sidebar.php:50
+msgid "Event logs"
+msgstr "Ereignisprotokolle"
+
+#: ./src/Controller/Admin/EventLogsController.php:152
+msgid "Activity logging has been turned on for {0}."
+msgstr "Aktivitätsprotokollierung wurde für {0} eingeschaltet."
+
+#: ./src/Controller/Admin/EventLogsController.php:153
+msgid "Activity logging has been turned off for {0}."
+msgstr "Aktivitätsprotokollierung wurde für {0} ausgeschaltet."
+
+#: ./src/Controller/Admin/EventLogsController.php:165
+msgid "Users can now view their own activity in {0}."
+msgstr "Benutzer können jetzt ihre eigene Aktivität in {0} sehen."
+
+#: ./src/Controller/Admin/EventLogsController.php:166
+msgid "Users can no longer view their own activity in {0}."
+msgstr "Benutzer können ihre eigene Aktivität in {0} nicht mehr sehen."
+
+#: ./src/Controller/Admin/EventLogsController.php:179
+msgid "No working country is set."
+msgstr "Kein Arbeitsland ist gesetzt."
+
+#: ./src/Controller/Admin/EventLogsController.php:190
+msgid "You are not allowed to change this setting."
+msgstr "Sie dürfen diese Einstellung nicht ändern."
+
+#: ./src/Controller/Admin/EventLogsController.php:195
+msgid "The setting could not be saved. Please try again."
+msgstr "Die Einstellung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut."
+
+#: ./src/Controller/Admin/EventLogsController.php:314
+#: ./src/Controller/UsersController.php:650
+msgid "You are not allowed to view this event."
+msgstr "Sie dürfen dieses Ereignis nicht ansehen."
+
+#: ./src/Controller/Admin/EventLogsController.php:317
+#: ./templates/Admin/EventLogs/view.php:67
+msgid "Event log"
+msgstr "Ereignisprotokoll"
+
+#: ./src/Controller/Admin/EventLogsController.php:350
+msgid "No active country is set for event log filtering."
+msgstr "Kein aktives Land für die Ereignisprotokollfilterung gesetzt."
+
+#: ./src/Controller/Admin/LanguagesController.php:95
+#: ./src/Controller/Admin/LanguagesController.php:262
+#: ./src/Controller/Admin/LanguagesController.php:303
+msgid "You are not allowed to access languages."
+msgstr "Sie dürfen nicht auf Sprachen zugreifen."
+
+#: ./src/Controller/Admin/LanguagesController.php:98
+#: ./src/Controller/Admin/LanguagesController.php:99
+#: ./src/Controller/Admin/LanguagesController.php:196
+#: ./src/Controller/Admin/LanguagesController.php:251
+#: ./src/Controller/Admin/LanguagesController.php:271
+#: ./templates/Admin/Dashboard/index.php:26
+#: ./templates/Admin/Languages/index.php:102
+#: ./templates/element/admin/sidebar.php:42
+msgid "Languages"
+msgstr "Sprachen"
+
+#: ./src/Controller/Admin/LanguagesController.php:163
+msgid "Only a superuser can add languages."
+msgstr "Nur ein Superuser kann Sprachen hinzufügen."
+
+#: ./src/Controller/Admin/LanguagesController.php:183
+#: ./src/Controller/Admin/LanguagesController.php:238
+msgid "The language has been saved."
+msgstr "Die Sprache wurde gespeichert."
+
+#: ./src/Controller/Admin/LanguagesController.php:195
+#: ./templates/Admin/Languages/form.php:36
+msgid "New language"
+msgstr "Neue Sprache"
+
+#: ./src/Controller/Admin/LanguagesController.php:207
+msgid "You are not allowed to edit languages."
+msgstr "Sie dürfen Sprachen nicht bearbeiten."
+
+#: ./src/Controller/Admin/LanguagesController.php:250
+#: ./templates/Admin/Languages/form.php:36
+msgid "Edit language"
+msgstr "Sprache bearbeiten"
+
+#: ./src/Controller/Admin/LanguagesController.php:270
+#: ./templates/Admin/Languages/view.php:15
+msgid "Language details"
+msgstr "Sprachdetails"
+
+#: ./src/Controller/Admin/LanguagesController.php:282
+msgid "Only a superuser can delete languages."
+msgstr "Nur ein Superuser kann Sprachen löschen."
+
+#: ./src/Controller/Admin/SearchController.php:20
+#: ./src/Controller/Admin/SearchController.php:21
+#: ./templates/Admin/Search/index.php:73
+#: ./templates/Users/event_log.php:35
+msgid "Search"
+msgstr "Suche"
+
+#: ./src/Controller/Admin/SetupsController.php:40
+msgid "You are not allowed to access Setups."
+msgstr "Sie dürfen nicht auf Einstellungen zugreifen."
+
+#: ./src/Controller/Admin/SetupsController.php:72
+#: ./src/Controller/Admin/SetupsController.php:73
+#: ./src/Controller/Admin/SetupsController.php:75
+#: ./src/Controller/Admin/SetupsController.php:167
+#: ./src/Controller/Admin/SetupsController.php:238
+#: ./src/Controller/Admin/SetupsController.php:261
+#: ./templates/Admin/Countries/view.php:290
+#: ./templates/Admin/Dashboard/index.php:16
+#: ./templates/Admin/Setups/index.php:95
+#: ./templates/element/admin/sidebar.php:37
+msgid "Setups"
+msgstr "Einstellungen"
+
+#: ./src/Controller/Admin/SetupsController.php:78
+msgid "No visible country is available. Add or enable a country first."
+msgstr "Kein sichtbares Land verfügbar. Fügen Sie zuerst ein Land hinzu oder aktivieren Sie eines."
+
+#: ./src/Controller/Admin/SetupsController.php:127
+msgid "Only a Superuser may create setups."
+msgstr "Nur ein Superuser darf Einstellungen anlegen."
+
+#: ./src/Controller/Admin/SetupsController.php:154
+msgid "The setup has been saved for all countries."
+msgstr "Die Einstellung wurde für alle Länder gespeichert."
+
+#: ./src/Controller/Admin/SetupsController.php:166
+#: ./templates/Admin/Setups/form.php:52
+msgid "New setup"
+msgstr "Neue Einstellung"
+
+#: ./src/Controller/Admin/SetupsController.php:182
+msgid "You are not allowed to edit this setup."
+msgstr "Sie dürfen diese Einstellung nicht bearbeiten."
+
+#: ./src/Controller/Admin/SetupsController.php:222
+msgid "The setup has been saved."
+msgstr "Die Einstellung wurde gespeichert."
+
+#: ./src/Controller/Admin/SetupsController.php:237
+#: ./templates/Admin/Setups/form.php:52
+msgid "Edit setup"
+msgstr "Einstellung bearbeiten"
+
+#: ./src/Controller/Admin/SetupsController.php:260
+#: ./templates/Admin/Countries/view.php:114
+#: ./templates/Admin/Countries/view.php:140
+#: ./templates/Admin/Countries/view.php:256
+msgid "Setup details"
+msgstr "Einstellungsdetails"
+
+#: ./src/Controller/Admin/SetupsController.php:272
+msgid "Only a Superuser may delete setups."
+msgstr "Nur ein Superuser darf Einstellungen löschen."
+
+#: ./src/Controller/Clubpresident/AppController.php:60
+#: ./src/Controller/Clubpresident/MembersController.php:34
+#: ./templates/Clubpresident/Dashboard/index.php:59
+msgid "Your account is not assigned to a club yet. Contact an administrator."
+msgstr "Ihr Konto ist noch keinem Club zugeordnet. Kontaktieren Sie einen Administrator."
+
+#: ./src/Controller/Clubpresident/MembersController.php:36
+#: ./src/Controller/Clubpresident/MembersController.php:37
+#: ./src/Controller/Clubpresident/MembersController.php:78
+#: ./src/Controller/Clubpresident/MembersController.php:79
+#: ./src/Controller/Clubpresident/MembersController.php:129
+#: ./src/Controller/Clubpresident/MembersController.php:147
+#: ./src/Controller/President/MembersController.php:41
+#: ./src/Controller/President/MembersController.php:42
+#: ./src/Controller/President/MembersController.php:91
+#: ./src/Controller/President/MembersController.php:92
+#: ./src/Controller/President/MembersController.php:163
+#: ./src/Controller/President/MembersController.php:181
+#: ./templates/Clubpresident/Dashboard/index.php:18
+#: ./templates/Clubpresident/Members/index.php:112
+#: ./templates/Clubpresident/Members/index.php:123
+#: ./templates/President/Clubs/index.php:107
+#: ./templates/President/Clubs/index.php:170
+#: ./templates/President/Clubs/view.php:240
+#: ./templates/President/Clubs/view.php:289
+#: ./templates/President/Dashboard/index.php:11
+#: ./templates/President/Members/index.php:121
+#: ./templates/President/Members/index.php:134
+#: ./templates/President/Members/index.php:153
+#: ./templates/President/Members/index.php:164
+#: ./templates/element/clubpresident/sidebar.php:24
+#: ./templates/element/president/sidebar.php:26
+msgid "Members"
+msgstr "Mitglieder"
+
+#: ./src/Controller/Clubpresident/MembersController.php:114
+#: ./src/Controller/President/MembersController.php:145
+msgid "The member has been saved."
+msgstr "Das Mitglied wurde gespeichert."
+
+#: ./src/Controller/Clubpresident/MembersController.php:128
+#: ./src/Controller/President/MembersController.php:162
+#: ./templates/element/users/member_edit_form.php:78
+msgid "Edit member"
+msgstr "Mitglied bearbeiten"
+
+#: ./src/Controller/Clubpresident/MembersController.php:146
+#: ./src/Controller/President/MembersController.php:180
+#: ./templates/Clubpresident/Members/view.php:7
+#: ./templates/Clubpresident/Members/view.php:14
+#: ./templates/President/Clubs/view.php:85
+#: ./templates/President/Clubs/view.php:114
+#: ./templates/President/Clubs/view.php:261
+#: ./templates/President/Members/view.php:7
+#: ./templates/President/Members/view.php:14
+msgid "Member details"
+msgstr "Mitgliedsdetails"
+
+#: ./src/Controller/Clubpresident/MembersController.php:187
+#: ./src/Controller/Clubpresident/MembersController.php:258
+#: ./src/Controller/Clubpresident/MembersController.php:297
+#: ./src/Controller/Clubpresident/MembersController.php:336
+#: ./src/Controller/Clubpresident/MembersController.php:403
+msgid "Your account is not assigned to a club yet."
+msgstr "Ihr Konto ist noch keinem Club zugeordnet."
+
+#: ./src/Controller/Clubpresident/MembersController.php:205
+#: ./src/Controller/Clubpresident/MembersController.php:349
+#: ./src/Controller/Clubpresident/MembersController.php:420
+#: ./src/Controller/President/MembersController.php:257
+#: ./src/Controller/President/MembersController.php:324
+#: ./src/Controller/President/MembersController.php:540
+msgid "Member not found."
+msgstr "Mitglied nicht gefunden."
+
+#: ./src/Controller/Clubpresident/MembersController.php:232
+#: ./src/Controller/President/MembersController.php:351
+#: ./templates/Clubpresident/Members/index.php:366
+#: ./templates/President/Members/index.php:469
+msgid "Could not update the member account."
+msgstr "Das Mitgliedskonto konnte nicht aktualisiert werden."
+
+#: ./src/Controller/Clubpresident/MembersController.php:242
+#: ./src/Controller/President/MembersController.php:361
+msgid "Member account enabled."
+msgstr "Mitgliedskonto aktiviert."
+
+#: ./src/Controller/Clubpresident/MembersController.php:243
+#: ./src/Controller/President/MembersController.php:362
+msgid "Member account disabled."
+msgstr "Mitgliedskonto deaktiviert."
+
+#: ./src/Controller/Clubpresident/MembersController.php:272
+#: ./src/Controller/Clubpresident/MembersController.php:311
+#: ./src/Controller/President/MembersController.php:392
+#: ./src/Controller/President/MembersController.php:432
+msgid "Applicant not found."
+msgstr "Bewerber nicht gefunden."
+
+#: ./src/Controller/Clubpresident/MembersController.php:278
+#: ./src/Controller/President/MembersController.php:398
+msgid "Membership approved. The new member has been notified by email."
+msgstr "Mitgliedschaft genehmigt. Das neue Mitglied wurde per E-Mail benachrichtigt."
+
+#: ./src/Controller/Clubpresident/MembersController.php:280
+#: ./src/Controller/President/MembersController.php:400
+msgid "Could not approve this application."
+msgstr "Diese Bewerbung konnte nicht genehmigt werden."
+
+#: ./src/Controller/Clubpresident/MembersController.php:317
+#: ./src/Controller/President/MembersController.php:438
+msgid "The application has been rejected. The applicant can no longer log in."
+msgstr "Die Bewerbung wurde abgelehnt. Der Bewerber kann sich nicht mehr anmelden."
+
+#: ./src/Controller/Clubpresident/MembersController.php:319
+#: ./src/Controller/President/MembersController.php:440
+msgid "Could not reject this application."
+msgstr "Diese Bewerbung konnte nicht abgelehnt werden."
+
+#: ./src/Controller/Clubpresident/MembersController.php:355
+msgid "This member has already paid the club membership fee for {0}."
+msgstr "Dieses Mitglied hat den Club-Mitgliedsbeitrag für {0} bereits gezahlt."
+
+#: ./src/Controller/Clubpresident/MembersController.php:369
+msgid "Could not record the club membership fee payment."
+msgstr "Die Club-Mitgliedsbeitragszahlung konnte nicht erfasst werden."
+
+#: ./src/Controller/Clubpresident/MembersController.php:374
+msgid "Club membership fee payment recorded for {0}."
+msgstr "Club-Mitgliedsbeitragszahlung für {0} erfasst."
+
+#: ./src/Controller/Clubpresident/MembersController.php:389
+#: ./src/Controller/President/MembersController.php:510
+#: ./src/Controller/UsersController.php:244
+#: ./src/Controller/UsersController.php:254
+#: ./src/Controller/UsersController.php:515
+#: ./src/Controller/UsersController.php:519
+#: ./src/Controller/UsersController.php:560
+#: ./src/Controller/UsersController.php:565
+msgid "You must be logged in."
+msgstr "Sie müssen angemeldet sein."
+
+#: ./src/Controller/Component/LoginComponent.php:24
+#: ./src/Middleware/RequireUserEnabledMiddleware.php:127
+msgid "Your account has been disabled. Please contact an administrator."
+msgstr "Ihr Konto wurde deaktiviert. Bitte kontaktieren Sie einen Administrator."
+
+#: ./src/Controller/Concerns/IndexListCrudTrait.php:499
+msgid "The record has been deleted."
+msgstr "Der Datensatz wurde gelöscht."
+
+#: ./src/Controller/Concerns/IndexListCrudTrait.php:504
+msgid "The record could not be deleted. Please try again."
+msgstr "Der Datensatz konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+
+#: ./src/Controller/President/ClubsController.php:42
+#: ./src/Controller/President/ClubsController.php:43
+#: ./src/Controller/President/ClubsController.php:149
+#: ./src/Controller/President/ClubsController.php:198
+#: ./src/Controller/President/ClubsController.php:232
+#: ./templates/President/Clubs/index.php:136
+#: ./templates/President/Dashboard/index.php:19
+#: ./templates/element/president/sidebar.php:31
+msgid "Clubs"
+msgstr "Clubs"
+
+#: ./src/Controller/President/ClubsController.php:47
+#: ./src/Controller/President/MembersController.php:39
+msgid "Your account is not assigned to a country yet. Contact an administrator."
+msgstr "Ihr Konto ist noch keinem Land zugeordnet. Kontaktieren Sie einen Administrator."
+
+#: ./src/Controller/President/ClubsController.php:137
+#: ./src/Controller/President/ClubsController.php:184
+msgid "The club has been saved."
+msgstr "Der Club wurde gespeichert."
+
+#: ./src/Controller/President/ClubsController.php:148
+#: ./templates/President/Clubs/form.php:56
+msgid "New club"
+msgstr "Neuer Club"
+
+#: ./src/Controller/President/ClubsController.php:197
+#: ./templates/President/Clubs/form.php:56
+msgid "Edit club"
+msgstr "Club bearbeiten"
+
+#: ./src/Controller/President/ClubsController.php:221
+#: ./src/Controller/President/ClubsController.php:503
+msgid "Club not found."
+msgstr "Club nicht gefunden."
+
+#: ./src/Controller/President/ClubsController.php:231
+#: ./templates/President/Clubs/view.php:184
+#: ./templates/President/Members/index.php:294
+msgid "Club details"
+msgstr "Clubdetails"
+
+#: ./src/Controller/President/ClubsController.php:264
 msgid "This club has already paid the national membership fee for {0}."
 msgstr "Dieser Club hat den nationalen Mitgliedsbeitrag für {0} bereits gezahlt."
 
+#: ./src/Controller/President/ClubsController.php:279
 msgid "Could not record the club national membership fee payment."
 msgstr "Die nationale Clubbeitragszahlung konnte nicht erfasst werden."
 
+#: ./src/Controller/President/ClubsController.php:285
 msgid "Club national membership fee payment recorded for {0}."
 msgstr "Nationale Clubbeitragszahlung für {0} erfasst."
 
-msgid "The club has not paid the annual national membership fee for {0} yet."
-msgstr "Der Club hat den jährlichen nationalen Mitgliedsbeitrag für {0} noch nicht gezahlt."
+#: ./src/Controller/President/ClubsController.php:488
+#: ./src/Controller/President/MembersController.php:243
+#: ./src/Controller/President/MembersController.php:305
+#: ./src/Controller/President/MembersController.php:377
+#: ./src/Controller/President/MembersController.php:417
+#: ./src/Controller/President/MembersController.php:524
+msgid "Your account is not assigned to a country yet."
+msgstr "Ihr Konto ist noch keinem Land zugeordnet."
 
-msgid "Clubs in {0} — membership year {1}"
-msgstr "Clubs in {0} — Mitgliedschaftsjahr {1}"
+#: ./src/Controller/President/MembersController.php:263
+msgid "This member has already paid the national membership fee for {0}."
+msgstr "Dieses Mitglied hat den nationalen Mitgliedsbeitrag für {0} bereits gezahlt."
 
+#: ./src/Controller/President/MembersController.php:277
+msgid "Could not record the national membership fee payment."
+msgstr "Die nationale Mitgliedsbeitragszahlung konnte nicht erfasst werden."
+
+#: ./src/Controller/President/MembersController.php:282
+msgid "National membership fee payment recorded for {0}."
+msgstr "Nationale Mitgliedsbeitragszahlung für {0} erfasst."
+
+#: ./src/Controller/UsersController.php:96
+#: ./src/Controller/UsersController.php:325
+#: ./templates/Member/Dashboard/index.php:13
+#: ./templates/New/Dashboard/index.php:20
+#: ./templates/Users/view.php:24
+#: ./templates/Users/view.php:71
+#: ./templates/element/admin/header_profile.php:45
+#: ./templates/element/new/sidebar.php:26
+msgid "Profile"
+msgstr "Profil"
+
+#: ./src/Controller/UsersController.php:98
+#: ./src/Controller/UsersController.php:443
+#: ./templates/Users/edit.php:24
+#: ./templates/Users/edit.php:70
+msgid "Edit profile"
+msgstr "Profil bearbeiten"
+
+#: ./src/Controller/UsersController.php:100
+#: ./templates/Users/change_password.php:77
+#: ./templates/Users/edit.php:74
+msgid "Back to profile"
+msgstr "Zurück zum Profil"
+
+#: ./src/Controller/UsersController.php:102
+#: ./src/Controller/UsersController.php:307
+#: ./templates/New/Dashboard/index.php:29
+#: ./templates/Users/complete_profile.php:14
+#: ./templates/Users/complete_profile.php:40
+#: ./templates/Users/view.php:90
+msgid "Complete your profile"
+msgstr "Profil vervollständigen"
+
+#: ./src/Controller/UsersController.php:104
+#: ./src/Controller/UsersController.php:623
+#: ./templates/Users/event_log.php:24
+#: ./templates/element/admin/header_profile.php:51
+msgid "My activity"
+msgstr "Meine Aktivität"
+
+#: ./src/Controller/UsersController.php:300
+msgid "Your profile has been saved. The club president will review your application."
+msgstr "Ihr Profil wurde gespeichert. Der Clubpräsident prüft Ihre Bewerbung."
+
+#: ./src/Controller/UsersController.php:345
+msgid "You are not allowed to edit your profile yet."
+msgstr "Sie dürfen Ihr Profil noch nicht bearbeiten."
+
+#: ./src/Controller/UsersController.php:432
+msgid "Your application to the new club has been submitted. You cannot use the system until the club president approves it."
+msgstr "Ihre Bewerbung beim neuen Club wurde eingereicht. Sie können das System nicht nutzen, bis der Clubpräsident sie genehmigt."
+
+#: ./src/Controller/UsersController.php:436
+msgid "Your profile has been saved."
+msgstr "Ihr Profil wurde gespeichert."
+
+#: ./src/Controller/UsersController.php:526
+msgid "You are not allowed to change the profile picture yet."
+msgstr "Sie dürfen das Profilbild noch nicht ändern."
+
+#: ./src/Controller/UsersController.php:545
+msgid "Profile picture removed."
+msgstr "Profilbild entfernt."
+
+#: ./src/Controller/UsersController.php:568
+msgid "You can only edit your own profile."
+msgstr "Sie können nur Ihr eigenes Profil bearbeiten."
+
+#: ./src/Controller/UsersController.php:588
+#: ./src/Controller/UsersController.php:599
+msgid "You must be logged in to view your event log."
+msgstr "Sie müssen angemeldet sein, um Ihr Ereignisprotokoll zu sehen."
+
+#: ./src/Controller/UsersController.php:653
+#: ./templates/Users/activity_log_view.php:25
+msgid "Activity details"
+msgstr "Aktivitätsdetails"
+
+#: ./src/Controller/UsersController.php:837
+msgid "Please correct the errors below."
+msgstr "Bitte korrigieren Sie die Fehler unten."
+
+#: ./src/Mailer/MembershipMailer.php:41
+msgid "New membership application: {0}"
+msgstr "Neue Mitgliedschaftsbewerbung: {0}"
+
+#: ./src/Mailer/MembershipMailer.php:78
+msgid "Your membership has been approved"
+msgstr "Ihre Mitgliedschaft wurde genehmigt"
+
+#: ./src/Mailer/MembershipMailer.php:116
+msgid "Club annual membership fee recorded for {0}"
+msgstr "Jährlicher Clubbeitrag erfasst für {0}"
+
+#: ./src/Mailer/MembershipMailer.php:116
+#: ./templates/email/html/club_national_fee_recorded.php:14
+#: ./templates/email/text/club_national_fee_recorded.php:16
 msgid "your club"
 msgstr "Ihren Club"
 
-msgid "Club membership fee record created for {0}"
-msgstr "Club-Beitragsdatensatz erstellt für {0}"
+#: ./src/Model/Table/Concerns/PreventsDeleteWithChildrenTrait.php:32
+#: ./src/Model/Table/CountriesTable.php:438
+#: ./templates/Admin/Countries/index.php:56
+#: ./templates/Admin/Countries/view.php:22
+#: ./templates/Admin/Languages/index.php:51
+#: ./templates/Clubpresident/Members/index.php:73
+#: ./templates/President/Clubs/index.php:67
+#: ./templates/President/Clubs/view.php:35
+#: ./templates/President/Members/index.php:80
+#: ./templates/element/admin/breadcrumb.php:27
+#: ./templates/layout/admin.php:83
+msgid "Cannot delete this record because it has related child records."
+msgstr "Dieser Datensatz kann nicht gelöscht werden, weil verknüpfte untergeordnete Datensätze vorhanden sind."
 
-msgid "Club membership fee updated for {0}"
-msgstr "Club-Beitrag aktualisiert für {0}"
+#: ./src/Model/Table/CountriesTable.php:341
+msgid "Use an international prefix like +36."
+msgstr "Verwenden Sie eine internationale Vorwahl wie +36."
 
-msgid "club"
-msgstr "Club"
+#: ./src/Model/Table/LanguagesTable.php:148
+msgid "Cannot delete this language because it is required by the system ({0})."
+msgstr "Diese Sprache kann nicht gelöscht werden, weil sie vom System benötigt wird ({0})."
 
-msgid "National association membership fee"
-msgstr "Mitgliedsbeitrag des nationalen Verbands"
+#: ./src/Model/Table/LanguagesTable.php:152
+msgid "Cannot delete this language because one or more countries use it as primary locale."
+msgstr "Diese Sprache kann nicht gelöscht werden, weil ein oder mehrere Länder sie als Primärlocale verwenden."
 
-msgid "Do you confirm that this club has paid the national pipe association membership fee for this year? The payment date will be set to today."
-msgstr "Bestätigen Sie, dass dieser Club den nationalen Pfeifenverbandsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+#: ./src/Model/Table/SetupsTable.php:181
+msgid "The slug may only contain lowercase letters, numbers and underscores."
+msgstr "Der Slug darf nur Kleinbuchstaben, Zahlen und Unterstriche enthalten."
 
-msgid "Do you confirm that {0} has paid the national pipe association membership fee for this year? The payment date will be set to today."
-msgstr "Bestätigen Sie, dass {0} den nationalen Pfeifenverbandsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+#: ./src/Model/Table/SetupsTable.php:189
+#: ./src/Utility/SetupValue.php:109
+#: ./src/Utility/SetupValue.php:140
+msgid "Invalid type."
+msgstr "Ungültiger Typ."
 
-msgid "the national pipe association"
-msgstr "dem nationalen Pfeifenverband"
+#: ./src/Model/Table/SetupsTable.php:195
+msgid "Invalid edit permission."
+msgstr "Ungültige Bearbeitungsberechtigung."
 
+#: ./src/Model/Table/SetupsTable.php:215
+msgid "The value is not valid for the selected type."
+msgstr "Der Wert ist für den gewählten Typ ungültig."
+
+#: ./src/Model/Table/SetupsTable.php:240
+msgid "This slug is already in use for this country."
+msgstr "Dieser Slug wird für dieses Land bereits verwendet."
+
+#: ./src/Model/Table/UsersTable.php:93
+#: ./src/Model/Table/UsersTable.php:126
+#: ./src/Model/Table/UsersTable.php:241
+msgid "Please enter your name."
+msgstr "Bitte geben Sie Ihren Namen ein."
+
+#: ./src/Model/Table/UsersTable.php:105
+#: ./src/Model/Table/UsersTable.php:138
+msgid "Phone must start with + and contain digits only."
+msgstr "Die Telefonnummer muss mit + beginnen und darf nur Ziffern enthalten."
+
+#: ./src/Model/Table/UsersTable.php:108
+#: ./src/Model/Table/UsersTable.php:110
+#: ./src/Model/Table/UsersTable.php:141
+#: ./src/Model/Table/UsersTable.php:143
+#: ./src/Model/Table/UsersTable.php:239
+msgid "Please select your country."
+msgstr "Bitte wählen Sie Ihr Land."
+
+#: ./src/Model/Table/UsersTable.php:112
+#: ./src/Model/Table/UsersTable.php:114
+#: ./src/Model/Table/UsersTable.php:145
+#: ./src/Model/Table/UsersTable.php:147
+msgid "Please select your club."
+msgstr "Bitte wählen Sie Ihren Club."
+
+#: ./src/Model/Table/UsersTable.php:236
+msgid "Please enter your email."
+msgstr "Bitte geben Sie Ihre E-Mail-Adresse ein."
+
+#: ./src/Model/Table/UsersTable.php:237
+msgid "Please enter a valid email."
+msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein."
+
+#: ./src/Model/Table/UsersTable.php:266
+msgid "Please select a valid club."
+msgstr "Bitte wählen Sie einen gültigen Club."
+
+#: ./src/Model/Table/UsersTable.php:288
+msgid "Please select a club in your country."
+msgstr "Bitte wählen Sie einen Club in Ihrem Land."
+
+#: ./src/Utility/EntityFormErrors.php:54
+#: ./src/Utility/EventLogPresenter.php:82
+#: ./templates/Clubpresident/Applicants/index.php:69
+#: ./templates/Clubpresident/Members/index.php:92
+#: ./templates/President/Clubs/index.php:80
+#: ./templates/President/Clubs/view.php:41
+#: ./templates/President/Members/index.php:93
+#: ./templates/Users/complete_profile.php:66
+#: ./templates/Users/edit.php:160
+#: ./templates/Users/view.php:147
+#: ./templates/element/users/member_view_fields.php:32
+msgid "Phone"
+msgstr "Telefon"
+
+#: ./src/Utility/EntityFormErrors.php:57
+#: ./src/Utility/EventLogPresenter.php:99
+#: ./templates/Users/edit.php:100
+#: ./templates/element/admin/header_profile.php:38
+#: ./templates/element/users/list_avatar.php:41
+msgid "Profile picture"
+msgstr "Profilbild"
+
+#: ./src/Utility/EventLogPresenter.php:17
+msgid "Record"
+msgstr "Datensatz"
+
+#: ./src/Utility/EventLogPresenter.php:62
+msgid "Sign-in"
+msgstr "Anmeldung"
+
+#: ./src/Utility/EventLogPresenter.php:63
+msgid "User account"
+msgstr "Benutzerkonto"
+
+#: ./src/Utility/EventLogPresenter.php:66
+msgid "Application settings"
+msgstr "Anwendungseinstellungen"
+
+#: ./src/Utility/EventLogPresenter.php:67
+#: ./templates/Admin/Countries/index.php:77
+#: ./templates/Admin/Countries/index.php:103
+#: ./templates/Admin/Countries/index.php:168
+#: ./templates/Admin/Countries/view.php:217
+#: ./templates/Admin/Search/index.php:38
+msgid "Continent"
+msgstr "Kontinent"
+
+#: ./src/Utility/EventLogPresenter.php:68
+msgid "Activity log"
+msgstr "Aktivitätsprotokoll"
+
+#: ./src/Utility/EventLogPresenter.php:79
+msgid "Last name"
+msgstr "Nachname"
+
+#: ./src/Utility/EventLogPresenter.php:80
+#: ./templates/Admin/Countries/view.php:63
+#: ./templates/Clubpresident/Applicants/index.php:68
+#: ./templates/Clubpresident/Members/index.php:91
+#: ./templates/Clubpresident/Members/index.php:145
+#: ./templates/President/Clubs/index.php:79
+#: ./templates/President/Clubs/view.php:40
+#: ./templates/President/Clubs/view.php:90
+#: ./templates/President/Members/index.php:92
+#: ./templates/President/Members/index.php:224
+#: ./templates/Users/edit.php:224
+#: ./templates/Users/login.php:69
+#: ./templates/Users/login.php:77
+#: ./templates/Users/register.php:67
+#: ./templates/Users/register.php:74
+#: ./templates/Users/view.php:144
+#: ./templates/element/users/member_view_fields.php:29
+#: ./templates/email/html/membership_application.php:15
+#: ./templates/email/text/membership_application.php:19
+msgid "Email"
+msgstr "E-Mail"
+
+#: ./src/Utility/EventLogPresenter.php:81
+#: ./templates/Users/edit.php:225
+#: ./templates/Users/view.php:145
+msgid "Username"
+msgstr "Benutzername"
+
+#: ./src/Utility/EventLogPresenter.php:85
+#: ./templates/Admin/Countries/view.php:65
+#: ./templates/Clubpresident/Members/index.php:93
+#: ./templates/President/Clubs/index.php:81
+#: ./templates/President/Clubs/view.php:42
+#: ./templates/President/Clubs/view.php:91
+#: ./templates/President/Members/index.php:94
+#: ./templates/Users/edit.php:227
+#: ./templates/Users/view.php:150
+#: ./templates/element/users/member_view_fields.php:35
+msgid "Role"
+msgstr "Rolle"
+
+#: ./src/Utility/EventLogPresenter.php:87
+msgid "Account active"
+msgstr "Konto aktiv"
+
+#: ./src/Utility/EventLogPresenter.php:88
+#: ./templates/Admin/Countries/form.php:265
+#: ./templates/Admin/Countries/index.php:78
+#: ./templates/Admin/Countries/index.php:104
+#: ./templates/Admin/Countries/index.php:174
+#: ./templates/Admin/Countries/view.php:37
+#: ./templates/Admin/Countries/view.php:122
+#: ./templates/Admin/Countries/view.php:218
+#: ./templates/Admin/Languages/form.php:139
+#: ./templates/Admin/Languages/index.php:71
+#: ./templates/Admin/Languages/index.php:82
+#: ./templates/Admin/Languages/index.php:148
+#: ./templates/Admin/Languages/view.php:33
+#: ./templates/Admin/Search/index.php:28
+#: ./templates/Admin/Search/index.php:39
+#: ./templates/Admin/Search/index.php:53
+#: ./templates/Clubpresident/Members/index.php:156
+#: ./templates/President/Clubs/form.php:136
+#: ./templates/President/Clubs/index.php:105
+#: ./templates/President/Clubs/index.php:167
+#: ./templates/President/Clubs/view.php:238
+#: ./templates/President/Members/index.php:119
+#: ./templates/President/Members/index.php:132
+#: ./templates/President/Members/index.php:235
+msgid "Visible"
+msgstr "Sichtbar"
+
+#: ./src/Utility/EventLogPresenter.php:89
+#: ./templates/Admin/Countries/index.php:79
+#: ./templates/Admin/Countries/index.php:105
+#: ./templates/Admin/Countries/index.php:176
+#: ./templates/Admin/Countries/view.php:36
+#: ./templates/Admin/Countries/view.php:219
+#: ./templates/Admin/Languages/index.php:72
+#: ./templates/Admin/Languages/index.php:83
+#: ./templates/Admin/Languages/index.php:150
+#: ./templates/Admin/Languages/view.php:40
+#: ./templates/Admin/Search/index.php:29
+#: ./templates/Admin/Search/index.php:40
+#: ./templates/Admin/Search/index.php:52
+#: ./templates/Clubpresident/Members/index.php:153
+#: ./templates/President/Clubs/index.php:106
+#: ./templates/President/Clubs/index.php:161
+#: ./templates/President/Clubs/view.php:239
+#: ./templates/President/Members/index.php:120
+#: ./templates/President/Members/index.php:133
+#: ./templates/President/Members/index.php:232
+msgid "Position"
+msgstr "Position"
+
+#: ./src/Utility/EventLogPresenter.php:91
+#: ./templates/Admin/Countries/index.php:75
+#: ./templates/Admin/Countries/index.php:101
+#: ./templates/Admin/Countries/index.php:170
+#: ./templates/Admin/Countries/view.php:213
+#: ./templates/Admin/Languages/index.php:70
+#: ./templates/Admin/Languages/index.php:81
+#: ./templates/Admin/Languages/index.php:146
+#: ./templates/Admin/Languages/view.php:31
+#: ./templates/Admin/Search/index.php:27
+msgid "Endonym"
+msgstr "Endonym"
+
+#: ./src/Utility/EventLogPresenter.php:92
+msgid "Language code"
+msgstr "Sprachcode"
+
+#: ./src/Utility/EventLogPresenter.php:93
+#: ./templates/Admin/Countries/view.php:215
+msgid "Timezone"
+msgstr "Zeitzone"
+
+#: ./src/Utility/EventLogPresenter.php:94
+msgid "ISO code"
+msgstr "ISO-Code"
+
+#: ./src/Utility/EventLogPresenter.php:95
+msgid "Membership status"
+msgstr "Mitgliedschaftsstatus"
+
+#: ./src/Utility/EventLogPresenter.php:96
+#: ./templates/Clubpresident/Members/index.php:98
+#: ./templates/President/Clubs/index.php:86
+#: ./templates/President/Clubs/view.php:47
+#: ./templates/President/Members/index.php:99
+msgid "Member since"
+msgstr "Mitglied seit"
+
+#: ./src/Utility/EventLogPresenter.php:97
+#: ./src/Utility/MembershipFee.php:46
+msgid "Club membership fee"
+msgstr "Club-Mitgliedsbeitrag"
+
+#: ./src/Utility/EventLogPresenter.php:98
+#: ./src/Utility/MembershipFee.php:56
 msgid "National pipe association membership fee"
 msgstr "Mitgliedsbeitrag des nationalen Pfeifenverbands"
 
+#: ./src/Utility/EventLogPresenter.php:100
+#: ./templates/Users/login.php:83
+#: ./templates/Users/login.php:90
+#: ./templates/Users/register.php:81
+#: ./templates/Users/register.php:88
+msgid "Password"
+msgstr "Passwort"
+
+#: ./src/Utility/EventLogPresenter.php:101
+#: ./templates/Admin/Countries/view.php:35
+#: ./templates/Admin/Search/index.php:51
+#: ./templates/Admin/Setups/index.php:64
+#: ./templates/Admin/Setups/index.php:124
+#: ./templates/Admin/Setups/view.php:52
+msgid "Value"
+msgstr "Wert"
+
+#: ./src/Utility/EventLogPresenter.php:102
+msgid "Identifier"
+msgstr "Kennung"
+
+#: ./src/Utility/EventLogPresenter.php:103
+#: ./templates/Admin/Countries/view.php:33
+#: ./templates/Admin/Countries/view.php:121
+#: ./templates/Admin/Search/index.php:49
+#: ./templates/Admin/Setups/index.php:62
+#: ./templates/Admin/Setups/index.php:123
+#: ./templates/Admin/Setups/view.php:49
+msgid "Type"
+msgstr "Typ"
+
+#: ./src/Utility/EventLogPresenter.php:104
+msgid "Who can edit"
+msgstr "Wer darf bearbeiten"
+
+#: ./src/Utility/EventLogPresenter.php:114
+msgid "Signed in"
+msgstr "Angemeldet"
+
+#: ./src/Utility/EventLogPresenter.php:115
+msgid "Signed out"
+msgstr "Abgemeldet"
+
+#: ./src/Utility/EventLogPresenter.php:116
+#: ./templates/Admin/Countries/index.php:82
+#: ./templates/Admin/Countries/index.php:108
+#: ./templates/Admin/Countries/index.php:183
+#: ./templates/Admin/Countries/view.php:38
+#: ./templates/Admin/Countries/view.php:67
+#: ./templates/Admin/Countries/view.php:123
+#: ./templates/Admin/Countries/view.php:265
+#: ./templates/Admin/EventLogs/index.php:122
+#: ./templates/Admin/EventLogs/view.php:78
+#: ./templates/Admin/Languages/index.php:73
+#: ./templates/Admin/Languages/index.php:84
+#: ./templates/Admin/Languages/index.php:154
+#: ./templates/Admin/Languages/view.php:41
+#: ./templates/Admin/Search/index.php:30
+#: ./templates/Admin/Search/index.php:42
+#: ./templates/Admin/Search/index.php:54
+#: ./templates/Admin/Setups/index.php:65
+#: ./templates/Admin/Setups/index.php:129
+#: ./templates/Admin/Setups/view.php:67
+#: ./templates/Clubpresident/Members/index.php:101
+#: ./templates/Clubpresident/Members/index.php:163
+#: ./templates/President/Clubs/index.php:89
+#: ./templates/President/Clubs/index.php:109
+#: ./templates/President/Clubs/index.php:175
+#: ./templates/President/Clubs/view.php:50
+#: ./templates/President/Clubs/view.php:94
+#: ./templates/President/Clubs/view.php:270
+#: ./templates/President/Members/index.php:102
+#: ./templates/President/Members/index.php:123
+#: ./templates/President/Members/index.php:136
+#: ./templates/President/Members/index.php:242
+#: ./templates/element/users/member_view_fields.php:64
+msgid "Created"
+msgstr "Erstellt"
+
+#: ./src/Utility/EventLogPresenter.php:117
+msgid "Updated"
+msgstr "Aktualisiert"
+
+#: ./src/Utility/EventLogPresenter.php:118
+msgid "Deleted"
+msgstr "Gelöscht"
+
+#: ./src/Utility/EventLogPresenter.php:140
+msgid "Deleted {0}"
+msgstr "Gelöscht: {0}"
+
+#: ./src/Utility/EventLogPresenter.php:143
+msgid "Created {0}"
+msgstr "Erstellt: {0}"
+
+#: ./src/Utility/EventLogPresenter.php:150
+msgid "Created {0}: {1}"
+msgstr "Erstellt: {0}: {1}"
+
+#: ./src/Utility/EventLogPresenter.php:162
+msgid "Updated {0}"
+msgstr "Aktualisiert: {0}"
+
+#: ./src/Utility/EventLogPresenter.php:179
+#: ./src/Utility/EventLogValueResolver.php:37
+#: ./src/Utility/EventLogValueResolver.php:92
+#: ./templates/element/activity_log_changes.php:37
+msgid "changed"
+msgstr "geändert"
+
+#: ./src/Utility/EventLogValueResolver.php:33
+msgid "unknown"
+msgstr "unbekannt"
+
+#: ./src/Utility/EventLogValueResolver.php:45
+#: ./src/Utility/EventLogValueResolver.php:90
+#: ./src/Utility/EventLogValueResolver.php:119
+#: ./src/Utility/EventLogValueResolver.php:127
+#: ./src/Utility/EventLogValueResolver.php:177
+#: ./src/Utility/EventLogValueResolver.php:195
+#: ./src/Utility/MembershipFee.php:296
+msgid "empty"
+msgstr "leer"
+
+#: ./src/Utility/EventLogValueResolver.php:91
+msgid "set"
+msgstr "gesetzt"
+
+#: ./src/Utility/EventLogValueResolver.php:93
+msgid "redacted"
+msgstr "geschwärzt"
+
+#: ./src/Utility/EventLogValueResolver.php:94
+msgid "complex value"
+msgstr "komplexer Wert"
+
+#: ./src/Utility/EventLogValueResolver.php:102
+msgid "no picture"
+msgstr "kein Bild"
+
+#: ./src/Utility/EventLogValueResolver.php:105
+#: ./src/Utility/EventLogValueResolver.php:108
+msgid "picture set"
+msgstr "Bild gesetzt"
+
+#: ./src/Utility/EventLogValueResolver.php:116
+msgid "Incomplete"
+msgstr "Unvollständig"
+
+#: ./src/Utility/EventLogValueResolver.php:117
+msgid "Pending approval"
+msgstr "Ausstehende Genehmigung"
+
+#: ./src/Utility/EventLogValueResolver.php:118
+msgid "Approved"
+msgstr "Genehmigt"
+
+#: ./src/Utility/EventLogValueResolver.php:147
+#: ./src/Utility/SetupValue.php:347
+#: ./templates/Admin/Countries/view.php:218
+#: ./templates/Admin/Languages/view.php:36
+#: ./templates/Admin/Setups/view.php:56
+#: ./templates/President/Clubs/view.php:237
+#: ./templates/President/Clubs/view.php:238
+#: ./templates/Users/edit.php:230
+#: ./templates/Users/view.php:153
+#: ./templates/layout/admin.php:86
+msgid "Yes"
+msgstr "Ja"
+
+#: ./src/Utility/EventLogValueResolver.php:150
+#: ./src/Utility/SetupValue.php:347
+#: ./templates/Admin/Countries/view.php:218
+#: ./templates/Admin/Languages/view.php:37
+#: ./templates/Admin/Setups/view.php:57
+#: ./templates/President/Clubs/view.php:237
+#: ./templates/President/Clubs/view.php:238
+#: ./templates/layout/admin.php:87
+msgid "No"
+msgstr "Nein"
+
+#: ./src/Utility/MembershipFee.php:74
+msgid "the national pipe association"
+msgstr "dem nationalen Pfeifenverband"
+
+#: ./src/Utility/MembershipFee.php:132
+#: ./templates/element/users/membership_fee_status.php:152
+msgid "Not paid for {0}"
+msgstr "Nicht bezahlt für {0}"
+
+#: ./src/Utility/MembershipFee.php:215
+msgid "Membership fee record created for {0}"
+msgstr "Mitgliedsbeitragsdatensatz erstellt für {0}"
+
+#: ./src/Utility/MembershipFee.php:216
+msgid "Membership fee updated for {0}"
+msgstr "Mitgliedsbeitrag aktualisiert für {0}"
+
+#: ./src/Utility/MembershipFee.php:251
+msgid "Club membership fee record created for {0}"
+msgstr "Club-Beitragsdatensatz erstellt für {0}"
+
+#: ./src/Utility/MembershipFee.php:251
+#: ./src/Utility/MembershipFee.php:252
+msgid "club"
+msgstr "Club"
+
+#: ./src/Utility/MembershipFee.php:252
+msgid "Club membership fee updated for {0}"
+msgstr "Club-Beitrag aktualisiert für {0}"
+
+#: ./src/Utility/MembershipFee.php:263
+msgid "{0} payment recorded for {1}: {2}"
+msgstr "{0}-Zahlung erfasst für {1}: {2}"
+
+#: ./src/Utility/MembershipFee.php:272
+msgid "{0} payment removed (was {1} for {2})"
+msgstr "{0}-Zahlung entfernt (war {1} für {2})"
+
+#: ./src/Utility/MembershipFee.php:281
+msgid "{0} payment date changed for {1}: {2} → {3}"
+msgstr "{0}-Zahlungsdatum geändert für {1}: {2} → {3}"
+
+#: ./src/Utility/MembershipFee.php:290
+msgid "{0} payment cleared"
+msgstr "{0}-Zahlung gelöscht"
+
+#: ./src/Utility/SetupEditBy.php:74
+msgid "Who may change this value: Superuser (system-critical), Admin and above, or President / Vice president level."
+msgstr "Wer diesen Wert ändern darf: Superuser (systemkritisch), Admin und höher, oder Präsident- / Vizepräsident-Ebene."
+
+#: ./src/Utility/SetupValue.php:57
+msgid "String"
+msgstr "Zeichenkette"
+
+#: ./src/Utility/SetupValue.php:58
+msgid "Text"
+msgstr "Text"
+
+#: ./src/Utility/SetupValue.php:59
+msgid "Integer"
+msgstr "Ganzzahl"
+
+#: ./src/Utility/SetupValue.php:60
+msgid "Float"
+msgstr "Gleitkommazahl"
+
+#: ./src/Utility/SetupValue.php:61
+msgid "Boolean"
+msgstr "Boolesch"
+
+#: ./src/Utility/SetupValue.php:62
+msgid "Date"
+msgstr "Datum"
+
+#: ./src/Utility/SetupValue.php:63
+msgid "Time"
+msgstr "Uhrzeit"
+
+#: ./src/Utility/SetupValue.php:64
+msgid "Date and time"
+msgstr "Datum und Uhrzeit"
+
+#: ./src/Utility/SetupValue.php:65
+msgid "JSON"
+msgstr "JSON"
+
+#: ./src/Utility/SetupValue.php:66
+msgid "Array"
+msgstr "Array"
+
+#: ./src/Utility/SetupValue.php:67
+msgid "Encrypted data"
+msgstr "Verschlüsselte Daten"
+
+#: ./src/Utility/SetupValue.php:158
+#: ./src/Utility/SetupValue.php:163
+msgid "Could not encrypt the value."
+msgstr "Der Wert konnte nicht verschlüsselt werden."
+
+#: ./src/Utility/SetupValue.php:181
+#: ./src/Utility/SetupValue.php:188
+msgid "Please enter a valid integer."
+msgstr "Bitte geben Sie eine gültige Ganzzahl ein."
+
+#: ./src/Utility/SetupValue.php:205
+msgid "Please enter a valid number."
+msgstr "Bitte geben Sie eine gültige Zahl ein."
+
+#: ./src/Utility/SetupValue.php:228
+msgid "Please enter a valid date."
+msgstr "Bitte geben Sie ein gültiges Datum ein."
+
+#: ./src/Utility/SetupValue.php:252
+msgid "Please enter a valid time."
+msgstr "Bitte geben Sie eine gültige Uhrzeit ein."
+
+#: ./src/Utility/SetupValue.php:277
+msgid "Please enter a valid date and time."
+msgstr "Bitte geben Sie ein gültiges Datum und eine gültige Uhrzeit ein."
+
+#: ./src/Utility/SetupValue.php:292
+#: ./src/Utility/SetupValue.php:299
+msgid "Please enter valid JSON."
+msgstr "Bitte geben Sie gültiges JSON ein."
+
+#: ./src/Utility/SetupValue.php:295
+msgid "JSON must be an object or an array."
+msgstr "JSON muss ein Objekt oder ein Array sein."
+
+#: ./src/Utility/SetupValue.php:330
+msgid "Please enter a valid list."
+msgstr "Bitte geben Sie eine gültige Liste ein."
+
+#: ./src/Utility/UserAvatar.php:62
+msgid "The image could not be uploaded. Please try again."
+msgstr "Das Bild konnte nicht hochgeladen werden. Bitte versuchen Sie es erneut."
+
+#: ./src/Utility/UserAvatar.php:65
+msgid "The image is too large. Maximum size is 5 MB."
+msgstr "Das Bild ist zu groß. Maximale Größe: 5 MB."
+
+#: ./src/Utility/UserAvatar.php:70
+msgid "Only JPEG, PNG or WebP images are allowed."
+msgstr "Nur JPEG-, PNG- oder WebP-Bilder sind erlaubt."
+
+#: ./src/Utility/UserAvatar.php:75
+msgid "The image could not be read."
+msgstr "Das Bild konnte nicht gelesen werden."
+
+#: ./src/Utility/UserAvatar.php:85
+#: ./src/Utility/UserAvatar.php:92
+#: ./src/Utility/UserAvatar.php:103
+msgid "The image could not be processed."
+msgstr "Das Bild konnte nicht verarbeitet werden."
+
+#: ./src/Utility/UserAvatar.php:112
+msgid "Could not create upload directory."
+msgstr "Upload-Verzeichnis konnte nicht erstellt werden."
+
+#: ./src/Utility/UserAvatar.php:119
+msgid "The image could not be saved."
+msgstr "Das Bild konnte nicht gespeichert werden."
+
+#: ./src/View/Helper/FormHelper.php:35
+msgid "Required"
+msgstr "Pflichtfeld"
+
+#: ./templates/Admin/Countries/form.php:66
+#: ./templates/Admin/Countries/index.php:52
+#: ./templates/Admin/Languages/form.php:38
+#: ./templates/Admin/Languages/index.php:47
+#: ./templates/Admin/Search/index.php:18
+#: ./templates/Admin/Setups/form.php:53
+#: ./templates/Admin/Setups/index.php:40
+#: ./templates/Clubpresident/Members/index.php:72
+#: ./templates/President/Clubs/form.php:57
+#: ./templates/President/Clubs/index.php:65
+#: ./templates/President/Clubs/view.php:34
+#: ./templates/President/Members/index.php:78
+#: ./templates/element/admin/breadcrumb.php:58
+msgid "Edit the selected record."
+msgstr "Den ausgewählten Datensatz bearbeiten."
+
+#: ./templates/Admin/Countries/form.php:66
+#: ./templates/Admin/Languages/form.php:38
+#: ./templates/Admin/Setups/form.php:53
+#: ./templates/President/Clubs/form.php:57
+#: ./templates/element/admin/breadcrumb.php:46
+msgid "Create a new record."
+msgstr "Einen neuen Datensatz anlegen."
+
+#: ./templates/Admin/Countries/form.php:67
+#: ./templates/Admin/Countries/index.php:53
+#: ./templates/Admin/Languages/form.php:39
+#: ./templates/Admin/Languages/index.php:48
+msgid "Only visibility and position can be changed."
+msgstr "Nur Sichtbarkeit und Position können geändert werden."
+
+#: ./templates/Admin/Countries/form.php:72
+#: ./templates/Admin/Languages/form.php:44
+#: ./templates/President/Clubs/form.php:65
+msgid "Created:"
+msgstr "Erstellt:"
+
+#: ./templates/Admin/Countries/form.php:73
+#: ./templates/Admin/Languages/form.php:45
+#: ./templates/President/Clubs/form.php:66
+msgid "Modified:"
+msgstr "Geändert:"
+
+#: ./templates/Admin/Countries/form.php:76
+#: ./templates/Admin/Languages/form.php:48
+#: ./templates/President/Clubs/form.php:69
+msgid "Close window"
+msgstr "Fenster schließen"
+
+#: ./templates/Admin/Countries/form.php:89
+#: ./templates/Admin/Countries/form.php:206
+msgid "ISO:"
+msgstr "ISO:"
+
+#: ./templates/Admin/Countries/form.php:102
+#: ./templates/Admin/Countries/form.php:213
+#: ./templates/Admin/Languages/form.php:78
+#: ./templates/Admin/Languages/form.php:115
+#: ./templates/Admin/Setups/form.php:78
+#: ./templates/President/Clubs/form.php:81
+#: ./templates/element/users/member_edit_form.php:94
+msgid "Name:"
+msgstr "Name:"
+
+#: ./templates/Admin/Countries/form.php:114
+#: ./templates/Admin/Countries/form.php:220
+#: ./templates/Admin/Languages/form.php:93
+#: ./templates/Admin/Languages/form.php:122
+msgid "Endonym:"
+msgstr "Endonym:"
+
+#: ./templates/Admin/Countries/form.php:124
+msgid "Endonym — how the country name is written in its own language/script (e.g. {0})."
+msgstr "Endonym — wie der Ländername in der eigenen Sprache/Schrift geschrieben wird (z. B. {0})."
+
+#: ./templates/Admin/Countries/form.php:126
+msgid "Endonym — how the country name is written in its own language/script."
+msgstr "Endonym — wie der Ländername in der eigenen Sprache/Schrift geschrieben wird."
+
+#: ./templates/Admin/Countries/form.php:133
+#: ./templates/Admin/Countries/form.php:227
+msgid "Primary locale:"
+msgstr "Primärlocale:"
+
+#: ./templates/Admin/Countries/form.php:145
+#: ./templates/Admin/Countries/form.php:234
+msgid "Timezone:"
+msgstr "Zeitzone:"
+
+#: ./templates/Admin/Countries/form.php:154
+msgid "IANA timezone used for datetime display for users registered in this country (e.g. {0})."
+msgstr "IANA-Zeitzone für die Datum-/Zeitanzeige bei in diesem Land registrierten Benutzern (z. B. {0})."
+
+#: ./templates/Admin/Countries/form.php:160
+#: ./templates/Admin/Countries/form.php:241
+msgid "Phone prefix:"
+msgstr "Telefonvorwahl:"
+
+#: ./templates/Admin/Countries/form.php:169
+msgid "International calling code for user phone inputs (E.164, e.g. +36)."
+msgstr "Internationale Vorwahl für Benutzertelefonnummern (E.164, z. B. +36)."
+
+#: ./templates/Admin/Countries/form.php:175
+#: ./templates/Admin/Countries/form.php:248
+msgid "Continent:"
+msgstr "Kontinent:"
+
+#: ./templates/Admin/Countries/form.php:180
+msgid "Select continent..."
+msgstr "Kontinent wählen…"
+
+#: ./templates/Admin/Countries/form.php:188
+msgid "Additional languages:"
+msgstr "Zusätzliche Sprachen:"
+
+#: ./templates/Admin/Countries/form.php:197
+msgid "Select additional languages..."
+msgstr "Zusätzliche Sprachen wählen…"
+
+#: ./templates/Admin/Countries/form.php:200
+msgid "Your own country language is always available on form tabs and is not listed here. Pick other countries whose languages should also appear as translation tabs when this country is active."
+msgstr "Die Sprache Ihres eigenen Landes ist auf Formular-Tabs immer verfügbar und wird hier nicht aufgeführt. Wählen Sie andere Länder, deren Sprachen zusätzlich als Übersetzungs-Tabs erscheinen sollen, wenn dieses Land aktiv ist."
+
+#: ./templates/Admin/Countries/form.php:275
+#: ./templates/Admin/Languages/form.php:152
+#: ./templates/President/Clubs/form.php:146
+msgid "Position:"
+msgstr "Position:"
+
+#: ./templates/Admin/Countries/form.php:289
+#: ./templates/Admin/Languages/form.php:166
+#: ./templates/Admin/Setups/form.php:247
+#: ./templates/President/Clubs/form.php:160
+#: ./templates/Users/edit.php:238
+#: ./templates/element/admin/breadcrumb.php:52
+#: ./templates/element/admin/breadcrumb.php:53
+#: ./templates/element/users/member_edit_form.php:202
+msgid "Save"
+msgstr "Speichern"
+
+#: ./templates/Admin/Countries/form.php:292
+#: ./templates/Admin/Languages/form.php:169
+#: ./templates/Admin/Setups/form.php:248
+#: ./templates/Clubpresident/Members/index.php:357
+#: ./templates/President/Clubs/form.php:163
+#: ./templates/President/Clubs/index.php:334
+#: ./templates/President/Members/index.php:460
+#: ./templates/Users/edit.php:279
+#: ./templates/Users/edit.php:283
+#: ./templates/element/users/member_edit_form.php:205
+#: ./templates/layout/admin.php:75
+#: ./templates/layout/admin.php:101
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: ./templates/Admin/Countries/index.php:49
+#: ./templates/Admin/Countries/view.php:160
+#: ./templates/Admin/Languages/index.php:44
+#: ./templates/Admin/Search/index.php:17
+#: ./templates/Admin/Search/index.php:145
+#: ./templates/Admin/Setups/index.php:39
+#: ./templates/Clubpresident/Members/index.php:71
+#: ./templates/President/Clubs/index.php:64
+#: ./templates/President/Clubs/view.php:33
+#: ./templates/President/Members/index.php:77
+#: ./templates/Users/edit.php:241
+#: ./templates/element/admin/breadcrumb.php:64
+#: ./templates/element/admin/breadcrumb.php:65
+#: ./templates/element/admin/modal_linked_record_view.php:24
+#: ./templates/element/admin/modal_record_view.php:24
+msgid "View details"
+msgstr "Details anzeigen"
+
+#: ./templates/Admin/Countries/index.php:49
+#: ./templates/Admin/Languages/index.php:44
+#: ./templates/Admin/Setups/index.php:39
+#: ./templates/Clubpresident/Members/index.php:71
+#: ./templates/President/Clubs/index.php:64
+#: ./templates/President/Clubs/view.php:33
+#: ./templates/President/Members/index.php:77
+msgid "View the selected record details."
+msgstr "Details des ausgewählten Datensatzes anzeigen."
+
+#: ./templates/Admin/Countries/index.php:50
+#: ./templates/Admin/Countries/view.php:165
+#: ./templates/Admin/Countries/view.php:272
+#: ./templates/Admin/Languages/index.php:45
+#: ./templates/Admin/Languages/view.php:48
+#: ./templates/Admin/Search/index.php:18
+#: ./templates/Admin/Search/index.php:154
+#: ./templates/Admin/Setups/index.php:40
+#: ./templates/Admin/Setups/view.php:73
+#: ./templates/Clubpresident/Members/index.php:72
+#: ./templates/Clubpresident/Members/view.php:26
+#: ./templates/President/Clubs/index.php:65
+#: ./templates/President/Clubs/view.php:34
+#: ./templates/President/Clubs/view.php:277
+#: ./templates/President/Members/index.php:78
+#: ./templates/President/Members/view.php:26
+#: ./templates/Users/view.php:186
+#: ./templates/element/admin/breadcrumb.php:58
+#: ./templates/element/admin/breadcrumb.php:59
+#: ./templates/element/admin/modal_linked_record_view.php:21
+#: ./templates/element/admin/modal_record_view.php:21
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: ./templates/Admin/Countries/index.php:55
+#: ./templates/Admin/Countries/index.php:56
+#: ./templates/Admin/Countries/view.php:21
+#: ./templates/Admin/Countries/view.php:22
+#: ./templates/Admin/Languages/index.php:50
+#: ./templates/Admin/Languages/index.php:51
+#: ./templates/Admin/Setups/index.php:41
+#: ./templates/Admin/Setups/view.php:21
+#: ./templates/Admin/Setups/view.php:77
+#: ./templates/Clubpresident/Members/index.php:73
+#: ./templates/President/Clubs/index.php:66
+#: ./templates/President/Clubs/index.php:67
+#: ./templates/President/Clubs/view.php:35
+#: ./templates/President/Members/index.php:79
+#: ./templates/President/Members/index.php:80
+#: ./templates/element/admin/breadcrumb.php:26
+#: ./templates/element/admin/breadcrumb.php:27
+#: ./templates/element/admin/breadcrumb.php:76
+#: ./templates/element/admin/breadcrumb.php:81
+#: ./templates/element/admin/modal_linked_record_view.php:28
+#: ./templates/element/admin/modal_record_view.php:28
+#: ./templates/layout/admin.php:70
+#: ./templates/layout/admin.php:74
+msgid "Delete"
+msgstr "Löschen"
+
+#: ./templates/Admin/Countries/index.php:55
+#: ./templates/Admin/Countries/view.php:21
+#: ./templates/Admin/Languages/index.php:50
+#: ./templates/Admin/Setups/index.php:41
+#: ./templates/Admin/Setups/view.php:21
+#: ./templates/President/Clubs/index.php:66
+#: ./templates/President/Members/index.php:79
+#: ./templates/element/admin/breadcrumb.php:26
+msgid "Permanently delete the selected record."
+msgstr "Den ausgewählten Datensatz dauerhaft löschen."
+
+#: ./templates/Admin/Countries/index.php:59
+#: ./templates/Admin/Languages/index.php:54
+#: ./templates/Admin/Setups/index.php:44
+#: ./templates/Clubpresident/Members/index.php:76
+#: ./templates/President/Clubs/index.php:70
+#: ./templates/President/Members/index.php:83
+msgid "Double-click a row to view the record details."
+msgstr "Doppelklicken Sie auf eine Zeile, um die Datensatzdetails anzuzeigen."
+
+#: ./templates/Admin/Countries/index.php:60
+#: ./templates/Admin/Languages/index.php:55
+#: ./templates/Admin/Setups/index.php:45
+#: ./templates/Clubpresident/Members/index.php:77
+#: ./templates/President/Clubs/index.php:71
+#: ./templates/President/Members/index.php:84
+msgid "Double-click a row to edit the record."
+msgstr "Doppelklicken Sie auf eine Zeile, um den Datensatz zu bearbeiten."
+
+#: ./templates/Admin/Countries/index.php:72
+#: ./templates/Admin/Countries/index.php:98
+#: ./templates/Admin/Countries/view.php:30
+#: ./templates/Admin/Countries/view.php:210
+#: ./templates/Admin/Languages/index.php:67
+#: ./templates/Admin/Languages/index.php:78
+#: ./templates/Admin/Languages/view.php:28
+#: ./templates/Admin/Search/index.php:24
+#: ./templates/Admin/Search/index.php:34
+#: ./templates/Admin/Search/index.php:46
+#: ./templates/Admin/Setups/index.php:59
+#: ./templates/Admin/Setups/view.php:39
+#: ./templates/Clubpresident/Members/index.php:89
+#: ./templates/President/Clubs/index.php:77
+#: ./templates/President/Clubs/index.php:100
+#: ./templates/President/Clubs/view.php:38
+#: ./templates/President/Clubs/view.php:211
+#: ./templates/President/Members/index.php:90
+#: ./templates/President/Members/index.php:115
+#: ./templates/President/Members/index.php:128
+#: ./templates/element/users/member_view_fields.php:23
+msgid "ID"
+msgstr "ID"
+
+#: ./templates/Admin/Countries/index.php:73
+#: ./templates/Admin/Countries/index.php:99
+#: ./templates/Admin/Countries/index.php:171
+#: ./templates/Admin/Countries/view.php:211
+#: ./templates/Admin/Search/index.php:35
+msgid "ISO"
+msgstr "ISO"
+
+#: ./templates/Admin/Countries/index.php:76
+#: ./templates/Admin/Countries/index.php:102
+#: ./templates/Admin/Countries/index.php:172
+#: ./templates/Admin/Search/index.php:37
+msgid "Locale"
+msgstr "Locale"
+
+#: ./templates/Admin/Countries/index.php:80
+#: ./templates/Admin/Countries/index.php:106
+#: ./templates/Admin/Countries/index.php:178
+msgid "Number of users"
+msgstr "Anzahl der Benutzer"
+
+#: ./templates/Admin/Countries/index.php:81
+#: ./templates/Admin/Countries/index.php:107
+msgid "Additional languages"
+msgstr "Zusätzliche Sprachen"
+
+#: ./templates/Admin/Countries/index.php:83
+#: ./templates/Admin/Countries/index.php:109
+#: ./templates/Admin/Countries/index.php:186
+#: ./templates/Admin/Countries/view.php:39
+#: ./templates/Admin/Countries/view.php:67
+#: ./templates/Admin/Countries/view.php:123
+#: ./templates/Admin/Countries/view.php:266
+#: ./templates/Admin/Languages/index.php:74
+#: ./templates/Admin/Languages/index.php:85
+#: ./templates/Admin/Languages/index.php:157
+#: ./templates/Admin/Languages/view.php:42
+#: ./templates/Admin/Search/index.php:31
+#: ./templates/Admin/Search/index.php:43
+#: ./templates/Admin/Search/index.php:55
+#: ./templates/Admin/Setups/index.php:66
+#: ./templates/Admin/Setups/index.php:132
+#: ./templates/Admin/Setups/view.php:68
+#: ./templates/Clubpresident/Members/index.php:102
+#: ./templates/Clubpresident/Members/index.php:166
+#: ./templates/President/Clubs/index.php:90
+#: ./templates/President/Clubs/index.php:110
+#: ./templates/President/Clubs/index.php:178
+#: ./templates/President/Clubs/view.php:51
+#: ./templates/President/Clubs/view.php:94
+#: ./templates/President/Clubs/view.php:271
+#: ./templates/President/Members/index.php:103
+#: ./templates/President/Members/index.php:124
+#: ./templates/President/Members/index.php:137
+#: ./templates/President/Members/index.php:245
+#: ./templates/element/users/member_view_fields.php:67
+msgid "Modified"
+msgstr "Geändert"
+
+#: ./templates/Admin/Countries/index.php:151
+msgid "Only visible countries"
+msgstr "Nur sichtbare Länder"
+
+#: ./templates/Admin/Countries/index.php:190
+#: ./templates/Admin/Countries/view.php:124
+#: ./templates/Admin/EventLogs/index.php:128
+#: ./templates/Admin/Languages/index.php:161
+#: ./templates/Admin/Setups/index.php:136
+#: ./templates/Clubpresident/Applicants/index.php:72
+#: ./templates/Clubpresident/Members/index.php:170
+#: ./templates/President/Clubs/index.php:182
+#: ./templates/President/Clubs/view.php:95
+#: ./templates/President/Members/index.php:249
+msgid "Actions"
+msgstr "Aktionen"
+
+#: ./templates/Admin/Countries/index.php:283
+#: ./templates/Admin/Languages/index.php:249
+msgid "No data."
+msgstr "Keine Daten."
+
+#: ./templates/Admin/Countries/view.php:32
+#: ./templates/Admin/Countries/view.php:120
+#: ./templates/Admin/Search/index.php:48
+#: ./templates/Admin/Setups/index.php:61
+#: ./templates/Admin/Setups/index.php:122
+#: ./templates/Admin/Setups/view.php:48
+msgid "Slug"
+msgstr "Slug"
+
+#: ./templates/Admin/Countries/view.php:34
+msgid "Edit by"
+msgstr "Bearbeitbar von"
+
+#: ./templates/Admin/Countries/view.php:66
+#: ./templates/Clubpresident/Members/index.php:96
+#: ./templates/Clubpresident/Members/index.php:147
+#: ./templates/President/Clubs/index.php:84
+#: ./templates/President/Clubs/view.php:45
+#: ./templates/President/Clubs/view.php:92
+#: ./templates/President/Members/index.php:97
+#: ./templates/President/Members/index.php:226
+#: ./templates/element/users/member_view_fields.php:44
+msgid "Active"
+msgstr "Aktiv"
+
+#: ./templates/Admin/Countries/view.php:199
+#: ./templates/President/Clubs/view.php:185
+#: ./templates/Users/view.php:75
+msgid "View the selected record (read-only)."
+msgstr "Den ausgewählten Datensatz anzeigen (schreibgeschützt)."
+
+#: ./templates/Admin/Countries/view.php:214
+msgid "Primary locale"
+msgstr "Primärlocale"
+
+#: ./templates/Admin/Countries/view.php:216
+msgid "Phone prefix"
+msgstr "Telefonvorwahl"
+
+#: ./templates/Admin/Countries/view.php:220
+#: ./templates/Admin/Countries/view.php:284
+#: ./templates/Admin/Search/index.php:41
+msgid "Users"
+msgstr "Benutzer"
+
+#: ./templates/Admin/Countries/view.php:223
+msgid "User list"
+msgstr "Benutzerliste"
+
+#: ./templates/Admin/Countries/view.php:243
+msgid "Setup list"
+msgstr "Einstellungsliste"
+
+#: ./templates/Admin/Dashboard/index.php:17
+msgid "Country settings and EAV setup values for the working country."
+msgstr "Ländereinstellungen und EAV-Setup-Werte für das Arbeitsland."
+
+#: ./templates/Admin/Dashboard/index.php:19
+msgid "Go to Setups"
+msgstr "Zu Einstellungen"
+
+#: ./templates/Admin/Dashboard/index.php:27
+msgid "Manage UI languages for the login selector: code, name, endonym and visibility."
+msgstr "UI-Sprachen für die Anmeldeauswahl verwalten: Code, Name, Endonym und Sichtbarkeit."
+
+#: ./templates/Admin/Dashboard/index.php:29
+msgid "Go to Languages"
+msgstr "Zu Sprachen"
+
+#: ./templates/Admin/Dashboard/index.php:37
+msgid "View and edit countries, visibility and related settings."
+msgstr "Länder, Sichtbarkeit und zugehörige Einstellungen anzeigen und bearbeiten."
+
+#: ./templates/Admin/Dashboard/index.php:39
+msgid "Go to Countries"
+msgstr "Zu Ländern"
+
+#: ./templates/Admin/Dashboard/index.php:47
+msgid "Search the activity / event log for this country."
+msgstr "Aktivitäts-/Ereignisprotokoll für dieses Land durchsuchen."
+
+#: ./templates/Admin/Dashboard/index.php:49
+msgid "Go to Event logs"
+msgstr "Zu Ereignisprotokollen"
+
+#: ./templates/Admin/Dashboard/index.php:62
+msgid "Welcome to MyAdmin. Choose a module below — each card describes where the button will take you."
+msgstr "Willkommen bei MyAdmin. Wählen Sie unten ein Modul — jede Karte beschreibt, wohin die Schaltfläche führt."
+
+#: ./templates/Admin/EventLogs/index.php:53
+msgid "Showing events for {0}"
+msgstr "Ereignisse für {0}"
+
+#: ./templates/Admin/EventLogs/index.php:85
+#: ./templates/Admin/EventLogs/index.php:123
+#: ./templates/Admin/EventLogs/view.php:84
+msgid "User"
+msgstr "Benutzer"
+
+#: ./templates/Admin/EventLogs/index.php:86
+msgid "All users"
+msgstr "Alle Benutzer"
+
+#: ./templates/Admin/EventLogs/index.php:94
+#: ./templates/Admin/EventLogs/index.php:124
+#: ./templates/Admin/EventLogs/view.php:87
+msgid "Module"
+msgstr "Modul"
+
+#: ./templates/Admin/EventLogs/index.php:96
+msgid "All modules"
+msgstr "Alle Module"
+
+#: ./templates/Admin/EventLogs/index.php:104
+#: ./templates/Admin/EventLogs/index.php:125
+#: ./templates/Admin/EventLogs/view.php:90
+msgid "Action"
+msgstr "Aktion"
+
+#: ./templates/Admin/EventLogs/index.php:106
+msgid "All actions"
+msgstr "Alle Aktionen"
+
+#: ./templates/Admin/EventLogs/index.php:114
+msgid "Filter"
+msgstr "Filter"
+
+#: ./templates/Admin/EventLogs/index.php:126
+#: ./templates/Admin/EventLogs/view.php:51
+msgid "Data changes"
+msgstr "Datenänderungen"
+
+#: ./templates/Admin/EventLogs/index.php:127
+#: ./templates/Admin/EventLogs/view.php:117
+msgid "IP"
+msgstr "IP"
+
+#: ./templates/Admin/EventLogs/index.php:182
+msgid "View"
+msgstr "Anzeigen"
+
+#: ./templates/Admin/EventLogs/index.php:190
+msgid "No event log records found."
+msgstr "Keine Ereignisprotokolleinträge gefunden."
+
+#: ./templates/Admin/EventLogs/index.php:205
+#: ./templates/Admin/Search/index.php:99
+#: ./templates/President/Clubs/form.php:34
+#: ./templates/Users/complete_profile.php:137
+#: ./templates/Users/edit.php:265
+#: ./templates/Users/login.php:141
+#: ./templates/Users/register.php:143
+msgid "No results found."
+msgstr "Keine Ergebnisse gefunden."
+
+#: ./templates/Admin/EventLogs/index.php:206
+#: ./templates/Admin/Search/index.php:77
+#: ./templates/President/Clubs/form.php:35
+#: ./templates/Users/complete_profile.php:138
+#: ./templates/Users/edit.php:266
+#: ./templates/Users/login.php:140
+#: ./templates/Users/register.php:142
+#: ./templates/element/admin/header_search.php:32
+#: ./templates/element/admin/table_search.php:21
+msgid "Search..."
+msgstr "Suchen…"
+
+#: ./templates/Admin/EventLogs/index.php:207
+msgid "Please enter {0} or more characters"
+msgstr "Bitte geben Sie {0} oder mehr Zeichen ein"
+
+#: ./templates/Admin/EventLogs/view.php:52
+msgid "Which fields changed and to what values."
+msgstr "Welche Felder geändert wurden und auf welche Werte."
+
+#: ./templates/Admin/EventLogs/view.php:93
+msgid "Entity"
+msgstr "Entität"
+
+#: ./templates/Admin/EventLogs/view.php:101
+msgid "Description"
+msgstr "Beschreibung"
+
+#: ./templates/Admin/EventLogs/view.php:105
+msgid "Deleted snapshot"
+msgstr "Gelöschter Snapshot"
+
+#: ./templates/Admin/EventLogs/view.php:111
+msgid "URL"
+msgstr "URL"
+
+#: ./templates/Admin/EventLogs/view.php:114
+msgid "HTTP method"
+msgstr "HTTP-Methode"
+
+#: ./templates/Admin/EventLogs/view.php:120
+msgid "User agent"
+msgstr "User-Agent"
+
+#: ./templates/Admin/EventLogs/view.php:124
+msgid "Request data"
+msgstr "Anfragedaten"
+
+#: ./templates/Admin/Languages/form.php:61
+#: ./templates/Admin/Languages/form.php:108
+msgid "Code:"
+msgstr "Code:"
+
+#: ./templates/Admin/Languages/form.php:72
+msgid "Locale code used for UI translations (e.g. hu_HU, en_US)."
+msgstr "Locale-Code für UI-Übersetzungen (z. B. hu_HU, en_US)."
+
+#: ./templates/Admin/Languages/form.php:87
+msgid "English canonical name (also stored as Translate default locale)."
+msgstr "Englischer kanonischer Name (auch als Translate-Standardlocale gespeichert)."
+
+#: ./templates/Admin/Languages/form.php:102
+msgid "Endonym — how the language name is written in itself (e.g. magyar, Deutsch)."
+msgstr "Endonym — wie der Sprachname in sich selbst geschrieben wird (z. B. magyar, Deutsch)."
+
+#: ./templates/Admin/Languages/form.php:145
+msgid "Visible languages appear in the login language selector."
+msgstr "Sichtbare Sprachen erscheinen in der Anmeldesprachenauswahl."
+
+#: ./templates/Admin/Languages/index.php:68
+#: ./templates/Admin/Languages/index.php:79
+#: ./templates/Admin/Languages/index.php:144
+#: ./templates/Admin/Languages/view.php:29
+#: ./templates/Admin/Search/index.php:25
+msgid "Code"
+msgstr "Code"
+
+#: ./templates/Admin/Languages/index.php:127
+msgid "Only visible languages"
+msgstr "Nur sichtbare Sprachen"
+
+#: ./templates/Admin/Search/index.php:15
+#: ./templates/Admin/Search/index.php:80
+#: ./templates/element/admin/header_search.php:19
+#: ./templates/element/admin/header_search.php:41
+#: ./templates/element/admin/table_search.php:10
+#: ./templates/element/admin/table_search.php:30
+msgid "Start search"
+msgstr "Suche starten"
+
+#: ./templates/Admin/Search/index.php:15
+#: ./templates/element/admin/header_search.php:19
+msgid "Search in the text fields of all configured tables."
+msgstr "In den Textfeldern aller konfigurierten Tabellen suchen."
+
+#: ./templates/Admin/Search/index.php:16
+#: ./templates/Admin/Search/index.php:91
+#: ./templates/element/admin/header_search.php:20
+#: ./templates/element/admin/header_search.php:52
+#: ./templates/element/admin/table_search.php:11
+#: ./templates/element/admin/table_search.php:41
+msgid "Clear search"
+msgstr "Suche löschen"
+
+#: ./templates/Admin/Search/index.php:16
+#: ./templates/element/admin/header_search.php:20
+msgid "Clear the search and reset the results."
+msgstr "Suche löschen und Ergebnisse zurücksetzen."
+
+#: ./templates/Admin/Search/index.php:17
+#: ./templates/element/admin/breadcrumb.php:64
+msgid "View the selected record."
+msgstr "Den ausgewählten Datensatz anzeigen."
+
+#: ./templates/Admin/Search/index.php:50
+#: ./templates/Admin/Setups/index.php:63
+#: ./templates/Admin/Setups/index.php:125
+#: ./templates/Admin/Setups/view.php:50
+msgid "Editable by"
+msgstr "Bearbeitbar von"
+
+#: ./templates/Admin/Search/index.php:97
+msgid "Enter a search term to find records in all configured tables."
+msgstr "Geben Sie einen Suchbegriff ein, um Datensätze in allen konfigurierten Tabellen zu finden."
+
+#: ./templates/Admin/Search/index.php:102
+msgid "About {0} results"
+msgstr "Etwa {0} Ergebnisse"
+
+#: ./templates/Admin/Search/index.php:114
+#: ./templates/element/admin/modal_record_view.php:5
+#: ./templates/layout/admin.php:88
+msgid "Record details"
+msgstr "Datensatzdetails"
+
+#: ./templates/Admin/Setups/form.php:55
+msgid "A matching record will be created for every visible country."
+msgstr "Für jedes sichtbare Land wird ein passender Datensatz erstellt."
+
+#: ./templates/Admin/Setups/form.php:67
+#: ./templates/element/admin/working_country_select.php:17
+msgid "Country:"
+msgstr "Land:"
+
+#: ./templates/Admin/Setups/form.php:72
+msgid "New setups are saved for all countries; the list shows the working country."
+msgstr "Neue Einstellungen werden für alle Länder gespeichert; die Liste zeigt das Arbeitsland."
+
+#: ./templates/Admin/Setups/form.php:91
+msgid "Slug:"
+msgstr "Slug:"
+
+#: ./templates/Admin/Setups/form.php:97
+msgid "e.g. site_title"
+msgstr "z. B. site_title"
+
+#: ./templates/Admin/Setups/form.php:101
+msgid "Lowercase letters, numbers and underscores only. Suggested from the name."
+msgstr "Nur Kleinbuchstaben, Zahlen und Unterstriche. Vorschlag aus dem Namen."
+
+#: ./templates/Admin/Setups/form.php:107
+msgid "Type:"
+msgstr "Typ:"
+
+#: ./templates/Admin/Setups/form.php:124
+msgid "Editable by:"
+msgstr "Bearbeitbar von:"
+
+#: ./templates/Admin/Setups/form.php:143
+msgid "Value:"
+msgstr "Wert:"
+
+#: ./templates/Admin/Setups/form.php:165
+#: ./templates/Clubpresident/Members/index.php:97
+#: ./templates/Clubpresident/Members/index.php:150
+#: ./templates/President/Clubs/form.php:115
+#: ./templates/President/Clubs/index.php:85
+#: ./templates/President/Clubs/index.php:104
+#: ./templates/President/Clubs/index.php:164
+#: ./templates/President/Clubs/view.php:46
+#: ./templates/President/Clubs/view.php:93
+#: ./templates/President/Clubs/view.php:237
+#: ./templates/President/Members/index.php:98
+#: ./templates/President/Members/index.php:118
+#: ./templates/President/Members/index.php:131
+#: ./templates/President/Members/index.php:229
+#: ./templates/element/users/member_edit_form.php:187
+#: ./templates/element/users/member_view_fields.php:51
+msgid "Enabled"
+msgstr "Aktiviert"
+
+#: ./templates/Admin/Setups/form.php:225
+msgid "Enter a JSON object or array."
+msgstr "Geben Sie ein JSON-Objekt oder -Array ein."
+
+#: ./templates/Admin/Setups/form.php:230
+msgid "One value per line (or a JSON array)."
+msgstr "Ein Wert pro Zeile (oder ein JSON-Array)."
+
+#: ./templates/Admin/Setups/form.php:234
+msgid "Leave blank to keep the current value"
+msgstr "Leer lassen, um den aktuellen Wert beizubehalten"
+
+#: ./templates/Admin/Setups/form.php:235
+msgid "Stored encrypted. Leave blank when editing to keep the current secret."
+msgstr "Verschlüsselt gespeichert. Beim Bearbeiten leer lassen, um das aktuelle Geheimnis beizubehalten."
+
+#: ./templates/Admin/Setups/index.php:98
+msgid "Listing settings for {0}"
+msgstr "Listeneinstellungen für {0}"
+
+#: ./templates/Admin/Setups/index.php:223
+#: ./templates/President/Clubs/index.php:317
+msgid "No records found."
+msgstr "Keine Datensätze gefunden."
+
+#: ./templates/Admin/Setups/view.php:86
+#: ./templates/Clubpresident/Members/view.php:21
+#: ./templates/President/Members/view.php:21
+#: ./templates/element/admin/breadcrumb.php:31
+msgid "Back to list"
+msgstr "Zurück zur Liste"
+
+#: ./templates/Clubpresident/Applicants/index.php:16
+#: ./templates/Clubpresident/Applicants/index.php:29
+msgid "Applicants"
+msgstr "Bewerber"
+
+#: ./templates/Clubpresident/Applicants/index.php:31
+msgid "Pending membership applications for {0}"
+msgstr "Ausstehende Mitgliedschaftsbewerbungen für {0}"
+
+#: ./templates/Clubpresident/Applicants/index.php:54
+msgid "Only enabled applicants"
+msgstr "Nur aktivierte Bewerber"
+
+#: ./templates/Clubpresident/Applicants/index.php:71
+msgid "Submitted"
+msgstr "Eingereicht"
+
+#: ./templates/Clubpresident/Applicants/index.php:116
+#: ./templates/element/clubpresident/applicant_cards.php:92
+msgid "Approve"
+msgstr "Genehmigen"
+
+#: ./templates/Clubpresident/Applicants/index.php:130
+#: ./templates/element/clubpresident/applicant_cards.php:106
+msgid "Reject"
+msgstr "Ablehnen"
+
+#: ./templates/Clubpresident/Applicants/index.php:134
+msgid "Rejected"
+msgstr "Abgelehnt"
+
+#: ./templates/Clubpresident/Applicants/index.php:142
+msgid "No pending applicants."
+msgstr "Keine ausstehenden Bewerber."
+
+#: ./templates/Clubpresident/Applicants/index.php:155
+#: ./templates/Clubpresident/Members/index.php:369
+#: ./templates/President/Members/index.php:472
+msgid "Approve membership?"
+msgstr "Mitgliedschaft genehmigen?"
+
+#: ./templates/Clubpresident/Applicants/index.php:156
+#: ./templates/Clubpresident/Members/index.php:370
+#: ./templates/President/Members/index.php:473
+msgid "Do you really want to approve this applicant as a full member?"
+msgstr "Möchten Sie diesen Bewerber wirklich als vollständiges Mitglied genehmigen?"
+
+#: ./templates/Clubpresident/Applicants/index.php:157
+#: ./templates/Clubpresident/Members/index.php:371
+#: ./templates/President/Members/index.php:474
+msgid "Yes, approve"
+msgstr "Ja, genehmigen"
+
+#: ./templates/Clubpresident/Applicants/index.php:158
+#: ./templates/Clubpresident/Members/index.php:372
+#: ./templates/President/Members/index.php:475
+msgid "Reject application?"
+msgstr "Bewerbung ablehnen?"
+
+#: ./templates/Clubpresident/Applicants/index.php:159
+#: ./templates/Clubpresident/Members/index.php:373
+#: ./templates/President/Members/index.php:476
+msgid "Do you really want to reject this application? The user will be disabled and cannot log in."
+msgstr "Möchten Sie diese Bewerbung wirklich ablehnen? Der Benutzer wird deaktiviert und kann sich nicht anmelden."
+
+#: ./templates/Clubpresident/Applicants/index.php:160
+#: ./templates/Clubpresident/Members/index.php:374
+#: ./templates/President/Members/index.php:477
+msgid "Yes, reject"
+msgstr "Ja, ablehnen"
+
+#: ./templates/Clubpresident/Dashboard/index.php:19
+msgid "Open your club members list: review pending applicants, approve or reject applications, and record club membership fee payments."
+msgstr "Öffnen Sie Ihre Clubmitgliederliste: ausstehende Bewerber prüfen, Bewerbungen genehmigen oder ablehnen und Club-Mitgliedsbeiträge erfassen."
+
+#: ./templates/Clubpresident/Dashboard/index.php:21
+#: ./templates/President/Dashboard/index.php:14
+msgid "Go to Members"
+msgstr "Zu Mitgliedern"
+
+#: ./templates/Clubpresident/Dashboard/index.php:33
+msgid "New membership applications"
+msgstr "Neue Mitgliedschaftsbewerbungen"
+
+#: ./templates/Clubpresident/Dashboard/index.php:37
+msgid "There is 1 new membership application waiting for your decision."
+msgstr "Es wartet 1 neue Mitgliedschaftsbewerbung auf Ihre Entscheidung."
+
+#: ./templates/Clubpresident/Dashboard/index.php:38
+msgid "There are {0} new membership applications waiting for your decision."
+msgstr "Es warten {0} neue Mitgliedschaftsbewerbungen auf Ihre Entscheidung."
+
+#: ./templates/Clubpresident/Dashboard/index.php:43
+msgid "Review applicants"
+msgstr "Bewerber prüfen"
+
+#: ./templates/Clubpresident/Dashboard/index.php:62
+msgid "Welcome to the Club president panel. Choose where you want to go — each card explains the destination."
+msgstr "Willkommen im Clubpräsidenten-Bereich. Wählen Sie, wohin Sie möchten — jede Karte erklärt das Ziel."
+
+#: ./templates/Clubpresident/Members/index.php:125
+msgid "Members of {0} — membership year {1}"
+msgstr "Mitglieder von {0} — Mitgliedschaftsjahr {1}"
+
+#: ./templates/Clubpresident/Members/index.php:306
+#: ./templates/Clubpresident/Members/index.php:361
+#: ./templates/President/Members/index.php:409
+#: ./templates/President/Members/index.php:467
+msgid "Disable"
+msgstr "Deaktivieren"
+
+#: ./templates/Clubpresident/Members/index.php:306
+#: ./templates/President/Members/index.php:409
+msgid "Disable this member account (cannot log in)."
+msgstr "Dieses Mitgliedskonto deaktivieren (Anmeldung nicht möglich)."
+
+#: ./templates/Clubpresident/Members/index.php:321
+#: ./templates/Clubpresident/Members/index.php:365
+#: ./templates/President/Members/index.php:424
+#: ./templates/President/Members/index.php:468
+msgid "Enable"
+msgstr "Aktivieren"
+
+#: ./templates/Clubpresident/Members/index.php:321
+#: ./templates/President/Members/index.php:424
+msgid "Enable this member account (can log in again)."
+msgstr "Dieses Mitgliedskonto aktivieren (Anmeldung wieder möglich)."
+
+#: ./templates/Clubpresident/Members/index.php:337
+#: ./templates/President/Members/index.php:440
+msgid "No members found."
+msgstr "Keine Mitglieder gefunden."
+
+#: ./templates/Clubpresident/Members/index.php:353
+msgid "Record membership fee payment?"
+msgstr "Mitgliedsbeitragszahlung erfassen?"
+
+#: ./templates/Clubpresident/Members/index.php:354
+msgid "Do you confirm that this member has paid the club membership fee for this year? The payment date will be set to today."
+msgstr "Bestätigen Sie, dass dieses Mitglied den Club-Mitgliedsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+
+#: ./templates/Clubpresident/Members/index.php:355
+msgid "Do you confirm that {0} has paid the club membership fee for this year? The payment date will be set to today."
+msgstr "Bestätigen Sie, dass {0} den Club-Mitgliedsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+
+#: ./templates/Clubpresident/Members/index.php:356
+#: ./templates/President/Clubs/index.php:333
+#: ./templates/President/Members/index.php:459
+msgid "Yes, record payment"
+msgstr "Ja, Zahlung erfassen"
+
+#: ./templates/Clubpresident/Members/index.php:358
+#: ./templates/President/Members/index.php:461
+msgid "Disable member?"
+msgstr "Mitglied deaktivieren?"
+
+#: ./templates/Clubpresident/Members/index.php:359
+#: ./templates/President/Members/index.php:462
+msgid "Do you really want to disable {0}? The member will not be able to log in."
+msgstr "Möchten Sie {0} wirklich deaktivieren? Das Mitglied kann sich dann nicht anmelden."
+
+#: ./templates/Clubpresident/Members/index.php:360
+#: ./templates/President/Members/index.php:463
+msgid "Yes, disable"
+msgstr "Ja, deaktivieren"
+
+#: ./templates/Clubpresident/Members/index.php:362
+#: ./templates/President/Members/index.php:464
+msgid "Enable member?"
+msgstr "Mitglied aktivieren?"
+
+#: ./templates/Clubpresident/Members/index.php:363
+#: ./templates/President/Members/index.php:465
+msgid "Do you really want to enable {0}? The member will be able to log in again."
+msgstr "Möchten Sie {0} wirklich aktivieren? Das Mitglied kann sich dann wieder anmelden."
+
+#: ./templates/Clubpresident/Members/index.php:364
+#: ./templates/President/Members/index.php:466
+msgid "Yes, enable"
+msgstr "Ja, aktivieren"
+
+#: ./templates/Member/Dashboard/index.php:14
+msgid "View your membership profile: personal data, club, and membership fee status. Edit is available from the profile page."
+msgstr "Ihr Mitgliedschaftsprofil anzeigen: persönliche Daten, Club und Beitragsstatus. Bearbeiten ist auf der Profilseite möglich."
+
+#: ./templates/Member/Dashboard/index.php:16
+#: ./templates/New/Dashboard/index.php:23
+msgid "Go to Profile"
+msgstr "Zum Profil"
+
+#: ./templates/Member/Dashboard/index.php:30
+msgid "Welcome to the Member panel. Choose where you want to go — each card explains the destination."
+msgstr "Willkommen im Mitgliederbereich. Wählen Sie, wohin Sie möchten — jede Karte erklärt das Ziel."
+
+#: ./templates/New/Dashboard/index.php:21
+msgid "View the profile you submitted. Your club president will review your application."
+msgstr "Das eingereichte Profil anzeigen. Ihr Clubpräsident prüft Ihre Bewerbung."
+
+#: ./templates/New/Dashboard/index.php:30
+msgid "Enter the missing details so you can submit your membership application."
+msgstr "Geben Sie die fehlenden Angaben ein, damit Sie Ihre Mitgliedschaftsbewerbung einreichen können."
+
+#: ./templates/New/Dashboard/index.php:32
+msgid "Go to Complete profile"
+msgstr "Zum Profil vervollständigen"
+
+#: ./templates/New/Dashboard/index.php:48
+msgid "Waiting for approval"
+msgstr "Warten auf Genehmigung"
+
+#: ./templates/New/Dashboard/index.php:50
+msgid "Your application is waiting for acceptance by the club president. You will receive an email when you are approved."
+msgstr "Ihre Bewerbung wartet auf die Annahme durch den Clubpräsidenten. Sie erhalten eine E-Mail, wenn Sie genehmigt werden."
+
+#: ./templates/New/Dashboard/index.php:55
+msgid "Incomplete profile"
+msgstr "Unvollständiges Profil"
+
+#: ./templates/New/Dashboard/index.php:57
+msgid "Your profile data is incomplete. Until you provide the required details, you cannot apply for membership."
+msgstr "Ihre Profildaten sind unvollständig. Bis Sie die erforderlichen Angaben machen, können Sie keine Mitgliedschaft beantragen."
+
+#: ./templates/New/Dashboard/index.php:61
+msgid "Missing:"
+msgstr "Fehlt:"
+
+#: ./templates/New/Dashboard/index.php:67
+msgid "Welcome."
+msgstr "Willkommen."
+
+#: ./templates/President/Clubs/form.php:36
+msgid "Please enter 2 or more characters"
+msgstr "Bitte geben Sie 2 oder mehr Zeichen ein"
+
+#: ./templates/President/Clubs/form.php:37
+#: ./templates/President/Clubs/form.php:103
+msgid "Select club president..."
+msgstr "Clubpräsident wählen…"
+
+#: ./templates/President/Clubs/form.php:59
+#: ./templates/President/Clubs/view.php:187
+msgid "Country: {0}"
+msgstr "Land: {0}"
+
+#: ./templates/President/Clubs/form.php:93
+msgid "Club president:"
+msgstr "Clubpräsident:"
+
+#: ./templates/President/Clubs/form.php:106
+msgid "Search by name or email (same country; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear."
+msgstr "Nach Name oder E-Mail suchen (gleiches Land; keine Bewerber mit Rolle „new“). Mitglieder werden Clubpräsident; ein Präsident oder Vizepräsident behält seine Rolle. Leer lassen zum Löschen."
+
+#: ./templates/President/Clubs/form.php:120
+msgid "Disabled clubs cannot be selected on the membership profile."
+msgstr "Deaktivierte Clubs können im Mitgliedschaftsprofil nicht ausgewählt werden."
+
+#: ./templates/President/Clubs/index.php:138
+msgid "Clubs in {0} — membership year {1}"
+msgstr "Clubs in {0} — Mitgliedschaftsjahr {1}"
+
+#: ./templates/President/Clubs/index.php:330
+msgid "Record club annual membership fee?"
+msgstr "Jährlichen Club-Mitgliedsbeitrag erfassen?"
+
+#: ./templates/President/Clubs/index.php:331
+msgid "Do you confirm that this club has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Bestätigen Sie, dass dieser Club den nationalen Pfeifenverbandsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+
+#: ./templates/President/Clubs/index.php:332
+#: ./templates/President/Members/index.php:458
+msgid "Do you confirm that {0} has paid the national pipe association membership fee for this year? The payment date will be set to today."
+msgstr "Bestätigen Sie, dass {0} den nationalen Pfeifenverbandsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
+
+#: ./templates/President/Clubs/view.php:199
+#: ./templates/Users/view.php:119
+msgid "Membership fees ({0})"
+msgstr "Mitgliedsbeiträge ({0})"
+
+#: ./templates/President/Clubs/view.php:243
+msgid "Member list"
+msgstr "Mitgliederliste"
+
+#: ./templates/President/Dashboard/index.php:12
+msgid "Open the list of members in your country: national membership fees, enable/disable accounts, and member details."
+msgstr "Öffnen Sie die Mitgliederliste Ihres Landes: nationale Mitgliedsbeiträge, Konten aktivieren/deaktivieren und Mitgliedsdetails."
+
+#: ./templates/President/Dashboard/index.php:20
+msgid "Manage clubs in your country: create and edit clubs, assign club presidents, visibility and position."
+msgstr "Clubs in Ihrem Land verwalten: Clubs anlegen und bearbeiten, Clubpräsidenten zuweisen, Sichtbarkeit und Position."
+
+#: ./templates/President/Dashboard/index.php:22
+msgid "Go to Clubs"
+msgstr "Zu Clubs"
+
+#: ./templates/President/Dashboard/index.php:36
+msgid "Welcome to the President panel. Choose where you want to go — each card explains the destination."
+msgstr "Willkommen im Präsidentenbereich. Wählen Sie, wohin Sie möchten — jede Karte erklärt das Ziel."
+
+#: ./templates/President/Members/index.php:166
+msgid "Members in {0} — membership year {1}"
+msgstr "Mitglieder in {0} — Mitgliedschaftsjahr {1}"
+
+#: ./templates/President/Members/index.php:192
+msgid "Only national fee paid"
+msgstr "Nur nationaler Beitrag gezahlt"
+
+#: ./templates/President/Members/index.php:204
+msgid "Show pending applicants"
+msgstr "Ausstehende Bewerber anzeigen"
+
+#: ./templates/President/Members/index.php:456
+msgid "Record national membership fee payment?"
+msgstr "Nationalen Mitgliedsbeitrag erfassen?"
+
+#: ./templates/President/Members/index.php:457
 msgid "Do you confirm that this member has paid the national pipe association membership fee for this year? The payment date will be set to today."
 msgstr "Bestätigen Sie, dass dieses Mitglied den nationalen Pfeifenverbandsbeitrag für dieses Jahr gezahlt hat? Das Zahlungsdatum wird auf heute gesetzt."
 
-msgid "Record national membership fee payment?"
-msgstr "Nationalen Pfeifenverbandsbeitrag erfassen?"
+#: ./templates/Users/activity_log_view.php:30
+#: ./templates/layout/error.php:36
+msgid "Back"
+msgstr "Zurück"
+
+#: ./templates/Users/activity_log_view.php:38
+msgid "What changed"
+msgstr "Was geändert wurde"
+
+#: ./templates/Users/activity_log_view.php:47
+msgid "No further details for this entry."
+msgstr "Keine weiteren Details zu diesem Eintrag."
+
+#: ./templates/Users/change_password.php:12
+#: ./templates/Users/change_password.php:21
+#: ./templates/Users/change_password.php:72
+#: ./templates/Users/edit.php:246
+#: ./templates/Users/view.php:192
+#: ./templates/element/admin/header_profile.php:57
+msgid "Change password"
+msgstr "Passwort ändern"
+
+#: ./templates/Users/change_password.php:25
+#: ./templates/Users/change_password.php:33
+msgid "Current password"
+msgstr "Aktuelles Passwort"
+
+#: ./templates/Users/change_password.php:40
+#: ./templates/Users/change_password.php:48
+msgid "New password"
+msgstr "Neues Passwort"
+
+#: ./templates/Users/change_password.php:58
+#: ./templates/Users/change_password.php:65
+#: ./templates/Users/register.php:94
+#: ./templates/Users/register.php:101
+msgid "Confirm password"
+msgstr "Passwort bestätigen"
+
+#: ./templates/Users/complete_profile.php:41
+msgid "Please fill in the missing details so we can send your membership application to the club president."
+msgstr "Bitte füllen Sie die fehlenden Angaben aus, damit wir Ihre Mitgliedschaftsbewerbung an den Clubpräsidenten senden können."
+
+#: ./templates/Users/complete_profile.php:78
+#: ./templates/Users/edit.php:172
+msgid "Optional. Starts with + and your country calling code (e.g. {0}). Enter your number after the prefix."
+msgstr "Optional. Beginnt mit + und der Vorwahl Ihres Landes (z. B. {0}). Geben Sie Ihre Nummer nach der Vorwahl ein."
+
+#: ./templates/Users/complete_profile.php:86
+#: ./templates/Users/complete_profile.php:91
+#: ./templates/Users/edit.php:181
+#: ./templates/Users/edit.php:186
+#: ./templates/Users/register.php:40
+#: ./templates/Users/register.php:46
+#: ./templates/element/admin/working_country_select.php:22
+msgid "Select country..."
+msgstr "Land wählen…"
+
+#: ./templates/Users/complete_profile.php:98
+#: ./templates/Users/edit.php:204
+msgid "Select your country first to see available clubs."
+msgstr "Wählen Sie zuerst Ihr Land, um verfügbare Clubs zu sehen."
+
+#: ./templates/Users/complete_profile.php:100
+#: ./templates/Users/edit.php:206
+msgid "There are no active clubs with a paid national membership fee for this country yet. Please choose another country from the list above."
+msgstr "Für dieses Land gibt es noch keine aktiven Clubs mit bezahltem nationalen Mitgliedsbeitrag. Bitte wählen Sie oben ein anderes Land."
+
+#: ./templates/Users/complete_profile.php:106
+#: ./templates/Users/complete_profile.php:112
+#: ./templates/Users/complete_profile.php:130
+#: ./templates/Users/edit.php:212
+#: ./templates/Users/edit.php:219
+#: ./templates/Users/edit.php:258
+msgid "Select club..."
+msgstr "Club wählen…"
+
+#: ./templates/Users/complete_profile.php:119
+msgid "Submit application"
+msgstr "Bewerbung absenden"
+
+#: ./templates/Users/complete_profile.php:131
+#: ./templates/Users/edit.php:259
+msgid "Failed to load clubs."
+msgstr "Clubs konnten nicht geladen werden."
+
+#: ./templates/Users/edit.php:71
+msgid "Update your personal details and profile picture."
+msgstr "Aktualisieren Sie Ihre persönlichen Daten und Ihr Profilbild."
+
+#: ./templates/Users/edit.php:103
+msgid "For a consistent look across the site, use a square image of 1000×1000 pixels. Other sizes or aspect ratios may not display well."
+msgstr "Für ein einheitliches Erscheinungsbild verwenden Sie ein quadratisches Bild mit 1000×1000 Pixeln. Andere Größen oder Seitenverhältnisse werden möglicherweise schlecht dargestellt."
+
+#: ./templates/Users/edit.php:116
+msgid "Upload image"
+msgstr "Bild hochladen"
+
+#: ./templates/Users/edit.php:124
+msgid "JPEG, PNG or WebP. Max. 5 MB. Recommended: 1000×1000 px square."
+msgstr "JPEG, PNG oder WebP. Max. 5 MB. Empfohlen: 1000×1000 px quadratisch."
+
+#: ./templates/Users/edit.php:136
+#: ./templates/Users/edit.php:276
+#: ./templates/layout/admin.php:72
+msgid "Remove picture"
+msgstr "Bild entfernen"
+
+#: ./templates/Users/edit.php:190
+msgid "You can correct your registered country if you chose the wrong one."
+msgstr "Sie können Ihr registriertes Land korrigieren, falls Sie das falsche gewählt haben."
+
+#: ./templates/Users/edit.php:198
+msgid "Changing your club has important consequences"
+msgstr "Ein Clubwechsel hat wichtige Folgen"
+
+#: ./templates/Users/edit.php:201
+msgid "If you choose a different club and save, your role will be set to “new”, and your club membership fee will be cleared — you must pay it again at the new club. Your national membership fee is not affected. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgstr "Wenn Sie einen anderen Club wählen und speichern, wird Ihre Rolle auf „new“ gesetzt und Ihr Club-Mitgliedsbeitrag gelöscht — Sie müssen ihn im neuen Club erneut zahlen. Ihr nationaler Mitgliedsbeitrag bleibt unberührt. Sie können dieses System nicht nutzen, bis der Präsident des gewählten Clubs Ihre Bewerbung genehmigt und Sie als Mitglied registriert."
+
+#: ./templates/Users/edit.php:277
+#: ./templates/layout/admin.php:73
+msgid "Do you really want to delete your profile picture?"
+msgstr "Möchten Sie Ihr Profilbild wirklich löschen?"
+
+#: ./templates/Users/edit.php:278
+msgid "Delete picture"
+msgstr "Bild löschen"
+
+#: ./templates/Users/edit.php:280
+msgid "Apply to a different club?"
+msgstr "Bei einem anderen Club bewerben?"
+
+#: ./templates/Users/edit.php:281
+msgid "Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member."
+msgstr "Möchten Sie Ihren Club wirklich wechseln? Wenn Sie speichern, verlieren Sie Ihren aktuellen Zugang und können das System nicht nutzen, bis der Clubpräsident des neuen Clubs Ihre Bewerbung genehmigt und Sie als Mitglied registriert."
+
+#: ./templates/Users/edit.php:282
+msgid "Yes, apply to this club"
+msgstr "Ja, bei diesem Club bewerben"
+
+#: ./templates/Users/event_log.php:25
+msgid "When you signed in, signed out, or changed your data."
+msgstr "Wann Sie sich angemeldet, abgemeldet oder Ihre Daten geändert haben."
+
+#: ./templates/Users/event_log.php:30
+msgid "Browse all activity"
+msgstr "Alle Aktivitäten durchsuchen"
+
+#: ./templates/Users/event_log.php:34
+msgid "Search activity…"
+msgstr "Aktivität suchen…"
+
+#: ./templates/Users/event_log.php:43
+msgid "No activity recorded yet."
+msgstr "Noch keine Aktivität erfasst."
+
+#: ./templates/Users/event_log.php:68
+msgid "Details"
+msgstr "Details"
+
+#: ./templates/Users/login.php:13
+#: ./templates/Users/login.php:29
+#: ./templates/Users/login.php:116
+#: ./templates/layout/login.php:22
+msgid "Login"
+msgstr "Anmelden"
+
+#: ./templates/Users/login.php:33
+#: ./templates/element/admin/header_language.php:2
+#: ./templates/element/admin/header_language.php:7
+msgid "Language"
+msgstr "Sprache"
+
+#: ./templates/Users/login.php:40
+msgid "Select language..."
+msgstr "Sprache wählen…"
+
+#: ./templates/Users/login.php:44
+msgid "Selected language: {0}"
+msgstr "Gewählte Sprache: {0}"
+
+#: ./templates/Users/login.php:99
+msgid "Remember me"
+msgstr "Angemeldet bleiben"
+
+#: ./templates/Users/login.php:122
+#: ./templates/Users/register.php:14
+#: ./templates/Users/register.php:32
+#: ./templates/Users/register.php:123
+msgid "Register"
+msgstr "Registrieren"
+
+#: ./templates/Users/login.php:125
+#: ./templates/Users/request_reset_password.php:10
+#: ./templates/Users/request_reset_password.php:17
+msgid "Forgot password?"
+msgstr "Passwort vergessen?"
+
+#: ./templates/Users/register.php:48
+msgid "Choose your country by its local name. The country language becomes the site language for your account."
+msgstr "Wählen Sie Ihr Land anhand des lokalen Namens. Die Landessprache wird die Seitensprache für Ihr Konto."
+
+#: ./templates/Users/register.php:110
+msgid "I accept the terms of service"
+msgstr "Ich akzeptiere die Nutzungsbedingungen"
+
+#: ./templates/Users/register.php:128
+msgid "Already have an account? Login"
+msgstr "Bereits ein Konto? Anmelden"
+
+#: ./templates/Users/request_reset_password.php:19
+msgid "Enter your email or username and we will send you a link to reset your password."
+msgstr "Geben Sie Ihre E-Mail-Adresse oder Ihren Benutzernamen ein, und wir senden Ihnen einen Link zum Zurücksetzen des Passworts."
+
+#: ./templates/Users/request_reset_password.php:22
+#: ./templates/Users/request_reset_password.php:30
+msgid "Email or username"
+msgstr "E-Mail oder Benutzername"
+
+#: ./templates/Users/request_reset_password.php:38
+msgid "Send reset link"
+msgstr "Reset-Link senden"
+
+#: ./templates/Users/request_reset_password.php:43
+msgid "Back to login"
+msgstr "Zurück zur Anmeldung"
+
+#: ./templates/Users/view.php:73
+msgid "Complete your profile first to apply for membership."
+msgstr "Vervollständigen Sie zuerst Ihr Profil, um eine Mitgliedschaft zu beantragen."
+
+#: ./templates/Users/view.php:163
+msgid "Social accounts"
+msgstr "Social-Konten"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:22
+msgid "Settings for {0}"
+msgstr "Einstellungen für {0}"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:24
+msgid "Your working country — toggles apply only to this country."
+msgstr "Ihr Arbeitsland — Schalter gelten nur für dieses Land."
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:31
+msgid "Activity logging"
+msgstr "Aktivitätsprotokollierung"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:33
+#: ./templates/element/admin/activity_log_setup_toggles.php:57
+msgid "On"
+msgstr "Ein"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:35
+#: ./templates/element/admin/activity_log_setup_toggles.php:59
+msgid "Off"
+msgstr "Aus"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:44
+msgid "Turn off logging"
+msgstr "Protokollierung ausschalten"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:44
+msgid "Turn on logging"
+msgstr "Protokollierung einschalten"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:48
+msgid "When off, new login/logout and data changes are not recorded."
+msgstr "Wenn aus, werden neue An-/Abmeldungen und Datenänderungen nicht erfasst."
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:55
+msgid "Users see own activity"
+msgstr "Benutzer sehen eigene Aktivität"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:68
+msgid "Hide from users"
+msgstr "Vor Benutzern verbergen"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:68
+msgid "Show to users"
+msgstr "Benutzern anzeigen"
+
+#: ./templates/element/admin/activity_log_setup_toggles.php:72
+msgid "Controls the “My activity” menu item for users in this country."
+msgstr "Steuert den Menüpunkt „Meine Aktivität“ für Benutzer in diesem Land."
+
+#: ./templates/element/admin/breadcrumb.php:46
+#: ./templates/element/admin/breadcrumb.php:47
+msgid "New"
+msgstr "Neu"
+
+#: ./templates/element/admin/breadcrumb.php:52
+msgid "Save the form data."
+msgstr "Formulardaten speichern."
+
+#: ./templates/element/admin/breadcrumb.php:90
+msgid "Home"
+msgstr "Start"
+
+#: ./templates/element/admin/event_log_changes.php:30
+msgid "Field"
+msgstr "Feld"
+
+#: ./templates/element/admin/event_log_changes.php:31
+#: ./templates/layout/admin.php:102
+msgid "From"
+msgstr "Von"
+
+#: ./templates/element/admin/event_log_changes.php:32
+#: ./templates/layout/admin.php:103
+msgid "To"
+msgstr "Nach"
+
+#: ./templates/element/admin/event_log_changes.php:48
+msgid "Secret"
+msgstr "Geheimnis"
+
+#: ./templates/element/admin/footer.php:3
+msgid "Copyright"
+msgstr "Copyright"
+
+#: ./templates/element/admin/footer.php:6
+msgid "Powered by"
+msgstr "Bereitgestellt von"
+
+#: ./templates/element/admin/form_language_fields.php:28
+msgid "Translations:"
+msgstr "Übersetzungen:"
+
+#: ./templates/element/admin/header.php:59
+msgid "Menu"
+msgstr "Menü"
+
+#: ./templates/element/admin/header_alerts.php:7
+msgid "Alerts"
+msgstr "Hinweise"
+
+#: ./templates/element/admin/header_alerts.php:9
+msgid "No alerts"
+msgstr "Keine Hinweise"
+
+#: ./templates/element/admin/header_help.php:7
+msgid "Help and support"
+msgstr "Hilfe und Support"
+
+#: ./templates/element/admin/header_help.php:11
+msgid "Documentation"
+msgstr "Dokumentation"
+
+#: ./templates/element/admin/header_help.php:12
+msgid "Coming soon"
+msgstr "Demnächst"
+
+#: ./templates/element/admin/header_language.php:3
+#: ./templates/element/admin/header_language.php:13
+msgid "English"
+msgstr "Englisch"
+
+#: ./templates/element/admin/header_language.php:10
+msgid "Hungarian"
+msgstr "Ungarisch"
+
+#: ./templates/element/admin/header_language.php:16
+msgid "German"
+msgstr "Deutsch"
+
+#: ./templates/element/admin/header_language.php:19
+msgid "Slovak"
+msgstr "Slowakisch"
+
+#: ./templates/element/admin/header_messages.php:7
+msgid "Messages"
+msgstr "Nachrichten"
+
+#: ./templates/element/admin/header_messages.php:9
+msgid "No messages"
+msgstr "Keine Nachrichten"
+
+#: ./templates/element/admin/header_profile.php:42
+msgid "Logged in: {0}"
+msgstr "Angemeldet: {0}"
+
+#: ./templates/element/admin/header_profile.php:62
+msgid "Log out"
+msgstr "Abmelden"
+
+#: ./templates/element/admin/index_counter.php:11
+msgid "Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total"
+msgstr "Seite {{page}} von {{pages}}, {{current}} Datensatz/Datensätze von {{count}} insgesamt"
+
+#: ./templates/element/admin/index_pagination.php:7
+msgid "First"
+msgstr "Erste"
+
+#: ./templates/element/admin/index_pagination.php:8
+msgid "Previous"
+msgstr "Zurück"
+
+#: ./templates/element/admin/index_pagination.php:9
+msgid "Next"
+msgstr "Weiter"
+
+#: ./templates/element/admin/index_pagination.php:10
+msgid "Last"
+msgstr "Letzte"
+
+#: ./templates/element/admin/index_pagination.php:42
+msgid "Pagination"
+msgstr "Paginierung"
+
+#: ./templates/element/admin/modal_linked_record_view.php:5
+msgid "Linked record"
+msgstr "Verknüpfter Datensatz"
+
+#: ./templates/element/admin/modal_linked_record_view.php:6
+#: ./templates/element/admin/modal_linked_record_view.php:18
+#: ./templates/element/admin/modal_record_view.php:6
+#: ./templates/element/admin/modal_record_view.php:18
+msgid "Close"
+msgstr "Schließen"
+
+#: ./templates/element/admin/modal_linked_record_view.php:11
+#: ./templates/element/admin/modal_record_view.php:11
+msgid "Loading…"
+msgstr "Laden…"
+
+#: ./templates/element/admin/sidebar.php:32
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: ./templates/element/admin/table_search.php:10
+msgid "Search in the text fields of this list."
+msgstr "In den Textfeldern dieser Liste suchen."
+
+#: ./templates/element/admin/table_search.php:11
+msgid "Clear the saved search and return to the last visited record."
+msgstr "Gespeicherte Suche löschen und zum zuletzt besuchten Datensatz zurückkehren."
+
+#: ./templates/element/admin/view_related_tabs.php:21
+msgid "Related records"
+msgstr "Verwandte Datensätze"
+
+#: ./templates/element/admin/view_related_tabs.php:67
+msgid "No related records."
+msgstr "Keine verwandten Datensätze."
+
+#: ./templates/element/admin/working_country_select.php:24
+msgid "Working country"
+msgstr "Arbeitsland"
+
+#: ./templates/element/clubpresident/applicant_cards.php:25
+msgid "New applicants"
+msgstr "Neue Bewerber"
+
+#: ./templates/element/clubpresident/applicant_cards.php:28
+msgid "Pending membership applications — review and approve or reject below."
+msgstr "Ausstehende Mitgliedschaftsbewerbungen — unten prüfen und genehmigen oder ablehnen."
+
+#: ./templates/element/flash/default.php:30
+#: ./templates/element/flash/default_swal.php:27
+msgid "Message"
+msgstr "Nachricht"
+
+#: ./templates/element/flash/error.php:15
+#: ./templates/element/flash/error_swal.php:16
+#: ./templates/layout/admin.php:93
+#: ./templates/Error/error400.php:24
+#: ./templates/Error/error500.php:34
+msgid "Error"
+msgstr "Fehler"
+
+#: ./templates/element/flash/info.php:15
+#: ./templates/element/flash/info_swal.php:16
+#: ./templates/layout/admin.php:95
+msgid "Info"
+msgstr "Info"
+
+#: ./templates/element/flash/success.php:15
+#: ./templates/element/flash/success_swal.php:18
+#: ./templates/layout/admin.php:94
+msgid "Success"
+msgstr "Erfolg"
+
+#: ./templates/element/flash/warning.php:15
+#: ./templates/element/flash/warning_swal.php:16
+msgid "Warning"
+msgstr "Warnung"
+
+#: ./templates/element/panel/club_fee_unpaid_alert.php:18
+msgid "Club membership fee unpaid"
+msgstr "Club-Mitgliedsbeitrag unbezahlt"
+
+#: ./templates/element/panel/club_fee_unpaid_alert.php:21
+msgid "You have not paid the club membership fee for {0} yet. Please pay your club and contact your club president."
+msgstr "Sie haben den Club-Mitgliedsbeitrag für {0} noch nicht gezahlt. Bitte zahlen Sie bei Ihrem Club und kontaktieren Sie Ihren Clubpräsidenten."
+
+#: ./templates/element/panel/dashboard_nav_cards.php:26
+msgid "Open"
+msgstr "Öffnen"
+
+#: ./templates/element/panel/switcher.php:15
+msgid "Roles"
+msgstr "Rollen"
+
+#: ./templates/element/users/form_errors.php:25
+msgid "Please correct the following:"
+msgstr "Bitte korrigieren Sie Folgendes:"
+
+#: ./templates/element/users/member_edit_form.php:19
+msgid "Membership fee"
+msgstr "Mitgliedsbeitrag"
+
+#: ./templates/element/users/member_edit_form.php:106
+msgid "Email:"
+msgstr "E-Mail:"
+
+#: ./templates/element/users/member_edit_form.php:113
+msgid "Phone:"
+msgstr "Telefon:"
+
+#: ./templates/element/users/member_edit_form.php:125
+msgid "Role:"
+msgstr "Rolle:"
+
+#: ./templates/element/users/member_edit_form.php:137
+msgid "You cannot change this member’s role."
+msgstr "Sie können die Rolle dieses Mitglieds nicht ändern."
+
+#: ./templates/element/users/member_edit_form.php:139
+msgid "Maximum role: president. Only a president or admin can assign or change the president role. Admin cannot be assigned here."
+msgstr "Maximale Rolle: Präsident. Nur ein Präsident oder Admin kann die Präsidentenrolle zuweisen oder ändern. Admin kann hier nicht zugewiesen werden."
+
+#: ./templates/element/users/membership_fee_status.php:27
+msgid "Last paid on {0}"
+msgstr "Zuletzt gezahlt am {0}"
+
+#: ./templates/element/users/membership_fee_status.php:28
+msgid "Has not paid yet"
+msgstr "Noch nicht gezahlt"
+
+#: ./templates/element/users/membership_fee_status.php:42
+msgid "Membership year {0}"
+msgstr "Mitgliedschaftsjahr {0}"
+
+#: ./templates/element/users/membership_fee_status.php:47
+#: ./templates/element/users/membership_fee_status.php:67
+#: ./templates/element/users/membership_fee_status.php:93
+#: ./templates/element/users/membership_fee_status.php:119
+#: ./templates/element/users/membership_fee_status.php:145
+msgid "Paid on {0}"
+msgstr "Gezahlt am {0}"
+
+#: ./templates/element/users/membership_fee_status.php:51
+#: ./templates/element/users/membership_fee_status.php:59
+msgid "Membership fee not paid yet"
+msgstr "Mitgliedsbeitrag noch nicht gezahlt"
+
+#: ./templates/element/users/membership_fee_status.php:52
+msgid "The club has not paid the annual national membership fee for {0} yet."
+msgstr "Der Club hat den jährlichen nationalen Mitgliedsbeitrag für {0} noch nicht gezahlt."
+
+#: ./templates/element/users/membership_fee_status.php:60
+msgid "Please pay your {0} for {1} and contact your club president."
+msgstr "Bitte zahlen Sie Ihren {0} für {1} und kontaktieren Sie Ihren Clubpräsidenten."
+
+#: ./templates/element/users/membership_fee_status.php:69
+#: ./templates/element/users/membership_fee_status.php:95
+#: ./templates/element/users/membership_fee_status.php:121
+msgid "Paid"
+msgstr "Bezahlt"
+
+#: ./templates/element/users/membership_fee_status.php:82
+msgid "Record club national fee payment"
+msgstr "Nationalen Clubbeitrag erfassen"
+
+#: ./templates/element/users/membership_fee_status.php:85
+#: ./templates/element/users/membership_fee_status.php:111
+#: ./templates/element/users/membership_fee_status.php:137
+msgid "Outstanding"
+msgstr "Offen"
+
+#: ./templates/element/users/membership_fee_status.php:108
+msgid "Record national fee payment"
+msgstr "Nationalen Beitrag erfassen"
+
+#: ./templates/element/users/membership_fee_status.php:134
+msgid "Record payment"
+msgstr "Zahlung erfassen"
+
+#: ./templates/element/users/membership_fee_status.php:154
+msgid "Not paid"
+msgstr "Nicht bezahlt"
+
+#: ./templates/email/html/club_national_fee_recorded.php:11
+#: ./templates/email/html/membership_application.php:11
+#: ./templates/email/html/membership_approved.php:9
+#: ./templates/email/text/club_national_fee_recorded.php:11
+#: ./templates/email/text/membership_application.php:11
+#: ./templates/email/text/membership_approved.php:9
+msgid "Hello{0},"
+msgstr "Hallo{0},"
+
+#: ./templates/email/html/club_national_fee_recorded.php:12
+#: ./templates/email/text/club_national_fee_recorded.php:14
+msgid "We confirm that the annual membership fee payment for club {0} has been received by the leadership and has been booked."
+msgstr "Wir bestätigen, dass die jährliche Mitgliedsbeitragszahlung des Clubs {0} bei der Leitung eingegangen und verbucht wurde."
+
+#: ./templates/email/html/club_national_fee_recorded.php:16
+#: ./templates/email/text/club_national_fee_recorded.php:20
+msgid "The payment date is {0}. Your club's annual membership fee for {1} is settled, and membership is valid toward {2}."
+msgstr "Das Zahlungsdatum ist {0}. Der jährliche Mitgliedsbeitrag Ihres Clubs für {1} ist beglichen, und die Mitgliedschaft gilt gegenüber {2}."
+
+#: ./templates/email/html/club_national_fee_recorded.php:22
+#: ./templates/email/text/club_national_fee_recorded.php:28
+msgid "Thank you."
+msgstr "Vielen Dank."
+
+#: ./templates/email/html/membership_application.php:12
+#: ./templates/email/text/membership_application.php:14
+msgid "A new user has completed their profile and applied for membership in {0}."
+msgstr "Ein neuer Benutzer hat sein Profil vervollständigt und eine Mitgliedschaft in {0} beantragt."
+
+#: ./templates/email/html/membership_application.php:19
+#: ./templates/email/text/membership_application.php:24
+msgid "Open members list"
+msgstr "Mitgliederliste öffnen"
+
+#: ./templates/email/html/membership_application.php:21
+#: ./templates/email/text/membership_application.php:27
+msgid "Please review the application and approve membership if appropriate."
+msgstr "Bitte prüfen Sie die Bewerbung und genehmigen Sie die Mitgliedschaft gegebenenfalls."
+
+#: ./templates/email/html/membership_approved.php:10
+#: ./templates/email/text/membership_approved.php:12
+msgid "The club president has approved your membership in {0}."
+msgstr "Der Clubpräsident hat Ihre Mitgliedschaft in {0} genehmigt."
+
+#: ./templates/email/html/membership_approved.php:11
+#: ./templates/email/text/membership_approved.php:15
+msgid "You are now a full member and can sign in to the site."
+msgstr "Sie sind jetzt vollständiges Mitglied und können sich auf der Website anmelden."
+
+#: ./templates/email/html/membership_approved.php:13
+#: ./templates/email/text/membership_approved.php:18
+msgid "Sign in"
+msgstr "Anmelden"
+
+#: ./templates/layout/admin.php:60
+#: ./templates/layout/admin.php:61
+msgid "Back to top"
+msgstr "Nach oben"
+
+#: ./templates/layout/admin.php:71
+msgid "Do you really want to delete the selected record?"
+msgstr "Möchten Sie den ausgewählten Datensatz wirklich löschen?"
+
+#: ./templates/layout/admin.php:76
+msgid "Unsaved changes"
+msgstr "Ungespeicherte Änderungen"
+
+#: ./templates/layout/admin.php:77
+msgid "You have unsaved changes. Do you really want to leave this form?"
+msgstr "Sie haben ungespeicherte Änderungen. Möchten Sie dieses Formular wirklich verlassen?"
+
+#: ./templates/layout/admin.php:78
+msgid "Leave"
+msgstr "Verlassen"
+
+#: ./templates/layout/admin.php:79
+msgid "Stay"
+msgstr "Bleiben"
+
+#: ./templates/layout/admin.php:80
+msgid "Delete functionality will be connected later."
+msgstr "Die Löschfunktion wird später angebunden."
+
+#: ./templates/layout/admin.php:81
+msgid "Delete form not found for ID:"
+msgstr "Löschformular nicht gefunden für ID:"
+
+#: ./templates/layout/admin.php:82
+msgid "Delete form not found. ID: {0}"
+msgstr "Löschformular nicht gefunden. ID: {0}"
+
+#: ./templates/layout/admin.php:84
+msgid "Failed to load the record."
+msgstr "Datensatz konnte nicht geladen werden."
+
+#: ./templates/layout/admin.php:85
+msgid "No response from the server."
+msgstr "Keine Antwort vom Server."
+
+#: ./templates/layout/admin.php:89
+msgid "Parent details"
+msgstr "Übergeordnete Details"
+
+#: ./templates/layout/admin.php:90
+#: ./templates/layout/admin.php:91
+msgid "Failed to save the new value."
+msgstr "Neuer Wert konnte nicht gespeichert werden."
+
+#: ./templates/layout/admin.php:92
+msgid "No response from the server. Failed to save the new value."
+msgstr "Keine Antwort vom Server. Neuer Wert konnte nicht gespeichert werden."
+
+#: ./templates/layout/admin.php:96
+msgid "OK"
+msgstr "OK"
+
+#: ./templates/layout/admin.php:97
+#: ./templates/layout/admin.php:99
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: ./templates/layout/admin.php:98
+#: ./templates/layout/admin.php:99
+msgid "Add a new value to the list."
+msgstr "Einen neuen Wert zur Liste hinzufügen."
+
+#: ./templates/layout/admin.php:100
+msgid "Apply"
+msgstr "Übernehmen"
+
+#: ./templates/layout/admin.php:104
+msgid "Custom"
+msgstr "Benutzerdefiniert"
+
+#: ./templates/layout/admin.php:105
+msgid "Table"
+msgstr "Tabelle"
+
+#: ./src/Model/Table/UsersTable.php:251
+msgid "Email already exists"
+msgstr "E-Mail existiert bereits"
+
+#: ./templates/Error/error400.php:25
+msgid "The requested address {0} was not found on this server."
+msgstr "Die angeforderte Adresse {0} wurde auf diesem Server nicht gefunden."
+
+#: ./templates/Error/error500.php:32
+msgid "An Internal Error Has Occurred."
+msgstr "Ein interner Fehler ist aufgetreten."
+

@@ -303,6 +303,19 @@ Röviden:
 8. Header: Belépve + Profile / Change password / Logout; search role-gated
 
 **Képlékeny:** más role-ok / más login-reg form / más auth provider → projektspecben leírni, majd frissíteni a `users-auth.md`-t.
+
+### 2.9b Tagság + role panelek (ha kell klub / jelentkezés)
+
+Ha a projektben **tagsági jelentkezés** + klubok + tagdíj kell (nem minden projektben):
+
+1. Auth előbb: §2.9 + [users-auth.md](users-auth.md)
+2. Teljes greenfield playbook: **[membership-greenfield.md](membership-greenfield.md)** (lépéssorrend §2, séma §3, ACL §5, UI §8–9, checklist §11)
+3. Részletes viselkedés: [membership.md](membership.md)
+4. Cursor rules: `membership-greenfield.mdc`, `panel-member-index.mdc`
+5. Séma mátrix: [uj-projekt-sema-playbook.md](uj-projekt-sema-playbook.md) §1.6
+
+**Ne** találj ki új UX-et (approve flow, tagdíj warning, klubelnök assign, President pending kapcsoló).
+
 ### 2.10 Első CRUD modul
 
 Kövesd a [crud-utmutato.md](crud-utmutato.md)-t egy **valós** táblára (vagy ideiglenes teszt táblára).

@@ -53,6 +53,7 @@ if ($clubId > 0) {
 				<h3 class="fw-bold"><i class="fa fa-tachometer"></i> <?= __('Dashboard') ?></h3>
 			</div>
 			<div class="card-body">
+				<?= $this->element('panel/club_fee_unpaid_alert') ?>
 				<?php if ($clubId < 1): ?>
 					<div class="alert alert-warning mb-0" role="alert">
 						<?= __('Your account is not assigned to a club yet. Contact an administrator.') ?>

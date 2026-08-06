@@ -103,7 +103,7 @@ $this->Html->script([
 								'data-placeholder' => __('Select club president...'),
 								'data-ajax-url' => $this->Url->build(['action' => 'userOptions']),
 							]) ?>
-							<div class="form-text"><?= __('Search by name or email (same country; not applicants with role new). Leave empty to clear.') ?></div>
+							<div class="form-text"><?= __('Search by name or email (same country; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear.') ?></div>
 						</div>
 					</div>
 

@@ -7,9 +7,6 @@ use App\Auth\LanguageAccess;
 use App\Auth\SetupAccess;
 
 $controller = (string)$this->request->getParam('controller');
-$isSamples = $controller === 'Samples';
-$isParents = $controller === 'Parents';
-$isCities = $controller === 'Cities';
 $isLanguages = $controller === 'Languages';
 $isCountries = $controller === 'Countries';
 $isSetups = $controller === 'Setups';
@@ -28,23 +25,6 @@ $showEventLogsMenu = EventLogAccess::canSearch($this->request);
 					<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Dashboard', 'action' => 'index']) ?>"<?= $isDashboard ? ' class="active"' : '' ?>>
 						<i class="fa fa-fw fa-tachometer"></i><span> <?= __('Dashboard') ?> </span>
 					</a>
-				</li>
-
-				<li class="submenu">
-					<a href="#"<?= ($isSamples || $isParents || $isCities) ? ' class="active"' : '' ?>>
-						<i class="fa fa-fw fa-table"></i> <span> <?= __('Data') ?> </span> <span class="menu-arrow"></span>
-					</a>
-					<ul class="list-unstyled">
-						<li<?= $isSamples ? ' class="active"' : '' ?>>
-							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Samples', 'action' => 'index']) ?>"><?= __('Samples') ?></a>
-						</li>
-						<li<?= $isParents ? ' class="active"' : '' ?>>
-							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Parents', 'action' => 'index']) ?>"><?= __('Parents') ?></a>
-						</li>
-						<li<?= $isCities ? ' class="active"' : '' ?>>
-							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'index']) ?>"><?= __('Cities') ?></a>
-						</li>
-					</ul>
 				</li>
 
 				<li class="submenu">

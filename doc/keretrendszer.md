@@ -35,17 +35,15 @@ Ez a fájl megkülönbözteti, mi **maradjon meg** minden projektben, és mi **c
 
 ## Ideiglenes / domain — cserélhető
 
-Bármilyen **üzleti** CRUD (és a keretrendszer kipróbálására használt demó modulok):
+Bármilyen **üzleti** CRUD. A keretrendszer kipróbálására használt **Samples / Parents / Cities** demó modulok **ebből a projektből el lettek távolítva** (2026-08-06) — a tanulságok [minta-tanulsagok.md](minta-tanulsagok.md)-ben maradnak.
 
-| Terület | Példa (demó, eldobható) |
-|---------|-------------------------|
-| Controllerek | `SamplesController`, `ParentsController`, `CitiesController` |
-| Templatek | `templates/Admin/Samples`, `Parents`, `Cities` |
-| Modellek | `Sample*`, `Parent*`, `City*`, `CitiesSample*` |
-| DB | demó táblák + seed |
-| Sidebar menüpontok | demó menü → cseréld élesre |
+| Terület | Megjegyzés |
+|---------|------------|
+| Controllerek / templatek / modellek | Éles domain (Countries, Clubs, Users, Setups, …) |
+| DB | Demó táblák (`samples`, `parents`, `cities`, `cities_samples`) drop migrációval törölve |
+| Sidebar / Dashboard | Csak valós menüpontok |
 
-Éles projektben ezek helyett a **valós** domain modulok állnak — a viselkedés ugyanaz ([crud-utmutato.md](crud-utmutato.md), [minta-tanulsagok.md](minta-tanulsagok.md)).
+Új CRUD: [crud-utmutato.md](crud-utmutato.md) + [minta-tanulsagok.md](minta-tanulsagok.md) (viselkedés, nem demó mezőnevek).
 
 ## Éles modul / új projekt checklist
 

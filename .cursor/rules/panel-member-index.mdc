@@ -21,6 +21,6 @@ Ha **President** / **Clubpresident** (vagy más panel) **Users** alapú listát 
 9. **JS** — `pages/index.js` + domain script (pl. tagdíj SWAL); ne hagyd ki a modalt.
 10. **Clubpresident** — nincs külön Applicants menü; pending jelentkezők **kártyákon** a tábla fölött (`applicant_cards` element); Approve/Reject → `membership_joined_date` / `enabled`; lista = **csak** a bejelentkezett user klubja.
 
-Referencia: `templates/President/Members/index.php`, `templates/Admin/Samples/index.php`, `src/Controller/Concerns/PanelMemberListTrait.php`.
+Referencia: `templates/President/Members/index.php`, `src/Controller/Concerns/PanelMemberListTrait.php`; Admin index minta: `doc/admin-konvenciok.md`, `doc/minta-tanulsagok.md`.
 
-Spec: [admin-konvenciok.md](admin-konvenciok.md) (Index lista), [membership.md](membership.md) § Taglisták.
+Spec: `doc/admin-konvenciok.md` (Index lista), `doc/membership.md` § Taglisták.

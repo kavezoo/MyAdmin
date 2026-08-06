@@ -10,7 +10,6 @@
  * @var string $completeProfileUrl
  */
 use App\Utility\PhoneNumber;
-use CakeDC\Users\Utility\UsersUrl;
 
 $this->assign('title', __('Complete your profile'));
 $this->Html->css([
@@ -28,7 +27,7 @@ $countryOptions = $countryOptions ?? [];
 $clubOptions = $clubOptions ?? [];
 $clubOptionsEmpty = (bool)($clubOptionsEmpty ?? false);
 $selectedCountryId = (int)($selectedCountryId ?? 0);
-$completeProfileUrl = (string)($completeProfileUrl ?? $this->Url->build(UsersUrl::actionUrl('completeProfile')));
+$completeProfileUrl = (string)($completeProfileUrl ?? $this->Url->build('/complete-profile'));
 $defaultPhonePrefix = (string)($defaultPhonePrefix ?? '');
 $countryPhonePrefixes = $countryPhonePrefixes ?? [];
 $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhonePrefix);
@@ -44,7 +43,7 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 				<div class="clearfix"></div>
 			</div>
 			<?= $this->Form->create($user, [
-				'url' => UsersUrl::actionUrl('completeProfile'),
+				'url' => '/complete-profile',
 				'id' => 'complete-profile-form',
 			]) ?>
 			<div class="card-body">

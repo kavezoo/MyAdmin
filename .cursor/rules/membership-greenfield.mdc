@@ -1,0 +1,26 @@
+---
+description: Tagság + role panelek greenfield — új projektben kövesd membership-greenfield.md-t.
+alwaysApply: false
+---
+
+# Tagság — greenfield playbook
+
+Ha a projektben **tagsági jelentkezés** + **role panelek** (`new` → profil → approve → `member`) kell:
+
+1. Olvasd **`doc/membership-greenfield.md`** (lépéssorrend + checklist) — **ne** találj ki új folyamatot.
+2. Auth előbb: **`doc/users-auth.md`** + `users-auth.mdc`.
+3. Részletes viselkedés: **`doc/membership.md`**.
+
+## Rögzített szabályok (ne térj el)
+
+| Téma | Szabály |
+|------|---------|
+| Klubváltás | Csak `club_membership_fee_date` null; országos tagdíj érintetlen |
+| Tagdíj unpaid UI | **warning**, nem danger |
+| Klubelnök | `clubs.club_president_id`; member→`clubpresident`; president/vp role marad |
+| Role edit (President) | Max president; VP nem állíthat president-et; nincs admin a listában |
+| Jelentkezők | Clubpresident: klub scope; President: kapcsoló + ország scope |
+| Approve scope | VP/president: `country_id`; clubpresident: `club_id` (`MembershipService`) |
+| `pos` | DB DEFAULT — `pos-db-default.mdc` |
+
+Módosítás után: `doc/valtozasok.md` + `membership.md` / `membership-greenfield.md` ha a minta változott.

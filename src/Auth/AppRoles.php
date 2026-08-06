@@ -146,4 +146,147 @@ class AppRoles
     {
         return in_array(strtolower(trim($role)), static::globalSearchRoles(), true);
     }
+
+    /**
+     * Higher number = higher privilege.
+     */
+    public static function rank(string $role): int
+    {
+        return match (strtolower(trim($role))) {
+            self::SUPERUSER => 80,
+            self::ADMIN => 70,
+            self::PRESIDENT => 60,
+            self::VICEPRESIDENT => 50,
+            self::CLUBPRESIDENT => 40,
+            self::EDITOR => 30,
+            self::MEMBER => 20,
+            self::NEW => 10,
+            default => 0,
+        };
+    }
+
+    /**
+     * Roles a president / vicepresident may assign on the Members edit form.
+     * Max = president; no admin / superuser / new.
+     *
+     * @return list<string>
+     */
+    public static function presidentAssignableRoles(): array
+    {
+        return [
+            self::MEMBER,
+            self::EDITOR,
+            self::CLUBPRESIDENT,
+            self::VICEPRESIDENT,
+            self::PRESIDENT,
+        ];
+    }
+
+    /**
+     * Select options: key => "key — Label" for {@see presidentAssignableRoles()}.
+     *
+     * @return array<string, string>
+     */
+    public static function presidentAssignableOptions(): array
+    {
+        $out = [];
+        foreach (static::presidentAssignableRoles() as $role) {
+            $out[$role] = static::labeled($role);
+        }
+
+        return $out;
+    }
+
+    /**
+     * Actor may set this target role on the President Members edit form.
+     * Vicepresident cannot assign `president`; only president / admin / superuser can.
+     */
+    public static function canAssignRole(string $actorRole, string $newRole): bool
+    {
+        $actorRole = strtolower(trim($actorRole));
+        $newRole = strtolower(trim($newRole));
+        if (!static::isPresidentAssignable($newRole)) {
+            return false;
+        }
+        if (!in_array($actorRole, [
+            self::PRESIDENT,
+            self::VICEPRESIDENT,
+            self::ADMIN,
+            self::SUPERUSER,
+        ], true)) {
+            return false;
+        }
+        if ($newRole === self::PRESIDENT) {
+            return in_array($actorRole, [self::PRESIDENT, self::ADMIN, self::SUPERUSER], true);
+        }
+
+        return true;
+    }
+
+    /**
+     * Actor may change this member's current role (e.g. VP cannot edit a president).
+     */
+    public static function canEditTargetRole(string $actorRole, string $targetRole): bool
+    {
+        $actorRole = strtolower(trim($actorRole));
+        $targetRole = strtolower(trim($targetRole));
+        if (in_array($targetRole, [self::ADMIN, self::SUPERUSER], true)) {
+            return false;
+        }
+        if ($targetRole === self::PRESIDENT) {
+            return in_array($actorRole, [self::PRESIDENT, self::ADMIN, self::SUPERUSER], true);
+        }
+        if (!static::isPresidentAssignable($targetRole) && $targetRole !== '') {
+            return false;
+        }
+
+        return in_array($actorRole, [
+            self::PRESIDENT,
+            self::VICEPRESIDENT,
+            self::ADMIN,
+            self::SUPERUSER,
+        ], true);
+    }
+
+    /**
+     * Role select options filtered by the logged-in officer.
+     *
+     * @return array<string, string>
+     */
+    public static function assignableOptionsForActor(string $actorRole): array
+    {
+        $out = [];
+        foreach (static::presidentAssignableRoles() as $role) {
+            if (static::canAssignRole($actorRole, $role)) {
+                $out[$role] = static::labeled($role);
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Club president assignment: promote to `clubpresident` only from member / editor.
+     * President / vicepresident (and above) keep their current role.
+     */
+    public static function shouldPromoteToClubPresident(string $role): bool
+    {
+        $role = strtolower(trim($role));
+
+        return in_array($role, [self::MEMBER, self::EDITOR], true);
+    }
+
+    /**
+     * When someone else becomes club elnök: demote only pure `clubpresident` → member.
+     * President / vicepresident keep their role.
+     */
+    public static function shouldDemoteFromClubPresident(string $role): bool
+    {
+        return strtolower(trim($role)) === self::CLUBPRESIDENT;
+    }
+
+    public static function isPresidentAssignable(string $role): bool
+    {
+        return in_array(strtolower(trim($role)), static::presidentAssignableRoles(), true);
+    }
 }

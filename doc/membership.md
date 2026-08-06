@@ -2,6 +2,12 @@
 
 Folyamat a frissen regisztrált (`role=new`) felhasználóktól a teljes értékű tagságig (`role=member`).
 
+| Dokumentum | Mikor |
+|------------|-------|
+| **[membership-greenfield.md](membership-greenfield.md)** | **Új projekt / greenfield** — lépéssorrend, séma, checklist, rögzített szabályok |
+| [users-auth.md](users-auth.md) | Auth + panelek baseline |
+| Cursor | `membership-greenfield.mdc`, `users-auth.mdc` |
+
 Kapcsolódó: [users-auth.md](users-auth.md), Cursor rule `.cursor/rules/users-auth.mdc`.
 
 ---
@@ -38,12 +44,17 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
    - `membership_status=pending`
    - email minden `clubpresident` + ugyanaz a `club_id` + `active`/`enabled` usernek
    - `application_notified=1`
-5. **New Dashboard** — „jelentkezés elküldve, várakozás” üzenet.
+5. **New Dashboard**
+   - **Hiányos** profil (nincs név és/vagy klub): figyelmeztetés + „Profil kiegészítése” CTA — amíg hiányzik, **nem** tud jelentkezni; a `/new` dashboard megtekinthető, más `/new/*` → `/complete-profile`.
+   - **Kész** profil: csak **„Elfogadásra vár”** üzenet (+ Profile kártya); `onProfileCompleted` heal ha státusz beragadt.
 6. **Clubpresident** → `/clubpresident/members`:
-   - **Fent:** pending jelentkezők **kártyákon** (név, email, telefon, ország, beadva; avatar ha van)
+   - **Fent:** pending jelentkezők **kártyákon** (név, email, telefon, ország, klub, beadva; avatar; **shadow**)
    - **Approve** (SWAL zöld/question) → `MembershipService::approve`: `role=member`, `membership_status=approved`, **`membership_joined_date` = ma**, email
    - **Reject** (SWAL warning) → `MembershipService::reject`: `users.enabled=false`
    - **Lent:** aktív tagok táblázata (tagdíj)
+6b. **President / VP** → `/president/members` (opcionális kapcsoló):
+   - Switch **„Show pending applicants”** → ugyanazok a kártyák, de **ország** scope (`country_id`)
+   - Approve / Reject: `MembershipService` — president/vp → `country_id` match; clubpresident → `club_id` match
 7. **Reject** után a jelentkező nem tud újra belépni (`RequireUserEnabledMiddleware`).
 8. Legacy `/clubpresident/applicants` → redirect a Members indexre (nincs külön Applicants menü).
 
@@ -58,12 +69,13 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 - Clubpresident: `/clubpresident/members` — **csak** a bejelentkezett user `club_id` klubjának tagjai / jelentkezői (más klub **soha**); lista: `membershipRosterRoles` (member, editor, clubpresident, president, vp — **önmaga is**); klub tagdíj **egy gomb + SWAL** → mai dátum; oszlopban zöld pipa vagy piros „Outstanding” gomb; **Enable / Disable** (SWAL warning/success; napló ha activity logging be van kapcsolva); tiltott tagok (`enabled=0`) is a listán.
 - **Lista név:** vastag név + alatta lefordított role (`AppRoles::label` — pl. Tag, Új tag, Klub elnök); element: `users/list_name_cell`.
 - **Edit:** ceruza / modal Edit / view „Edit” → `…/members/edit/{id}` (közös `element/users/member_edit_form`: név, telefon, tagdíj dátum Tempus+Popper; Clubpresident = klub díj; President = országos díj + enabled). Tagdíj dátum változás → `event_logs` ha `activity_logging_enabled`.
-- **President / vicepresident:** `/president/members` — ország `country_id` szerinti roster (ugyanazok a role-ok, **önmaga is**; enabled=0 is látszik); országos tagdíj rögzítés (SWAL); **Enable / Disable** gomb (AJAX + SWAL, `users.enabled`); switch „Only national fee paid”; klub tagdíj oszlop csak olvasható.
-- **President Clubs:** `/president/clubs` — ország klubjainak teljes CRUD (name, enabled, visible, pos, **`user_count`** CounterCache); **`national_membership_fee_date`** (klub → országos pipa egyesület éves tagdíj, év = dátum éve); index oszlopcímke: `MembershipFee::clubEntityFeeLabel()` → EN *National pipe association membership fee*, HU **MPE tagdíj**; Outstanding gomb / zöld pipa + SWAL → mai dátum; **email** a klubelnöknek (`MembershipMailer::clubNationalFeeRecorded`, szöveg: `__('the national pipe association')` → HU **az MPE**); **napló** ha `activity_logging_enabled` (`MembershipFee::clubEntityActivityDescriptions`); view: tagdíj panel pipával (`profile_club`); **klubelnök** AJAX Select2: ugyanaz az ország + **nem** `role=new` (member és fölötte bárki, önmaga is) → mentéskor `role=clubpresident` + `club_id`; indexen `user_count` + elnök név → user modal (Edit/View → Members); **view:** Member list félkövér linkek + Related records TAB (Users/Members) + linked modal; törlés tiltva ha `user_count > 0`. Admin Clubs CRUD később.
-- **Profil:** feltűnő piros blokk ha nincs befizetve; zöld pipa + dátum ha igen (klub + országos/MPE).
+- **President / vicepresident:** `/president/members` — ország `country_id` szerinti roster (ugyanazok a role-ok, **önmaga is**; enabled=0 is látszik); országos tagdíj rögzítés (SWAL); **Enable / Disable** gomb (AJAX + SWAL, `users.enabled`); switch „Only national fee paid”; switch **„Show pending applicants”** → `role=new` + `pending` jelentkező kártyák (Approve / Reject, ország scope); klub tagdíj oszlop csak olvasható; **edit:** role select (`AppRoles::assignableOptionsForActor`) — member…president (nincs admin); **VP nem** módosíthat / nem állíthat `president` role-t; **president/admin** igen; president megváltoztathatja a VP role-ját (akár member / clubpresident / president).
+- **President Clubs:** `/president/clubs` — ország klubjainak teljes CRUD (name, enabled, visible, pos, **`user_count`** CounterCache); **`club_president_id`** (kijelölt klubelnök Users.id); **`national_membership_fee_date`** (klub → országos pipa egyesület éves tagdíj, év = dátum éve); index oszlopcímke: `MembershipFee::clubEntityFeeLabel()` → EN *National pipe association membership fee*, HU **MPE tagdíj**; Outstanding gomb / zöld pipa + SWAL → mai dátum; **email** a klubelnöknek (`MembershipMailer::clubNationalFeeRecorded`, szöveg: `__('the national pipe association')` → HU **az MPE**); **napló** ha `activity_logging_enabled` (`MembershipFee::clubEntityActivityDescriptions`); view: tagdíj panel pipával (`profile_club`); **klubelnök** AJAX Select2: ugyanaz az ország + **nem** `role=new` → `clubs.club_president_id` + `club_id`; **member/editor → `clubpresident`**; **president/vp lehet klubelnök** (role **változatlan**); előző tiszta `clubpresident` → **member**; magasabb rangú előző → role megmarad; indexen `user_count` + elnök név → user modal (Edit/View → Members); **view:** Member list félkövér linkek + Related records TAB (Users/Members) + linked modal; törlés tiltva ha `user_count > 0`. Admin Clubs CRUD később.
+- **Profil:** tagdíj panel **2 oszlop egy sorban** (bal: klub tagdíj, jobb: országos/MPE); **warning** stílus (sárga) ha nincs befizetve — **nem** danger/piros; zöld pipa + dátum ha igen.
+- **Vezérlőpult:** ha van klub és a klub tagdíj nincs befizetve a tárgyévre → `element/panel/club_fee_unpaid_alert` (**alert-warning**) a New / Member / Clubpresident / President dashboardon (`PanelAppController` → `clubFeeUnpaid`).
 - **Napló:** `EventLogBehavior` + `ActivityLogSetup::isLoggingEnabled` (ország Setup `activity_logging_enabled`). User tagdíj: `MembershipFee::activityDescriptions`. **Klub → országos tagdíj** (`clubs.national_membership_fee_date`, pl. Outstanding gomb / `updateNationalFee`): `MembershipFee::clubEntityActivityDescriptions` (module=`Clubs`). Jóváhagyás / enable-disable: `MembershipProfile::activityDescriptions`. Ha a globális naplózás ki van kapcsolva az országra → **nincs** `event_logs` sor.
 
-**Profil klubváltás (member+):** `/edit` oldalon más klub mentése → `role=new`, `membership_status=pending`, **`membership_joined_date` = null**, `Authentication::setIdentity`, clubpresident értesítés; redirect `/new`. **RestrictNewRoleMiddleware:** csak `/new` + profil/auth URL-ek (`/profile`, `/edit`, …), más prefix → `/new`.
+**Profil klubváltás (member+):** `/edit` oldalon más klub mentése → `role=new`, `membership_status=pending`, **`membership_joined_date` = null**, **csak** `club_membership_fee_date` = null (`MembershipFee::clearClubFeeOnClubSwitch` — az új klubban újra kell fizetni); **`national_membership_fee_date` érintetlen** (országos / MPE független a klubtól), `Authentication::setIdentity`, clubpresident értesítés; redirect `/new`. Figyelmeztetés a formon: **alert-warning**. **RestrictNewRoleMiddleware:** csak `/new` + profil/auth URL-ek (`/profile`, `/edit`, …), más prefix → `/new`.
 
 ---
 
@@ -71,8 +83,9 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 
 | Fájl | Tartalom |
 |------|----------|
-| `config/schema/clubs.sql` | `clubs` tábla (`enabled` DEFAULT 1, `visible`, `pos`, `national_membership_fee_date`) |
+| `config/schema/clubs.sql` | `clubs` tábla (`enabled` DEFAULT 1, `visible`, `pos`, `club_president_id`, `national_membership_fee_date`) |
 | `config/Migrations/20260805170000_AddNationalMembershipFeeDateToClubs.php` | klub → országos éves tagdíj dátum |
+| `config/Migrations/20260806090000_AddClubPresidentIdToClubs.php` | kijelölt klubelnök `club_president_id` + backfill |
 | `config/schema/users_membership.sql` | `membership_status`, `membership_joined_date`, `application_notified` |
 | `config/Migrations/20260805150000_AddMembershipJoinedDateToUsers.php` | `membership_joined_date` + backfill approved tagokra |
 | `tmp/seed_membership.php` | séma + demo klubok + clubpresident `club_id` |
@@ -86,6 +99,7 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 | Réteg | Fájl |
 |-------|------|
 | ACL / státusz | `src/Auth/MembershipProfile.php` (`FIELD_JOINED`, `isJoined`, activityDescriptions) |
+| Tagdíj | `src/Utility/MembershipFee.php` (`isClubFeeUnpaid`, `clearClubFeeOnClubSwitch`, …); panel warning: `element/panel/club_fee_unpaid_alert` (`PanelAppController`) |
 | Service | `src/Service/MembershipService.php` |
 | Mailer | `src/Mailer/MembershipMailer.php` + `templates/email/{html,text}/membership_*.php` |
 | Profil form | `UsersController::completeProfile` / `edit`, `templates/Users/complete_profile.php` / `edit.php`; view: `profile` → `view.php` |
@@ -94,9 +108,11 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 | UI kártyák | `templates/element/clubpresident/applicant_cards.php`, `css/pages/clubpresident_applicants.css` |
 | President Clubs CRUD | `President\ClubsController`, `templates/President/Clubs/`, `js/pages/president_clubs_form.js`; `clubs.user_count` CounterCache (`Users` → `Clubs`) |
 | Clubs séma | `config/schema/clubs.sql`, migráció `20260805160000_AddUserCountToClubs` |
-| President enable/disable | `President\MembersController::toggleEnabled` + `js/pages/president_members.js` (SWAL: disable=warning, enable=success) |
-| Clubpresident enable/disable | `Clubpresident\MembersController::toggleEnabled` + `js/pages/clubpresident_members.js` (ugyanaz a SWAL stílus; napló: `EventLogBehavior` + `MembershipProfile::activityDescriptions`) |
-| Taglista index minta | `templates/President/Members/index.php`, `PanelMemberListTrait`, rule `.cursor/rules/panel-member-index.mdc` |
+| President enable/disable | `President\MembersController::toggleEnabled` + `js/pages/president_members.js` |
+| President pending + approve | `President\MembersController` (`show_applicants` switch, `approve`/`reject`); `MembershipService::approverMayActOnApplicant` |
+| Role ACL | `AppRoles::canAssignRole`, `canEditTargetRole`, `assignableOptionsForActor`, `shouldDemoteFromClubPresident` |
+| Klubelnök assign | `ClubsTable::assignClubPresident`, `clubs.club_president_id` migráció |
+| Header session | `element/admin/header.php` — név + rang |
 | Login redirect | `Application` `EVENT_AFTER_LOGIN` |
 | New gate | `Controller/New/AppController.php` |
 | Role `new` lock | `RestrictNewRoleMiddleware` (auth után) |
@@ -116,13 +132,21 @@ Transport: `config/app.php` / `app_local.php` `Email` + `EmailTransport`.
 
 ## 6. Ellenőrzőlista
 
-- [ ] Migráció: `membership_joined_date`
+- [ ] Migráció: `membership_joined_date`, `club_president_id`
 - [ ] Clubpresident: egy **Members** menü; kártyák fent + tábla lent
+- [ ] President: **Show pending applicants** kapcsoló + approve/reject ország scope
 - [ ] Approve → joined date ma + role member + email
 - [ ] Reject → SWAL warning + `enabled=0`
+- [ ] Klubelnök: member→clubpresident; president/vp role megmarad; előző clubpresident→member
+- [ ] President Members edit: role select; VP nem president-et
+- [ ] Klubváltás: csak klub tagdíj null; warning UI
+- [ ] Dashboard: `club_fee_unpaid_alert` unpaid klub tagdíjnál
+- [ ] Header: név + rang (minden prefix, közös layout)
 - [ ] President: Enable/Disable AJAX + SWAL; disabled sorok látszanak
 - [ ] Activity logging Setup off → nincs event_logs sor enable/approve-nál
 - [ ] Új regisztráció → complete profile → clubpresident email → Members kártya
+
+**Greenfield teljes lista:** [membership-greenfield.md](membership-greenfield.md) §11.
 
 ---
 
@@ -134,8 +158,18 @@ A **Members** index **Admin index playbook** — nem egyszerű HTML tábla.
 |------|----------|
 | Fejléc változók | `$rowDoubleClickAction`, `$showIdColumn`, `$showCreatedColumn`, … |
 | Sort | Minden oszlop: `Paginator::sort` + **típusosztály** a `th`-n; `sortableFields` kulcs = `sort()` első arg (rövid név / `Clubs.name`) — különben nincs ASC/DESC ikon |
-| Clubpresident kártyák | Pending `new`+`pending`+`enabled` jelentkezők a tábla **fölött** — **külső panel card** (header + body) + nested `20rem` kártyák; **ugyanaz** a `club_id` scope |
+| Clubpresident kártyák | Pending `new`+`pending`+`enabled` jelentkezők a tábla **fölött** — **külső panel card** + nested `20rem` kártyák (`shadow`); **ugyanaz** a `club_id` scope |
+| President pending | Kapcsoló **Show pending applicants** → `element/clubpresident/applicant_cards`; **ország** scope; approve/reject ugyanaz a SWAL JS |
 | Clubpresident scope | `Users.club_id` = bejelentkezett user klubja (`presidentClubId()` DB-ből; `scopeToPresidentClub()`); más klub tagja **nem** látszik / nem approve-olható |
+| President scope | `Users.country_id` = officer country; pending + roster |
 | President enable | Actions: ban / check gomb → `toggleEnabled` AJAX |
 | Clubpresident enable | Ugyanaz: ban / check → `toggleEnabled`; tiltott tagok is a listán (`enabled=0`); SWAL warning (disable) / success (enable) |
-| Edit | Ceruza / `editUrl` → `edit` action + `member_edit_form` (nem view) |
+| Edit | Ceruza / `editUrl` → `edit` action + `member_edit_form` (President: role select + enabled) |
+
+---
+
+## 8. Greenfield / új projekt
+
+Új CakePHP projektben a tagság + role panelek **teljes felépítése**: **[membership-greenfield.md](membership-greenfield.md)** (lépéssorrend, DB, ACL, UI checklist).  
+Auth előfeltétel: [users-auth.md](users-auth.md) + [uj-projekt.md](uj-projekt.md) §2.9.  
+Cursor rule: `.cursor/rules/membership-greenfield.mdc`.

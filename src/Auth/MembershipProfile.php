@@ -32,6 +32,32 @@ class MembershipProfile
     }
 
     /**
+     * Human labels for missing required profile fields (dashboard warning).
+     *
+     * @return list<string>
+     */
+    public static function missingFieldLabels(mixed $user): array
+    {
+        $labels = [
+            'first_name' => (string)__('Name'),
+            'country_id' => (string)__('Country'),
+            'club_id' => (string)__('Club'),
+        ];
+        $missing = [];
+        foreach (static::requiredFields() as $field) {
+            $value = static::value($user, $field);
+            $empty = ($field === 'country_id' || $field === 'club_id')
+                ? (int)$value < 1
+                : trim((string)$value) === '';
+            if ($empty && isset($labels[$field])) {
+                $missing[] = $labels[$field];
+            }
+        }
+
+        return $missing;
+    }
+
+    /**
      * True when the applicant was accepted (joined date set).
      */
     public static function isJoined(mixed $user): bool
@@ -151,6 +177,18 @@ class MembershipProfile
     public static function isPending(mixed $user): bool
     {
         return static::statusOf($user) === self::STATUS_PENDING;
+    }
+
+    /**
+     * Role `new` with required profile fields filled — waiting for club president.
+     */
+    public static function isWaitingForApproval(mixed $user): bool
+    {
+        $role = strtolower(trim((string)(static::value($user, 'role') ?? '')));
+
+        return $role === AppRoles::NEW
+            && static::isComplete($user)
+            && !static::isJoined($user);
     }
 
     public static function needsProfileCompletion(mixed $user): bool

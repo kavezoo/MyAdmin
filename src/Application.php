@@ -202,9 +202,9 @@ class Application extends BaseApplication
                     'description' => __('User logged in'),
                 ], $request);
 
-                // Fresh `new` users must complete profile before anything else.
+                // Fresh `new` users land on the New dashboard (incomplete → warning + CTA there).
                 if ($role === AppRoles::NEW && MembershipProfile::needsProfileCompletion($user)) {
-                    $event->setResult(UsersUrl::actionUrl('completeProfile'));
+                    $event->setResult(RoleHome::url(AppRoles::NEW));
 
                     return;
                 }

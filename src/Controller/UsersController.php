@@ -386,6 +386,7 @@ class UsersController extends CakeDCUsersController
                 $user->set('membership_status', MembershipProfile::STATUS_PENDING);
                 $user->set('application_notified', false);
                 $user->set(MembershipProfile::FIELD_JOINED, null);
+                MembershipFee::clearClubFeeOnClubSwitch($user);
             }
 
             $upload = $this->getRequest()->getUploadedFile('avatar');
@@ -415,6 +416,7 @@ class UsersController extends CakeDCUsersController
                     'membership_status' => true,
                     'application_notified' => true,
                     MembershipProfile::FIELD_JOINED => true,
+                    MembershipFee::FIELD_CLUB => true,
                 ];
             }
 
@@ -872,7 +874,7 @@ class UsersController extends CakeDCUsersController
         $defaultPhonePrefix = PhoneNumber::prefixForCountryId($countryId);
         $this->set('defaultPhonePrefix', $defaultPhonePrefix);
         $this->set('countryPhonePrefixes', PhoneNumber::prefixMapForCountryIds(array_map('intval', array_keys($countryOptions))));
-        $this->set('completeProfileUrl', Router::url(UsersUrl::actionUrl('completeProfile')));
+        $this->set('completeProfileUrl', Router::url('/complete-profile'));
     }
 
     /**

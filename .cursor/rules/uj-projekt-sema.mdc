@@ -9,7 +9,7 @@ Ha **új projektet** indítunk, **éles DB**-re építünk, vagy **új CRUD** mo
 
 1. Olvasd a **DB sémát** és a **kapcsolatokat** (FK / hasMany / HABTM).
 2. Minden eddigi Admin megoldást a séma szerint tedd be — playbook: `doc/uj-projekt-sema-playbook.md`.
-3. **Ne** a demó Samples/Parents/Cities mezőneveket másold vakon.
+3. **Ne** demó mezőneveket másolj vakon (Samples/Parents/Cities már nincsenek a projektben — minták: `doc/minta-tanulsagok.md`).
 
 ## Séma → megoldás (rövid)
 

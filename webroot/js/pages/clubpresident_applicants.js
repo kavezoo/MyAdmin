@@ -38,7 +38,7 @@
 	}
 
 	$(function () {
-		var cfg = window.ClubpresidentApplicants || {};
+		var cfg = window.ClubpresidentApplicants || window.PresidentApplicants || {};
 
 		$(document).on('click', '.js-applicant-approve', function (e) {
 			e.preventDefault();

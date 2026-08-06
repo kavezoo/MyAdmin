@@ -1,9 +1,8 @@
 # Minta (demó) → éles projekt — tanulságok
 
-A **Samples / Parents / Cities** modulok és a `myadmin` demó DB **csak minta**: a keretrendszer kipróbálására szolgálnak.  
-Éles projektnél **cseréld / töröld** őket — a **viselkedést és a `doc/` szabályokat** vidd tovább.
+A **Samples / Parents / Cities** modulok a keretrendszer kipróbálására szolgáltak. **Ebből a MyAdmin projektből el lettek távolítva** (kód + DB táblák) — a fájl a belőlük leszűrt, **tartós** mintákat őrzi, hogy új / éles adatbázison az agent **újra fel tudja építeni** a CRUD-ot chatelőzmény nélkül.
 
-Ez a fájl a demóból leszűrt, **tartós** mintákat rögzíti, hogy új / éles adatbázison az agent **újra fel tudja építeni** a CRUD-ot chatelőzmény nélkül.
+Éles / új projektnél: a **viselkedést és a `doc/` szabályokat** vidd tovább — **ne** a demó mezőneveket (`szam`, `netto`, `logikai`, …).
 
 Kapcsolódó: [keretrendszer.md](keretrendszer.md), [crud-utmutato.md](crud-utmutato.md), [admin-konvenciok.md](admin-konvenciok.md), [admin-oldal.md](admin-oldal.md), [uj-projekt.md](uj-projekt.md), [middleware.md](middleware.md), [i18n.md](i18n.md).
 

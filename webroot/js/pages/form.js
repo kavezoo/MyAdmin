@@ -119,7 +119,16 @@
 		};
 
 		/**
+		 * Re-take baseline after late widget init (phone prefix, Select2, title-case).
+		 * Call when a page script mutates fields on load without user edits.
+		 */
+		App.recaptureFormBaseline = function () {
+			captureBaseline();
+		};
+
+		/**
 		 * Snapshot of meaningful form fields (after Select2 / Tempus / Trumbowyg init).
+		 * Values are normalized so cosmetic widget defaults do not look “dirty”.
 		 * @returns {string}
 		 */
 		var snapshotForm = function () {
@@ -162,9 +171,21 @@
 				var val = $el.val();
 				if ($.isArray(val)) {
 					data[name] = val.map(String).join('\u0001');
-				} else {
-					data[name] = val == null ? '' : String(val);
+					return;
 				}
+				var str = val == null ? '' : String(val);
+				// Phone: empty or country-prefix-only → same as empty (init/focus puts +36, blur clears it)
+				if ($el.hasClass('js-phone-intl')) {
+					var phone = str.trim();
+					var defPrefix = String($el.attr('data-default-prefix') || '').trim();
+					if (phone === '' || phone === '+' || (defPrefix !== '' && phone === defPrefix)) {
+						data[name] = '';
+						return;
+					}
+					data[name] = phone;
+					return;
+				}
+				data[name] = str;
 			});
 			return JSON.stringify(data);
 		};
@@ -546,7 +567,7 @@
 			$el.select2({
 				theme: 'bootstrap-5',
 				width: '100%',
-				placeholder: $el.data('placeholder') || msg.selectCities || msg.selectSamples || 'Select…',
+				placeholder: $el.data('placeholder') || 'Select…',
 				closeOnSelect: false,
 				tags: hasCreate,
 				createTag: hasCreate ? select2CreateTag : undefined
@@ -883,9 +904,10 @@
 		focusPrimaryFormField();
 		window.setTimeout(focusPrimaryFormField, 0);
 
-		// Baseline after widgets settle (Select2 / Tempus / Trumbowyg / inputmask)
+		// Baseline after widgets settle (Select2 / Tempus / Trumbowyg / inputmask / phone / title-case)
 		window.setTimeout(captureBaseline, 50);
 		window.setTimeout(captureBaseline, 300);
+		window.setTimeout(captureBaseline, 700);
 
 		$form.on('submit', function () {
 			allowLeave = true;

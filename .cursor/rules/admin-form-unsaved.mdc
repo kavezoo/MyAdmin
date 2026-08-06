@@ -34,7 +34,9 @@ Minden Admin **add/edit** form (`#form-horizontal` + `pages/form.js`):
 Layout: `templates/layout/admin.php` → `MyAdmin.messages.*`  
 JS: `MyAdmin.confirmLeave({ onConfirm })` — `webroot/js/app.js`  
 Programozott navigáció: `MyAdmin.allowFormLeave()` — `webroot/js/pages/form.js`  
-Logika: `webroot/js/pages/form.js` (+ ország reload: `users_auth_country.js`)
+Baseline újra: `MyAdmin.recaptureFormBaseline()` (widget init után)  
+Logika: `webroot/js/pages/form.js` (+ ország reload: `users_auth_country.js`)  
+Snapshot: JSON mezőértékek; telefon prefix-only = üres; csak eltérésnél kérdez.
 
 ## Új form
 

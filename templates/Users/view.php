@@ -88,7 +88,7 @@ $nationalFeeDateFormatted = (string)($nationalFeeDateFormatted ?? '');
 					<div class="alert alert-warning mb-4">
 						<?= $this->Html->link(
 							__('Complete your profile'),
-							UsersUrl::actionUrl('completeProfile'),
+							'/complete-profile',
 							['class' => 'alert-link']
 						) ?>
 					</div>
@@ -117,20 +117,26 @@ $nationalFeeDateFormatted = (string)($nationalFeeDateFormatted ?? '');
 
 				<div class="membership-fee-panel mb-4">
 					<div class="membership-fee-panel__title"><?= __('Membership fees ({0})', $membershipYear) ?></div>
-					<?= $this->element('users/membership_fee_status', [
-						'label' => $clubFeeLabel,
-						'paid' => $clubFeePaid,
-						'membershipYear' => $membershipYear,
-						'dateFormatted' => $clubFeeDateFormatted,
-						'mode' => 'profile',
-					]) ?>
-					<?= $this->element('users/membership_fee_status', [
-						'label' => $nationalFeeLabel,
-						'paid' => $nationalFeePaid,
-						'membershipYear' => $membershipYear,
-						'dateFormatted' => $nationalFeeDateFormatted,
-						'mode' => 'profile',
-					]) ?>
+					<div class="row g-3 membership-fee-panel__row">
+						<div class="col-12 col-md-6">
+							<?= $this->element('users/membership_fee_status', [
+								'label' => $clubFeeLabel,
+								'paid' => $clubFeePaid,
+								'membershipYear' => $membershipYear,
+								'dateFormatted' => $clubFeeDateFormatted,
+								'mode' => 'profile',
+							]) ?>
+						</div>
+						<div class="col-12 col-md-6">
+							<?= $this->element('users/membership_fee_status', [
+								'label' => $nationalFeeLabel,
+								'paid' => $nationalFeePaid,
+								'membershipYear' => $membershipYear,
+								'dateFormatted' => $nationalFeeDateFormatted,
+								'mode' => 'profile',
+							]) ?>
+						</div>
+					</div>
 				</div>
 
 				<dl class="record-view-fields mb-0">

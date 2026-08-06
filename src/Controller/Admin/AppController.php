@@ -28,13 +28,13 @@ class AppController extends BaseController
 
     /**
      * Session key: last worked-on Admin records (per Table alias + global `_last`).
-     * Structure: ['Samples' => 12, 'Cities' => 3, '_last' => ['model' => 'Samples', 'id' => 12]]
+     * Structure: ['Countries' => 12, 'Clubs' => 3, '_last' => ['model' => 'Countries', 'id' => 12]]
      */
     protected const LAST_VISITED_SESSION_KEY = 'Admin.lastVisited';
 
     /**
      * Session: per-model index list state (sort, direction, page, q, limit).
-     * Structure: Admin.indexState[Samples] = ['sort' => …, 'direction' => …, 'page' => 2, 'q' => '…']
+     * Structure: Admin.indexState[Countries] = ['sort' => …, 'direction' => …, 'page' => 2, 'q' => '…']
      */
     protected const INDEX_STATE_SESSION_KEY = 'Admin.indexState';
 

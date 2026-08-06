@@ -549,6 +549,41 @@ body.adminbody .main-sidebar.left {
   .button-menu-mobile:hover {
     color: #a2cff7; }
 
+.header-session {
+	display: flex;
+	align-items: center;
+	max-width: min(52vw, 28rem);
+}
+
+.header-session-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-width: 0;
+	line-height: 1.25;
+	color: #ffffff;
+	padding-right: 0.5rem;
+}
+
+.header-session-name {
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: #ffffff;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.header-session-role {
+	font-size: 0.95rem;
+	font-weight: 500;
+	color: #ffffff;
+	opacity: 0.95;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .sidebar-inner {
   height: 100%; }
 

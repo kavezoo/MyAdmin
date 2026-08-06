@@ -15,6 +15,7 @@ A felhasználónak **soha ne kelljen külön kérnie** a dokumentálást. Minden
 | Admin UI / CRUD / Delete / form / view / modal / oszlop | `doc/admin-konvenciok.md` és/vagy `doc/admin-oldal.md` |
 | Setups EAV / típus / slug | `doc/setups.md` (+ `setups-eav.mdc`) |
 | CakeDC auth (login / register / profile / role panelek) | `doc/users-auth.md` (+ `users-auth.mdc`) |
+| Tagság / klub / tagdíj / jelentkezők | `doc/membership.md` + **`doc/membership-greenfield.md`** (+ `membership-greenfield.mdc`) |
 | Demó→éles / tartós minta-viselkedés | `doc/minta-tanulsagok.md` (checklist, gyakori hibák, §0 playbook) |
 | Locale / `__()` / Admin nyelv / Translate form TAB / index sort | `doc/i18n.md`, `doc/form-i18n-tabs.md`, `doc/countries-admin.md` |
 | Szám / dátum middleware, parser | `doc/middleware.md` |

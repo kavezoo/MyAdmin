@@ -50,7 +50,7 @@ class MembershipService
     }
 
     /**
-     * Club president approves applicant → role member + email.
+     * Club president or country officer (president / vice president) approves applicant → member + email.
      */
     public function approve(EntityInterface $applicant, EntityInterface $approver): bool
     {
@@ -60,7 +60,7 @@ class MembershipService
         if ((int)$applicant->get('club_id') < 1) {
             return false;
         }
-        if ((int)$approver->get('club_id') !== (int)$applicant->get('club_id')) {
+        if (!$this->approverMayActOnApplicant($applicant, $approver)) {
             return false;
         }
 
@@ -94,7 +94,7 @@ class MembershipService
     }
 
     /**
-     * Club president rejects applicant → users.enabled = false (no delete).
+     * Club president or country officer rejects applicant → users.enabled = false (no delete).
      */
     public function reject(EntityInterface $applicant, EntityInterface $rejecter): bool
     {
@@ -104,7 +104,7 @@ class MembershipService
         if ((int)$applicant->get('club_id') < 1) {
             return false;
         }
-        if ((int)$rejecter->get('club_id') !== (int)$applicant->get('club_id')) {
+        if (!$this->approverMayActOnApplicant($applicant, $rejecter)) {
             return false;
         }
 
@@ -152,19 +152,35 @@ class MembershipService
             return;
         }
 
+        /** @var \App\Model\Table\ClubsTable $clubs */
+        $clubs = $this->fetchTable('Clubs');
+        $designated = $clubs->findClubPresident($clubId);
+
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->fetchTable('Users');
-        $presidents = $users->find()
+        $recipients = [];
+        if ($designated !== null
+            && (int)($designated->get('active') ?? 0) === 1
+            && (int)($designated->get('enabled') ?? 0) === 1
+        ) {
+            $recipients[(string)$designated->get('id')] = $designated;
+        }
+
+        // Also notify any role=clubpresident for this club (legacy / extra).
+        foreach ($users->find()
             ->where([
                 'Users.role' => AppRoles::CLUBPRESIDENT,
                 'Users.club_id' => $clubId,
                 'Users.active' => 1,
                 'Users.enabled' => 1,
             ])
-            ->all();
+            ->all() as $president
+        ) {
+            $recipients[(string)$president->get('id')] = $president;
+        }
 
         $clubName = $this->clubName($clubId);
-        if ($presidents->count() === 0) {
+        if ($recipients === []) {
             Log::info(sprintf(
                 'No clubpresident for club_id=%d (applicant %s)',
                 $clubId,
@@ -174,7 +190,7 @@ class MembershipService
             return;
         }
 
-        foreach ($presidents as $president) {
+        foreach ($recipients as $president) {
             try {
                 /** @var \App\Mailer\MembershipMailer $mailer */
                 $mailer = $this->getMailer('Membership');
@@ -192,5 +208,20 @@ class MembershipService
         $club = $clubs->find()->select(['name'])->where(['Clubs.id' => $clubId])->first();
 
         return $club !== null ? (string)$club->get('name') : ('#' . $clubId);
+    }
+
+    /**
+     * Club president: same club. President / vice president: same country.
+     */
+    protected function approverMayActOnApplicant(EntityInterface $applicant, EntityInterface $approver): bool
+    {
+        $approverRole = strtolower(trim((string)($approver->get('role') ?? '')));
+        if (in_array($approverRole, [AppRoles::PRESIDENT, AppRoles::VICEPRESIDENT], true)) {
+            return (int)($approver->get('country_id') ?? 0) === (int)($applicant->get('country_id') ?? 0)
+                && (int)($approver->get('country_id') ?? 0) > 0;
+        }
+
+        return (int)($approver->get('club_id') ?? 0) === (int)($applicant->get('club_id') ?? 0)
+            && (int)($approver->get('club_id') ?? 0) > 0;
     }
 }

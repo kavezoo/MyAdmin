@@ -34,7 +34,7 @@ if ($mode === 'profile' || $mode === 'profile_club'): ?>
 				<?php if ($paid): ?>
 					<i class="fa fa-check-circle"></i>
 				<?php else: ?>
-					<i class="fa fa-exclamation-circle"></i>
+					<i class="fa fa-exclamation-triangle"></i>
 				<?php endif; ?>
 			</span>
 			<div class="membership-fee-status__titles">

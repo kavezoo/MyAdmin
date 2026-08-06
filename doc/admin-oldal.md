@@ -347,4 +347,4 @@ Részletek: [i18n.md](i18n.md).
 | Tartós vs. demó | [keretrendszer.md](keretrendszer.md) |
 | Változásnapló | [valtozasok.md](valtozasok.md) |
 
-Demó referencia (ha van a projektben): `templates/Admin/Samples/` + `SamplesController` — a **viselkedést** másold, nem a mezőneveket.
+Demó referencia: a Samples/Parents/Cities modulok **el lettek távolítva** — a CRUD **viselkedést** a [minta-tanulsagok.md](minta-tanulsagok.md) + [admin-konvenciok.md](admin-konvenciok.md) specekből másold (nem demó mezőneveket).

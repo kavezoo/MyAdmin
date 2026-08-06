@@ -4,12 +4,35 @@
  *
  * @var \App\View\AppView $this
  */
+use App\Auth\AppRoles;
+use App\Auth\CurrentUser;
+use App\Auth\MembershipProfile;
+
 $panelHomeUrl = $this->get('panelHomeUrl') ?? [
 	'prefix' => 'Admin',
 	'controller' => 'Dashboard',
 	'action' => 'index',
 ];
 $panelBrand = (string)($this->get('panelBrand') ?? __('Admin'));
+
+$sessionName = '';
+$sessionRoleLabel = '';
+$identity = $this->request->getAttribute('identity');
+if ($identity !== null) {
+	$sessionName = MembershipProfile::displayName($identity);
+	if ($sessionName === '') {
+		$sessionName = trim((string)(
+			$identity->get('username')
+			?: $identity->get('email')
+			?: ''
+		));
+	}
+	$role = CurrentUser::role($this->request);
+	$sessionRoleLabel = AppRoles::label($role);
+	if (CurrentUser::isSuperuser($this->request) && $role !== AppRoles::SUPERUSER) {
+		$sessionRoleLabel .= ' · ' . __('Superuser');
+	}
+}
 ?>
 <!-- top bar navigation -->
 <div class="headerbar">
@@ -32,10 +55,20 @@ $panelBrand = (string)($this->get('panelBrand') ?? __('Admin'));
 		</ul>
 
 		<ul class="list-inline menu-left mb-0">
-			<li class="float-left">
-				<button class="button-menu-mobile open-left">
+			<li class="float-left header-session">
+				<button type="button" class="button-menu-mobile open-left" aria-label="<?= h(__('Menu')) ?>">
 					<i class="fa fa-fw fa-bars"></i>
 				</button>
+				<?php if ($sessionName !== '' || $sessionRoleLabel !== ''): ?>
+					<span class="header-session-info" title="<?= h(trim($sessionName . ' — ' . $sessionRoleLabel, ' —')) ?>">
+						<?php if ($sessionName !== ''): ?>
+							<span class="header-session-name"><?= h($sessionName) ?></span>
+						<?php endif; ?>
+						<?php if ($sessionRoleLabel !== ''): ?>
+							<span class="header-session-role"><?= h($sessionRoleLabel) ?></span>
+						<?php endif; ?>
+					</span>
+				<?php endif; ?>
 			</li>
 		</ul>
 

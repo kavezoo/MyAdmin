@@ -5,6 +5,189 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-06 — Teljes fr_FR + it_IT UI fordítások (gettext)
+
+### Mi változott / miért
+- A `default.pot` mind a **577** msgid-jére készült teljes francia és olasz `msgstr` — üres fordítás nem marad.
+- Forrás mapek: `tmp/i18n_translations_fr.php`, `tmp/i18n_translations_it.php` (értékek: `tmp/i18n_fr_values.php` / `tmp/i18n_it_values.php` → `php tmp/i18n_build_fr_it_maps.php`).
+- `tmp/build_full_locales.php` most **hu_HU + de_DE + fr_FR + it_IT** `.po`-t épít; másolatok: `fr_FR`→`fr_MC`, `it_IT`→`it_SM`/`it_VA` (Language header frissítve).
+- Plural-Forms: FR `nplurals=2; plural=(n > 1);` · IT `nplurals=2; plural=(n != 1);`.
+
+### Érintett
+- `tmp/i18n_translations_fr.php`, `tmp/i18n_translations_it.php`, `tmp/i18n_fr_values.php`, `tmp/i18n_it_values.php`, `tmp/i18n_build_fr_it_maps.php`, `tmp/build_full_locales.php`
+- `resources/locales/fr_FR/default.po`, `fr_MC/default.po`, `it_IT/default.po`, `it_SM/default.po`, `it_VA/default.po`
+- `doc/i18n.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-06 — Teljes hu_HU + de_DE UI fordítások (gettext)
+
+### Mi változott / miért
+- A `default.pot` mind a **577** msgid-jére készült teljes `msgstr` map magyarul és németül — üres fordítás nem marad.
+- Forrás mapek: `tmp/i18n_translations_hu.php`, `tmp/i18n_translations_de.php`; összeállítás: `tmp/build_full_locales.php` (meglévő `.po` + extra, extra nyer).
+- Kiírva: `resources/locales/hu_HU/default.po`, `resources/locales/de_DE/default.po` (+ `de_AT` / `de_CH` / `de_LI` = `de_DE` másolat).
+- Újraépítés: extract → `php tmp/build_full_locales.php` — lásd `doc/i18n.md`.
+
+### Érintett
+- `tmp/i18n_translations_hu.php`, `tmp/i18n_translations_de.php`, `tmp/build_full_locales.php`, `tmp/i18n_po_lib.php`
+- `resources/locales/hu_HU/default.po`, `resources/locales/de_{DE,AT,CH,LI}/default.po`, `resources/locales/default.pot`
+- `doc/i18n.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-06 — Demó modulok eltávolítva: Samples / Parents / Cities
+
+### Mi változott / miért
+- A Samples, Parents és Cities Admin modulok csak a keretrendszer UI/CRUD mintájára kellettek — domainként nem kellenek ebbe a projektbe.
+- Törölve: controllerek, modellek, templatek, sidebar Data menü, dashboard kártyák, `admin_search` bejegyzések, EventLog / AdminTranslate / CounterCache rebuild demó részei.
+- Migráció: `20260806140000_DropDemoSamplesParentsCities` — drop `cities_samples`, `samples`, `cities`, `parents` + kapcsolódó `i18n` sorok.
+- A tartós minták továbbra is a `doc/minta-tanulsagok.md` + `doc/admin-konvenciok.md` specekben vannak (új projekt / új CRUD innen másolható).
+
+### Érintett
+- Törölt: `src/Controller/Admin/{Samples,Parents,Cities}Controller.php`, `src/Model/{Table,Entity}/*Sample*`, `*Parent*`, `*Cit*`, `templates/Admin/{Samples,Parents,Cities}/`
+- `templates/element/admin/sidebar.php`, `templates/Admin/Dashboard/index.php`, `config/admin_search.php`
+- `RebuildCounterCachesCommand`, `EventLogPresenter`, `AdminTranslate`, `AdminCountry`, `templates/Admin/Search/index.php`, `layout/admin.php`, `webroot/js/pages/{index,form}.js`
+- `doc/struktura.md`, `keretrendszer.md`, `minta-tanulsagok.md`, `admin-oldal.md`, rules `panel-member-index`, `admin-index-sort-icons`
+
+---
+
+## 2026-08-06 — Dokumentáció: tagság greenfield playbook (teljes csomag)
+
+### Mi változott / miért
+- Az eddigi tagsági / role / klubelnök / tagdíj / jelentkező minták **greenfield playbookba** rögzítve — új projektben innen építendő a rendszer, ne improvizálás.
+- Új: **`doc/membership-greenfield.md`** (lépéssorrend, séma, ACL, UI elementek, checklist, gyakori hibák).
+- Új rule: **`membership-greenfield.mdc`**.
+- Kereszt-hivatkozások: `membership.md` §6–8, `README.md`, `uj-projekt.md` §2.9b, `uj-projekt-sema-playbook.md` §1.6, `struktura.md` (`panel/`, applicant cards), `auto-dokumentalas.mdc`, `users-auth.mdc`.
+
+### Érintett
+- `doc/membership-greenfield.md` (új)
+- `.cursor/rules/membership-greenfield.mdc` (új)
+- `doc/membership.md`, `doc/README.md`, `doc/uj-projekt.md`, `doc/uj-projekt-sema-playbook.md`, `doc/struktura.md`
+- `.cursor/rules/auto-dokumentalas.mdc`, `.cursor/rules/users-auth.mdc`
+
+---
+
+## 2026-08-06 — President Members: pending jelentkezők kapcsoló
+
+### Mi változott / miért
+- `/president/members`: kapcsoló **Show pending applicants** — `new` + `pending` jelentkezők kártyákon; Approve / Reject ország scope-ban (president/vp).
+- `MembershipService::approve/reject`: president/vp → `country_id` match; clubpresident → `club_id` match.
+
+### Érintett
+- `President/MembersController`, `MembershipService`, `President/Members/index.php`, `applicant_cards`, `clubpresident_applicants.js`
+- `doc/membership.md`
+
+---
+
+## 2026-08-06 — Header: név + rang a hamburger mellett
+
+### Mi változott / miért
+- Topbaron a menü gomb mellett: bejelentkezett név + role címke (Új tag / Tag / Klub elnök / Alelnök / Elnök / Admin / Superuser).
+
+### Érintett
+- `templates/element/admin/header.php`, `webroot/css/style.css`, `doc/users-auth.md`
+
+---
+
+## 2026-08-06 — Role ACL: VP vs president + klubelnök demote
+
+### Mi változott / miért
+- VP **nem** módosíthatja / nem állíthatja a `president` role-t; csak president vagy admin.
+- President szabadon állíthat VP-t (pl. member / clubpresident / president).
+- Klubelnök váltáskor: tiszta `clubpresident` → `member`; magasabb rangú (president/vp) role **marad**; új member → `clubpresident`.
+
+### Érintett
+- `AppRoles::canAssignRole` / `canEditTargetRole` / `shouldDemoteFromClubPresident`
+- `ClubsTable::assignClubPresident`, `President/MembersController`, `member_edit_form`
+- `doc/membership.md`, `doc/users-auth.md`
+
+---
+
+## 2026-08-06 — President: tag role select + klubelnök assign
+
+### Mi változott / miért
+- President/VP tag szerkesztés: **role** select (member…president; nincs admin/superuser/new).
+- Klubelnök beállítás: `clubs.club_president_id`; **member/editor → clubpresident**; **president/vp role megmarad**, csak `club_id` + `club_president_id` áll.
+
+### Érintett
+- Migráció `20260806090000_AddClubPresidentIdToClubs`, `clubs.sql`, `Club`, `ClubsTable`, `ClubsController`, `MembershipService`
+- `AppRoles::presidentAssignableRoles` / `shouldPromoteToClubPresident`
+- `President/MembersController`, `member_edit_form`, `doc/membership.md`
+
+---
+
+## 2026-08-06 — Clubpresident: új tag kártyák árnyéka
+
+### Mi változott / miért
+- Members listán a pending applicant kártyákon Bootstrap `shadow` (láthatóbb kiemelés).
+
+### Érintett
+- `templates/element/clubpresident/applicant_cards.php`
+
+---
+
+## 2026-08-06 — Klubváltás: klub tagdíj nullázás + warning a paneleken
+
+### Mi változott / miért
+- Tag klubváltáskor (`role=new`) **csak** a **klub tagdíj** (`club_membership_fee_date`) nullázódik — az új klubban újra kell fizetni. Az **országos / MPE** (`national_membership_fee_date`) **nem** változik.
+- Vezérlőpult (New / Member / Clubpresident / President): befizetetlen klub tagdíj → **alert-warning**.
+- Profil tagdíj unpaid + klubváltás figyelmeztetés: **warning** stílus (nem danger).
+
+### Érintett
+- `MembershipFee::clearClubFeeOnClubSwitch` / `isClubFeeUnpaid`, `UsersController`, `PanelAppController`
+- `element/panel/club_fee_unpaid_alert`, dashboard templatek, `membership_fee.css`, `Users/edit.php`
+- `doc/membership.md`, `doc/users-auth.md`, `resources/locales/hu_HU/default.po`
+
+---
+
+## 2026-08-06 — New dashboard: hiányos vs elfogadásra vár
+
+### Mi változott / miért
+- Hiányos profil (név/klub): a vezérlőpulton **figyelmeztetés** — amíg nincs kitöltve, nem tud jelentkezni; dashboard megtekinthető, CTA → `/complete-profile`.
+- Kész profil: csak **„Elfogadásra vár”** szöveg.
+- Login után hiányos `new` → `/new` dashboard (nem azonnali complete-profile redirect).
+
+### Érintett
+- `New/AppController`, `New/DashboardController`, `templates/New/Dashboard/index.php`
+- `MembershipProfile::missingFieldLabels`, `Application.php`, `doc/membership.md`
+
+---
+
+## 2026-08-06 — New dashboard: várakozás ha profil kész
+
+### Mi változott / miért
+- „Profil kiegészítése” kártya akkor is megjelent, ha név+klub ki volt töltve, de `membership_status` még nem `pending` — a gomb `/complete-profile`-ra vitt, ami azonnal visszadobott.
+- Dashboard: `isWaitingForApproval` (kész profil) → csak várakozás + Profile kártya; hiányos profil → complete-profile CTA.
+- Explicit route `/complete-profile`; heal `onProfileCompleted` ha státusz beragadt.
+
+### Érintett
+- `New/DashboardController`, `templates/New/Dashboard/index.php`, `MembershipProfile::isWaitingForApproval`
+- `config/routes.php`, `New/AppController`, `Application.php`, `doc/membership.md`
+
+---
+
+## 2026-08-06 — Mentetlen form: false dirty a profilon
+
+### Mi változott / miért
+- Profil edit mindig leave Swal-t mutatott változtatás nélkül: telefon `+prefix` init vs blur üres; név title-case blur autofókusz után; baseline túl korán.
+- Snapshot normalizálás (telefon prefix = üres); title-case betöltéskor; `recaptureFormBaseline()`; késleltetett baseline.
+
+### Érintett
+- `webroot/js/pages/form.js`, `users_profile.js`, `users_phone.js`
+- `doc/admin-konvenciok.md`, `.cursor/rules/admin-form-unsaved.mdc`
+
+---
+
+## 2026-08-06 — Profil tagdíj: 2 oszlop egy sorban
+
+### Mi változott / miért
+- `/profile` tagdíj panel: klub + országos státusz **egymás mellett** (`col-md-6`), ne két teljes sorban.
+
+### Érintett
+- `templates/Users/view.php`, `webroot/css/pages/membership_fee.css`, `doc/membership.md`, `doc/users-auth.md`
+
+---
+
 ## 2026-08-06 — Profil klub mentés: disabled select POST bug
 
 ### Mi változott / miért

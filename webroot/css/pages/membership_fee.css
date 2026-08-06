@@ -4,7 +4,12 @@
 .membership-fee-status--profile {
 	border-radius: 0.5rem;
 	padding: 1rem 1.15rem;
-	margin-bottom: 0.75rem;
+	margin-bottom: 0;
+	height: 100%;
+}
+
+.membership-fee-panel__row > [class*="col-"] > .membership-fee-status--profile {
+	margin-bottom: 0;
 }
 
 .membership-fee-status--profile.membership-fee-status--paid {
@@ -13,9 +18,9 @@
 }
 
 .membership-fee-status--profile.membership-fee-status--unpaid {
-	background: #fff5f5;
-	border: 2px solid #f1aeb5;
-	box-shadow: 0 0 0 1px rgba(220, 53, 69, 0.08);
+	background: #fff3cd;
+	border: 1px solid #ffecb5;
+	box-shadow: none;
 }
 
 .membership-fee-status__head {
@@ -34,7 +39,7 @@
 }
 
 .membership-fee-status--unpaid .membership-fee-status__icon {
-	color: #dc3545;
+	color: #997404;
 }
 
 .membership-fee-status__label {
@@ -53,7 +58,7 @@
 }
 
 .membership-fee-status__message--unpaid {
-	color: #842029;
+	color: #664d03;
 	font-size: 1rem;
 }
 

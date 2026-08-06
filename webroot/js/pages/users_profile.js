@@ -42,10 +42,32 @@
 			});
 		}
 
+		$('.js-title-case-name').each(function () {
+			var $el = $(this);
+			var next = titleCaseName($el.val());
+			if (String($el.val() || '') !== next) {
+				$el.val(next);
+			}
+		});
 		$('.js-title-case-name').on('blur', function () {
 			var $el = $(this);
-			$el.val(titleCaseName($el.val()));
+			var next = titleCaseName($el.val());
+			if (String($el.val() || '') !== next) {
+				$el.val(next);
+			}
 		});
+
+		// After Select2 / title-case settle — refresh unsaved-form baseline
+		window.setTimeout(function () {
+			if (typeof App.recaptureFormBaseline === 'function') {
+				App.recaptureFormBaseline();
+			}
+		}, 0);
+		window.setTimeout(function () {
+			if (typeof App.recaptureFormBaseline === 'function') {
+				App.recaptureFormBaseline();
+			}
+		}, 400);
 
 		var $deleteBtn = $('#btn-delete-avatar');
 		var $deleteForm = $('#delete-avatar-form');

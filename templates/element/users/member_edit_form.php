@@ -7,13 +7,30 @@
  * @var string $feeField club_membership_fee_date | national_membership_fee_date
  * @var string $feeLabel
  * @var bool $showEnabled
+ * @var bool $showRole
+ * @var array<string, string> $roleOptions
+ * @var bool $roleSelectDisabled
  */
+use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
 use App\Utility\MembershipFee;
 
 $feeField = (string)($feeField ?? MembershipFee::FIELD_CLUB);
 $feeLabel = (string)($feeLabel ?? __('Membership fee'));
 $showEnabled = (bool)($showEnabled ?? false);
+$showRole = (bool)($showRole ?? false);
+$roleOptions = $roleOptions ?? [];
+$currentRole = strtolower(trim((string)($member->get('role') ?? '')));
+$roleSelectDisabled = (bool)($roleSelectDisabled ?? false);
+if (!$roleSelectDisabled && $showRole && $currentRole !== '' && !AppRoles::isPresidentAssignable($currentRole)) {
+	$roleSelectDisabled = true;
+}
+if ($showRole && $roleOptions === []) {
+	$roleOptions = AppRoles::presidentAssignableOptions();
+}
+if ($currentRole !== '' && !isset($roleOptions[$currentRole])) {
+	$roleOptions = [$currentRole => AppRoles::labeled($currentRole)] + $roleOptions;
+}
 $feeValue = $member->get($feeField);
 $feePickerValue = '';
 if ($feeValue instanceof \DateTimeInterface) {
@@ -45,7 +62,7 @@ $this->Html->scriptBlock(
 	. ');',
 	['block' => 'script']
 );
-// Tempus Dominus 6 needs Popper for correct popup placement (same as Admin Samples form).
+// Tempus Dominus 6 needs Popper for correct popup placement (same as other Admin date forms).
 $this->Html->script([
 	'popper',
 	'/plugins/tempus-dominus/js/tempus-dominus.min',
@@ -102,6 +119,28 @@ $this->Html->script([
 							]) ?>
 						</div>
 					</div>
+
+					<?php if ($showRole): ?>
+						<div class="form-group row mb-3">
+							<?= $this->Form->adminLabel('role', __('Role:'), ['for' => 'role']) ?>
+							<div class="col-12 col-md-10 col-xl-5">
+								<?= $this->Form->control('role', [
+									'label' => false,
+									'type' => 'select',
+									'options' => $roleOptions,
+									'class' => 'form-select',
+									'id' => 'role',
+									'disabled' => $roleSelectDisabled,
+								]) ?>
+								<?php if ($roleSelectDisabled): ?>
+									<?= $this->Form->hidden('role') ?>
+									<div class="form-text"><?= __('You cannot change this member’s role.') ?></div>
+								<?php else: ?>
+									<div class="form-text"><?= __('Maximum role: president. Only a president or admin can assign or change the president role. Admin cannot be assigned here.') ?></div>
+								<?php endif; ?>
+							</div>
+						</div>
+					<?php endif; ?>
 
 					<div class="form-group row mb-3">
 						<?= $this->Form->adminLabel($feeField, $feeLabel . ':', ['for' => $feeInputId, 'required' => false]) ?>

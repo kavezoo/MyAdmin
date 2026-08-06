@@ -32,6 +32,7 @@ $cards = [
 				<h3 class="fw-bold"><i class="fa fa-tachometer"></i> <?= __('Dashboard') ?></h3>
 			</div>
 			<div class="card-body">
+				<?= $this->element('panel/club_fee_unpaid_alert') ?>
 				<p class="mb-3"><?= __('Welcome to the President panel. Choose where you want to go — each card explains the destination.') ?></p>
 				<?= $this->element('panel/dashboard_nav_cards', ['cards' => $cards]) ?>
 			</div>

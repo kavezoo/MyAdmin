@@ -126,7 +126,7 @@ Minden hagyományos Admin **add/edit** form (`#form-horizontal` + `pages/form.js
 
 **Trigger navigáció:** Cancel / Close gombok, breadcrumb Back, sidebar linkek, bármely `<a href>` (kivéve `#`, `javascript:`, `mailto:`, `tel:`, `target=_blank`, `download`, Bootstrap toggle, `.modal` belüli link, `btn-row-delete`). Profil országváltás: AJAX klubok (`users_auth_country.js`), nem navigáció.
 
-**Baseline:** form ready után ~400 ms (Select2 / Tempus / Trumbowyg settle). Snapshot: input / select / textarea értékek (checkbox/radio: checked).
+**Baseline:** betöltés után JSON snapshot a tracked mezőkről (`snapshotForm` → `JSON.stringify`); elhagyáskor új snapshot összehasonlítás. Widget settle: ~50 / 300 / 700 ms + `MyAdmin.recaptureFormBaseline()` (pl. profil telefon / title-case / Select2). Normalizálás: trim; `.js-phone-intl` prefix-only → üres (ne legyen false dirty).
 
 **API:**
 
@@ -136,6 +136,7 @@ MyAdmin.confirmLeave({
 });
 MyAdmin.allowFormLeave(); // programozott navigáció előtt (kikapcsolja a beforeunload-ot)
 MyAdmin.isFormDirty();    // opcionális dirty ellenőrzés
+MyAdmin.recaptureFormBaseline(); // baseline újra widget init után
 ```
 
 **Új form:** ha `id="form-horizontal"` + `pages/form` script → automatikus. Ne írj párhuzamos dirty-checket.
@@ -259,7 +260,7 @@ Az utoljára megtekintett / szerkesztésre megnyitott / sikeresen mentett (új v
 
 | Kulcs | Tartalom |
 |-------|----------|
-| `Admin.lastVisited` | pl. `['Samples' => 12, 'Cities' => 3, '_last' => ['model' => 'Samples', 'id' => 12]]` |
+| `Admin.lastVisited` | pl. `['Countries' => 12, 'Clubs' => 3, '_last' => ['model' => 'Countries', 'id' => 12]]` |
 
 | Esemény | Mentés |
 |---------|--------|

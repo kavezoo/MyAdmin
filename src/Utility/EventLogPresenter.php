@@ -64,9 +64,6 @@ class EventLogPresenter
             'Countries' => __('Country'),
             'Clubs' => __('Club'),
             'Setups' => __('Application settings'),
-            'Samples' => __('Sample record'),
-            'Parents' => __('Parent record'),
-            'Cities' => __('City'),
             'Continents' => __('Continent'),
             'EventLogs' => __('Activity log'),
         ];

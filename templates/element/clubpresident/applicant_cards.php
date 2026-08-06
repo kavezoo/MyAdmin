@@ -37,6 +37,10 @@ $count = count($list);
 						$applicantId = (string)$applicant->id;
 						$countryLabel = AdminCountry::label((int)($applicant->country_id ?? 0));
 						$phone = trim((string)($applicant->phone ?? ''));
+						$clubName = '';
+						if (!empty($applicant->club) && is_object($applicant->club)) {
+							$clubName = trim((string)($applicant->club->name ?? ''));
+						}
 						$avatarPath = UserAvatar::displayPath($applicantId, (string)($applicant->avatar ?? ''));
 						$avatarUrl = $avatarPath !== ''
 							? $this->Url->build(UserAvatar::publicUrlFor($applicantId, (string)($applicant->avatar ?? '')))
@@ -47,7 +51,7 @@ $count = count($list);
 							? \App\Utility\LocaleDateParser::format($applicant->modified, 'datetime_short')
 							: '';
 						?>
-						<div class="card applicant-card border">
+						<div class="card applicant-card border shadow">
 							<?php if ($avatarUrl !== ''): ?>
 								<img class="card-img-top applicant-card__img" src="<?= h($avatarUrl) ?>" alt="<?= h($name) ?>">
 							<?php else: ?>
@@ -62,6 +66,9 @@ $count = count($list);
 									<span class="d-block"><i class="fa fa-envelope fa-fw text-muted"></i> <?= h((string)$applicant->email) ?></span>
 									<?php if ($phone !== ''): ?>
 										<span class="d-block"><i class="fa fa-phone fa-fw text-muted"></i> <?= h($phone) ?></span>
+									<?php endif; ?>
+									<?php if ($clubName !== ''): ?>
+										<span class="d-block"><i class="fa fa-users fa-fw text-muted"></i> <?= h($clubName) ?></span>
 									<?php endif; ?>
 									<?php if ($countryLabel !== ''): ?>
 										<span class="d-block"><i class="fa fa-flag fa-fw text-muted"></i> <?= h($countryLabel) ?></span>

@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace App\Controller\President;
 
+use App\Auth\AppRoles;
+use App\Auth\CurrentUser;
+use App\Auth\MembershipProfile;
 use App\Controller\Concerns\PanelMemberListTrait;
+use App\Service\MembershipService;
 use App\Utility\AdminCountry;
 use App\Utility\MembershipFee;
 use Cake\Http\Exception\ForbiddenException;
@@ -18,6 +22,8 @@ class MembersController extends AppController
     use PanelMemberListTrait;
 
     private const NATIONAL_PAID_ONLY_SESSION_KEY = 'President.Members.national_paid_only';
+
+    private const SHOW_APPLICANTS_SESSION_KEY = 'President.Members.show_applicants';
 
     /**
      * Active members in the officer's country.
@@ -36,12 +42,16 @@ class MembersController extends AppController
             $this->set('breadcrumb', __('Members'));
             $this->set('countryLabel', '');
             $nationalPaidOnly = false;
-            $this->set(compact('membershipYear', 'countryId', 'nationalPaidOnly'));
+            $showApplicants = false;
+            $applicants = [];
+            $this->set(compact('membershipYear', 'countryId', 'nationalPaidOnly', 'showApplicants', 'applicants'));
 
             return;
         }
 
         $nationalPaidOnly = $this->resolveNationalPaidOnly();
+        $showApplicants = $this->resolveShowApplicants();
+        $applicants = [];
 
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->fetchTable('Users');
@@ -60,6 +70,22 @@ class MembersController extends AppController
             ->contain(['Clubs'])
             ->where($where);
 
+        if ($showApplicants) {
+            $applicants = $users->find()
+                ->contain(['Clubs'])
+                ->where([
+                    'Users.country_id' => $countryId,
+                    'Users.role' => AppRoles::NEW,
+                    'Users.membership_status' => MembershipProfile::STATUS_PENDING,
+                    'Users.active' => 1,
+                    'Users.enabled' => 1,
+                ])
+                ->orderBy(['Users.modified' => 'DESC', 'Users.created' => 'DESC'])
+                ->limit(200)
+                ->all()
+                ->toList();
+        }
+
         $countryLabel = AdminCountry::label($countryId);
 
         $this->set('title', __('Members'));
@@ -68,7 +94,7 @@ class MembersController extends AppController
             $query,
             $this->panelMemberPaginateOptions($this->panelMemberSortableFields(true))
         ));
-        $this->set(compact('countryLabel', 'countryId', 'membershipYear', 'nationalPaidOnly'));
+        $this->set(compact('countryLabel', 'countryId', 'membershipYear', 'nationalPaidOnly', 'showApplicants', 'applicants'));
     }
 
     /**
@@ -87,16 +113,33 @@ class MembersController extends AppController
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->fetchTable('Users');
         $countryId = (int)($member->get('country_id') ?? 0);
+        $actorRole = CurrentUser::role($this->getRequest());
+        $targetRole = strtolower(trim((string)($member->get('role') ?? '')));
+        $canEditRole = AppRoles::canEditTargetRole($actorRole, $targetRole);
+        $roleOptions = AppRoles::assignableOptionsForActor($actorRole);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             try {
-                $member = $users->patchEntity($member, $this->request->getData(), [
-                    'accessibleFields' => [
-                        'first_name' => true,
-                        'phone' => true,
-                        'enabled' => true,
-                        MembershipFee::FIELD_NATIONAL => true,
-                    ],
+                $data = $this->request->getData();
+                $requestedRole = strtolower(trim((string)($data['role'] ?? '')));
+                $accessible = [
+                    'first_name' => true,
+                    'phone' => true,
+                    'enabled' => true,
+                    MembershipFee::FIELD_NATIONAL => true,
+                ];
+                if (
+                    $canEditRole
+                    && $requestedRole !== ''
+                    && AppRoles::canAssignRole($actorRole, $requestedRole)
+                ) {
+                    $accessible['role'] = true;
+                } else {
+                    unset($data['role']);
+                }
+
+                $member = $users->patchEntity($member, $data, [
+                    'accessibleFields' => $accessible,
                 ]);
                 if ($users->save($member)) {
                     $this->Flash->success(__('The member has been saved.'));
@@ -113,6 +156,9 @@ class MembersController extends AppController
         $this->set('feeField', MembershipFee::FIELD_NATIONAL);
         $this->set('feeLabel', MembershipFee::nationalFeeLabel($countryId));
         $this->set('showEnabled', true);
+        $this->set('showRole', true);
+        $this->set('roleOptions', $roleOptions);
+        $this->set('roleSelectDisabled', !$canEditRole);
         $this->set('title', __('Edit member'));
         $this->set('breadcrumb', __('Members'));
         $this->render('form');
@@ -318,6 +364,86 @@ class MembersController extends AppController
     }
 
     /**
+     * Approve pending applicant in the officer's country → member + joined date.
+     *
+     * @param string|null $id User id
+     * @return \Cake\Http\Response|null
+     */
+    public function approve(?string $id = null): ?Response
+    {
+        $this->request->allowMethod(['post', 'put', 'patch']);
+        $countryId = $this->officerCountryId();
+        if ($countryId < 1) {
+            throw new ForbiddenException(__('Your account is not assigned to a country yet.'));
+        }
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->fetchTable('Users');
+        $applicant = $users->find()
+            ->where([
+                'Users.id' => (string)$id,
+                'Users.country_id' => $countryId,
+                'Users.role' => AppRoles::NEW,
+                'Users.membership_status' => MembershipProfile::STATUS_PENDING,
+                'Users.enabled' => 1,
+            ])
+            ->first();
+        if ($applicant === null) {
+            throw new NotFoundException(__('Applicant not found.'));
+        }
+
+        $approver = $users->get($this->requireIdentityUserId());
+        $ok = (new MembershipService())->approve($applicant, $approver);
+        if ($ok) {
+            $this->Flash->success(__('Membership approved. The new member has been notified by email.'));
+        } else {
+            $this->Flash->error(__('Could not approve this application.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Reject pending applicant in the officer's country → users.enabled = false.
+     *
+     * @param string|null $id User id
+     * @return \Cake\Http\Response|null
+     */
+    public function reject(?string $id = null): ?Response
+    {
+        $this->request->allowMethod(['post', 'put', 'patch']);
+        $countryId = $this->officerCountryId();
+        if ($countryId < 1) {
+            throw new ForbiddenException(__('Your account is not assigned to a country yet.'));
+        }
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->fetchTable('Users');
+        $applicant = $users->find()
+            ->where([
+                'Users.id' => (string)$id,
+                'Users.country_id' => $countryId,
+                'Users.role' => AppRoles::NEW,
+                'Users.membership_status' => MembershipProfile::STATUS_PENDING,
+                'Users.enabled' => 1,
+            ])
+            ->first();
+        if ($applicant === null) {
+            throw new NotFoundException(__('Applicant not found.'));
+        }
+
+        $rejecter = $users->get($this->requireIdentityUserId());
+        $ok = (new MembershipService())->reject($applicant, $rejecter);
+        if ($ok) {
+            $this->Flash->success(__('The application has been rejected. The applicant can no longer log in.'));
+        } else {
+            $this->Flash->error(__('Could not reject this application.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    /**
      * Index filter: only members with national fee paid for current year (default off = all).
      */
     protected function resolveNationalPaidOnly(): bool
@@ -342,6 +468,49 @@ class MembersController extends AppController
         }
 
         return (bool)$saved;
+    }
+
+    /**
+     * Index filter: show pending applicants (role `new`) as cards above the list.
+     */
+    protected function resolveShowApplicants(): bool
+    {
+        $session = $this->request->getSession();
+        $query = $this->request->getQueryParams();
+
+        if (array_key_exists('show_applicants', $query)) {
+            $raw = $query['show_applicants'];
+            if (is_array($raw)) {
+                $raw = end($raw);
+            }
+            $show = in_array((string)$raw, ['1', 'true', 'on'], true);
+            $session->write(self::SHOW_APPLICANTS_SESSION_KEY, $show);
+
+            return $show;
+        }
+
+        $saved = $session->read(self::SHOW_APPLICANTS_SESSION_KEY);
+        if ($saved === null) {
+            return false;
+        }
+
+        return (bool)$saved;
+    }
+
+    protected function requireIdentityUserId(): string
+    {
+        $identity = $this->getRequest()->getAttribute('identity');
+        $userId = '';
+        if ($identity !== null && method_exists($identity, 'getIdentifier')) {
+            $userId = (string)$identity->getIdentifier();
+        } elseif ($identity !== null && method_exists($identity, 'get')) {
+            $userId = (string)($identity->get('id') ?? '');
+        }
+        if ($userId === '') {
+            throw new ForbiddenException(__('You must be logged in.'));
+        }
+
+        return $userId;
     }
 
     /**

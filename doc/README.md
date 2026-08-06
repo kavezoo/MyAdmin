@@ -19,7 +19,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | **Ország→ország láthatóság** | **[country-visibilities.md](country-visibilities.md)** |
 | **Eseménynapló** | **[event-logs.md](event-logs.md)** |
 | **Login nyelv** | **[login-language.md](login-language.md)** |
-| **Tagság jelentkezés** | **[membership.md](membership.md)** |
+| **Tagság jelentkezés** | **[membership.md](membership.md)** — greenfield: **[membership-greenfield.md](membership-greenfield.md)** |
 | Fordítás | [i18n.md](i18n.md) |
 | **Form nyelvi TAB-ok** | **[form-i18n-tabs.md](form-i18n-tabs.md)** |
 | Mentéskori szám/dátum | [middleware.md](middleware.md) |
@@ -43,6 +43,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | **[event-logs.md](event-logs.md)** | **Eseménynapló** (`event_logs`); login/CRUD/HTTP; ország ACL |
 | **[login-language.md](login-language.md)** | Login **nyelv** Select2; `languages` + i18n nevek; register = ország |
 | **[membership.md](membership.md)** | Tagság: `new` → profil → clubpresident → `member` |
+| **[membership-greenfield.md](membership-greenfield.md)** | **Tagság + role panelek greenfield** — lépéssorrend, séma, ACL, checklist |
 | [middleware.md](middleware.md) | Locale szám- és dátumnormalizálás |
 | [crud-utmutato.md](crud-utmutato.md) | Új Admin CRUD modul lépései |
 | [setups.md](setups.md) | Típusos Setups (EAV) modul — widgetek, slug, JSON/tömb |
@@ -67,7 +68,8 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | `admin-form-required.mdc` | Kötelező mező piros `*` (adminLabel) |
 | `uj-projekt-sema.mdc` | **alwaysApply** — új/éles projekt: séma + kapcsolatok szerint minden megoldás |
 | `pos-db-default.mdc` | `pos` mindig DB DEFAULT |
-| `admin-linked-modal-urls.mdc` | Linked modal Edit/View/Delete = megnyitott entitás CRUD URL (örök) |
+| `membership-greenfield.mdc` | Tagság + role panelek greenfield — `membership-greenfield.md` |
+| `panel-member-index.mdc` | President / Clubpresident taglista index minta |
 
 Új projektbe másold a `doc/` **és** a `.cursor/rules/` mappát.
 
@@ -76,6 +78,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - Framework: **CakePHP 5.4+**, Admin URL: `/admin/...`
 - UI szövegek: `__('English msgid')`; panel locale: **bejelentkezés után** login session/cookie, majd user ország (`BrowserLocale::forLoggedIn`); headerben **nincs** nyelvválasztó; **nincs** URL `/{lang}`
 - **Szerepkör panelek:** `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös Admin chrome; `new` csak `/new` — [users-auth.md](users-auth.md) §0–2
+- **Tagság (ha kell):** `new` → `/complete-profile` → approve → `member`; klubelnök, tagdíj, role ACL — [membership-greenfield.md](membership-greenfield.md) + [membership.md](membership.md); rule: `membership-greenfield.mdc`
 - **CakeDC auth baseline:** ValiAdmin login; email login; ország + `country_id`; Flash toast; RoleHome afterLogin (`setResult`); header Belépve + Profile…; search role-gated — **projektenként változhat** (role/form/SSO) — [users-auth.md](users-auth.md); rule: `users-auth.mdc`
 - Országnevek: DB `countries` + Translate `i18n`; földrész: `continents` + `countries.continent_id` + Continents i18n (CLDR); Admin lista UI: **[countries-admin.md](countries-admin.md)**; ACL: superuser teljes / admin `visible`+`pos` — seed: `php tmp/seed_continents.php` ([i18n.md](i18n.md))
 - Layout = csak közös CSS/JS; index/form/view oldalspecifikus asseteket a template tölti
@@ -111,7 +114,7 @@ Konkrét mappaút **nem** kötelező a doksihoz — új projektben másold be a 
 ## Agent szabályok
 
 1. Agent szabályok: **új/éles DB**: **[uj-projekt-sema-playbook.md](uj-projekt-sema-playbook.md)** (séma→megoldás); **[admin-oldal.md](admin-oldal.md)** (célkép); **éles DB / demó→éles**: **[minta-tanulsagok.md](minta-tanulsagok.md)** (§0 playbook); **auth / login**: **[users-auth.md](users-auth.md)**; **Translate form / index locale**: [form-i18n-tabs.md](form-i18n-tabs.md) + [i18n.md](i18n.md); **Countries lista**: [countries-admin.md](countries-admin.md); majd a releváns részlet-doksik.
-2. Új projekt / hiányzó layout → [uj-projekt.md](uj-projekt.md) 2. szakasz (+ §2.9 CakeDC auth).
+2. Új projekt / hiányzó layout → [uj-projekt.md](uj-projekt.md) 2. szakasz (+ §2.9 CakeDC auth; tagság: §2.9b + [membership-greenfield.md](membership-greenfield.md)).
 3. Kód kövesse a konvenciókat (`__()`, asset szabály, middleware, CounterCache, view tabs, oszlopszélességek).
 4. **Automatikus dokumentálás (kötelező):** minden lényeges kód/viselkedés-változás **ugyanabban a körben** frissítse a `valtozasok.md`-t **és** az érintett speceket (`admin-oldal.md` / `admin-konvenciok.md` / `minta-tanulsagok.md` / `middleware.md` / `i18n.md` / …). Tartós playbook → `.cursor/rules/*.mdc` is. A felhasználónak **ne kelljen** külön „dokumentáld” üzenetet írnia. Cursor rule: `.cursor/rules/auto-dokumentalas.mdc`.
 5. Domain DB sémát ne keverd a keretrendszer-doksi közé (teszt táblák eldobhatók — a tanulságok a `minta-tanulsagok.md`-ben maradnak).

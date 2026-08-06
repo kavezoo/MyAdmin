@@ -16,8 +16,8 @@ use Cake\Validation\Validator;
 /**
  * Clubs Table.
  *
- * Club president = Users row with role `clubpresident` and `club_id` = this club
- * (no FK on clubs — assignment via {@see assignClubPresident()}).
+ * Club president: `clubs.club_president_id` → Users.id (via {@see assignClubPresident()}).
+ * Member / editor → role becomes `clubpresident`; president / vp keep their role.
  * `user_count` = CounterCache from Users.club_id.
  *
  * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
@@ -74,7 +74,7 @@ class ClubsTable extends Table
     }
 
     /**
-     * Current club president user (role=clubpresident + club_id), or null.
+     * Designated club president user (`clubs.club_president_id`), with legacy fallback.
      *
      * @return \Cake\Datasource\EntityInterface|null
      */
@@ -84,6 +84,25 @@ class ClubsTable extends Table
             return null;
         }
 
+        $club = $this->find()
+            ->select(['id', 'club_president_id'])
+            ->where(['Clubs.id' => $clubId])
+            ->first();
+        if ($club === null) {
+            return null;
+        }
+
+        $presidentId = trim((string)($club->get('club_president_id') ?? ''));
+        if ($presidentId !== '') {
+            $user = $this->Users->find()
+                ->where(['Users.id' => $presidentId])
+                ->first();
+            if ($user !== null) {
+                return $user;
+            }
+        }
+
+        // Legacy: role=clubpresident + club_id (before club_president_id column).
         return $this->Users->find()
             ->where([
                 'Users.club_id' => $clubId,
@@ -96,8 +115,11 @@ class ClubsTable extends Table
     /**
      * Assign (or clear) club president for a club in one country.
      *
-     * Previous clubpresident(s) for this club → role `member` (keep club_id).
-     * Selected user → role `clubpresident`, club_id set.
+     * - Stores `clubs.club_president_id`.
+     * - Previous designated / role=`clubpresident` → `member` only if they were pure clubpresident;
+     *   president / vicepresident keep their role.
+     * - Selected member / editor → role `clubpresident` + club_id.
+     * - Selected president / vicepresident → club_id + club_president_id; role unchanged.
      */
     public function assignClubPresident(int $clubId, int $countryId, ?string $userId): bool
     {
@@ -105,7 +127,27 @@ class ClubsTable extends Table
             return false;
         }
 
+        $club = $this->find()
+            ->where([
+                'Clubs.id' => $clubId,
+                'Clubs.country_id' => $countryId,
+            ])
+            ->first();
+        if ($club === null) {
+            return false;
+        }
+
         $userId = $userId !== null ? trim($userId) : '';
+        $previousDesignatedId = trim((string)($club->get('club_president_id') ?? ''));
+
+        // Demote outgoing designated club elnök when they were only clubpresident.
+        if ($previousDesignatedId !== '' && $previousDesignatedId !== $userId) {
+            if (!$this->demoteOutgoingClubPresident($previousDesignatedId, $countryId)) {
+                return false;
+            }
+        }
+
+        // Legacy / extra: any other role=clubpresident on this club → member (except new assignee).
         $previous = $this->Users->find()
             ->where([
                 'Users.club_id' => $clubId,
@@ -115,7 +157,15 @@ class ClubsTable extends Table
             ->all();
 
         foreach ($previous as $prev) {
-            if ($userId !== '' && (string)$prev->get('id') === $userId) {
+            $prevId = (string)$prev->get('id');
+            if ($userId !== '' && $prevId === $userId) {
+                continue;
+            }
+            if ($previousDesignatedId !== '' && $prevId === $previousDesignatedId) {
+                // Already handled above.
+                continue;
+            }
+            if (!AppRoles::shouldDemoteFromClubPresident((string)($prev->get('role') ?? ''))) {
                 continue;
             }
             $prev->set('role', AppRoles::MEMBER);
@@ -131,7 +181,15 @@ class ClubsTable extends Table
         }
 
         if ($userId === '') {
-            return true;
+            $club->set('club_president_id', null);
+
+            return (bool)$this->save($club, [
+                'checkRules' => false,
+                'accessibleFields' => [
+                    'club_president_id' => true,
+                    'modified' => true,
+                ],
+            ]);
         }
 
         $user = $this->Users->find()
@@ -146,12 +204,55 @@ class ClubsTable extends Table
         }
 
         $user->set('club_id', $clubId);
-        $user->set('role', AppRoles::CLUBPRESIDENT);
+        $accessible = [
+            'club_id' => true,
+            'modified' => true,
+        ];
+        if (AppRoles::shouldPromoteToClubPresident((string)($user->get('role') ?? ''))) {
+            $user->set('role', AppRoles::CLUBPRESIDENT);
+            $accessible['role'] = true;
+        }
 
-        return (bool)$this->Users->save($user, [
+        if (!$this->Users->save($user, [
+            'checkRules' => false,
+            'accessibleFields' => $accessible,
+        ])) {
+            return false;
+        }
+
+        $club->set('club_president_id', $userId);
+
+        return (bool)$this->save($club, [
             'checkRules' => false,
             'accessibleFields' => [
-                'club_id' => true,
+                'club_president_id' => true,
+                'modified' => true,
+            ],
+        ]);
+    }
+
+    /**
+     * Demote outgoing club elnök to member only when role is pure clubpresident.
+     */
+    protected function demoteOutgoingClubPresident(string $userId, int $countryId): bool
+    {
+        $prev = $this->Users->find()
+            ->where([
+                'Users.id' => $userId,
+                'Users.country_id' => $countryId,
+            ])
+            ->first();
+        if ($prev === null) {
+            return true;
+        }
+        if (!AppRoles::shouldDemoteFromClubPresident((string)($prev->get('role') ?? ''))) {
+            return true;
+        }
+        $prev->set('role', AppRoles::MEMBER);
+
+        return (bool)$this->Users->save($prev, [
+            'checkRules' => false,
+            'accessibleFields' => [
                 'role' => true,
                 'modified' => true,
             ],

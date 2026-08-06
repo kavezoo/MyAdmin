@@ -21,7 +21,8 @@ use Cake\Mailer\MailerAwareTrait;
  *
  * Scope: clubs where `country_id` = officer country.
  * Club president Select2: same `country_id`, exclude `role=new` (member+ OK);
- * assignment sets `role=clubpresident` + `club_id`.
+ * assignment stores `clubs.club_president_id` + `club_id`; member/editor → `clubpresident`,
+ * president/vp keep their role.
  *
  * @property \App\Model\Table\ClubsTable $Clubs
  */
@@ -549,21 +550,81 @@ class ClubsController extends AppController
             return [];
         }
 
-        /** @var \App\Model\Table\UsersTable $users */
-        $users = $this->fetchTable('Users');
-        $rows = $users->find()
+        $clubs = $this->Clubs->find()
+            ->select(['id', 'club_president_id'])
             ->where([
-                'Users.club_id IN' => $clubIds,
-                'Users.role' => AppRoles::CLUBPRESIDENT,
-                'Users.country_id' => $countryId,
+                'Clubs.id IN' => $clubIds,
+                'Clubs.country_id' => $countryId,
             ])
             ->all();
 
-        $map = [];
+        $presidentIds = [];
+        $clubToPresidentId = [];
+        foreach ($clubs as $club) {
+            $cid = (int)$club->get('id');
+            $pid = trim((string)($club->get('club_president_id') ?? ''));
+            if ($pid === '') {
+                continue;
+            }
+            $clubToPresidentId[$cid] = $pid;
+            $presidentIds[$pid] = true;
+        }
+
+        if ($presidentIds === []) {
+            // Legacy fallback: role=clubpresident + club_id
+            /** @var \App\Model\Table\UsersTable $users */
+            $users = $this->fetchTable('Users');
+            $rows = $users->find()
+                ->where([
+                    'Users.club_id IN' => $clubIds,
+                    'Users.role' => AppRoles::CLUBPRESIDENT,
+                    'Users.country_id' => $countryId,
+                ])
+                ->all();
+
+            $map = [];
+            foreach ($rows as $user) {
+                $cid = (int)$user->get('club_id');
+                if (!isset($map[$cid])) {
+                    $map[$cid] = $user;
+                }
+            }
+
+            return $map;
+        }
+
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->fetchTable('Users');
+        $rows = $users->find()
+            ->where(['Users.id IN' => array_keys($presidentIds)])
+            ->all();
+        $byId = [];
         foreach ($rows as $user) {
-            $cid = (int)$user->get('club_id');
-            if (!isset($map[$cid])) {
-                $map[$cid] = $user;
+            $byId[(string)$user->get('id')] = $user;
+        }
+
+        $map = [];
+        foreach ($clubToPresidentId as $cid => $pid) {
+            if (isset($byId[$pid])) {
+                $map[$cid] = $byId[$pid];
+            }
+        }
+
+        // Clubs without club_president_id yet: legacy role lookup
+        $missing = array_diff($clubIds, array_keys($map));
+        if ($missing !== []) {
+            $rows = $users->find()
+                ->where([
+                    'Users.club_id IN' => array_values($missing),
+                    'Users.role' => AppRoles::CLUBPRESIDENT,
+                    'Users.country_id' => $countryId,
+                ])
+                ->all();
+            foreach ($rows as $user) {
+                $cid = (int)$user->get('club_id');
+                if (!isset($map[$cid])) {
+                    $map[$cid] = $user;
+                }
             }
         }
 

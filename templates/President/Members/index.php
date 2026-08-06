@@ -8,11 +8,13 @@
  * @var int $countryId
  * @var int $membershipYear
  * @var bool $nationalPaidOnly
+ * @var bool $showApplicants
+ * @var iterable<\CakeDC\Users\Model\Entity\User> $applicants
  */
 use App\Auth\MembershipProfile;
 use App\Utility\MembershipFee;
 
-$this->Html->css(['pages/index', 'pages/membership_fee', 'pages/users_list_avatar'], ['block' => true]);
+$this->Html->css(['pages/index', 'pages/membership_fee', 'pages/users_list_avatar', 'pages/clubpresident_applicants'], ['block' => true]);
 
 /**
  * Row double-click: 'modal' | 'edit' | 'none'
@@ -64,11 +66,13 @@ $countryLabel = (string)($countryLabel ?? '');
 $membershipYear = (int)($membershipYear ?? MembershipFee::currentYear());
 $countryId = (int)($countryId ?? 0);
 $nationalPaidOnly = (bool)($nationalPaidOnly ?? false);
+$showApplicants = (bool)($showApplicants ?? false);
+$applicants = $applicants ?? [];
 $nationalFeeLabel = MembershipFee::nationalFeeLabel($countryId);
 $clubFeeLabel = MembershipFee::clubFeeLabel($countryId);
-$nationalFilterQuery = $this->request->getQueryParams();
-unset($nationalFilterQuery['national_paid_only']);
-$nationalFilterQuery['page'] = '1';
+$indexFilterQuery = $this->request->getQueryParams();
+unset($indexFilterQuery['national_paid_only'], $indexFilterQuery['show_applicants']);
+$indexFilterQuery['page'] = '1';
 
 $tooltipDetails = '<b>' . __('View details') . '</b><br>' . __('View the selected record details.');
 $tooltipEdit = '<b>' . __('Edit') . '</b><br>' . __('Edit the selected record.');
@@ -145,11 +149,15 @@ $this->Html->scriptBlock(
 	. ');',
 	['block' => 'script']
 );
-$this->Html->script(['pages/index', 'pages/president_members'], ['block' => 'scriptBottom']);
+$this->Html->script(['pages/index', 'pages/president_members', 'pages/clubpresident_applicants'], ['block' => 'scriptBottom']);
 $this->assign('title', __('Members'));
 ?>
 <div class="row">
 	<div class="col-12 p-2">
+		<?php if ($showApplicants): ?>
+			<?= $this->element('clubpresident/applicant_cards', ['applicants' => $applicants]) ?>
+		<?php endif; ?>
+
 		<div class="card mb-3 shadow border border-2">
 			<div class="card-header">
 				<div class="float-left">
@@ -163,9 +171,9 @@ $this->assign('title', __('Members'));
 				</div>
 				<div class="float-right d-flex align-items-center gap-2 flex-wrap justify-content-end">
 					<form method="get" action="<?= h($this->Url->build(['action' => 'index'])) ?>"
-						class="members-national-paid-filter mb-0"
-						id="members-national-paid-filter">
-						<?php foreach ($nationalFilterQuery as $name => $value): ?>
+						class="members-index-filters mb-0 d-flex flex-wrap align-items-center gap-3"
+						id="members-index-filters">
+						<?php foreach ($indexFilterQuery as $name => $value): ?>
 							<?php if (!is_scalar($value)) {
 								continue;
 							} ?>
@@ -180,8 +188,20 @@ $this->assign('title', __('Members'));
 								name="national_paid_only"
 								value="1"
 								<?= $nationalPaidOnly ? 'checked' : '' ?>
-								onchange="document.getElementById('members-national-paid-only-off').disabled = this.checked; this.form.submit();">
+								onchange="document.getElementById('members-national-paid-only-off').disabled = this.checked; document.getElementById('members-show-applicants-off').disabled = document.getElementById('members-show-applicants').checked; this.form.submit();">
 							<label class="form-check-label text-nowrap" for="members-national-paid-only"><?= __('Only national fee paid') ?></label>
+						</div>
+						<input type="hidden" name="show_applicants" value="0" id="members-show-applicants-off"
+							<?= $showApplicants ? 'disabled' : '' ?>>
+						<div class="form-check form-switch mb-0">
+							<input type="checkbox"
+								class="form-check-input"
+								id="members-show-applicants"
+								name="show_applicants"
+								value="1"
+								<?= $showApplicants ? 'checked' : '' ?>
+								onchange="document.getElementById('members-show-applicants-off').disabled = this.checked; document.getElementById('members-national-paid-only-off').disabled = document.getElementById('members-national-paid-only').checked; this.form.submit();">
+							<label class="form-check-label text-nowrap" for="members-show-applicants"><?= __('Show pending applicants') ?></label>
 						</div>
 					</form>
 					<span class="index-header-sep" aria-hidden="true">|</span>
@@ -447,6 +467,14 @@ window.PresidentMembers = {
 	disableLabel: <?= json_encode(__('Disable'), JSON_UNESCAPED_UNICODE) ?>,
 	enableLabel: <?= json_encode(__('Enable'), JSON_UNESCAPED_UNICODE) ?>,
 	toggleError: <?= json_encode(__('Could not update the member account.'), JSON_UNESCAPED_UNICODE) ?>
+};
+window.PresidentApplicants = {
+	approveTitle: <?= json_encode(__('Approve membership?'), JSON_UNESCAPED_UNICODE) ?>,
+	approveText: <?= json_encode(__('Do you really want to approve this applicant as a full member?'), JSON_UNESCAPED_UNICODE) ?>,
+	approveConfirm: <?= json_encode(__('Yes, approve'), JSON_UNESCAPED_UNICODE) ?>,
+	rejectTitle: <?= json_encode(__('Reject application?'), JSON_UNESCAPED_UNICODE) ?>,
+	rejectText: <?= json_encode(__('Do you really want to reject this application? The user will be disabled and cannot log in.'), JSON_UNESCAPED_UNICODE) ?>,
+	rejectConfirm: <?= json_encode(__('Yes, reject'), JSON_UNESCAPED_UNICODE) ?>
 };
 </script>
 <?= $this->element('admin/modal_record_view') ?>

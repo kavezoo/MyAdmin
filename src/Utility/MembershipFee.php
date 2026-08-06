@@ -92,6 +92,39 @@ class MembershipFee
         return (int)$date->format('Y') === $year;
     }
 
+    /**
+     * True when the user's club membership fee is unpaid for the current year.
+     * No club assigned → not considered unpaid (nothing to pay toward).
+     */
+    public static function isClubFeeUnpaid(mixed $user, ?int $year = null): bool
+    {
+        $year ??= static::currentYear();
+        $clubId = 0;
+        $feeDate = null;
+        if (is_object($user) && method_exists($user, 'get')) {
+            $clubId = (int)($user->get('club_id') ?? 0);
+            $feeDate = $user->get(self::FIELD_CLUB);
+        } elseif (is_array($user)) {
+            $clubId = (int)($user['club_id'] ?? 0);
+            $feeDate = $user[self::FIELD_CLUB] ?? null;
+        }
+
+        if ($clubId < 1) {
+            return false;
+        }
+
+        return !static::isPaidForYear($feeDate, $year);
+    }
+
+    /**
+     * Club switch → clear club fee only (must be paid again at the new club).
+     * National membership fee is independent and must not be cleared.
+     */
+    public static function clearClubFeeOnClubSwitch(EntityInterface $user): void
+    {
+        $user->set(self::FIELD_CLUB, null);
+    }
+
     public static function paymentDisplay(mixed $date, int $year): string
     {
         $date = static::toDate($date);

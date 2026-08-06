@@ -192,13 +192,13 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 
 				<div class="mb-3">
 					<label class="form-label" for="club-id"><?= __('Club') ?> <span class="text-danger">*</span></label>
-					<div class="users-profile-club-warning alert alert-danger border border-danger mb-3" role="alert">
+					<div class="users-profile-club-warning alert alert-warning border border-warning mb-3" role="alert">
 						<div class="fw-bold users-profile-club-warning-title">
 							<i class="fa fa-exclamation-triangle me-1" aria-hidden="true"></i>
 							<?= __('Changing your club has important consequences') ?>
 						</div>
 						<p class="mb-0 mt-2 users-profile-club-warning-text">
-							<?= __('If you choose a different club and save, your role will be set to “new”. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member.') ?>
+							<?= __('If you choose a different club and save, your role will be set to “new”, and your club membership fee will be cleared — you must pay it again at the new club. Your national membership fee is not affected. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member.') ?>
 						</p>
 					</div>
 					<div class="form-text mb-2 js-club-need-country<?= $selectedCountryId < 1 ? '' : ' d-none' ?>"><?= __('Select your country first to see available clubs.') ?></div>

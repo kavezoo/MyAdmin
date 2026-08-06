@@ -34,14 +34,28 @@ $this->viewBuilder()->setLayout('admin');
 
 Sidebar elementek: `templates/element/{admin,new,member,clubpresident,president}/sidebar.php`.  
 Dashboard navigáció: `templates/element/panel/dashboard_nav_cards.php` — card cím + leírás + gomb; a **Dashboard card-body**-ban (nem külön keret alatt).
-Tag szerkesztés (Clubpresident/President): `templates/element/users/member_edit_form.php`.
-Spec: [users-auth.md](users-auth.md).
+
+## Element inventory (`templates/element/panel/`)
+
+| Element | Kötelező? | Szerep |
+|---------|-----------|--------|
+| `dashboard_nav_cards.php` | igen (panel dashboard) | Navigációs kártyák a dashboard card-body-ban |
+| `club_fee_unpaid_alert.php` | igen (ha tagság) | Befizetetlen **klub** tagdíj — **alert-warning** (New/Member/Clubpresident/President dashboard) |
+
+## Element inventory (`templates/element/clubpresident/`)
+
+| Element | Kötelező? | Szerep |
+|---------|-----------|--------|
+| `applicant_cards.php` | igen (ha tagság) | Pending jelentkező kártyák (`shadow`); Clubpresident **mindig** fent; President **kapcsolóval** (ország scope) |
+
+Tag szerkesztés (Clubpresident/President): `templates/element/users/member_edit_form.php` (President: role select).
+Spec: [users-auth.md](users-auth.md), [membership.md](membership.md), [membership-greenfield.md](membership-greenfield.md).
 
 ## Element inventory (`templates/element/admin/`)
 
 | Element | Kötelező? | Szerep |
 |---------|-----------|--------|
-| `header.php` | igen | Felső sáv (**nyelvválasztó nélkül**) |
+| `header.php` | igen | Felső sáv (**nyelvválasztó nélkül**); hamburger mellett név + rang |
 | `sidebar.php` | igen | Menü |
 | `breadcrumb.php` | igen | Cím + eszköztár gombok |
 | `footer.php` | igen | Lábléc |
@@ -70,29 +84,26 @@ Spec: [users-auth.md](users-auth.md).
 | `Admin\DashboardController` | `/admin` kezdőlap |
 | `Admin\SearchController` | Globális keresés (`/admin/search`) — role-gated |
 
-### Domain / demó (példa, nem kötelező az új projektben)
+### Domain modulok
 
-| Controller | Tanulság |
-|------------|----------|
+| Controller | Szerep |
+|------------|--------|
 | `SetupsController` | Típusos beállítások CRUD (`SetupValue`) — [setups.md](setups.md) |
-| `CitiesController` | Teljes CRUD + `recordGet` + HABTM `samples._ids` (CounterCache tartja a `sample_count`-ot) |
 | `CountriesController` | Lista / view / edit; **csak** `visible` + `pos`; contain Continents; i18n csak megjelenítés |
 | `LanguagesController` | UI locale CRUD; **LanguageAccess**; visible-only index; Translate `name` |
 | `ContinentsTable` | Földrészek (seed); Translate → `i18n`; hasMany Countries |
-| `SamplesController` | Teljes CRUD + `recordGet` (Cities ASC) + `select2Create` / `select2CreateCity` + `setFormOptions` (Parent: visible + pos/name; Cities list) + `parentGet` |
-| `ParentsController` | CRUD + `recordGet` + gyerekvédelem |
+| `EventLogsController` | Eseménynapló kereső — [event-logs.md](event-logs.md) |
 
-Új modulnál a **viselkedést** másold (nem a mezőlistát) — [crud-utmutato.md](crud-utmutato.md).
+Új modulnál a **viselkedést** másold a `doc/` specekből (nem demó mezőneveket) — [crud-utmutato.md](crud-utmutato.md), [minta-tanulsagok.md](minta-tanulsagok.md).
 
 ## Modellek — tipikus buktatók
 
 | Helyzet | Megoldás |
 |---------|----------|
 | Reserved entity (`Parent`) | Átnevezés pl. `ParentRecord` + `Table::setEntityClass` |
-| HABTM through kötelező join mező | `beforeSave` / `beforeMarshal` default |
-| `CitiesSamplesTable` | HABTM through + **CounterCache** (`Samples.city_count`, `Cities.sample_count`) |
-| `SamplesTable` | CounterCache → `Parents.sample_count`; HABTM Cities + `cascadeCallbacks` |
-| `ParentsTable` / `CitiesTable` | `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()` |
+| HABTM through kötelező join mező | `beforeSave` / `beforeMarshal` default; CounterCache a **through** Table-en |
+| belongsTo CounterCache | Gyerek Table-en → szülő `*_count` |
+| `PreventsDeleteWithChildrenTrait` | `relatedChildrenCountField()` + disabled Delete UI |
 | `CountriesTable` | ISO `iso2` + primary `locale` + `continent_id` → Continents; Translate → `i18n` (`name`); Admin: csak `visible`/`pos`; continent seed: `php tmp/seed_continents.php` |
 | `I18nTable` | CakePHP Translate EAV (`config/schema/i18n.sql`) |
 | Számláló mező (`*_count`) | CounterCache tartja; create-kor `0` ha NOT NULL + nincs DB DEFAULT; megjelenítés: `formatCount` (0/null → üres) |

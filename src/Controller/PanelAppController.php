@@ -7,6 +7,7 @@ use App\Auth\PanelAccess;
 use App\Auth\RoleHome;
 use App\Utility\AdminCountry;
 use App\Utility\BrowserLocale;
+use App\Utility\MembershipFee;
 use Cake\Core\Configure;
 use Cake\I18n\I18n;
 
@@ -48,5 +49,33 @@ abstract class PanelAppController extends AppController
         $this->set('canAdd', false);
         $this->set('canEdit', false);
         $this->set('canDelete', false);
+
+        $membershipYear = MembershipFee::currentYear();
+        $clubFeeUnpaid = false;
+        $identity = $request->getAttribute('identity');
+        if ($identity !== null) {
+            $userId = '';
+            if (method_exists($identity, 'getIdentifier')) {
+                $userId = (string)$identity->getIdentifier();
+            } elseif (method_exists($identity, 'get')) {
+                $userId = (string)($identity->get('id') ?? '');
+            }
+            if ($userId !== '') {
+                try {
+                    /** @var \App\Model\Table\UsersTable $users */
+                    $users = $this->fetchTable('Users');
+                    $feeUser = $users->find()
+                        ->select(['id', 'club_id', MembershipFee::FIELD_CLUB])
+                        ->where(['Users.id' => $userId])
+                        ->first();
+                    if ($feeUser !== null) {
+                        $clubFeeUnpaid = MembershipFee::isClubFeeUnpaid($feeUser, $membershipYear);
+                    }
+                } catch (\Throwable) {
+                    $clubFeeUnpaid = false;
+                }
+            }
+        }
+        $this->set(compact('membershipYear', 'clubFeeUnpaid'));
     }
 }

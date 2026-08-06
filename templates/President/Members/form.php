@@ -11,4 +11,7 @@ echo $this->element('users/member_edit_form', [
 	'feeField' => $feeField ?? null,
 	'feeLabel' => $feeLabel ?? null,
 	'showEnabled' => $showEnabled ?? false,
+	'showRole' => $showRole ?? false,
+	'roleOptions' => $roleOptions ?? [],
+	'roleSelectDisabled' => $roleSelectDisabled ?? false,
 ]);

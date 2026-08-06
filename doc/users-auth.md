@@ -24,7 +24,7 @@ Ez a dokumentum a **MyAdmin-ban összerakott** auth / regisztráció / szerepkö
 | Belépés kapu | CakeDC `active` **és** app `enabled` (`findActive`); session közben is |
 | Eseménynapló / tevékenység | `event_logs` — saját lista ha `users_activity_log_visible`; officer kereső — [event-logs.md](event-logs.md) |
 | Profil | `admin` layout; member+ szerkeszthető profil + avatár — §6.1 |
-| Tagság onboarding | `new` → kötelező `/complete-profile` → clubpresident Approve → `member` — [membership.md](membership.md) |
+| Tagság onboarding | `new` → kötelező `/complete-profile` → clubpresident Approve → `member` — [membership.md](membership.md); **greenfield:** [membership-greenfield.md](membership-greenfield.md) |
 | URL nyelv | **nincs** `/{lang}/…` — locale session / user ország |
 | Panel chrome | ugyanaz az `admin` layout (header / sidebar / breadcrumb / content) minden szerepkör-prefixen |
 
@@ -194,19 +194,24 @@ Session közben `RequireUserEnabledMiddleware` kidobja a usert, ha `enabled` (va
 2. Profile / Change password / Log out — `.dropdown-item.notify-item`, **0.9rem** (mint a többi header legördülő)
 3. `.profile-dropdown`: min ~280px, max ~420px
 
+**Hamburger mellett** (`header.php` `.header-session`): bejelentkezett **név** + **rang** (`AppRoles::label` — Új tag / Tag / Klub elnök / Alelnök / Elnök / Admin / Superuser; `is_superuser` flag → „· Superuser” ha a role nem `superuser`).
+
 ### 6.1 Profile — view + edit (`/profile`, `/edit`)
 
-- **`/profile`** (`UsersController::profile` → `templates/Users/view.php`): read-only adatlap (tagdíj státusz / unpaid figyelmeztetés, mezők, social). Footer + breadcrumb **Edit** → `/edit`. Header Profile link ide mutat.
+- **`/profile`** (`UsersController::profile` → `templates/Users/view.php`): read-only adatlap; tagdíj státusz **egy sorban 2 oszlop** (klub + országos); mezők, social. Footer + breadcrumb **Edit** → `/edit`. Header Profile link ide mutat.
 - **`/edit`** (`UsersController::edit` → `templates/Users/edit.php`): szerkesztő űrlap — kötelező: **név**, ország, klub; **opcionális** telefon (`+` + ország hívószám + számjegyek; csak prefix → nem mentődik). Nincs tagdíj figyelmeztetés. Mentés után redirect `/profile`.
 - **Országváltás** (`users_auth_country.js`): ha van `#club-id` (edit / complete-profile) → **csak** AJAX `/clubs-for-country` (soha nincs `location.href` / leave kérdés). Lista: enabled + visible + **idei országos tagdíj**, plusz a **saját klub** ha ugyanabban az országban van.
 - Validációs hiba: piros összefoglaló a form felett + mező alatti `error-message` + toast konkrét szöveggel.
-- **Role `new` + hiányos profil:** `/complete-profile` továbbra is kötelező (New panel redirect).
-- **Role `new` (klubváltás / pending):** csak `/new` prefix + profil/auth URL-ek (`profile`, `edit`, …); `RestrictNewRoleMiddleware` — más prefix → `/new`.
+- **Role `new` + hiányos profil:** New Dashboard **figyelmeztet** (hiányzó mezők); CTA → `/complete-profile`. Más `/new/*` oldal → redirect complete-profile.
+- **Role `new` + kész profil** (név + ország + klub): New Dashboard csak **„Elfogadásra vár”** (`MembershipProfile::isWaitingForApproval`).
+- **Role `new` (klubváltás / pending):** csak `/new` prefix + profil/auth URL-ek (`profile`, `edit`, …); `RestrictNewRoleMiddleware` — más prefix → `/new`. Klubváltáskor csak `club_membership_fee_date` nullázódik; az országos tagdíj nem.
+- **President/VP Members edit:** role select max `president` (`AppRoles::assignableOptionsForActor`) — admin nem adható; **VP nem** állíthat / nem módosíthat `president` role-t; president módosíthatja a VP-t.
+- **Klubelnök assign:** `clubs.club_president_id`; member/editor → `clubpresident`; president/vp role változatlan; előző tiszta `clubpresident` → `member`.
 - Névmezők title-case mentéskor.
 - **Profilkép:** edit oldalon; ajánlott **1000×1000 px** négyzetes; törlés SweetAlert + `deleteAvatar` POST → visszairányít `/edit`.
 - Fájl: `uploads/avatars/{user.id}.jpg` (pl. UUID); DB: `users.avatar` (ugyanaz az útvonal).
 - **Entitás:** `App\Model\Entity\User` — CakeDC `_getAvatar()` helyett DB útvonal (+ social fallback); header + profil preview `UserAvatar::publicUrlFor`.
-- **Klubváltás:** más klub mentése → `role=new`, pending jelentkezés, clubpresident értesítés; piros figyelmeztetés + SWAL — [membership.md](membership.md).
+- **Klubváltás:** más klub mentése → `role=new`, pending jelentkezés, clubpresident értesítés; **warning** figyelmeztetés + SWAL — [membership.md](membership.md).
 - Breadcrumb: profile = view mód (`canEdit`); edit = form Save + View details (nincs Delete).
 
 ---

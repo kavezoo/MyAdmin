@@ -9,32 +9,7 @@ use App\Auth\SetupAccess;
 
 $this->assign('title', __('Dashboard'));
 
-$cards = [
-	[
-		'title' => __('Samples'),
-		'text' => __('Browse and manage sample records: list, search, add, edit and delete.'),
-		'url' => ['prefix' => 'Admin', 'controller' => 'Samples', 'action' => 'index'],
-		'button' => __('Go to Samples'),
-		'btnClass' => 'btn-primary',
-		'icon' => 'fa-table',
-	],
-	[
-		'title' => __('Parents'),
-		'text' => __('Open the parents catalogue used as parent records for samples.'),
-		'url' => ['prefix' => 'Admin', 'controller' => 'Parents', 'action' => 'index'],
-		'button' => __('Go to Parents'),
-		'btnClass' => 'btn-primary',
-		'icon' => 'fa-folder',
-	],
-	[
-		'title' => __('Cities'),
-		'text' => __('Manage cities and their links to samples.'),
-		'url' => ['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'index'],
-		'button' => __('Go to Cities'),
-		'btnClass' => 'btn-primary',
-		'icon' => 'fa-map-marker',
-	],
-];
+$cards = [];
 
 if (SetupAccess::canAccessModule($this->request)) {
 	$cards[] = [

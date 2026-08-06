@@ -8,7 +8,7 @@
  *   MyAdmin.config.recordGetUrl / editUrl / viewUrl  // index saját modul
  *   MyAdmin.config.categoryGetUrl / parentEditUrl / parentViewUrl / parentDeleteUrl
  *   MyAdmin.config.recordFieldLabels / categoryFieldLabels
- *   MyAdmin.config.entityFieldLabels  // { city: {…}, sample: {…}, parent: {…} } — view
+ *   MyAdmin.config.entityFieldLabels  // { country: {…}, club: {…} } — view
  *
  * View / linked link: a.record-modal-link (vagy a.category-link) data-* attribútumokkal.
  * Kapcsolt tábla: table.related-records-table + data-get-url / edit / view / delete / labels / title
@@ -25,8 +25,8 @@
 	var categoryGetUrl = cfg.categoryGetUrl || '';
 	var editUrl = cfg.editUrl || '';
 	var viewUrl = cfg.viewUrl || '';
-	var parentEditUrl = cfg.parentEditUrl || '/admin/parents/edit';
-	var parentViewUrl = cfg.parentViewUrl || '/admin/parents/view';
+	var parentEditUrl = cfg.parentEditUrl || '';
+	var parentViewUrl = cfg.parentViewUrl || '';
 	var parentDeleteUrl = cfg.parentDeleteUrl || '';
 
 	$(function () {
@@ -57,18 +57,9 @@
 
 		var recordFieldLabels = cfg.recordFieldLabels || {
 			id: 'ID',
-			parent: 'Parent',
 			name: 'Name',
-			szam: 'Number',
-			netto: 'Net',
-			datum: 'Date',
-			ido: 'Time',
-			datumido: 'Date and time',
-			logikai: 'Boolean',
 			pos: 'Position',
 			visible: 'Visible',
-			city_count: 'Cities',
-			cities: 'City list',
 			created: 'Created',
 			modified: 'Modified'
 		};
@@ -81,7 +72,7 @@
 			}
 			if (value == null || value === '') {
 				// *_count: leave blank (do not show 0 / —)
-				if (key === 'city_count' || key === 'sample_count' || /_count$/.test(key)) {
+				if (/_count$/.test(key)) {
 					return '';
 				}
 				return '—';
@@ -525,7 +516,6 @@
 			name: 'Name',
 			pos: 'Position',
 			visible: 'Visible',
-			sample_count: 'Samples',
 			created: 'Created',
 			modified: 'Modified'
 		};

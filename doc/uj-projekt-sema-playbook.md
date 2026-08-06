@@ -1,6 +1,6 @@
 # Új projekt — séma alapján kötelező megoldások (agent playbook)
 
-**Cél:** új CakePHP Admin projektnél / éles DB-re építésnél az agent **ne felejtse el** a keretrendszer eddigi megoldásait. Minden funkciót a **valós adatbázis séma** és a **táblakapcsolatok** szerint kell beépíteni — nem a demó Samples mezőneveket másolni.
+**Cél:** új CakePHP Admin projektnél / éles DB-re építésnél az agent **ne felejtse el** a keretrendszer eddigi megoldásait. Minden funkciót a **valós adatbázis séma** és a **táblakapcsolatok** szerint kell beépíteni — nem demó mezőneveket másolni. (A Samples/Parents/Cities demó modulok ebből a projektből el lettek távolítva; a minták: [minta-tanulsagok.md](minta-tanulsagok.md).)
 
 Kapcsolódó: [uj-projekt.md](uj-projekt.md) (greenfield lépések), [minta-tanulsagok.md](minta-tanulsagok.md) (§0), [crud-utmutato.md](crud-utmutato.md), [README.md](README.md).  
 Cursor rule: `.cursor/rules/uj-projekt-sema.mdc` (`alwaysApply`).
@@ -82,6 +82,22 @@ Cursor rule: `.cursor/rules/uj-projekt-sema.mdc` (`alwaysApply`).
 | Delete: danger / disabled+tooltip ha gyerek | `admin-delete-blocked` |
 | Oszlopszélességek | admin-oldal §4.3 (`count` min 15rem, …) |
 
+### 1.6 Tagság / users / clubs (ha van klub + jelentkezés)
+
+| Séma / kapcsolat | Admin / panel megoldás | Doc / rule |
+|------------------|------------------------|------------|
+| `users.role` + membership mezők | `AppRoles`, `MembershipProfile`, `MembershipService`, `MembershipFee` | membership-greenfield §3–6 |
+| `users.club_id` → `clubs` | belongsTo Select2 (enabled); klubváltás: csak klub tagdíj null | membership §4–5 |
+| `clubs.club_president_id` | FK user; assign: member→`clubpresident`; president/vp role marad | membership-greenfield §5 |
+| `club_membership_fee_date` / `national_membership_fee_date` | DATE; unpaid UI **warning**; év = dátum éve | membership-greenfield §8 |
+| Clubpresident Members | Pending kártyák fent + roster lent; klub scope | membership §7, panel-member-index |
+| President Members | Ország roster + pending kapcsoló + role select edit | membership-greenfield §7 |
+| President Clubs | CRUD + klubelnök + national club fee | membership-greenfield §2 lépés 10 |
+| Approve / Reject | `MembershipService`; president/vp → `country_id`; clubpresident → `club_id` | membership-greenfield §7 |
+| Header session | Név + rang a hamburger mellett (közös layout) | users-auth, struktura |
+
+Greenfield lépéssorrend: [membership-greenfield.md](membership-greenfield.md) §2. Részletes folyamat: [membership.md](membership.md).
+
 ---
 
 ## 2. Új CRUD modul — séma-vezérelt checklist
@@ -114,8 +130,9 @@ Minden új táblánál:
 1. Layout, middleware, AppView, MyAdmin JS API — [uj-projekt.md](uj-projekt.md)
 2. Countries + Continents + i18n seed (ha kell ország/locale) — [i18n.md](i18n.md), [countries-admin.md](countries-admin.md)
 3. CakeDC auth baseline — [users-auth.md](users-auth.md)
-4. Domain CRUD-ok a **séma szerint** (§1–2)
-5. Opcionális: Setups EAV — [setups.md](setups.md)
+4. **Opcionális tagság** — [membership-greenfield.md](membership-greenfield.md) (ha klub + jelentkezés)
+5. Domain CRUD-ok a **séma szerint** (§1–2)
+6. Opcionális: Setups EAV — [setups.md](setups.md)
 
 **Ne** hagyd ki: kötelező csillag, nyelvi TAB + tooltip + name fókusz, Translate index sort, unsaved leave, CounterCache, pos DB default, form hibák.
 
@@ -149,5 +166,6 @@ Minden új táblánál:
 | Translate search/sort | i18n.md | admin-translate-search-sort.mdc |
 | Countries index | countries-admin.md | admin-countries-index.mdc |
 | Auth | users-auth.md | users-auth.mdc |
+| Tagság / klub | membership-greenfield.md, membership.md | membership-greenfield.mdc, panel-member-index.mdc |
 | Setups | setups.md | setups-eav.mdc |
 | Auto doksi | — | auto-dokumentalas.mdc |
