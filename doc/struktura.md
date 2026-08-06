@@ -96,7 +96,7 @@ Spec: [users-auth.md](users-auth.md).
 | `CountriesTable` | ISO `iso2` + primary `locale` + `continent_id` → Continents; Translate → `i18n` (`name`); Admin: csak `visible`/`pos`; continent seed: `php tmp/seed_continents.php` |
 | `I18nTable` | CakePHP Translate EAV (`config/schema/i18n.sql`) |
 | Számláló mező (`*_count`) | CounterCache tartja; create-kor `0` ha NOT NULL + nincs DB DEFAULT; megjelenítés: `formatCount` (0/null → üres) |
-| `pos` / `visible` / `logikai` | **DB DEFAULT** — PHP-ban **ne** hardkódolj; `UsesDatabaseColumnDefaultsTrait` + `newEntityWithSchemaDefaults()`. Üres form → unset. `beforeMarshal` `$data` = `ArrayObject` → `getArrayCopy()`. **`pos`:** mindig séma DEFAULT (**`1000`**); az agent soha ne állítsa / ne növelgesse (rule: `pos-db-default.mdc`) |
+| `pos` / `visible` / `logikai` | **DB DEFAULT** — PHP-ban **ne** hardkódolj; `UsesDatabaseColumnDefaultsTrait` + `newEntityWithSchemaDefaults()`. Üres form → unset. `beforeMarshal` `$data` = `ArrayObject` → `getArrayCopy()`. **`pos`:** PHP-ból **békén hagyjuk** (séma DEFAULT **`1000`**); ne állítsuk / ne növeljük — **majd a user**, ha akarja, a formon megnöveli (rule: `pos-db-default.mdc`) |
 | Pénznem UI | `LocaleNumberParser::formatCurrency()` — HUF, ICU (hu: `Ft` utótag; en: `HUF` előtag) |
 | Admin keresés | `config/admin_search.php` + `App\Utility\AdminSearch` — index / globális szöveges mezők; Search Google UI + lapozás |
 | Lapozó | `admin/index_pagination` FA «‹›»; `App\View\Helper\PaginatorHelper` (`page=1` az URL-ben) |

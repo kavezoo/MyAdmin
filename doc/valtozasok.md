@@ -5,6 +5,17 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-06 — `pos`: PHP-ból békén hagyjuk (megerősítés)
+
+### Mi változott / miért
+- Rögzítve újra: a **`pos`** mezőt PHP-ból **nem állítjuk és nem növeljük** — DB DEFAULT (`1000`). **Majd a felhasználó**, ha akarja, a formon megnöveli.
+- Rule + specek szöveg pontosítva („békén hagyjuk” / user növeli).
+
+### Érintett
+- `.cursor/rules/pos-db-default.mdc`, `doc/README.md`, `doc/struktura.md`, `doc/uj-projekt-sema-playbook.md`, `doc/admin-konvenciok.md`
+
+---
+
 ## 2026-08-05 — Országos pipa egyesület / MPE tagdíj i18n
 
 ### Mi változott / miért

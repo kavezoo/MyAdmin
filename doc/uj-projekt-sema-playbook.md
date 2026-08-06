@@ -35,7 +35,7 @@ Cursor rule: `.cursor/rules/uj-projekt-sema.mdc` (`alwaysApply`).
 | `DATE` / `TIME` / `DATETIME` | Tempus Dominus 6 + `dateFormat`; mentés dátum MW | middleware, admin-konvenciok |
 | `BOOLEAN` / `TINYINT(1)` | form-switch; index boolean oszlop | admin-oldal |
 | `visible` | Switch; lista végén `visible` → `pos`; Countries: visible-only szűrő | admin-konvenciok, countries-admin |
-| `pos` | DB **DEFAULT `1000`** — agent **soha** ne növelgesse / ne írja | `pos-db-default` |
+| `pos` | PHP-ból **békén hagyjuk** (DB **DEFAULT `1000`**); ne állítsuk / ne növeljük — **majd a user** a formon | `pos-db-default` |
 | `*_count` | **CounterCache** (ne élő COUNT) | minta-tanulsagok, crud-utmutato |
 | `created` / `modified` | Timestamp behavior; form header editnél | — |
 | Oszlop DEFAULT (DB) | `UsesDatabaseColumnDefaultsTrait` + séma DEFAULT | minta-tanulsagok |

@@ -99,7 +99,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - **Linked / szülő modal:** `data-id` + `data-edit-url` / `data-view-url` / `data-delete-url` = **a megnyitott rekord** saját CRUD-ja (pl. taglista klub → `Clubs/edit/{klubId}`); **tilos** a lista sor URL-jére visszahullani — rule: `admin-linked-modal-urls.mdc`
 - Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon; **belongsTo lista**: `visible` + `pos`/`name` sorrend; form végén **`visible` → `pos`**; **`<hr>` mindig közvetlenül a `visible` fölött** (soha más mező fölött) — rule: `admin-form-visible-hr.mdc`; `fetchTable()`, ne Association
 - Oszlop DEFAULT (`pos`, `visible`, …): **DB séma** + `UsesDatabaseColumnDefaultsTrait` — ne PHP hardcode
-- **`pos`:** mindig DB DEFAULT (**általában `1000`**, minden táblán) — az agent **soha** ne állítsa / ne növelgesse / ne írjon `1`/`10`/`$pos += 10`-et; a felhasználó írja át a formon ha kell (rule: `.cursor/rules/pos-db-default.mdc`)
+- **`pos`:** PHP-ból **békén hagyjuk** — mindig DB DEFAULT (**általában `1000`**); **tilos** állítani / növelgetni (`1`/`10`/`$pos += 10`). **Majd a felhasználó**, ha akarja, a formon megnöveli (rule: `.cursor/rules/pos-db-default.mdc`)
 - **`*_count`:** **CounterCache** (hasMany → gyerek Table; HABTM → through + `cascadeCallbacks`); törlésvédelem: `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()`; **ne** élő COUNT / controller `count(_ids)`
 - Modal kapcsolt névlisták: utolsó **20** (`modified DESC`), megjelenítés **ABC ASC**; view tab lehet teljes ABC lista
 

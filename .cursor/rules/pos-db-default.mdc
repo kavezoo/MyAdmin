@@ -1,13 +1,13 @@
 ---
-description: A pos mező mindig az adatbázis DEFAULT (1000) — az agent soha ne állítsa / ne írja felül.
+description: A pos mezőt PHP-ból soha ne állítsuk / növeljük — DB DEFAULT; a felhasználó írja át ha akarja.
 alwaysApply: true
 ---
 
 # `pos` mező = csak DB DEFAULT (örök)
 
-A **`pos`** (pozíció) oszlop értéke **mindig** az adatbázis séma **DEFAULT**-jából jön.
+A **`pos`** (pozíció) oszlopot **PHP-ból békén hagyjuk**: nem állítjuk, nem növeljük, nem „szépítjük”.
 
-**Alapértelmezés minden táblán: `1000`.** Új rekordnál és seednél is ez érvényesül. A felhasználó a formon átírhatja, ha akarja — az agent / seed / sync **soha** ne állítson semmi mást.
+**Alapértelmezés minden táblán: a séma DEFAULT (tipikusan `1000`).** Új rekordnál és seednél is ez érvényesül. **Majd a felhasználó**, ha akarja, a formon megnöveli / átírja.
 
 ## Kötelező
 
@@ -21,7 +21,7 @@ A **`pos`** (pozíció) oszlop értéke **mindig** az adatbázis séma **DEFAULT
 - `$entity->pos = 1` / `10` / `$pos += 10` „szép sorrendhez”
 - Seed / migráció / `AdminLanguage::sync*` / `ensurePartnerVisibility` közben országonként / nyelvenként növekvő `pos`
 - Self-visibility vagy „kiemelt” sor (`en_GB`) külön `pos=1` / `2` / `3`
-- Bármilyen „okos” alapértelmezés a DB DEFAULT helyett
+- Bármilyen „okos” alapértelmezés vagy automatikus növelés a DB DEFAULT helyett
 
 ## Engedélyezett
 
@@ -30,4 +30,4 @@ A **`pos`** (pozíció) oszlop értéke **mindig** az adatbázis séma **DEFAULT
 
 ## Dokumentáció
 
-`doc/struktura.md`, `doc/uj-projekt-sema-playbook.md`, `doc/README.md` (Rögzített döntések), `doc/valtozasok.md`.
+`doc/struktura.md`, `doc/uj-projekt-sema-playbook.md`, `doc/admin-konvenciok.md`, `doc/README.md` (Rögzített döntések), `doc/valtozasok.md`.

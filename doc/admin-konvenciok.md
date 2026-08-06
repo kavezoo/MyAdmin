@@ -812,7 +812,7 @@ A formon megjelenő **szülő / kategória** választólista (Select2 single vag
 | Szűrés | Csak `visible = true` rekordok |
 | Rendezés | **`pos` ASC**, majd **`name` ASC** |
 | Edit kivétel | A jelenleg hozzárendelt rekord (`parent_id` stb.) **akkor is** a listában legyen, ha `visible = false` (OR feltétel) |
-| `pos` értéke | DB DEFAULT — PHP ne állítson 1000-et ([struktura.md](struktura.md)) |
+| `pos` értéke | PHP-ból **békén hagyjuk** (DB DEFAULT `1000`); ne állítsuk / ne növeljük — **majd a user** a formon ([struktura.md](struktura.md), `pos-db-default.mdc`) |
 
 ```php
 protected function setFormOptions(?Sample $sample = null): void

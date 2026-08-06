@@ -18,7 +18,7 @@ Ha **új projektet** indítunk, **éles DB**-re építünk, vagy **új CRUD** mo
 | Translate szöveg | Form nyelvi TAB + `data-name-target` fókusz; index `AdminTranslate` (tilos COALESCE) |
 | date/time/datetime | Tempus + dátum middleware |
 | int/decimal | inputmask + szám middleware; pénz → `formatCurrency` |
-| `pos` | DB DEFAULT **1000** only — agent soha ne állítsa (`pos-db-default.mdc`) |
+| `pos` | PHP-ból **békén hagyjuk** (DB DEFAULT **1000**); ne növeljük — majd a user (`pos-db-default.mdc`) |
 | `visible` + `pos` | Form végén; **`<hr>` mindig a `visible` fölött** (`admin-form-visible-hr.mdc`) |
 | `*_count` / gyerek | CounterCache + Delete disabled ha > 0 |
 | belongsTo | Select2 visible+pos/name; opcionális „+” |
