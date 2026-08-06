@@ -156,8 +156,9 @@ Reject: `enabled=false` (SWAL warning).
 |------|---------|
 | Profil unpaid | **warning** (sárga) — `membership_fee.css`; **nem** danger |
 | Dashboard | `element/panel/club_fee_unpaid_alert` ha klub tagdíj unpaid (`PanelAppController`) |
-| Klubváltás (member+) | **Csak** `club_membership_fee_date` null; **országos nem** |
-| Klubváltás UX | `alert-warning` a formon; `role=new`, pending, redirect `/new` |
+| Klubváltás (member / editor) | **Csak** `club_membership_fee_date` null; **országos nem**; `role=new` + pending + redirect `/new` |
+| Klubváltás (clubpresident / president / vp) | Role **változatlan**; csak klub + klub tagdíj null; nincs re-application (`AppRoles::keepsRoleOnClubSwitch`) |
+| Klubváltás UX | `alert-warning` a formon; officer vs member szöveg különbözik |
 
 Megjelenítés pénzhez: `MembershipFee::formatCurrency()` / `LocaleNumberParser::formatCurrency()` — rule `penznem-formatcurrency.mdc`.
 
@@ -215,7 +216,8 @@ templates/Users/{complete_profile,edit,view}.php
 - [ ] President: „Show pending applicants” → kártyák ország szinten; Approve működik
 - [ ] Klubelnök assign: member→clubpresident; president/vp role megmarad
 - [ ] President Members edit: role select; VP nem állíthat president-et
-- [ ] Klubváltás: csak klub tagdíj null; warning dashboard + profil
+- [ ] Klubváltás member/editor: csak klub tagdíj null + role=new; officer: role megmarad
+- [ ] Klubváltás warning dashboard + profil (officer / member szöveg)
 - [ ] Tagdíj unpaid: warning stílus (nem piros danger)
 - [ ] Header: név + rang minden prefix alatt (közös `admin` layout)
 - [ ] Reject → user nem lép be (`enabled=0`)
@@ -230,6 +232,7 @@ templates/Users/{complete_profile,edit,view}.php
 | President approve: club_id check | Country officer → `country_id` match (`approverMayActOnApplicant`) |
 | Klubelnök = mindig role clubpresident | President/vp elnök: role **marad**, csak `club_president_id` |
 | Klubváltás nullázza MPE tagdíjat | **Csak** `club_membership_fee_date` |
+| Officer klubváltás → role=new | clubpresident / president / vp: **role marad** (`keepsRoleOnClubSwitch`) |
 | Unpaid tagdíj piros danger | **warning** CSS + `alert-warning` |
 | Applicant approve URL clubpresident only | President prefix is `approve` / `reject` action |
 | `pos` klub seedben 1,2,3 | DB DEFAULT **1000**; user formon állítja |

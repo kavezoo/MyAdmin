@@ -381,11 +381,17 @@ class UsersController extends CakeDCUsersController
 
             $newClubId = (int)($user->get('club_id') ?? 0);
             $clubSwitch = MembershipProfile::isClubSwitch($previousClubId, $newClubId);
-            if ($clubSwitch) {
+            $officerKeepsRole = $clubSwitch && AppRoles::keepsRoleOnClubSwitch(
+                (string)($user->get('role') ?? '')
+            );
+            if ($clubSwitch && !$officerKeepsRole) {
                 $user->set('role', AppRoles::NEW);
                 $user->set('membership_status', MembershipProfile::STATUS_PENDING);
                 $user->set('application_notified', false);
                 $user->set(MembershipProfile::FIELD_JOINED, null);
+                MembershipFee::clearClubFeeOnClubSwitch($user);
+            } elseif ($officerKeepsRole) {
+                // Officers join the other club without re-application; club fee resets only.
                 MembershipFee::clearClubFeeOnClubSwitch($user);
             }
 
@@ -405,7 +411,7 @@ class UsersController extends CakeDCUsersController
             }
 
             $saveOptions = [];
-            if ($clubSwitch) {
+            if ($clubSwitch && !$officerKeepsRole) {
                 $saveOptions['accessibleFields'] = [
                     'first_name' => true,
                     'phone' => true,
@@ -418,20 +424,39 @@ class UsersController extends CakeDCUsersController
                     MembershipProfile::FIELD_JOINED => true,
                     MembershipFee::FIELD_CLUB => true,
                 ];
+            } elseif ($officerKeepsRole) {
+                $saveOptions['accessibleFields'] = [
+                    'first_name' => true,
+                    'phone' => true,
+                    'country_id' => true,
+                    'club_id' => true,
+                    'avatar' => true,
+                    MembershipFee::FIELD_CLUB => true,
+                ];
             }
 
             if (!$user->hasErrors() && $users->save($user, $saveOptions)) {
-                if ($clubSwitch) {
+                if ($clubSwitch && !$officerKeepsRole) {
                     (new MembershipService())->onClubChanged($user);
+                }
+                if ($officerKeepsRole && $previousClubId > 0) {
+                    /** @var \App\Model\Table\ClubsTable $clubs */
+                    $clubs = $this->fetchTable('Clubs');
+                    $clubs->clearDesignatedPresidentIfUser($previousClubId, $userId);
                 }
                 $fresh = $users->get($userId, contain: ['Countries', 'Clubs']);
                 if ($this->components()->has('Authentication')) {
                     $this->Authentication->setIdentity($fresh);
                 }
-                if ($clubSwitch) {
+                if ($clubSwitch && !$officerKeepsRole) {
                     $this->Flash->success(__('Your application to the new club has been submitted. You cannot use the system until the club president approves it.'));
 
                     return $this->redirect(RoleHome::url(AppRoles::NEW));
+                }
+                if ($officerKeepsRole) {
+                    $this->Flash->success(__('Your club has been updated. Your role is unchanged.'));
+
+                    return $this->redirect(UsersUrl::actionUrl('profile'));
                 }
                 $this->Flash->success(__('Your profile has been saved.'));
 
@@ -448,6 +473,10 @@ class UsersController extends CakeDCUsersController
         $this->set('canManageAvatar', true);
         $this->set('needsProfileCompletion', MembershipProfile::needsProfileCompletion($user));
         $this->set('profileOriginalClubId', $profileOriginalClubId);
+        $this->set(
+            'keepsRoleOnClubSwitch',
+            AppRoles::keepsRoleOnClubSwitch((string)($user->get('role') ?? ''))
+        );
     }
 
     /**

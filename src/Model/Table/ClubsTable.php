@@ -232,6 +232,40 @@ class ClubsTable extends Table
     }
 
     /**
+     * If this user is the designated elnök of `$clubId`, clear `club_president_id`
+     * (e.g. officer left the club via profile — role may stay clubpresident elsewhere).
+     */
+    public function clearDesignatedPresidentIfUser(int $clubId, string $userId): bool
+    {
+        if ($clubId < 1 || $userId === '') {
+            return true;
+        }
+
+        $club = $this->find()
+            ->select(['id', 'club_president_id'])
+            ->where(['Clubs.id' => $clubId])
+            ->first();
+        if ($club === null) {
+            return true;
+        }
+
+        $designated = trim((string)($club->get('club_president_id') ?? ''));
+        if ($designated === '' || $designated !== $userId) {
+            return true;
+        }
+
+        $club->set('club_president_id', null);
+
+        return (bool)$this->save($club, [
+            'checkRules' => false,
+            'accessibleFields' => [
+                'club_president_id' => true,
+                'modified' => true,
+            ],
+        ]);
+    }
+
+    /**
      * Demote outgoing club elnök to member only when role is pure clubpresident.
      */
     protected function demoteOutgoingClubPresident(string $userId, int $countryId): bool

@@ -15,7 +15,7 @@ Ha a projektben **tagsági jelentkezés** + **role panelek** (`new` → profil �
 
 | Téma | Szabály |
 |------|---------|
-| Klubváltás | Csak `club_membership_fee_date` null; országos tagdíj érintetlen |
+| Klubváltás | Member/editor: csak `club_membership_fee_date` null + `role=new`; **clubpresident/president/vp: role marad** |
 | Tagdíj unpaid UI | **warning**, nem danger |
 | Klubelnök | `clubs.club_president_id`; member→`clubpresident`; president/vp role marad |
 | Role edit (President) | Max president; VP nem állíthat president-et; nincs admin a listában |

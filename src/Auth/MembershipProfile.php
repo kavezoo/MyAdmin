@@ -233,6 +233,17 @@ class MembershipProfile
         return $previousClubId > 0 && $newClubId > 0 && $previousClubId !== $newClubId;
     }
 
+    /**
+     * Member / editor club switch → pending re-approval as `new`.
+     * Clubpresident / president / VP keep role ({@see AppRoles::keepsRoleOnClubSwitch()}).
+     */
+    public static function requiresReapprovalOnClubSwitch(mixed $user): bool
+    {
+        $role = strtolower(trim((string)(static::value($user, 'role') ?? '')));
+
+        return $role !== '' && !AppRoles::keepsRoleOnClubSwitch($role);
+    }
+
     public static function wasNotified(mixed $user): bool
     {
         return !empty(static::value($user, 'application_notified'));

@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MyAdmin\n"
-"POT-Creation-Date: 2026-08-06 14:46+0200\n"
-"PO-Revision-Date: 2026-08-06 14:46+0200\n"
+"POT-Creation-Date: 2026-08-06 14:57+0200\n"
+"PO-Revision-Date: 2026-08-06 14:57+0200\n"
 "Language: hu_HU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -3237,4 +3237,19 @@ msgstr "A kért cím ({0}) nem található a szerveren."
 #: ./templates/Error/error500.php:32
 msgid "An Internal Error Has Occurred."
 msgstr "Belső hiba történt."
+
+msgid "Your club has been updated. Your role is unchanged."
+msgstr "A klubod frissítve. A szerepköröd változatlan maradt."
+
+msgid "If you choose a different club and save, your role stays the same. Only your club membership fee will be cleared — you must pay it again at the new club. Your national membership fee is not affected."
+msgstr "Ha másik klubot választasz és mented, a szerepköröd változatlan marad. Csak a klub tagdíjad törlődik — az új klubban újra be kell fizetned. Az országos (MPE) tagdíjad nem változik."
+
+msgid "Change club?"
+msgstr "Klubváltás?"
+
+msgid "Do you really want to change your club? Your role will stay the same. Only your club membership fee will be cleared — you must pay it again at the new club."
+msgstr "Biztosan klubot szeretnél váltani? A szerepköröd változatlan marad. Csak a klub tagdíjad törlődik — az új klubban újra be kell fizetned."
+
+msgid "Yes, change club"
+msgstr "Igen, klubváltás"
 

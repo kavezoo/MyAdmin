@@ -165,7 +165,7 @@
 						focusCancel: true,
 						confirmButtonText: profileCfg.clubChangeConfirm || 'Yes, apply to this club',
 						cancelButtonText: profileCfg.clubChangeCancel || 'Cancel',
-						confirmButtonColor: '#dc3545',
+						confirmButtonColor: profileCfg.keepsRoleOnClubSwitch ? '#0d6efd' : '#dc3545',
 						cancelButtonColor: '#6c757d',
 						reverseButtons: true
 					}).then(function (result) {

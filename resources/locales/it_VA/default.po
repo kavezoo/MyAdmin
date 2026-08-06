@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MyAdmin\n"
-"POT-Creation-Date: 2026-08-06 14:46+0200\n"
-"PO-Revision-Date: 2026-08-06 14:46+0200\n"
+"POT-Creation-Date: 2026-08-06 14:57+0200\n"
+"PO-Revision-Date: 2026-08-06 14:57+0200\n"
 "Language: it_VA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -3237,4 +3237,19 @@ msgstr "L’indirizzo richiesto {0} non è stato trovato su questo server."
 #: ./templates/Error/error500.php:32
 msgid "An Internal Error Has Occurred."
 msgstr "Si è verificato un errore interno."
+
+msgid "Your club has been updated. Your role is unchanged."
+msgstr "Il club è stato aggiornato. Il tuo ruolo resta invariato."
+
+msgid "If you choose a different club and save, your role stays the same. Only your club membership fee will be cleared — you must pay it again at the new club. Your national membership fee is not affected."
+msgstr "Se scegli un altro club e salvi, il tuo ruolo resta lo stesso. Solo la quota associativa del club verrà azzerata — dovrai pagarla di nuovo nel nuovo club. La quota nazionale non viene modificata."
+
+msgid "Change club?"
+msgstr "Cambiare club?"
+
+msgid "Do you really want to change your club? Your role will stay the same. Only your club membership fee will be cleared — you must pay it again at the new club."
+msgstr "Vuoi davvero cambiare club? Il tuo ruolo resta lo stesso. Solo la quota associativa del club verrà azzerata — dovrai pagarla di nuovo nel nuovo club."
+
+msgid "Yes, change club"
+msgstr "Sì, cambia club"
 

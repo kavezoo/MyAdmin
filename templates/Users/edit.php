@@ -58,6 +58,7 @@ $userIdStr = trim((string)($user->id ?? ''));
 $avatarPath = $userIdStr !== '' ? UserAvatar::displayPath($userIdStr, (string)($user->avatar ?? '')) : '';
 $avatarUrl = $avatarPath !== '' ? $this->Url->build(UserAvatar::publicUrlFor($userIdStr, (string)($user->avatar ?? ''))) : '';
 $profileOriginalClubId = (int)($profileOriginalClubId ?? 0);
+$keepsRoleOnClubSwitch = (bool)($keepsRoleOnClubSwitch ?? AppRoles::keepsRoleOnClubSwitch($roleKey));
 $defaultPhonePrefix = (string)($defaultPhonePrefix ?? '');
 $countryPhonePrefixes = $countryPhonePrefixes ?? [];
 $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhonePrefix);
@@ -198,7 +199,11 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 							<?= __('Changing your club has important consequences') ?>
 						</div>
 						<p class="mb-0 mt-2 users-profile-club-warning-text">
-							<?= __('If you choose a different club and save, your role will be set to “new”, and your club membership fee will be cleared — you must pay it again at the new club. Your national membership fee is not affected. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member.') ?>
+							<?php if (!empty($keepsRoleOnClubSwitch)): ?>
+								<?= __('If you choose a different club and save, your role stays the same. Only your club membership fee will be cleared — you must pay it again at the new club. Your national membership fee is not affected.') ?>
+							<?php else: ?>
+								<?= __('If you choose a different club and save, your role will be set to “new”, and your club membership fee will be cleared — you must pay it again at the new club. Your national membership fee is not affected. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member.') ?>
+							<?php endif; ?>
 						</p>
 					</div>
 					<div class="form-text mb-2 js-club-need-country<?= $selectedCountryId < 1 ? '' : ' d-none' ?>"><?= __('Select your country first to see available clubs.') ?></div>
@@ -273,13 +278,20 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 			window.UsersProfile = {
 				deleteAvatarUrl: <?= json_encode($deleteAvatarUrl) ?>,
 				originalClubId: <?= (int)$profileOriginalClubId ?>,
+				keepsRoleOnClubSwitch: <?= $keepsRoleOnClubSwitch ? 'true' : 'false' ?>,
 				deleteAvatarTitle: <?= json_encode(__('Remove picture'), JSON_UNESCAPED_UNICODE) ?>,
 				deleteAvatarConfirm: <?= json_encode(__('Do you really want to delete your profile picture?'), JSON_UNESCAPED_UNICODE) ?>,
 				deleteAvatarButton: <?= json_encode(__('Delete picture'), JSON_UNESCAPED_UNICODE) ?>,
 				deleteAvatarCancel: <?= json_encode(__('Cancel'), JSON_UNESCAPED_UNICODE) ?>,
+				<?php if ($keepsRoleOnClubSwitch): ?>
+				clubChangeSwalTitle: <?= json_encode(__('Change club?'), JSON_UNESCAPED_UNICODE) ?>,
+				clubChangeSwalText: <?= json_encode(__('Do you really want to change your club? Your role will stay the same. Only your club membership fee will be cleared — you must pay it again at the new club.'), JSON_UNESCAPED_UNICODE) ?>,
+				clubChangeConfirm: <?= json_encode(__('Yes, change club'), JSON_UNESCAPED_UNICODE) ?>,
+				<?php else: ?>
 				clubChangeSwalTitle: <?= json_encode(__('Apply to a different club?'), JSON_UNESCAPED_UNICODE) ?>,
 				clubChangeSwalText: <?= json_encode(__('Do you really want to change your club? If you save, you will lose your current access and cannot use the system until the club president of the new club approves your application and registers you as a member.'), JSON_UNESCAPED_UNICODE) ?>,
 				clubChangeConfirm: <?= json_encode(__('Yes, apply to this club'), JSON_UNESCAPED_UNICODE) ?>,
+				<?php endif; ?>
 				clubChangeCancel: <?= json_encode(__('Cancel'), JSON_UNESCAPED_UNICODE) ?>
 			};
 			</script>

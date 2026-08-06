@@ -204,14 +204,14 @@ Session közben `RequireUserEnabledMiddleware` kidobja a usert, ha `enabled` (va
 - Validációs hiba: piros összefoglaló a form felett + mező alatti `error-message` + toast konkrét szöveggel.
 - **Role `new` + hiányos profil:** New Dashboard **figyelmeztet** (hiányzó mezők); CTA → `/complete-profile`. Más `/new/*` oldal → redirect complete-profile.
 - **Role `new` + kész profil** (név + ország + klub): New Dashboard csak **„Elfogadásra vár”** (`MembershipProfile::isWaitingForApproval`).
-- **Role `new` (klubváltás / pending):** csak `/new` prefix + profil/auth URL-ek (`profile`, `edit`, …); `RestrictNewRoleMiddleware` — más prefix → `/new`. Klubváltáskor csak `club_membership_fee_date` nullázódik; az országos tagdíj nem.
+- **Role `new` (klubváltás / pending):** csak `/new` prefix + profil/auth URL-ek (`profile`, `edit`, …); `RestrictNewRoleMiddleware` — más prefix → `/new`. Member/editor klubváltáskor csak `club_membership_fee_date` nullázódik; az országos tagdíj nem.
 - **President/VP Members edit:** role select max `president` (`AppRoles::assignableOptionsForActor`) — admin nem adható; **VP nem** állíthat / nem módosíthat `president` role-t; president módosíthatja a VP-t.
 - **Klubelnök assign:** `clubs.club_president_id`; member/editor → `clubpresident`; president/vp role változatlan; előző tiszta `clubpresident` → `member`.
 - Névmezők title-case mentéskor.
 - **Profilkép:** edit oldalon; ajánlott **1000×1000 px** négyzetes; törlés SweetAlert + `deleteAvatar` POST → visszairányít `/edit`.
 - Fájl: `uploads/avatars/{user.id}.jpg` (pl. UUID); DB: `users.avatar` (ugyanaz az útvonal).
 - **Entitás:** `App\Model\Entity\User` — CakeDC `_getAvatar()` helyett DB útvonal (+ social fallback); header + profil preview `UserAvatar::publicUrlFor`.
-- **Klubváltás:** más klub mentése → `role=new`, pending jelentkezés, clubpresident értesítés; **warning** figyelmeztetés + SWAL — [membership.md](membership.md).
+- **Klubváltás:** member/editor → `role=new` + pending + SWAL; **clubpresident / president / vp** → role **változatlan**, csak klub + klub tagdíj null — [membership.md](membership.md).
 - Breadcrumb: profile = view mód (`canEdit`); edit = form Save + View details (nincs Delete).
 
 ---

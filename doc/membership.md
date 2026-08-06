@@ -75,7 +75,9 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 - **Vezérlőpult:** ha van klub és a klub tagdíj nincs befizetve a tárgyévre → `element/panel/club_fee_unpaid_alert` (**alert-warning**) a New / Member / Clubpresident / President dashboardon (`PanelAppController` → `clubFeeUnpaid`).
 - **Napló:** `EventLogBehavior` + `ActivityLogSetup::isLoggingEnabled` (ország Setup `activity_logging_enabled`). User tagdíj: `MembershipFee::activityDescriptions`. **Klub → országos tagdíj** (`clubs.national_membership_fee_date`, pl. Outstanding gomb / `updateNationalFee`): `MembershipFee::clubEntityActivityDescriptions` (module=`Clubs`). Jóváhagyás / enable-disable: `MembershipProfile::activityDescriptions`. Ha a globális naplózás ki van kapcsolva az országra → **nincs** `event_logs` sor.
 
-**Profil klubváltás (member+):** `/edit` oldalon más klub mentése → `role=new`, `membership_status=pending`, **`membership_joined_date` = null**, **csak** `club_membership_fee_date` = null (`MembershipFee::clearClubFeeOnClubSwitch` — az új klubban újra kell fizetni); **`national_membership_fee_date` érintetlen** (országos / MPE független a klubtól), `Authentication::setIdentity`, clubpresident értesítés; redirect `/new`. Figyelmeztetés a formon: **alert-warning**. **RestrictNewRoleMiddleware:** csak `/new` + profil/auth URL-ek (`/profile`, `/edit`, …), más prefix → `/new`.
+**Profil klubváltás:**
+- **member / editor:** `/edit` → más klub → `role=new`, `membership_status=pending`, **`membership_joined_date` = null**, **csak** `club_membership_fee_date` = null (`MembershipFee::clearClubFeeOnClubSwitch`); **`national_membership_fee_date` érintetlen**; clubpresident értesítés; redirect `/new`. Figyelmeztetés: **alert-warning**. **RestrictNewRoleMiddleware:** csak `/new` + profil/auth URL-ek.
+- **clubpresident / president / vicepresident:** `/edit` → más klub → **role változatlan**, nincs re-application; csak `club_id` + klub tagdíj nullázás; ha a régi klub `club_president_id`-je ő volt → törölve (`ClubsTable::clearDesignatedPresidentIfUser`); redirect `/profile`.
 
 ---
 
@@ -139,7 +141,7 @@ Transport: `config/app.php` / `app_local.php` `Email` + `EmailTransport`.
 - [ ] Reject → SWAL warning + `enabled=0`
 - [ ] Klubelnök: member→clubpresident; president/vp role megmarad; előző clubpresident→member
 - [ ] President Members edit: role select; VP nem president-et
-- [ ] Klubváltás: csak klub tagdíj null; warning UI
+- [ ] Klubváltás member/editor: csak klub tagdíj null + role=new; officer (clubpresident/president/vp): role megmarad
 - [ ] Dashboard: `club_fee_unpaid_alert` unpaid klub tagdíjnál
 - [ ] Header: név + rang (minden prefix, közös layout)
 - [ ] President: Enable/Disable AJAX + SWAL; disabled sorok látszanak

@@ -5,6 +5,23 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-06 — Profil klubváltás: officer role változatlan
+
+### Mi változott / miért
+- **clubpresident / president / vicepresident** profilon (`/edit`) másik klubhoz csatlakozáskor a **role nem változik** — nincs `new` / pending / `/new` redirect.
+- Csak `club_id` + klub tagdíj nullázás; országos tagdíj érintetlen. Ha a régi klub kijelölt elnöke volt → `club_president_id` törölve.
+- Member / editor továbbra is a re-application flowot kapja.
+- UI: külön figyelmeztetés + SWAL szöveg officereknek.
+
+### Érintett
+- `AppRoles::keepsRoleOnClubSwitch`, `MembershipProfile::requiresReapprovalOnClubSwitch`
+- `UsersController::edit`, `ClubsTable::clearDesignatedPresidentIfUser`
+- `templates/Users/edit.php`, `webroot/js/pages/users_profile.js`
+- `doc/membership.md`, `membership-greenfield.md`, `users-auth.md`, `membership-greenfield.mdc`
+- hu/de/fr/it `.po` (új msgid-ek)
+
+---
+
 ## 2026-08-06 — Teljes fr_FR + it_IT UI fordítások (gettext)
 
 ### Mi változott / miért

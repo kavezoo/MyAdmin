@@ -277,6 +277,19 @@ class AppRoles
     }
 
     /**
+     * Profile club switch: these officers keep their role (no re-application as `new`).
+     * Clubpresident / president / vicepresident simply join the other club.
+     */
+    public static function keepsRoleOnClubSwitch(string $role): bool
+    {
+        return in_array(strtolower(trim($role)), [
+            self::CLUBPRESIDENT,
+            self::PRESIDENT,
+            self::VICEPRESIDENT,
+        ], true);
+    }
+
+    /**
      * When someone else becomes club elnök: demote only pure `clubpresident` → member.
      * President / vicepresident keep their role.
      */
