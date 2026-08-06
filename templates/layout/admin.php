@@ -5,10 +5,17 @@
  * Layout CSS/JS only — page-specific assets via $this->fetch('css'|'script'|'scriptBottom').
  *
  * @var \App\View\AppView $this
+ * @var string $appName
+ * @var string $appTitle
  */
+use App\Utility\AppBrand;
+
+$appTitle = (string)($appTitle ?? AppBrand::title());
 $pageTitle = $this->fetch('title');
 if ($pageTitle === '' || $pageTitle === null) {
-	$pageTitle = __('Admin');
+	$pageTitle = $appTitle;
+} else {
+	$pageTitle = $pageTitle . ' :: ' . $appTitle;
 }
 ?>
 <!DOCTYPE html>
@@ -17,7 +24,7 @@ if ($pageTitle === '' || $pageTitle === null) {
 	<?= $this->Html->charset() ?>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><?= h($pageTitle) ?></title>
-	<meta name="description" content="<?= h(__('Admin')) ?>">
+	<meta name="description" content="<?= h($appTitle) ?>">
 	<meta name="author" content="KaveZoo">
 
 	<?= $this->Html->meta('icon', 'favicon.ico') ?>

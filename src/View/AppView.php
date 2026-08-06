@@ -15,6 +15,7 @@ declare(strict_types=1);
  */
 namespace App\View;
 
+use App\Utility\AppBrand;
 use Cake\View\View;
 
 /**
@@ -40,6 +41,9 @@ class AppView extends View
      */
     public function initialize(): void
     {
+        $this->set('appName', AppBrand::name());
+        $this->set('appTitle', AppBrand::title());
+
         try {
             $this->loadHelper('CakeDC/Users.User');
         } catch (\Throwable) {

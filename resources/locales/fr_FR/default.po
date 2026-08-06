@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MyAdmin\n"
-"POT-Creation-Date: 2026-08-06 14:57+0200\n"
-"PO-Revision-Date: 2026-08-06 14:57+0200\n"
+"POT-Creation-Date: 2026-08-06 15:15+0200\n"
+"PO-Revision-Date: 2026-08-06 15:15+0200\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -1884,10 +1884,6 @@ msgstr "Rechercher dans le journal d’activité / des événements pour ce pays
 msgid "Go to Event logs"
 msgstr "Aller aux Journaux des événements"
 
-#: ./templates/Admin/Dashboard/index.php:62
-msgid "Welcome to MyAdmin. Choose a module below — each card describes where the button will take you."
-msgstr "Bienvenue sur MyAdmin. Choisissez un module ci-dessous — chaque carte décrit où le bouton vous mènera."
-
 #: ./templates/Admin/EventLogs/index.php:53
 msgid "Showing events for {0}"
 msgstr "Événements affichés pour {0}"
@@ -3252,4 +3248,7 @@ msgstr "Voulez-vous vraiment changer de club ? Votre rôle reste le même. Seule
 
 msgid "Yes, change club"
 msgstr "Oui, changer de club"
+
+msgid "Welcome to {0}. Choose a module below — each card describes where the button will take you."
+msgstr "Bienvenue sur {0}. Choisissez un module ci-dessous — chaque carte décrit où le bouton vous mènera."
 

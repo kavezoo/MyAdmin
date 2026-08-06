@@ -76,6 +76,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 ## Rögzített döntések (minden projektben)
 
 - Framework: **CakePHP 5.4+**, Admin URL: `/admin/...`
+- **Terméknév (látható brand):** `config/app.php` → **`App.Name`** / **`App.Title`** (alap: **PipeOffice**; env: `APP_NAME` / `APP_TITLE`); login H1 + böngésző title + welcome — `App\Utility\AppBrand`
 - UI szövegek: `__('English msgid')`; panel locale: **bejelentkezés után** login session/cookie, majd user ország (`BrowserLocale::forLoggedIn`); headerben **nincs** nyelvválasztó; **nincs** URL `/{lang}`
 - **Szerepkör panelek:** `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös Admin chrome; `new` csak `/new` — [users-auth.md](users-auth.md) §0–2
 - **Tagság (ha kell):** `new` → `/complete-profile` → approve → `member`; klubelnök, tagdíj, role ACL — [membership-greenfield.md](membership-greenfield.md) + [membership.md](membership.md); rule: `membership-greenfield.mdc`

@@ -1887,7 +1887,7 @@ msgid "Go to Event logs"
 msgstr ""
 
 #: ./templates/Admin/Dashboard/index.php:62
-msgid "Welcome to MyAdmin. Choose a module below — each card describes where the button will take you."
+msgid "Welcome to {0}. Choose a module below — each card describes where the button will take you."
 msgstr ""
 
 #: ./templates/Admin/EventLogs/index.php:53

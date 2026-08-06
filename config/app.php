@@ -55,8 +55,9 @@ return [
         'defaultLocale' => env('APP_DEFAULT_LOCALE', 'hu_HU'),
         // Admin prefix locale (no URL lang segment). Éles: 'hu_HU'. Ideiglenes EN teszt: 'en_US'.
         'adminLocale' => env('APP_ADMIN_LOCALE', 'en_UK'),
-        'Name' => env('APP_NAME', 'MyAdmin'),
-        'Title' => env('APP_TITLE', 'MyAdmin'),
+        // Visible product brand (login H1, browser title, welcome). Override via .env APP_NAME / APP_TITLE.
+        'Name' => env('APP_NAME', 'PipeOffice'),
+        'Title' => env('APP_TITLE', 'PipeOffice'),
         'LocalLoginFirst' => true,
         'defaultTimezone' => env('APP_DEFAULT_TIMEZONE', 'UTC'),
         'base' => false,

@@ -5,6 +5,21 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-06 — Terméknév: PipeOffice (`App.Name` / `App.Title`)
+
+### Mi változott / miért
+- Látható brand **PipeOffice** (login H1, böngésző title, Admin welcome, footer).
+- Egy config hely: `config/app.php` → `App.Name` + `App.Title` (env: `APP_NAME` / `APP_TITLE`); olvasás: `App\Utility\AppBrand`.
+- JS API (`window.MyAdmin`) **nem** változott — az belső névtér.
+
+### Érintett
+- `config/app.php`, `config/.env.example`, `config/app_local.example.php`
+- `src/Utility/AppBrand.php`, `src/View/AppView.php`
+- `templates/layout/{login,admin}.php`, `element/admin/footer.php`, `Admin/Dashboard/index.php`
+- `doc/users-auth.md`, hu/de/fr/it `.po` (welcome `{0}`)
+
+---
+
 ## 2026-08-06 — Login: Register / Forgot password szétválasztva
 
 ### Mi változott / miért

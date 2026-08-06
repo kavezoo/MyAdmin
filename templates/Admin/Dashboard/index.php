@@ -59,7 +59,7 @@ if (EventLogAccess::canSearch($this->request)) {
 				<h3 class="fw-bold"><i class="fa fa-tachometer"></i> <?= __('Dashboard') ?></h3>
 			</div>
 			<div class="card-body">
-				<p class="mb-3"><?= __('Welcome to MyAdmin. Choose a module below — each card describes where the button will take you.') ?></p>
+				<p class="mb-3"><?= __('Welcome to {0}. Choose a module below — each card describes where the button will take you.', h((string)($appName ?? \App\Utility\AppBrand::name()))) ?></p>
 				<?= $this->element('panel/dashboard_nav_cards', ['cards' => $cards]) ?>
 			</div>
 		</div>

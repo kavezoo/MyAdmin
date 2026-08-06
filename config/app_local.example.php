@@ -21,6 +21,15 @@ return [
     'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
 
     /*
+     * Visible product brand — override defaults from app.php / .env.
+     * Login H1 = Name; browser title base = Title (falls back to Name).
+     */
+    // 'App' => [
+    //     'Name' => env('APP_NAME', 'PipeOffice'),
+    //     'Title' => env('APP_TITLE', 'PipeOffice'),
+    // ],
+
+    /*
      * Security and encryption configuration
      *
      * - salt - A random string used in security hashing methods.

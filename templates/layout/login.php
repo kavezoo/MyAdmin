@@ -8,10 +8,10 @@
  *
  * @var \App\View\AppView $this
  */
-use Cake\Core\Configure;
+use App\Utility\AppBrand;
 
-$pageTitle = (string)(Configure::read('App.Title') ?: Configure::read('App.Name') ?: 'MyAdmin');
-$pageName = (string)(Configure::read('App.Name') ?: 'MyAdmin');
+$pageTitle = AppBrand::title();
+$pageName = AppBrand::name();
 ?>
 <!DOCTYPE html>
 <html lang="<?= h(str_replace('_', '-', \Cake\I18n\I18n::getLocale())) ?>">

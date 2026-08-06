@@ -15,7 +15,8 @@ Ez a dokumentum a **MyAdmin-ban összerakott** auth / regisztráció / szerepkö
 
 | Terület | Rögzített minta |
 |---------|-----------------|
-| Login layout | ValiAdmin CDN + `login-box local-login` + `.local-login-form` flow; **nincs** box-logo |
+| Login layout | ValiAdmin CDN + `login-box local-login` + `.local-login-form` flow; **nincs** box-logo; brand = `App.Name` (`PipeOffice`) |
+| Termék név | `config/app.php` → `App.Name` / `App.Title` (env: `APP_NAME` / `APP_TITLE`); helper: `App\Utility\AppBrand` |
 | Flash | Simple Notify toast — `Admin` prefix, **`admin` layout** (profil, tevékenységnapló), `login` layout |
 | App Users | `Users.controller` / `Users.table` = App; templatek `templates/Users/` |
 | Permissions | **ne** `'plugin' => false` App Usersre; `SanitizeAuthRedirectMiddleware` |
