@@ -72,7 +72,7 @@ return [
         [
             'role' => '*',
             'controller' => 'Users',
-            'action' => ['profile', 'edit', 'completeProfile', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword', 'eventLog', 'eventLogView', 'deleteAvatar'],
+            'action' => ['profile', 'edit', 'completeProfile', 'clubsForCountry', 'logout', 'linkSocial', 'callbackLinkSocial', 'changePassword', 'eventLog', 'eventLogView', 'deleteAvatar'],
         ],
         // Admin prefix — only admin / superuser (full panel)
         [

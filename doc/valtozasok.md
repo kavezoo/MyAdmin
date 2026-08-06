@@ -5,6 +5,54 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-06 — Profil klub mentés: disabled select POST bug
+
+### Mi változott / miért
+- AJAX után / üres listánál a `#club-id` **disabled** volt → böngésző nem küldi a mezőt → „Válaszd ki a klubodat.”
+- Select soha nem disabled; submit előtt Select2 → native szinkron; validáció `notBlank` a `club_id`/`country_id` mezőkön.
+
+### Érintett
+- `users_auth_country.js`, `users_profile.js`, `templates/Users/{edit,complete_profile}.php`, `UsersTable` validáció
+
+---
+
+## 2026-08-06 — Profil országváltás: AJAX fix (nincs leave, biztos URL)
+
+### Mi változott / miért
+- Leave kérdés oka: országváltáskor mégis `location.href` (hibás/üres clubs URL) → dirty form `beforeunload`.
+- Explicit route `/clubs-for-country`; `data-clubs-url` a selecten; ha van `#club-id`, **soha** nincs oldalelhagyás — csak AJAX klublista.
+- Klubok: idei országos tagdíj + saját klub (ha az ország egyezik).
+
+### Érintett
+- `config/routes.php`, `users_auth_country.js`, `templates/Users/{edit,complete_profile}.php`
+
+---
+
+## 2026-08-06 — Profil országváltás: AJAX klublista (nincs leave kérdés)
+
+### Mi változott / miért
+- Ország Select2 váltáskor **ne** kérdezzen leave-t és **ne** töltse újra az oldalt.
+- AJAX `UsersController::clubsForCountry` → klub Select2 frissítés.
+- Klubok: **enabled + visible + az adott évben befizetett országos tagdíj**; a user jelenlegi klubja kivételként mindig listázható.
+- Üres lista szöveg frissítve.
+
+### Érintett
+- `ClubsTable`, `UsersTable` (club szabály), `UsersController::clubsForCountry`, `permissions.php`, `RestrictNewRoleMiddleware`
+- `users_auth_country.js`, `templates/Users/{edit,complete_profile}.php`
+- `doc/membership.md`, `doc/users-auth.md`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-06 — Profil országváltás: leave confirm Swal (nem natív)
+
+### Mi változott / miért
+- Korábbi megoldás (Swal leave ország reload előtt) — **felülírva** az AJAX klublistával (lásd fenti bejegyzés).
+
+### Érintett
+- (történeti) `users_auth_country.js`, `form.js`
+
+---
+
 ## 2026-08-06 — `pos`: PHP-ból békén hagyjuk (megerősítés)
 
 ### Mi változott / miért

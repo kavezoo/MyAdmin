@@ -22,9 +22,10 @@ Kapcsolódó: [users-auth.md](users-auth.md), Cursor rule `.cursor/rules/users-a
 Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 
 - `first_name` (egy „név” mező), `country_id` (>0), `club_id` (>0, `clubs.enabled=1`, `visible=1`) — **telefon opcionális**
-- Klub lista: `ClubsTable::optionsForCountry(country_id)` — csak az adott ország **enabled + visible** klubjai, `pos` majd `name` sorrend.
+- Klub lista: `ClubsTable::optionsForCountry(country_id)` — csak az adott ország **enabled + visible** klubjai, **és** az adott évben befizetett országos (nemzeti) tagdíj (`national_membership_fee_date` éve = aktuális év); `pos` majd `name` sorrend. A user jelenlegi klubja akkor is listázódik, ha a tagdíj hiányzik.
+- Profil / complete-profile **országváltás**: nincs oldal-újratöltés / leave kérdés — AJAX `UsersController::clubsForCountry` frissíti a klub Select2-t.
 - Profil szerkesztés ország select: **minden** `Countries.visible = true` sor (`AdminCountry::visibleOptionsWithLocale`), + a user mentett országa ha hiányzik a listából.
-- Alapértelmezett kijelölés: `users.country_id` és `users.club_id`; országváltás query csak más ország esetén üríti a klubot.
+- Alapértelmezett kijelölés: `users.country_id` és `users.club_id`.
 
 ---
 

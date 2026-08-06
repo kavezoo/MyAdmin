@@ -117,10 +117,12 @@
 			var clubSwitchConfirmed = false;
 
 			$profileForm.on('submit', function (e) {
+				var $clubField = $('#club-id');
+				$clubField.prop('disabled', false);
 				if (clubSwitchConfirmed) {
 					return;
 				}
-				var newClubId = String($club.val() || '');
+				var newClubId = String($clubField.val() || '');
 				if (
 					originalClubId !== '0'
 					&& newClubId !== ''

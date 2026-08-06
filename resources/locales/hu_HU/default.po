@@ -1303,6 +1303,12 @@ msgstr "Mentetlen módosítások"
 msgid "You have unsaved changes. Do you really want to leave this form?"
 msgstr "Mentetlen módosítások vannak. Biztosan elhagyod az űrlapot?"
 
+msgid "There are no active clubs with a paid national membership fee for this country yet. Please choose another country from the list above."
+msgstr "Ehhez az országhoz jelenleg nincs aktív, országos tagdíjat befizetett klub. Válassz másik országot a fenti listából."
+
+msgid "Failed to load clubs."
+msgstr "A klubok betöltése nem sikerült."
+
 msgid "Leave"
 msgstr "Elhagyás"
 

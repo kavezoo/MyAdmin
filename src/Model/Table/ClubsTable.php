@@ -6,6 +6,7 @@ namespace App\Model\Table;
 use App\Auth\AppRoles;
 use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
+use App\Utility\MembershipFee;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
@@ -201,9 +202,10 @@ class ClubsTable extends Table
     }
 
     /**
-     * Profile / complete-profile: enabled + visible clubs for one country (pos, name).
+     * Profile / complete-profile: enabled + visible clubs that paid the national
+     * association fee for the current year (pos, name).
      *
-     * @param int $includeClubId Always list the user's current club (even if hidden/disabled).
+     * @param int $includeClubId Always list the user's current club (even if unpaid / hidden / disabled).
      *
      * @return array<int, string>
      */
@@ -213,25 +215,32 @@ class ClubsTable extends Table
             return [];
         }
 
-        $options = $this->findSelectableForCountry($countryId)
+        $options = $this->findSelectableForCountry($countryId, requireNationalFeePaid: true)
             ->find('list', keyField: 'id', valueField: 'name')
             ->toArray();
 
         if ($includeClubId > 0 && !isset($options[$includeClubId])) {
-            $options = array_merge($this->optionsForClubIds([$includeClubId]), $options);
+            $own = $this->find()
+                ->select(['id', 'country_id'])
+                ->where(['Clubs.id' => $includeClubId])
+                ->disableHydration()
+                ->first();
+            if ($own !== null && (int)($own['country_id'] ?? 0) === $countryId) {
+                $options = array_merge($this->optionsForClubIds([$includeClubId]), $options);
+            }
         }
 
         return $options;
     }
 
     /**
-     * Country ids with at least one selectable club (enabled + visible).
+     * Country ids with at least one selectable club (enabled + visible + fee paid this year).
      *
      * @return list<int>
      */
     public function countryIdsWithSelectableClubs(): array
     {
-        $ids = $this->findSelectable()
+        $ids = $this->findSelectable(requireNationalFeePaid: true)
             ->select(['Clubs.country_id'])
             ->distinct(['Clubs.country_id'])
             ->disableHydration()
@@ -269,26 +278,70 @@ class ClubsTable extends Table
     }
 
     /**
-     * Selectable clubs in one country (enabled, visible, pos).
+     * Whether a club may be chosen on profile (same country, enabled, visible, fee paid —
+     * or the member's already-assigned club).
+     */
+    public function isAllowedForProfile(int $clubId, int $countryId, int $allowExistingClubId = 0): bool
+    {
+        if ($clubId < 1 || $countryId < 1) {
+            return false;
+        }
+
+        $base = [
+            'Clubs.id' => $clubId,
+            'Clubs.country_id' => $countryId,
+            'Clubs.enabled' => true,
+            'Clubs.visible' => true,
+        ];
+        if (!$this->exists($base)) {
+            return false;
+        }
+
+        if ($allowExistingClubId > 0 && $clubId === $allowExistingClubId) {
+            return true;
+        }
+
+        $year = MembershipFee::currentYear();
+        $start = sprintf('%04d-01-01', $year);
+        $end = sprintf('%04d-12-31', $year);
+
+        return $this->exists($base + [
+            'Clubs.national_membership_fee_date >=' => $start,
+            'Clubs.national_membership_fee_date <=' => $end,
+        ]);
+    }
+
+    /**
+     * Selectable clubs in one country (enabled, visible, pos; optionally national fee paid).
      *
      * @return \Cake\ORM\Query\SelectQuery<\App\Model\Entity\Club>
      */
-    public function findSelectableForCountry(int $countryId): SelectQuery
+    public function findSelectableForCountry(int $countryId, bool $requireNationalFeePaid = false): SelectQuery
     {
-        return $this->findSelectable()
+        return $this->findSelectable($requireNationalFeePaid)
             ->where(['Clubs.country_id' => $countryId]);
     }
 
     /**
      * @return \Cake\ORM\Query\SelectQuery<\App\Model\Entity\Club>
      */
-    public function findSelectable(): SelectQuery
+    public function findSelectable(bool $requireNationalFeePaid = false): SelectQuery
     {
-        return $this->find()
+        $query = $this->find()
             ->where([
                 'Clubs.enabled' => true,
                 'Clubs.visible' => true,
             ])
             ->orderBy(['Clubs.pos' => 'ASC', 'Clubs.name' => 'ASC']);
+
+        if ($requireNationalFeePaid) {
+            $year = MembershipFee::currentYear();
+            $query->where([
+                'Clubs.national_membership_fee_date >=' => sprintf('%04d-01-01', $year),
+                'Clubs.national_membership_fee_date <=' => sprintf('%04d-12-31', $year),
+            ]);
+        }
+
+        return $query;
     }
 }

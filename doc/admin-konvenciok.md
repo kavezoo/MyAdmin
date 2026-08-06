@@ -121,9 +121,10 @@ Minden hagyományos Admin **add/edit** form (`#form-horizontal` + `pages/form.js
 |------------|----------|
 | **Swal figyelmeztetés** | Bármely tracked mező értéke **eltér** a betöltés utáni baseline-tól, és a user elnavigálna |
 | **Nincs kérdés** | Semmi nem változott, vagy mentés (`submit`) történik |
-| **Natív `beforeunload`** | Dirty + böngésző tab zárás / frissítés (Swal itt nem használható) |
+| **Natív `beforeunload`** | Dirty + böngésző tab zárás / F5 (Swal itt nem használható) |
+| **Programozott reload** (pl. register ország) | ha dirty: `confirmLeave` + `allowFormLeave()`; profil klublista: AJAX, nincs leave |
 
-**Trigger navigáció:** Cancel / Close gombok, breadcrumb Back, sidebar linkek, bármely `<a href>` (kivéve `#`, `javascript:`, `mailto:`, `tel:`, `target=_blank`, `download`, Bootstrap toggle, `.modal` belüli link, `btn-row-delete`).
+**Trigger navigáció:** Cancel / Close gombok, breadcrumb Back, sidebar linkek, bármely `<a href>` (kivéve `#`, `javascript:`, `mailto:`, `tel:`, `target=_blank`, `download`, Bootstrap toggle, `.modal` belüli link, `btn-row-delete`). Profil országváltás: AJAX klubok (`users_auth_country.js`), nem navigáció.
 
 **Baseline:** form ready után ~400 ms (Select2 / Tempus / Trumbowyg settle). Snapshot: input / select / textarea értékek (checkbox/radio: checked).
 
@@ -133,6 +134,8 @@ Minden hagyományos Admin **add/edit** form (`#form-horizontal` + `pages/form.js
 MyAdmin.confirmLeave({
 	onConfirm: function () { window.location.href = url; }
 });
+MyAdmin.allowFormLeave(); // programozott navigáció előtt (kikapcsolja a beforeunload-ot)
+MyAdmin.isFormDirty();    // opcionális dirty ellenőrzés
 ```
 
 **Új form:** ha `id="form-horizontal"` + `pages/form` script → automatikus. Ne írj párhuzamos dirty-checket.

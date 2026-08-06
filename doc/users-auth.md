@@ -198,6 +198,7 @@ Session közben `RequireUserEnabledMiddleware` kidobja a usert, ha `enabled` (va
 
 - **`/profile`** (`UsersController::profile` → `templates/Users/view.php`): read-only adatlap (tagdíj státusz / unpaid figyelmeztetés, mezők, social). Footer + breadcrumb **Edit** → `/edit`. Header Profile link ide mutat.
 - **`/edit`** (`UsersController::edit` → `templates/Users/edit.php`): szerkesztő űrlap — kötelező: **név**, ország, klub; **opcionális** telefon (`+` + ország hívószám + számjegyek; csak prefix → nem mentődik). Nincs tagdíj figyelmeztetés. Mentés után redirect `/profile`.
+- **Országváltás** (`users_auth_country.js`): ha van `#club-id` (edit / complete-profile) → **csak** AJAX `/clubs-for-country` (soha nincs `location.href` / leave kérdés). Lista: enabled + visible + **idei országos tagdíj**, plusz a **saját klub** ha ugyanabban az országban van.
 - Validációs hiba: piros összefoglaló a form felett + mező alatti `error-message` + toast konkrét szöveggel.
 - **Role `new` + hiányos profil:** `/complete-profile` továbbra is kötelező (New panel redirect).
 - **Role `new` (klubváltás / pending):** csak `/new` prefix + profil/auth URL-ek (`profile`, `edit`, …); `RestrictNewRoleMiddleware` — más prefix → `/new`.

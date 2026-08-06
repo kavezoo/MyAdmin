@@ -105,10 +105,11 @@ class UsersTable extends CakeDCUsersTable
                 'message' => __('Phone must start with + and contain digits only.'),
             ])
             ->requirePresence('country_id')
-            ->notEmptyString('country_id', __('Please select your country.'))
+            ->notBlank('country_id', __('Please select your country.'))
             ->nonNegativeInteger('country_id')
+            ->greaterThan('country_id', 0, __('Please select your country.'))
             ->requirePresence('club_id')
-            ->notEmptyString('club_id', __('Please select your club.'))
+            ->notBlank('club_id', __('Please select your club.'))
             ->nonNegativeInteger('club_id')
             ->greaterThan('club_id', 0, __('Please select your club.'));
 
@@ -137,10 +138,11 @@ class UsersTable extends CakeDCUsersTable
                 'message' => __('Phone must start with + and contain digits only.'),
             ])
             ->requirePresence('country_id')
-            ->notEmptyString('country_id', __('Please select your country.'))
+            ->notBlank('country_id', __('Please select your country.'))
             ->nonNegativeInteger('country_id')
+            ->greaterThan('country_id', 0, __('Please select your country.'))
             ->requirePresence('club_id')
-            ->notEmptyString('club_id', __('Please select your club.'))
+            ->notBlank('club_id', __('Please select your club.'))
             ->nonNegativeInteger('club_id')
             ->greaterThan('club_id', 0, __('Please select your club.'));
 
@@ -273,12 +275,14 @@ class UsersTable extends CakeDCUsersTable
                 return false;
             }
 
-            return $this->Clubs->exists([
-                'Clubs.id' => $clubId,
-                'Clubs.country_id' => $countryId,
-                'Clubs.visible' => true,
-                'Clubs.enabled' => true,
-            ]);
+            $allowExisting = 0;
+            if (!$entity->isDirty('club_id')) {
+                $allowExisting = $clubId;
+            } elseif (method_exists($entity, 'getOriginal')) {
+                $allowExisting = (int)$entity->getOriginal('club_id');
+            }
+
+            return $this->Clubs->isAllowedForProfile($clubId, $countryId, $allowExisting);
         }, 'clubInCountry', [
             'errorField' => 'club_id',
             'message' => __('Please select a club in your country.'),

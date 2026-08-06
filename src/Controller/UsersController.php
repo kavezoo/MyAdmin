@@ -449,6 +449,57 @@ class UsersController extends CakeDCUsersController
     }
 
     /**
+     * AJAX: club Select2 options for a country (enabled + visible + national fee paid this year).
+     *
+     * Query: country_id, optional include_club_id (keep current club even if unpaid).
+     *
+     * @return \Cake\Http\Response
+     */
+    public function clubsForCountry(): Response
+    {
+        $this->request->allowMethod(['get']);
+        $identity = $this->getRequest()->getAttribute('identity');
+        if ($identity === null) {
+            throw new ForbiddenException();
+        }
+
+        $countryId = (int)$this->getRequest()->getQuery('country_id');
+        $includeClubId = (int)$this->getRequest()->getQuery('include_club_id');
+
+        /** @var \App\Model\Table\ClubsTable $clubs */
+        $clubs = $this->fetchTable('Clubs');
+
+        if ($includeClubId > 0 && $countryId > 0) {
+            $includeClub = $clubs->find()
+                ->select(['id', 'country_id'])
+                ->where(['Clubs.id' => $includeClubId])
+                ->disableHydration()
+                ->first();
+            if ($includeClub === null || (int)($includeClub['country_id'] ?? 0) !== $countryId) {
+                $includeClubId = 0;
+            }
+        } else {
+            $includeClubId = 0;
+        }
+
+        $options = $countryId > 0
+            ? $clubs->optionsForCountry($countryId, $includeClubId)
+            : [];
+
+        $payload = [
+            'success' => true,
+            'country_id' => $countryId,
+            'clubs' => $options,
+            'empty' => $countryId > 0 && $options === [],
+            'default_phone_prefix' => PhoneNumber::prefixForCountryId($countryId),
+        ];
+
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody((string)json_encode($payload, JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
      * Remove own profile picture (member+).
      *
      * @return \Cake\Http\Response

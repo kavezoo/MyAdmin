@@ -40,6 +40,7 @@ class RestrictNewRoleMiddleware implements MiddlewareInterface
         'profile',
         'edit',
         'completeprofile',
+        'clubsforcountry',
         'deleteavatar',
         'logout',
         'linksocial',

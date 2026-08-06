@@ -13,6 +13,7 @@ Minden Admin **add/edit** form (`#form-horizontal` + `pages/form.js`):
 3. Ha **semmi nem változott** → nincs kérdés, szabad navigáció.
 4. **Mentés (submit)** → nincs kérdés (`allowLeave`).
 5. Böngésző tab zárás / frissítés dirty állapotban → natív `beforeunload` (böngésző saját dialógusa, nem Swal).
+6. **Programozott navigáció** (pl. ország Select2 **reload** registeren): ne `location.href` közvetlenül dirty formon — `MyAdmin.confirmLeave` + `MyAdmin.allowFormLeave()`. Profil / complete-profile országváltásnál **nincs** navigáció: AJAX klublista (`users_auth_country.js` + `clubsForCountry`).
 
 ## Nem kérdez (kivételek)
 
@@ -32,7 +33,8 @@ Minden Admin **add/edit** form (`#form-horizontal` + `pages/form.js`):
 
 Layout: `templates/layout/admin.php` → `MyAdmin.messages.*`  
 JS: `MyAdmin.confirmLeave({ onConfirm })` — `webroot/js/app.js`  
-Logika: `webroot/js/pages/form.js`
+Programozott navigáció: `MyAdmin.allowFormLeave()` — `webroot/js/pages/form.js`  
+Logika: `webroot/js/pages/form.js` (+ ország reload: `users_auth_country.js`)
 
 ## Új form
 

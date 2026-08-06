@@ -89,19 +89,17 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 						'id' => 'country-id',
 						'required' => true,
 						'value' => $selectedCountryId > 0 ? $selectedCountryId : null,
-						'data-reload-url' => $completeProfileUrl,
 						'data-placeholder' => __('Select country...'),
+						'data-clubs-url' => $this->Url->build('/clubs-for-country'),
+						'data-include-club-id' => (string)(int)($user->club_id ?? 0),
 					]) ?>
 				</div>
 				<div class="mb-0">
 					<label class="form-label" for="club-id"><?= __('Club') ?></label>
-					<?php if ($selectedCountryId < 1): ?>
-						<div class="form-text mb-2"><?= __('Select your country first to see available clubs.') ?></div>
-					<?php elseif ($clubOptionsEmpty): ?>
-						<div class="alert alert-warning mb-2">
-							<?= __('There are no clubs registered for this country yet. Please choose another country from the list above.') ?>
-						</div>
-					<?php endif; ?>
+					<div class="form-text mb-2 js-club-need-country<?= $selectedCountryId < 1 ? '' : ' d-none' ?>"><?= __('Select your country first to see available clubs.') ?></div>
+					<div class="alert alert-warning mb-2 js-club-empty-warning<?= ($selectedCountryId > 0 && $clubOptionsEmpty) ? '' : ' d-none' ?>">
+						<?= __('There are no active clubs with a paid national membership fee for this country yet. Please choose another country from the list above.') ?>
+					</div>
 					<?= $this->Form->control('club_id', [
 						'label' => false,
 						'type' => 'select',
@@ -110,7 +108,7 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 						'class' => 'form-select js-club-select',
 						'id' => 'club-id',
 						'required' => $clubOptions !== [],
-						'disabled' => $clubOptions === [],
+						'disabled' => false,
 						'value' => (int)($user->club_id ?? 0) > 0 ? (int)$user->club_id : null,
 						'data-placeholder' => __('Select club...'),
 					]) ?>
@@ -128,7 +126,10 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 </div>
 <script>
 window.UsersAuthCountry = window.UsersAuthCountry || {};
-window.UsersAuthCountry.reloadUrl = <?= json_encode($completeProfileUrl) ?>;
+window.UsersAuthCountry.clubsUrl = <?= json_encode($this->Url->build('/clubs-for-country'), JSON_UNESCAPED_SLASHES) ?>;
+window.UsersAuthCountry.includeClubId = <?= (int)($user->club_id ?? 0) ?>;
+window.UsersAuthCountry.clubPlaceholder = <?= json_encode(__('Select club...'), JSON_UNESCAPED_UNICODE) ?>;
+window.UsersAuthCountry.clubsLoadFailed = <?= json_encode(__('Failed to load clubs.'), JSON_UNESCAPED_UNICODE) ?>;
 window.UsersAuthCountry.flagBase = <?= json_encode($this->Url->build('/img/flags/'), JSON_UNESCAPED_SLASHES) ?>;
 window.UsersAuthCountry.flags = <?= json_encode(
 	\App\Utility\AdminCountry::iso2Map(array_map('intval', array_keys($countryOptions))),

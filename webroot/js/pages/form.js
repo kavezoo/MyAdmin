@@ -108,6 +108,17 @@
 		};
 
 		/**
+		 * Programmatic navigation (e.g. country Select2 reload) — skip beforeunload / link guards.
+		 */
+		App.allowFormLeave = function () {
+			allowLeave = true;
+		};
+
+		App.isFormDirty = function () {
+			return isFormDirty();
+		};
+
+		/**
 		 * Snapshot of meaningful form fields (after Select2 / Tempus / Trumbowyg init).
 		 * @returns {string}
 		 */
