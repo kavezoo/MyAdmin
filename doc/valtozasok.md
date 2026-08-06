@@ -5,6 +5,17 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-06 — Verseny kivetítő / óra: architektúra döntések naplózva
+
+### Mi változott / miért
+- Döntésnapló: két ablak (operátor + kivetítő), ~1 s polling (nem WebSocket), display token, óra állapotgép (prep → running → finished), offline = helyi LAN + azonos gépes BroadcastChannel fallback.
+- **Implementáció holnap / következő kör** — kód még nincs.
+
+### Érintett
+- `doc/race-display.md` (új), `doc/README.md`, `doc/valtozasok.md`
+
+---
+
 ## 2026-08-06 — Form lábléc gombok: mobil wrapping (globális)
 
 ### Mi változott / miért

@@ -20,6 +20,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | **Eseménynapló** | **[event-logs.md](event-logs.md)** |
 | **Login nyelv** | **[login-language.md](login-language.md)** |
 | **Tagság jelentkezés** | **[membership.md](membership.md)** — greenfield: **[membership-greenfield.md](membership-greenfield.md)** |
+| **Verseny kivetítő / óra (terv)** | **[race-display.md](race-display.md)** — döntések; kód még nincs |
 | Fordítás | [i18n.md](i18n.md) |
 | **Form nyelvi TAB-ok** | **[form-i18n-tabs.md](form-i18n-tabs.md)** |
 | Mentéskori szám/dátum | [middleware.md](middleware.md) |
@@ -44,6 +45,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | **[login-language.md](login-language.md)** | Login **nyelv** Select2; `languages` + i18n nevek; register = ország |
 | **[membership.md](membership.md)** | Tagság: `new` → profil → clubpresident → `member` |
 | **[membership-greenfield.md](membership-greenfield.md)** | **Tagság + role panelek greenfield** — lépéssorrend, séma, ACL, checklist |
+| **[race-display.md](race-display.md)** | **Verseny kivetítő + óra** — architektúra döntések (polling, token, offline LAN); implementáció folyamatban |
 | [middleware.md](middleware.md) | Locale szám- és dátumnormalizálás |
 | [crud-utmutato.md](crud-utmutato.md) | Új Admin CRUD modul lépései |
 | [setups.md](setups.md) | Típusos Setups (EAV) modul — widgetek, slug, JSON/tömb |
@@ -80,6 +82,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - UI szövegek: `__('English msgid')`; panel locale: **bejelentkezés után** login session/cookie, majd user ország (`BrowserLocale::forLoggedIn`); headerben **nincs** nyelvválasztó; **nincs** URL `/{lang}`
 - **Szerepkör panelek:** `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös Admin chrome; `new` csak `/new` — [users-auth.md](users-auth.md) §0–2
 - **Tagság (ha kell):** `new` → `/complete-profile` → approve → `member`; klubelnök, tagdíj, role ACL — [membership-greenfield.md](membership-greenfield.md) + [membership.md](membership.md); rule: `membership-greenfield.mdc`
+- **Verseny kivetítő (tervezett):** két ablak, ~1 s polling, display token, offline = helyi LAN (+ azonos gépes BroadcastChannel); részletek — [race-display.md](race-display.md) (**kód még nincs**)
 - **CakeDC auth baseline:** ValiAdmin login; email login; ország + `country_id`; Flash toast; RoleHome afterLogin (`setResult`); header Belépve + Profile…; search role-gated — **projektenként változhat** (role/form/SSO) — [users-auth.md](users-auth.md); rule: `users-auth.mdc`
 - Országnevek: DB `countries` + Translate `i18n`; földrész: `continents` + `countries.continent_id` + Continents i18n (CLDR); Admin lista UI: **[countries-admin.md](countries-admin.md)**; ACL: superuser teljes / admin `visible`+`pos` — seed: `php tmp/seed_continents.php` ([i18n.md](i18n.md))
 - Layout = csak közös CSS/JS; index/form/view oldalspecifikus asseteket a template tölti
