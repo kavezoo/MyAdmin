@@ -191,7 +191,7 @@ Edit gomb a modalban a View details **előtt** (UX konvenció).
 - Boolean: switch
 - **`visible` + `pos`:** form végén; `visible` fölött mezőszélességű `<hr>` (`row` + `col-12 col-xxl-11`); sorrend: **visible → pos**
 - **Mezőhiba:** control alatt, piros félkövér (`.error-message`); Tempus/Select2+/checkbox: `admin/field_error`
-- Lábléc: Save + Cancel (`offset-md-2`, form labelhez); Save a breadcrumbben is (`form="form-horizontal"`)
+- Lábléc: Save + Cancel (`offset-md-2`, form labelhez); Save a breadcrumbben is (`form="form-horizontal"`); mobil: gombok egyben, sor törhet (`admin-form-footer-buttons.mdc`)
 - Select2 mező mellett **„+”** gomb (single **és** multiple), ha új kapcsolt rekord **egyszerűen** felvehető; HABTM multiple Select2 **mindkét** CRUD formon
 - **Fókusz:** **minden** Admin formon a `#name` (vagy első szöveges mező) azonnal fókuszt kap — `pages/form.js` kötelező asset + `autofocus`
 - **Mentetlen leave:** ha mező változott a betöltés óta → `confirmLeave` Swal; ha nem → szabad navigáció — [admin-konvenciok.md](admin-konvenciok.md); rule: `admin-form-unsaved.mdc`

@@ -197,6 +197,8 @@ img {
   align-items: stretch;
   padding: 0.5rem 1.1rem;
   line-height: 1.2;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .breadcrumb-holder-actions .toolbar-buttons .btn .btn-label {
@@ -278,6 +280,13 @@ img {
 .header-search-clear.disabled {
   opacity: 0.45;
   pointer-events: none;
+}
+
+/* Mobile / narrow: hide global header search (title bar overcrowded) */
+@media (max-width: 991.98px) {
+  .header-search-item {
+    display: none !important;
+  }
 }
 
 .card-box {
@@ -1143,6 +1152,41 @@ a.btn:focus {
   margin: -7px -14px;
   margin-right: 12px;
   pointer-events: none;
+}
+
+/*
+ * Form / view footer actions (global):
+ * - each .btn stays one unit (icon + label never wrap inside the button)
+ * - the row may wrap: whole buttons move to the next line
+ */
+.btn:has(.btn-label) {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+.card-footer .row > [class*="col-"]:has(> .btn),
+.card-footer .record-view-footer-actions,
+.card-footer:has(> .btn),
+.form-footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* gap replaces Bootstrap ms-* between sibling footer buttons */
+.card-footer .row > [class*="col-"]:has(> .btn) > .btn.ms-2,
+.card-footer .row > [class*="col-"]:has(> .btn) > .btn.ms-3,
+.card-footer .record-view-footer-actions > .btn.ms-2,
+.card-footer .record-view-footer-actions > .btn.ms-3,
+.form-footer-actions > .btn.ms-2,
+.form-footer-actions > .btn.ms-3,
+.card-footer:has(> .btn) > .btn.ms-2,
+.card-footer:has(> .btn) > .btn.ms-3 {
+  margin-left: 0 !important;
 }
 
 .btn-rounded .btn-label {

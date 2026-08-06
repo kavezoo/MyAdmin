@@ -749,6 +749,7 @@ Delete után a controller **referer**-re irányít (`referer(['action' => 'index
 - Bootstrap rács: label `col-md-2`, mező jobbra; címkék félkövérek (`style.css`)
 - **Kötelező mező csillag (automatikus):** külső label mindig `$this->Form->adminLabel('field', __('Label:'))` (vagy `requiredMark('field')` a szöveg **előtt**). Piros `*` közvetlenül a név előtt, szóköz nélkül — validatorból (`notEmpty*` / `requirePresence`). Opcionálisnál nincs. CSS: `#form-horizontal .required`. i18n TAB: `form_language_fields` a gyökér mezőnévre.
 - Lábléc: Save + Cancel; Save a breadcrumbben is (`form="form-horizontal"`); gombok: `col-12 col-md-10 col-xxl-9 offset-md-2` (mezősorral egy vonalban)
+- **Lábléc gombok wrapping (örök, globális):** egy gomb ikon+szöveg **egyben** marad (`nowrap`); ha kevés a hely, a **következő gomb** kerül új sorba (`flex-wrap` + `gap`). CSS: `style.css` (`.btn:has(.btn-label)`, `.card-footer …`, `.form-footer-actions`). Rule: `admin-form-footer-buttons.mdc`. Ne írj mobilra full-width / széteső gomb layoutot.
 - **Mezőhiba:** a beviteli mező **alatt**, piros félkövér (`.error-message`); Admin Form: `errorClass=is-invalid`, `inputContainerError={{content}}{{error}}` — `AppView` + `style.css`
   - Egyszerű `Form->control`: a hiba automatikusan a mező alatt
   - **input-group** (Tempus), **select2-with-add**, **checkbox**: `'error' => false` a controlon, majd a wrapper **után** `<?= $this->element('admin/field_error', ['field' => '…']) ?>` — így nem a naptár ikon / „+” gomb mellé kerül

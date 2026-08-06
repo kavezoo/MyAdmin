@@ -5,6 +5,39 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-06 — Form lábléc gombok: mobil wrapping (globális)
+
+### Mi változott / miért
+- Keskeny képernyőn a form/view `card-footer` gombok (Save/Cancel/…) **nem esnek szét** a gombon belül; ha kell, **egész gomb** kerül új sorba (`flex-wrap` + `gap` + `nowrap`).
+- Tartós szabály: rule + doksi.
+
+### Érintett
+- `webroot/css/style.css`, `.cursor/rules/admin-form-footer-buttons.mdc`
+- `doc/admin-konvenciok.md`, `doc/admin-oldal.md`, `doc/README.md`
+
+---
+
+## 2026-08-06 — Header: mobil kereső elrejtve + help/messages/alerts kikommentelve
+
+### Mi változott / miért
+- Keskeny képernyőn (`≤991px`) a header globális keresősáv rejtve (címsor nem zsúfolódik).
+- Kérdőjel / boríték / harang header lenyílók ideiglenesen kikommentelve (`header_help` / `header_messages` / `header_alerts`).
+
+### Érintett
+- `templates/element/admin/header.php`, `webroot/css/style.css`
+
+---
+
+## 2026-08-06 — Auth ablakok: mobil/tablet felülre
+
+### Mi változott / miért
+- Login / regisztráció / elfelejtett jelszó keskeny képernyőn (`≤991px`) **felül** jelenik meg (nem függőlegesen középen), megfelelő paddinggel.
+
+### Érintett
+- `webroot/css/pages/users_auth.css`
+
+---
+
 ## 2026-08-06 — Terméknév: PipeOffice (`App.Name` / `App.Title`)
 
 ### Mi változott / miért

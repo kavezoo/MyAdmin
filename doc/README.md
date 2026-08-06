@@ -87,6 +87,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - **Index card footer:** mindig `admin/index_footer` (= `index_counter` + `index_pagination`); lapozó: **First | Previous | számok | Next | Last** (disabled a széleken) — [admin-konvenciok.md](admin-konvenciok.md) Lapozó; rule: `admin-paginator.mdc`
 - Admin dialógusok: **SweetAlert2** (`MyAdmin.swal` / `alert` / `alertError` / `confirmDelete` / `confirmLeave` / `flashSwal`) — soha `window.alert`; Bootstrap modal FocusTrap pause; popup **árnyék** + z-index 20000 (`style.css`)
 - **Mentetlen form:** `#form-horizontal` dirty → leave Swal (`confirmLeave`); változatlan → nincs kérdés — [admin-konvenciok.md](admin-konvenciok.md); rule: `admin-form-unsaved.mdc`
+- **Form / view lábléc gombok:** ikon+szöveg egyben (`nowrap`); szűk helyen egész gomb új sorba (`flex-wrap`) — [admin-konvenciok.md](admin-konvenciok.md); rule: `admin-form-footer-buttons.mdc`
 - **Form kötelező `*`:** label előtt, piros, validatorból — `FormHelper::adminLabel` — rule: `admin-form-required.mdc`
 - **Új/éles projekt:** séma + kapcsolatok szerint **minden** keretrendszer-megoldás — [uj-projekt-sema-playbook.md](uj-projekt-sema-playbook.md); rule: `uj-projekt-sema.mdc`
 - **Index keresés/sort Translate:** `indexPaginateOptionsFor` + `AdminSearch` (UI locale); **ne** `COALESCE` az ORDER BY-ban — [i18n.md](i18n.md); rule: `admin-translate-search-sort.mdc`

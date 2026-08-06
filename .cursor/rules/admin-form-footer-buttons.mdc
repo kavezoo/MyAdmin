@@ -1,0 +1,25 @@
+---
+description: Form / view lábléc gombok — egyben maradnak, sor törhet
+alwaysApply: true
+---
+
+# Form lábléc gombok — wrapping (örök)
+
+Admin / panel **form és view card-footer** action gombok (Save, Cancel, Edit, …) keskeny képernyőn is:
+
+## Kötelező
+
+1. **Egy gomb = egy egység:** az ikon (`btn-label`) + felirat **soha** ne törjön a gombon belül (`white-space: nowrap` + `inline-flex`).
+2. **A gombok sora törhet:** ha nincs elég hely, a következő gomb **egészben** új sorba kerül (`flex-wrap` + `gap`).
+3. CSS globális (`webroot/css/style.css`): `.btn:has(.btn-label)`, `.card-footer …:has(> .btn)`, `.record-view-footer-actions`, opcionális `.form-footer-actions`.
+4. Új form lábléc: maradhat a megszokott markup (`card-footer` → `row` → `col-… offset-md-2` → Save + Cancel); **ne** írj külön mobil `display:block` / `width:100%` gombokat, ha csak a wrapping a cél.
+
+## Tilos
+
+- Gomb szövegének sortörése a gombon belül (`white-space: normal` a footer action `.btn`-en)
+- Keskeny képernyőn egymás alá *széteső* ikon + szöveg (külön sorban a `btn-label` és a label)
+- Index `card-footer` (`admin/index_footer`) felülírása ugyanezzel a mintával — az nem action-gomb sor
+
+## Spec
+
+`doc/admin-konvenciok.md` (Form → lábléc gombok), `doc/README.md` Rögzített döntések.

@@ -48,9 +48,14 @@ if ($identity !== null) {
 
 		<ul class="list-inline float-right mb-0">
 			<?= $this->element('admin/header_search') ?>
-			<?= $this->element('admin/header_help') ?>
-			<?= $this->element('admin/header_messages') ?>
-			<?= $this->element('admin/header_alerts') ?>
+			<?php
+			/*
+			 * Temporary: question / envelope / bell header dropdowns hidden until wired up.
+			 * <?= $this->element('admin/header_help') ?>
+			 * <?= $this->element('admin/header_messages') ?>
+			 * <?= $this->element('admin/header_alerts') ?>
+			 */
+			?>
 			<?= $this->element('admin/header_profile') ?>
 		</ul>
 
