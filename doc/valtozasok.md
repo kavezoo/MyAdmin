@@ -5,6 +5,16 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-06 — Login: Register / Forgot password szétválasztva
+
+### Mi változott / miért
+- Login alsó linkek: **Register balra**, **Forgot password? jobbra** (`space-between` + `:has` ha mindkettő látszik).
+
+### Érintett
+- `webroot/css/pages/users_auth.css`
+
+---
+
 ## 2026-08-06 — Profil klubváltás: officer role változatlan
 
 ### Mi változott / miért

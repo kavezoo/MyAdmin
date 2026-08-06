@@ -46,13 +46,24 @@
 }
 
 .users-auth-body .users-auth-links {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem 1.5rem;
 	margin-top: 0.75rem;
 	font-size: 0.9rem;
 }
 
 .users-auth-body .users-auth-links a {
 	display: inline-block;
-	margin-right: 0.75rem;
+	margin-right: 0;
+}
+
+/* Login: Register balra, Forgot password jobbra (ha mindkettő látszik) */
+.users-auth-body .users-auth-links:has(> :nth-child(2)) > :last-child {
+	margin-left: auto;
+	text-align: right;
 }
 
 .users-auth-body .form-error,
