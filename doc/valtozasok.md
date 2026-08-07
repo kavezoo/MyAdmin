@@ -5,6 +5,17 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-07 — President Clubs add: country_id INSERT javítás
+
+### Mi változott / miért
+- Új klub mentésekor a `patchEntity` azonos `country_id` mellett **nem dirty**-ként hagyta a mezőt → INSERT kihagyta → MySQL `0` → FK hiba → „nem menthető”.
+- Javítás: `country_id` mindig a officer országából, **patch után** `set()` (nem a POST-ból).
+
+### Érintett
+- `src/Controller/President/ClubsController.php`, `doc/valtozasok.md`, `doc/membership.md`
+
+---
+
 ## 2026-08-06 — Verseny kivetítő / óra: architektúra döntések naplózva
 
 ### Mi változott / miért

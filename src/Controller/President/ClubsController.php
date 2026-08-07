@@ -131,6 +131,8 @@ class ClubsController extends AppController
                         'pos' => true,
                     ],
                 ]);
+                // Same value after patch clears dirty → INSERT omits country_id → FK 0.
+                $club->setDirty('country_id', true);
                 if ($this->Clubs->save($club)) {
                     $this->Clubs->assignClubPresident((int)$club->id, $countryId, $presidentId);
                     $this->rememberLastVisited('Clubs', $club->id);
