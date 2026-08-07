@@ -3,20 +3,34 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Club $club
  * @var int $countryId
+ * @var int $officerCountryId
  * @var string $countryLabel
  * @var array<string, string> $presidentOptions
+ * @var array<string, string> $countryOptions
+ * @var array<string, string> $cityOptions
+ * @var array<int, string> $countryFlags
  * @var string $clubPresidentId
+ * @var int|null $cityId
  */
 $this->Html->css([
 	'/plugins/select2-4.1.0/css/select2.min',
 	'/plugins/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min',
 	'pages/form',
+	'pages/users_auth',
 ], ['block' => true]);
 
 $isEdit = !$club->isNew();
 $presidentOptions = $presidentOptions ?? [];
+$countryOptions = $countryOptions ?? [];
+$cityOptions = $cityOptions ?? [];
+$countryFlags = $countryFlags ?? [];
 $clubPresidentId = (string)($clubPresidentId ?? '');
-$countryLabel = (string)($countryLabel ?? '');
+$countryId = (int)($countryId ?? 0);
+$officerCountryId = (int)($officerCountryId ?? $countryId);
+$cityId = isset($cityId) ? (int)$cityId : (int)($club->city_id ?? 0);
+if ($cityId < 1) {
+	$cityId = null;
+}
 
 $config = [
 	'indexUrl' => $this->Url->build(['action' => 'index']),
@@ -30,11 +44,18 @@ $this->Html->scriptBlock(
 );
 
 $jsCfg = [
-	'ajaxUrl' => $this->Url->build(['action' => 'userOptions']),
+	'userAjaxUrl' => $this->Url->build(['action' => 'userOptions']),
+	'countryAjaxUrl' => $this->Url->build(['action' => 'countryOptions']),
+	'cityAjaxUrl' => $this->Url->build(['action' => 'cityOptions']),
+	'rememberCountryUrl' => $this->Url->build(['action' => 'rememberCountry']),
+	'flagBase' => $this->Url->build('/img/flags/'),
+	'flags' => $countryFlags,
 	'noResults' => __('No results found.'),
 	'searching' => __('Search...'),
 	'inputTooShort' => __('Please enter 2 or more characters'),
-	'placeholder' => __('Select club president...'),
+	'presidentPlaceholder' => __('Select club president...'),
+	'countryPlaceholder' => __('Select country...'),
+	'cityPlaceholder' => __('Start typing the city name...'),
 ];
 $this->Html->scriptBlock(
 	'window.PresidentClubsForm = ' . json_encode($jsCfg, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';',
@@ -55,9 +76,6 @@ $this->Html->script([
 				<div class="float-left">
 					<h3><i class="fa fa-check-square-o"></i> <?= $isEdit ? __('Edit club') : __('New club') ?></h3>
 					<?= $isEdit ? __('Edit the selected record.') : __('Create a new record.') ?>
-					<?php if ($countryLabel !== ''): ?>
-						<div class="text-muted small"><?= h(__('Country: {0}', $countryLabel)) ?></div>
-					<?php endif; ?>
 				</div>
 				<div class="float-right d-flex align-items-center gap-3">
 					<?php if ($isEdit): ?>
@@ -90,6 +108,52 @@ $this->Html->script([
 					</div>
 
 					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('short_name', __('Short name:'), ['for' => 'short-name', 'required' => false]) ?>
+						<div class="col-12 col-md-10 col-xl-5">
+							<?= $this->Form->control('short_name', [
+								'label' => false,
+								'class' => 'form-control',
+								'id' => 'short-name',
+							]) ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('country_id', __('Country:'), ['for' => 'country-id']) ?>
+						<div class="col-12 col-md-10 col-xl-8">
+							<?= $this->Form->control('country_id', [
+								'label' => false,
+								'type' => 'select',
+								'options' => $countryOptions,
+								'value' => $countryId > 0 ? $countryId : null,
+								'class' => 'form-select js-club-country-select',
+								'id' => 'country-id',
+								'data-placeholder' => __('Select country...'),
+								'data-ajax-url' => $this->Url->build(['action' => 'countryOptions']),
+							]) ?>
+							<div class="form-text"><?= __('Default is your country. The last country you chose is offered first next time.') ?></div>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('city_id', __('City:'), ['for' => 'city-id', 'required' => false]) ?>
+						<div class="col-12 col-md-10 col-xl-8">
+							<?= $this->Form->control('city_id', [
+								'label' => false,
+								'type' => 'select',
+								'options' => $cityOptions,
+								'empty' => true,
+								'value' => $cityId,
+								'class' => 'form-select js-club-city-select',
+								'id' => 'city-id',
+								'data-placeholder' => __('Start typing the city name...'),
+								'data-ajax-url' => $this->Url->build(['action' => 'cityOptions']),
+							]) ?>
+							<div class="form-text"><?= __('Cities are listed for the selected country only. Start typing the city name.') ?></div>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
 						<?= $this->Form->adminLabel('club_president_id', __('Club president:'), ['for' => 'club-president-id', 'required' => false]) ?>
 						<div class="col-12 col-md-10 col-xl-8">
 							<?= $this->Form->control('club_president_id', [
@@ -103,7 +167,74 @@ $this->Html->script([
 								'data-placeholder' => __('Select club president...'),
 								'data-ajax-url' => $this->Url->build(['action' => 'userOptions']),
 							]) ?>
-							<div class="form-text"><?= __('Search by name or email (same country; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear.') ?></div>
+							<div class="form-text"><?= __('Search by name or email (same country as above; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear.') ?></div>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('address', __('Address:'), ['for' => 'address', 'required' => false]) ?>
+						<div class="col-12 col-md-10 col-xl-8">
+							<?= $this->Form->control('address', [
+								'label' => false,
+								'class' => 'form-control',
+								'id' => 'address',
+							]) ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('email', __('Email:'), ['for' => 'email', 'required' => false]) ?>
+						<div class="col-12 col-md-10 col-xl-5">
+							<?= $this->Form->control('email', [
+								'label' => false,
+								'type' => 'email',
+								'class' => 'form-control',
+								'id' => 'email',
+							]) ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('phone', __('Phone:'), ['for' => 'phone', 'required' => false]) ?>
+						<div class="col-12 col-md-10 col-xl-5">
+							<?= $this->Form->control('phone', [
+								'label' => false,
+								'class' => 'form-control',
+								'id' => 'phone',
+							]) ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('web', __('Website:'), ['for' => 'web', 'required' => false]) ?>
+						<div class="col-12 col-md-10 col-xl-8">
+							<?= $this->Form->control('web', [
+								'label' => false,
+								'class' => 'form-control',
+								'id' => 'web',
+							]) ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('facebook', __('Facebook:'), ['for' => 'facebook', 'required' => false]) ?>
+						<div class="col-12 col-md-10 col-xl-8">
+							<?= $this->Form->control('facebook', [
+								'label' => false,
+								'class' => 'form-control',
+								'id' => 'facebook',
+							]) ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('insta', __('Instagram:'), ['for' => 'insta', 'required' => false]) ?>
+						<div class="col-12 col-md-10 col-xl-8">
+							<?= $this->Form->control('insta', [
+								'label' => false,
+								'class' => 'form-control',
+								'id' => 'insta',
+							]) ?>
 						</div>
 					</div>
 

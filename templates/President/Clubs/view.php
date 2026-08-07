@@ -210,7 +210,31 @@ $usersTable = ob_get_clean();
 				<dl class="record-view-fields mb-0">
 					<div class="record-view-row"><dt><?= __('ID') ?></dt><dd><?= h($club->id) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h($club->name) ?></dd></div>
+					<?php if (trim((string)($club->short_name ?? '')) !== ''): ?>
+						<div class="record-view-row"><dt><?= __('Short name') ?></dt><dd><?= h($club->short_name) ?></dd></div>
+					<?php endif; ?>
 					<div class="record-view-row"><dt><?= __('Country') ?></dt><dd><?= h($countryLabel) ?></dd></div>
+					<?php if (trim((string)($cityLabel ?? '')) !== ''): ?>
+						<div class="record-view-row"><dt><?= __('City') ?></dt><dd><?= h($cityLabel) ?></dd></div>
+					<?php endif; ?>
+					<?php if (trim((string)($club->address ?? '')) !== ''): ?>
+						<div class="record-view-row"><dt><?= __('Address') ?></dt><dd><?= h($club->address) ?></dd></div>
+					<?php endif; ?>
+					<?php if (trim((string)($club->email ?? '')) !== ''): ?>
+						<div class="record-view-row"><dt><?= __('Email') ?></dt><dd><?= h($club->email) ?></dd></div>
+					<?php endif; ?>
+					<?php if (trim((string)($club->phone ?? '')) !== ''): ?>
+						<div class="record-view-row"><dt><?= __('Phone') ?></dt><dd><?= h($club->phone) ?></dd></div>
+					<?php endif; ?>
+					<?php if (trim((string)($club->web ?? '')) !== ''): ?>
+						<div class="record-view-row"><dt><?= __('Website') ?></dt><dd><a href="<?= h($club->web) ?>" target="_blank" rel="noopener"><?= h($club->web) ?></a></dd></div>
+					<?php endif; ?>
+					<?php if (trim((string)($club->facebook ?? '')) !== ''): ?>
+						<div class="record-view-row"><dt><?= __('Facebook') ?></dt><dd><a href="<?= h($club->facebook) ?>" target="_blank" rel="noopener"><?= h($club->facebook) ?></a></dd></div>
+					<?php endif; ?>
+					<?php if (trim((string)($club->insta ?? '')) !== ''): ?>
+						<div class="record-view-row"><dt><?= __('Instagram') ?></dt><dd><a href="<?= h($club->insta) ?>" target="_blank" rel="noopener"><?= h($club->insta) ?></a></dd></div>
+					<?php endif; ?>
 					<div class="record-view-row">
 						<dt><?= __('Club president') ?></dt>
 						<dd>

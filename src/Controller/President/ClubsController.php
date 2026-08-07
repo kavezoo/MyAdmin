@@ -19,10 +19,9 @@ use Cake\Mailer\MailerAwareTrait;
 /**
  * Country clubs CRUD (president / vice president).
  *
- * Scope: clubs where `country_id` = officer country.
- * Club president Select2: same `country_id`, exclude `role=new` (member+ OK);
- * assignment stores `clubs.club_president_id` + `club_id`; member/editor → `clubpresident`,
- * president/vp keep their role.
+ * Index lists clubs for the form country (session last choice, default = officer country).
+ * Form: country Select2 (flags, UI locale names) + city AJAX Select2 (selected country only).
+ * Club president Select2: same selected `country_id`, exclude `role=new`.
  *
  * @property \App\Model\Table\ClubsTable $Clubs
  */
@@ -30,9 +29,32 @@ class ClubsController extends AppController
 {
     use MailerAwareTrait;
 
+    protected const CLUBS_FORM_COUNTRY_SESSION = 'President.clubsFormCountryId';
+
     protected int $indexLimit = 50;
 
     protected int $indexMaxLimit = 500;
+
+    /**
+     * Mass-assignment fields for club add/edit (not president id — handled separately).
+     *
+     * @var list<string>
+     */
+    protected const CLUB_FORM_FIELDS = [
+        'country_id',
+        'city_id',
+        'name',
+        'short_name',
+        'email',
+        'address',
+        'phone',
+        'web',
+        'facebook',
+        'insta',
+        'enabled',
+        'visible',
+        'pos',
+    ];
 
     /**
      * @return \Cake\Http\Response|null|void
@@ -42,8 +64,8 @@ class ClubsController extends AppController
         $this->set('title', __('Clubs'));
         $this->viewBuilder()->setVar('breadcrumb', __('Clubs'));
 
-        $countryId = $this->officerCountryId();
-        if ($countryId < 1) {
+        $officerCountryId = $this->officerCountryId();
+        if ($officerCountryId < 1) {
             $this->Flash->warning(__('Your account is not assigned to a country yet. Contact an administrator.'));
             $this->set('clubs', $this->emptyPaginated($this->indexLimit));
             $this->set('countryLabel', '');
@@ -53,6 +75,7 @@ class ClubsController extends AppController
             return;
         }
 
+        $countryId = $this->clubsFormCountryId($officerCountryId);
         $this->set('canAdd', true);
         $this->set('canEdit', true);
 
@@ -65,6 +88,7 @@ class ClubsController extends AppController
             'sortableFields' => [
                 'id',
                 'name',
+                'short_name',
                 'pos',
                 'enabled',
                 'visible',
@@ -80,6 +104,7 @@ class ClubsController extends AppController
         ]);
 
         $query = $this->Clubs->find()
+            ->contain(['Cities'])
             ->where(['Clubs.country_id' => $countryId]);
         $query = $this->applyIndexSearch($query, $this->Clubs);
 
@@ -108,33 +133,32 @@ class ClubsController extends AppController
      */
     public function add()
     {
-        $countryId = $this->requireOfficerCountryId();
+        $officerCountryId = $this->requireOfficerCountryId();
         $this->set('canAdd', true);
         $this->set('canEdit', true);
 
+        $formCountryId = $this->clubsFormCountryId($officerCountryId);
         $club = $this->newEntityWithSchemaDefaults($this->Clubs);
-        $club->set('country_id', $countryId);
+        $club->set('country_id', $formCountryId);
+        $club->set('city_id', 0);
 
         if ($this->request->is('post')) {
             try {
                 $data = $this->request->getData();
                 $presidentId = $this->extractPresidentId($data);
-                unset($data['club_president_id'], $data['country_id']);
-                $data['country_id'] = $countryId;
+                unset($data['club_president_id'], $data['clubpresident_id']);
+
+                $saveCountryId = $this->resolvePostedCountryId($data, $officerCountryId);
+                $data['country_id'] = $saveCountryId;
+                $data['city_id'] = max(0, (int)($data['city_id'] ?? 0));
 
                 $club = $this->Clubs->patchEntity($club, $data, [
-                    'accessibleFields' => [
-                        'country_id' => true,
-                        'name' => true,
-                        'enabled' => true,
-                        'visible' => true,
-                        'pos' => true,
-                    ],
+                    'accessibleFields' => array_fill_keys(self::CLUB_FORM_FIELDS, true),
                 ]);
-                // Same value after patch clears dirty → INSERT omits country_id → FK 0.
                 $club->setDirty('country_id', true);
                 if ($this->Clubs->save($club)) {
-                    $this->Clubs->assignClubPresident((int)$club->id, $countryId, $presidentId);
+                    $this->rememberClubsFormCountryId($saveCountryId);
+                    $this->Clubs->assignClubPresident((int)$club->id, $saveCountryId, $presidentId);
                     $this->rememberLastVisited('Clubs', $club->id);
                     $this->Flash->success(__('The club has been saved.'));
 
@@ -144,9 +168,10 @@ class ClubsController extends AppController
                 // Unexpected errors → user-facing flash
             }
             $this->Flash->error(__('The record could not be saved. Please try again.'));
+            $formCountryId = (int)($club->get('country_id') ?: $formCountryId);
         }
 
-        $this->setClubFormVars($club, $countryId, null);
+        $this->setClubFormVars($club, $formCountryId, $officerCountryId, null);
         $this->set('title', __('New club'));
         $this->viewBuilder()->setVar('breadcrumb', __('Clubs'));
         $this->render('form');
@@ -158,30 +183,32 @@ class ClubsController extends AppController
      */
     public function edit(?string $id = null)
     {
-        $countryId = $this->requireOfficerCountryId();
+        $officerCountryId = $this->requireOfficerCountryId();
         $this->set('canAdd', true);
         $this->set('canEdit', true);
 
-        $club = $this->getScopedClub((string)$id, $countryId);
+        $club = $this->getClubById((string)$id);
         $this->rememberLastVisited('Clubs', $club->id);
         $president = $this->Clubs->findClubPresident((int)$club->id);
+        $formCountryId = (int)$club->get('country_id');
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             try {
                 $data = $this->request->getData();
                 $presidentId = $this->extractPresidentId($data);
-                unset($data['club_president_id'], $data['country_id']);
+                unset($data['club_president_id'], $data['clubpresident_id']);
+
+                $saveCountryId = $this->resolvePostedCountryId($data, $officerCountryId);
+                $data['country_id'] = $saveCountryId;
+                $data['city_id'] = max(0, (int)($data['city_id'] ?? 0));
 
                 $club = $this->Clubs->patchEntity($club, $data, [
-                    'accessibleFields' => [
-                        'name' => true,
-                        'enabled' => true,
-                        'visible' => true,
-                        'pos' => true,
-                    ],
+                    'accessibleFields' => array_fill_keys(self::CLUB_FORM_FIELDS, true),
                 ]);
+                $club->setDirty('country_id', true);
                 if ($this->Clubs->save($club)) {
-                    $this->Clubs->assignClubPresident((int)$club->id, $countryId, $presidentId);
+                    $this->rememberClubsFormCountryId($saveCountryId);
+                    $this->Clubs->assignClubPresident((int)$club->id, $saveCountryId, $presidentId);
                     $this->rememberLastVisited('Clubs', $club->id);
                     $this->Flash->success(__('The club has been saved.'));
 
@@ -192,9 +219,10 @@ class ClubsController extends AppController
             }
             $this->Flash->error(__('The record could not be saved. Please try again.'));
             $president = $this->Clubs->findClubPresident((int)$club->id);
+            $formCountryId = (int)($club->get('country_id') ?: $formCountryId);
         }
 
-        $this->setClubFormVars($club, $countryId, $president);
+        $this->setClubFormVars($club, $formCountryId, $officerCountryId, $president);
         $this->setCanDeleteFlag($this->Clubs, $club);
         $this->set('title', __('Edit club'));
         $this->viewBuilder()->setVar('breadcrumb', __('Clubs'));
@@ -207,11 +235,12 @@ class ClubsController extends AppController
      */
     public function view(?string $id = null)
     {
-        $countryId = $this->requireOfficerCountryId();
+        $this->requireOfficerCountryId();
         $this->set('canAdd', true);
         $this->set('canEdit', true);
 
         $club = $this->Clubs->get((int)$id, contain: [
+            'Cities',
             'Users' => function ($q) {
                 return $q->orderBy([
                     'Users.first_name' => 'ASC',
@@ -219,15 +248,15 @@ class ClubsController extends AppController
                 ]);
             },
         ]);
-        if ((int)$club->get('country_id') !== $countryId) {
-            throw new NotFoundException(__('Club not found.'));
-        }
 
+        $countryId = (int)$club->get('country_id');
         $this->rememberLastVisited('Clubs', $club->id);
+        $this->rememberClubsFormCountryId($countryId);
         $president = $this->Clubs->findClubPresident((int)$club->id);
 
         $this->set(compact('club', 'president', 'countryId'));
         $this->set('countryLabel', AdminCountry::label($countryId));
+        $this->set('cityLabel', $this->cityLabelForClub($club));
         $this->set('membershipYear', MembershipFee::currentYear());
         $this->setCanDeleteFlag($this->Clubs, $club);
         $this->set('title', __('Club details'));
@@ -241,8 +270,8 @@ class ClubsController extends AppController
     public function delete(?string $id = null): ?Response
     {
         $this->request->allowMethod(['post', 'delete']);
-        $countryId = $this->requireOfficerCountryId();
-        $club = $this->getScopedClub((string)$id, $countryId);
+        $this->requireOfficerCountryId();
+        $club = $this->getClubById((string)$id);
 
         return $this->deleteEntityOrFail($this->Clubs, $club);
     }
@@ -257,8 +286,9 @@ class ClubsController extends AppController
     public function updateNationalFee(?string $id = null): ?Response
     {
         $this->request->allowMethod(['post', 'put', 'patch']);
-        $countryId = $this->requireOfficerCountryId();
-        $club = $this->getScopedClub((string)$id, $countryId);
+        $this->requireOfficerCountryId();
+        $club = $this->getClubById((string)$id);
+        $countryId = (int)$club->get('country_id');
 
         $membershipYear = MembershipFee::currentYear();
         $existingDate = $club->get(MembershipFee::FIELD_CLUB_ENTITY);
@@ -341,7 +371,7 @@ class ClubsController extends AppController
         }
 
         try {
-            $club = $this->getScopedClub((string)$id, $countryId);
+            $club = $this->getClubById((string)$id);
         } catch (NotFoundException) {
             return $this->jsonRecordNotFound();
         }
@@ -356,7 +386,15 @@ class ClubsController extends AppController
                 'record' => [
                     'id' => $club->id,
                     'name' => $club->name,
+                    'short_name' => (string)($club->get('short_name') ?? ''),
                     'country' => AdminCountry::label((int)$club->country_id),
+                    'city' => $this->cityLabelForClub($club),
+                    'email' => (string)($club->get('email') ?? ''),
+                    'address' => (string)($club->get('address') ?? ''),
+                    'phone' => (string)($club->get('phone') ?? ''),
+                    'web' => (string)($club->get('web') ?? ''),
+                    'facebook' => (string)($club->get('facebook') ?? ''),
+                    'insta' => (string)($club->get('insta') ?? ''),
                     'club_president' => $president !== null
                         ? MembershipProfile::displayName($president)
                         : '',
@@ -417,23 +455,177 @@ class ClubsController extends AppController
     }
 
     /**
-     * Select2 AJAX: users eligible as club president (same country, not role `new`).
+     * Remember last club-form country (session) when the Select2 changes.
      *
-     * Filter: `Users.country_id` = officer country; exclude `role = new` (member and above OK).
+     * @return \Cake\Http\Response
+     */
+    public function rememberCountry(): Response
+    {
+        $this->request->allowMethod(['post']);
+        $this->requireOfficerCountryId();
+        $countryId = (int)$this->request->getData('country_id');
+        if ($countryId > 0) {
+            /** @var \App\Model\Table\CountriesTable $countries */
+            $countries = $this->fetchTable('Countries');
+            if ($countries->exists(['Countries.id' => $countryId])) {
+                $this->rememberClubsFormCountryId($countryId);
+            }
+        }
+
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody((string)json_encode(['success' => true], JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * JSON Select2: countries (visible), UI-locale names + iso2 for flags.
+     * Preferred (last form / officer) countries first.
+     *
+     * @return \Cake\Http\Response
+     */
+    public function countryOptions(): Response
+    {
+        $this->request->allowMethod(['get']);
+        $officerCountryId = $this->officerCountryId();
+        if ($officerCountryId < 1) {
+            return $this->emptySelect2Response();
+        }
+
+        $preferredId = $this->clubsFormCountryId($officerCountryId);
+        $term = trim((string)$this->request->getQuery('q'));
+        $page = max(1, (int)$this->request->getQuery('page'));
+        $limit = 30;
+
+        /** @var \App\Model\Table\CountriesTable $countries */
+        $countries = $this->fetchTable('Countries');
+        $query = $countries->find()
+            ->select(['Countries.id', 'Countries.iso2', 'Countries.name', 'Countries.endonim_name'])
+            ->where(['Countries.visible' => true]);
+
+        if ($term !== '') {
+            $like = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $term) . '%';
+            $query->where([
+                'OR' => [
+                    'Countries.name LIKE' => $like,
+                    'Countries.endonim_name LIKE' => $like,
+                    'Countries.iso2 LIKE' => $like,
+                ],
+            ]);
+        }
+
+        $rows = $query
+            ->orderBy(['Countries.name' => 'ASC', 'Countries.id' => 'ASC'])
+            ->limit(400)
+            ->all();
+
+        $preferred = [];
+        $rest = [];
+        foreach ($rows as $row) {
+            $id = (int)$row->get('id');
+            $item = [
+                'id' => (string)$id,
+                'text' => AdminCountry::label($id),
+                'iso2' => strtolower(trim((string)$row->get('iso2'))),
+            ];
+            if ($id === $preferredId || $id === $officerCountryId) {
+                $preferred[$id] = $item;
+            } else {
+                $rest[] = $item;
+            }
+        }
+
+        $ordered = [];
+        if (isset($preferred[$preferredId])) {
+            $ordered[] = $preferred[$preferredId];
+            unset($preferred[$preferredId]);
+        }
+        if (isset($preferred[$officerCountryId])) {
+            $ordered[] = $preferred[$officerCountryId];
+        }
+        $all = array_merge($ordered, $rest);
+        $total = count($all);
+        $slice = array_slice($all, ($page - 1) * $limit, $limit);
+
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody((string)json_encode([
+                'results' => array_values($slice),
+                'pagination' => ['more' => ($page * $limit) < $total],
+            ], JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * JSON Select2: cities for one country (type to search, min 2 chars).
+     *
+     * @return \Cake\Http\Response
+     */
+    public function cityOptions(): Response
+    {
+        $this->request->allowMethod(['get']);
+        if ($this->officerCountryId() < 1) {
+            return $this->emptySelect2Response();
+        }
+
+        $countryId = (int)$this->request->getQuery('country_id');
+        $term = trim((string)$this->request->getQuery('q'));
+        $page = max(1, (int)$this->request->getQuery('page'));
+        $limit = 30;
+
+        if ($countryId < 1 || mb_strlen($term) < 2) {
+            return $this->emptySelect2Response();
+        }
+
+        /** @var \App\Model\Table\CitiesTable $cities */
+        $cities = $this->fetchTable('Cities');
+        $like = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $term) . '%';
+        $query = $cities->find()
+            ->select(['Cities.id', 'Cities.name', 'Cities.zip'])
+            ->where([
+                'Cities.country_id' => $countryId,
+                'OR' => [
+                    'Cities.name LIKE' => $like,
+                    'Cities.zip LIKE' => $like,
+                ],
+            ])
+            ->orderBy(['Cities.name' => 'ASC', 'Cities.zip' => 'ASC', 'Cities.id' => 'ASC']);
+
+        $total = (clone $query)->count();
+        $rows = $query->limit($limit)->offset(($page - 1) * $limit)->all();
+
+        $results = [];
+        foreach ($rows as $city) {
+            $results[] = [
+                'id' => (string)$city->get('id'),
+                'text' => $cities->optionLabel($city),
+            ];
+        }
+
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody((string)json_encode([
+                'results' => $results,
+                'pagination' => ['more' => ($page * $limit) < $total],
+            ], JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * Select2 AJAX: users eligible as club president (selected country, not role `new`).
+     *
+     * Query `country_id` = club form country (fallback officer).
      *
      * @return \Cake\Http\Response
      */
     public function userOptions(): Response
     {
         $this->request->allowMethod(['get']);
-        $countryId = $this->officerCountryId();
+        $officerCountryId = $this->officerCountryId();
+        if ($officerCountryId < 1) {
+            return $this->emptySelect2Response();
+        }
+
+        $countryId = (int)$this->request->getQuery('country_id');
         if ($countryId < 1) {
-            return $this->response
-                ->withType('application/json')
-                ->withStringBody((string)json_encode([
-                    'results' => [],
-                    'pagination' => ['more' => false],
-                ], JSON_UNESCAPED_UNICODE));
+            $countryId = $officerCountryId;
         }
 
         $term = trim((string)$this->request->getQuery('q'));
@@ -483,6 +675,16 @@ class ClubsController extends AppController
             ], JSON_UNESCAPED_UNICODE));
     }
 
+    protected function emptySelect2Response(): Response
+    {
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody((string)json_encode([
+                'results' => [],
+                'pagination' => ['more' => false],
+            ], JSON_UNESCAPED_UNICODE));
+    }
+
     protected function requireOfficerCountryId(): int
     {
         $countryId = $this->officerCountryId();
@@ -493,19 +695,69 @@ class ClubsController extends AppController
         return $countryId;
     }
 
-    protected function getScopedClub(string $id, int $countryId): EntityInterface
+    /**
+     * Last country chosen on the club form, else officer home country.
+     */
+    protected function clubsFormCountryId(int $officerCountryId): int
+    {
+        $session = $this->getRequest()->getSession();
+        $saved = (int)$session->read(self::CLUBS_FORM_COUNTRY_SESSION);
+        if ($saved > 0) {
+            /** @var \App\Model\Table\CountriesTable $countries */
+            $countries = $this->fetchTable('Countries');
+            if ($countries->exists(['Countries.id' => $saved])) {
+                return $saved;
+            }
+        }
+
+        return $officerCountryId;
+    }
+
+    protected function rememberClubsFormCountryId(int $countryId): void
+    {
+        if ($countryId < 1) {
+            return;
+        }
+        $this->getRequest()->getSession()->write(self::CLUBS_FORM_COUNTRY_SESSION, $countryId);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    protected function resolvePostedCountryId(array $data, int $officerCountryId): int
+    {
+        $posted = (int)($data['country_id'] ?? 0);
+        if ($posted < 1) {
+            return $this->clubsFormCountryId($officerCountryId);
+        }
+        /** @var \App\Model\Table\CountriesTable $countries */
+        $countries = $this->fetchTable('Countries');
+        if (!$countries->exists(['Countries.id' => $posted])) {
+            return $officerCountryId;
+        }
+
+        return $posted;
+    }
+
+    protected function getClubById(string $id): EntityInterface
     {
         $club = $this->Clubs->find()
-            ->where([
-                'Clubs.id' => (int)$id,
-                'Clubs.country_id' => $countryId,
-            ])
+            ->contain(['Cities'])
+            ->where(['Clubs.id' => (int)$id])
             ->first();
         if ($club === null) {
             throw new NotFoundException(__('Club not found.'));
         }
 
         return $club;
+    }
+
+    /**
+     * @deprecated Use {@see getClubById()}
+     */
+    protected function getScopedClub(string $id, int $countryId): EntityInterface
+    {
+        return $this->getClubById($id);
     }
 
     /**
@@ -526,19 +778,68 @@ class ClubsController extends AppController
         return $id !== '' ? $id : null;
     }
 
+    protected function cityLabelForClub(EntityInterface $club): string
+    {
+        $city = $club->get('city');
+        if ($city instanceof EntityInterface) {
+            /** @var \App\Model\Table\CitiesTable $cities */
+            $cities = $this->fetchTable('Cities');
+
+            return $cities->optionLabel($city);
+        }
+        $cityId = (int)($club->get('city_id') ?? 0);
+        if ($cityId < 1) {
+            return '';
+        }
+        /** @var \App\Model\Table\CitiesTable $cities */
+        $cities = $this->fetchTable('Cities');
+        $row = $cities->find()->where(['Cities.id' => $cityId])->first();
+
+        return $row !== null ? $cities->optionLabel($row) : '';
+    }
+
     /**
      * @param \Cake\Datasource\EntityInterface|null $president
      */
-    protected function setClubFormVars(EntityInterface $club, int $countryId, ?EntityInterface $president): void
-    {
+    protected function setClubFormVars(
+        EntityInterface $club,
+        int $formCountryId,
+        int $officerCountryId,
+        ?EntityInterface $president
+    ): void {
         $presidentOptions = [];
         if ($president !== null) {
             $presidentOptions[(string)$president->get('id')] = $this->formatUserOptionLabel($president);
         }
 
-        $this->set(compact('club', 'countryId', 'president', 'presidentOptions'));
-        $this->set('countryLabel', AdminCountry::label($countryId));
+        $cityOptions = [];
+        $cityId = (int)($club->get('city_id') ?? 0);
+        if ($cityId > 0) {
+            /** @var \App\Model\Table\CitiesTable $cities */
+            $cities = $this->fetchTable('Cities');
+            $city = $cities->find()->where(['Cities.id' => $cityId])->first();
+            if ($city !== null) {
+                $cityOptions[(string)$city->get('id')] = $cities->optionLabel($city);
+            }
+        }
+
+        $countryOptions = [];
+        if ($formCountryId > 0) {
+            $countryOptions[(string)$formCountryId] = AdminCountry::label($formCountryId);
+        }
+
+        $flagIds = array_values(array_unique(array_filter([
+            $formCountryId,
+            $officerCountryId,
+        ])));
+
+        $this->set(compact('club', 'president', 'presidentOptions', 'cityOptions', 'countryOptions'));
+        $this->set('countryId', $formCountryId);
+        $this->set('officerCountryId', $officerCountryId);
+        $this->set('countryLabel', AdminCountry::label($formCountryId));
         $this->set('clubPresidentId', $president !== null ? (string)$president->get('id') : '');
+        $this->set('cityId', $cityId > 0 ? $cityId : null);
+        $this->set('countryFlags', AdminCountry::iso2Map($flagIds));
     }
 
     /**

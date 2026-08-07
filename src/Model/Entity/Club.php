@@ -10,16 +10,26 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property int $country_id
+ * @property int $city_id
+ * @property string $clubpresident_id Legacy/sync column (same user as club_president_id; '' if none)
  * @property string $name
+ * @property string $short_name
+ * @property string $email
  * @property bool $enabled
+ * @property string $address
+ * @property string $phone
+ * @property string $web
+ * @property string $facebook
+ * @property string $insta
  * @property bool $visible
  * @property int $pos
  * @property int $user_count
- * @property string|null $club_president_id
+ * @property string|null $club_president_id Designated club president (Users.id)
  * @property \Cake\I18n\Date|null $national_membership_fee_date
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
  * @property \App\Model\Entity\Country|null $country
+ * @property \App\Model\Entity\City|null $city
  * @property \CakeDC\Users\Model\Entity\User[] $users
  */
 class Club extends Entity
@@ -29,8 +39,17 @@ class Club extends Entity
      */
     protected array $_accessible = [
         'country_id' => true,
+        'city_id' => true,
+        'clubpresident_id' => true,
         'name' => true,
+        'short_name' => true,
+        'email' => true,
         'enabled' => true,
+        'address' => true,
+        'phone' => true,
+        'web' => true,
+        'facebook' => true,
+        'insta' => true,
         'visible' => true,
         'pos' => true,
         'user_count' => false,
@@ -39,6 +58,7 @@ class Club extends Entity
         'created' => true,
         'modified' => true,
         'country' => true,
+        'city' => true,
         'users' => true,
     ];
 }

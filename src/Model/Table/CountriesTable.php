@@ -90,6 +90,21 @@ class CountriesTable extends Table
             'className' => 'Users',
             'dependent' => false,
         ]);
+        $this->hasMany('Clubs', [
+            'foreignKey' => 'country_id',
+            'className' => 'Clubs',
+            'dependent' => false,
+        ]);
+        $this->hasMany('Counties', [
+            'foreignKey' => 'country_id',
+            'className' => 'Counties',
+            'dependent' => false,
+        ]);
+        $this->hasMany('Cities', [
+            'foreignKey' => 'country_id',
+            'className' => 'Cities',
+            'dependent' => false,
+        ]);
         $this->hasMany('Setups', [
             'foreignKey' => 'country_id',
             'dependent' => false,

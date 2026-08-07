@@ -3252,3 +3252,53 @@ msgstr "Sì, cambia club"
 msgid "Welcome to {0}. Choose a module below — each card describes where the button will take you."
 msgstr "Benvenuto in {0}. Scegli un modulo qui sotto — ogni scheda spiega dove porta il pulsante."
 
+msgid "Short name"
+msgstr "Nome breve"
+
+msgid "Short name:"
+msgstr "Nome breve:"
+
+msgid "City"
+msgstr "Città"
+
+msgid "City:"
+msgstr "Città:"
+
+msgid "Start typing the city name..."
+msgstr "Inizia a digitare il nome della città…"
+
+msgid "Cities are listed for the selected country only. Start typing the city name."
+msgstr "Le città sono elencate solo per il paese selezionato. Inizia a digitare il nome della città."
+
+msgid "Default is your country. The last country you chose is offered first next time."
+msgstr "Predefinito: il tuo paese. Il paese scelto per ultimo sarà proposto per primo la volta successiva."
+
+msgid "Website"
+msgstr "Sito web"
+
+msgid "Website:"
+msgstr "Sito web:"
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Facebook:"
+msgstr "Facebook:"
+
+msgid "Instagram"
+msgstr "Instagram"
+
+msgid "Instagram:"
+msgstr "Instagram:"
+
+msgid "Address"
+msgstr "Indirizzo"
+
+msgid "Address:"
+msgstr "Indirizzo:"
+
+msgid "Please select a valid city."
+msgstr "Seleziona una città valida."
+
+msgid "Search by name or email (same country as above; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear."
+msgstr "Cerca per nome o e-mail (stesso paese di cui sopra; non candidati con ruolo new). I membri diventano presidente del club; un presidente / vicepresidente mantiene il ruolo. Lascia vuoto per rimuovere."

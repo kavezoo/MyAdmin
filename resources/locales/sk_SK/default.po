@@ -333,3 +333,54 @@ msgstr "Do you confirm that this member has paid the national pipe association m
 
 msgid "Record national membership fee payment?"
 msgstr "Record national membership fee payment?"
+
+msgid "Short name"
+msgstr "Krátky názov"
+
+msgid "Short name:"
+msgstr "Krátky názov:"
+
+msgid "City"
+msgstr "Obec"
+
+msgid "City:"
+msgstr "Obec:"
+
+msgid "Start typing the city name..."
+msgstr "Začnite písať názov obce…"
+
+msgid "Cities are listed for the selected country only. Start typing the city name."
+msgstr "Obce sa zobrazujú len pre vybranú krajinu. Začnite písať názov obce."
+
+msgid "Default is your country. The last country you chose is offered first next time."
+msgstr "Predvolené je vaša krajina. Naposledy zvolená krajina bude nabudúce ponúknutá ako prvá."
+
+msgid "Website"
+msgstr "Webová stránka"
+
+msgid "Website:"
+msgstr "Webová stránka:"
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Facebook:"
+msgstr "Facebook:"
+
+msgid "Instagram"
+msgstr "Instagram"
+
+msgid "Instagram:"
+msgstr "Instagram:"
+
+msgid "Address"
+msgstr "Adresa"
+
+msgid "Address:"
+msgstr "Adresa:"
+
+msgid "Please select a valid city."
+msgstr "Vyberte platnú obec."
+
+msgid "Search by name or email (same country as above; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear."
+msgstr "Hľadanie podľa mena alebo e-mailu (rovnaká krajina ako vyššie; nie žiadatelia s rolou new). Členovia sa stanú prezidentom klubu; prezident / viceprezident si rolú ponechá. Nechajte prázdne na vymazanie."

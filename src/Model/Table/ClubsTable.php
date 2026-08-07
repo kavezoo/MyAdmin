@@ -17,16 +17,34 @@ use Cake\Validation\Validator;
  * Clubs Table.
  *
  * Club president: `clubs.club_president_id` → Users.id (via {@see assignClubPresident()}).
+ * Also mirrors into NOT NULL `clubpresident_id` ('' when none).
  * Member / editor → role becomes `clubpresident`; president / vp keep their role.
  * `user_count` = CounterCache from Users.club_id.
  *
  * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
+ * @property \App\Model\Table\CitiesTable&\Cake\ORM\Association\BelongsTo $Cities
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
  */
 class ClubsTable extends Table
 {
     use PreventsDeleteWithChildrenTrait;
     use UsesDatabaseColumnDefaultsTrait;
+
+    /**
+     * NOT NULL string columns without DB DEFAULT — empty string on INSERT.
+     *
+     * @var list<string>
+     */
+    protected const STRING_DEFAULTS = [
+        'short_name',
+        'email',
+        'address',
+        'phone',
+        'web',
+        'facebook',
+        'insta',
+        'clubpresident_id',
+    ];
 
     /**
      * @param array<string, mixed> $config
@@ -42,6 +60,9 @@ class ClubsTable extends Table
         $this->setEntityClass(\App\Model\Entity\Club::class);
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('CounterCache', [
+            'Countries' => ['club_count'],
+        ]);
 
         // Explicit EventLog (also auto-attached in Application) — national club fee date, …
         if (!$this->hasBehavior('EventLog')) {
@@ -53,11 +74,40 @@ class ClubsTable extends Table
             'joinType' => 'INNER',
             'className' => 'Countries',
         ]);
+        $this->belongsTo('Cities', [
+            'foreignKey' => 'city_id',
+            'joinType' => 'LEFT',
+            'className' => 'Cities',
+        ]);
         $this->hasMany('Users', [
             'foreignKey' => 'club_id',
             'className' => 'Users',
             'dependent' => false,
         ]);
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param \ArrayObject<string, mixed> $options
+     * @return void
+     */
+    public function beforeSave(\Cake\Event\EventInterface $event, EntityInterface $entity, \ArrayObject $options): void
+    {
+        foreach (self::STRING_DEFAULTS as $field) {
+            if ($entity->get($field) === null) {
+                $entity->set($field, '');
+            }
+        }
+
+        $cityId = (int)($entity->get('city_id') ?? 0);
+        if ($cityId < 1) {
+            $entity->set('city_id', 0);
+        }
+
+        // Mirror designated president into legacy NOT NULL column.
+        $presidentId = trim((string)($entity->get('club_president_id') ?? ''));
+        $entity->set('clubpresident_id', $presidentId);
     }
 
     protected function relatedChildrenCountField(): string
@@ -182,11 +232,13 @@ class ClubsTable extends Table
 
         if ($userId === '') {
             $club->set('club_president_id', null);
+            $club->set('clubpresident_id', '');
 
             return (bool)$this->save($club, [
                 'checkRules' => false,
                 'accessibleFields' => [
                     'club_president_id' => true,
+                    'clubpresident_id' => true,
                     'modified' => true,
                 ],
             ]);
@@ -221,11 +273,13 @@ class ClubsTable extends Table
         }
 
         $club->set('club_president_id', $userId);
+        $club->set('clubpresident_id', $userId);
 
         return (bool)$this->save($club, [
             'checkRules' => false,
             'accessibleFields' => [
                 'club_president_id' => true,
+                'clubpresident_id' => true,
                 'modified' => true,
             ],
         ]);
@@ -255,11 +309,13 @@ class ClubsTable extends Table
         }
 
         $club->set('club_president_id', null);
+        $club->set('clubpresident_id', '');
 
         return (bool)$this->save($club, [
             'checkRules' => false,
             'accessibleFields' => [
                 'club_president_id' => true,
+                'clubpresident_id' => true,
                 'modified' => true,
             ],
         ]);
@@ -305,10 +361,49 @@ class ClubsTable extends Table
             ->notEmptyString('country_id');
 
         $validator
+            ->nonNegativeInteger('city_id')
+            ->allowEmptyString('city_id');
+
+        $validator
             ->scalar('name')
             ->maxLength('name', 150)
             ->requirePresence('name', 'create')
             ->notEmptyString('name');
+
+        $validator
+            ->scalar('short_name')
+            ->maxLength('short_name', 250)
+            ->allowEmptyString('short_name');
+
+        $validator
+            ->email('email', false, __('Please enter a valid email address.'))
+            ->maxLength('email', 50)
+            ->allowEmptyString('email');
+
+        $validator
+            ->scalar('address')
+            ->maxLength('address', 100)
+            ->allowEmptyString('address');
+
+        $validator
+            ->scalar('phone')
+            ->maxLength('phone', 50)
+            ->allowEmptyString('phone');
+
+        $validator
+            ->scalar('web')
+            ->maxLength('web', 1000)
+            ->allowEmptyString('web');
+
+        $validator
+            ->scalar('facebook')
+            ->maxLength('facebook', 1000)
+            ->allowEmptyString('facebook');
+
+        $validator
+            ->scalar('insta')
+            ->maxLength('insta', 1000)
+            ->allowEmptyString('insta');
 
         $validator
             ->boolean('enabled')
@@ -332,6 +427,18 @@ class ClubsTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['country_id'], 'Countries'), ['errorField' => 'country_id']);
+        $rules->add(
+            function (EntityInterface $entity) {
+                $cityId = (int)($entity->get('city_id') ?? 0);
+                if ($cityId < 1) {
+                    return true;
+                }
+
+                return $this->Cities->exists(['Cities.id' => $cityId]);
+            },
+            'cityExists',
+            ['errorField' => 'city_id', 'message' => __('Please select a valid city.')]
+        );
 
         return $rules;
     }

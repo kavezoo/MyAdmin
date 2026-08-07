@@ -41,7 +41,7 @@ $membershipYear = (int)($membershipYear ?? MembershipFee::currentYear());
 $clubEntityFeeLabel = MembershipFee::clubEntityFeeLabel($countryId);
 
 $showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
-$indexColspan = 4; // name, club president, national fee, actions
+$indexColspan = 5; // name, city, club president, national fee, actions
 if ($showIdColumn) {
 	$indexColspan++;
 }
@@ -99,7 +99,15 @@ $config = [
 	'recordFieldLabels' => [
 		'id' => __('ID'),
 		'name' => __('Name'),
+		'short_name' => __('Short name'),
 		'country' => __('Country'),
+		'city' => __('City'),
+		'address' => __('Address'),
+		'email' => __('Email'),
+		'phone' => __('Phone'),
+		'web' => __('Website'),
+		'facebook' => __('Facebook'),
+		'insta' => __('Instagram'),
 		'club_president' => __('Club president'),
 		'enabled' => __('Enabled'),
 		'visible' => __('Visible'),
@@ -155,6 +163,7 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 								<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
 							<?php endif; ?>
 							<th scope="col" class="string name"><?= $this->Paginator->sort('name', __('Name')) ?></th>
+							<th scope="col" class="string city"><?= __('City') ?></th>
 							<th scope="col" class="string club-president"><?= __('Club president') ?></th>
 							<th scope="col" class="date national-fee text-center"><?= $this->Paginator->sort(MembershipFee::FIELD_CLUB_ENTITY, h($clubEntityFeeLabel) . ' (' . h($membershipYear) . ')') ?></th>
 							<?php if ($showPosColumn): ?>
@@ -200,6 +209,19 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 									<td class="number id"><?= h($club->id) ?></td>
 								<?php endif; ?>
 								<td class="string name"><?= h($club->name) ?></td>
+								<td class="string city">
+									<?php
+									$cityName = '';
+									if (!empty($club->city)) {
+										$zip = trim((string)($club->city->zip ?? ''));
+										$cityName = trim((string)$club->city->name);
+										if ($zip !== '') {
+											$cityName .= ' (' . $zip . ')';
+										}
+									}
+									echo $cityName !== '' ? h($cityName) : '—';
+									?>
+								</td>
 								<td class="string club-president">
 									<?php if ($president !== null): ?>
 										<a href="#"

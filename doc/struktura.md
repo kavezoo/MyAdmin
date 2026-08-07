@@ -30,7 +30,7 @@ $this->viewBuilder()->setLayout('admin');
 | New | `/new` | `src/Controller/New/`, `templates/New/` |
 | Member | `/member` | `src/Controller/Member/`, `templates/Member/` |
 | Clubpresident | `/clubpresident` | `…/Clubpresident/` |
-| President | `/president` | `…/President/` — Members + **Clubs** CRUD |
+| President | `/president` | `…/President/` — Members + **Clubs** CRUD (ország/település Select2, `cities`/`counties`) |
 
 Sidebar elementek: `templates/element/{admin,new,member,clubpresident,president}/sidebar.php`.  
 Dashboard navigáció: `templates/element/panel/dashboard_nav_cards.php` — card cím + leírás + gomb; a **Dashboard card-body**-ban (nem külön keret alatt).

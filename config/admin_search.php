@@ -106,6 +106,13 @@ return [
                 'includeInGlobal' => false,
                 'fields' => [
                     'name',
+                    'short_name',
+                    'email',
+                    'address',
+                    'phone',
+                    'web',
+                    'facebook',
+                    'insta',
                 ],
             ],
             // Continents: nincs külön Admin CRUD index — globális kereséshez később felvehető:

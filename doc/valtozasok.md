@@ -5,6 +5,30 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-07 — Clubs form címkék: hu/de/fr/it/sk
+
+### Mi változott / miért
+- Új klub form címkék (Short name, City, Website, Instagram, help szövegek, …) lefordítva: `hu_HU`, `de_DE` (+ AT/CH/LI), `fr_FR` (+ MC), `it_IT` (+ SM/VA), `sk_SK`.
+
+### Érintett
+- `resources/locales/{hu_HU,de_*,fr_*,it_*,sk_SK}/default.po`, `tmp/merge_club_form_locales.php`
+
+---
+
+## 2026-08-07 — Cities / Counties model + President Clubs bővített form
+
+### Mi változott / miért
+- Élő DB: `cities`, `counties` + bővített `clubs` (city_id, short_name, email, address, phone, web, facebook, insta, clubpresident_id).
+- Model: `City`/`County` + `CitiesTable`/`CountiesTable`; `Club`/`ClubsTable` frissítve (belongsTo Cities, CounterCache `Countries.club_count`, `clubpresident_id` tükör).
+- President Clubs form: ország AJAX Select2 (zászló + UI locale név, utolsó választás sessionben előre), település AJAX (csak a kiválasztott ország, gépelés min. 2 karakter), új kontakt mezők.
+
+### Érintett
+- `src/Model/Entity/{City,County,Club}.php`, `src/Model/Table/{Cities,Counties,Clubs,Countries}Table.php`
+- `src/Controller/President/ClubsController.php`, `templates/President/Clubs/{form,index,view}.php`, `webroot/js/pages/president_clubs_form.js`
+- `config/schema/{clubs,cities,counties}.sql`, `config/admin_search.php`, `doc/membership.md`, `doc/struktura.md`, `resources/locales/hu_HU/default.po`
+
+---
+
 ## 2026-08-07 — President Clubs add: country_id INSERT javítás
 
 ### Mi változott / miért

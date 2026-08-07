@@ -3252,3 +3252,54 @@ msgstr "Igen, klubváltás"
 msgid "Welcome to {0}. Choose a module below — each card describes where the button will take you."
 msgstr "Üdvözöl a {0}. Válassz modult alább — minden kártya leírja, hová visz a gomb."
 
+msgid "Short name"
+msgstr "Rövid név"
+
+msgid "Short name:"
+msgstr "Rövid név:"
+
+msgid "City"
+msgstr "Település"
+
+msgid "City:"
+msgstr "Település:"
+
+msgid "Start typing the city name..."
+msgstr "Kezdd el gépelni a település nevét…"
+
+msgid "Cities are listed for the selected country only. Start typing the city name."
+msgstr "A települések csak a kiválasztott országból listázódnak. Kezdd el gépelni a település nevét."
+
+msgid "Default is your country. The last country you chose is offered first next time."
+msgstr "Alapértelmezés: a te országod. A legutóbb választott ország lesz első a következő alkalommal."
+
+msgid "Website"
+msgstr "Weboldal"
+
+msgid "Website:"
+msgstr "Weboldal:"
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Facebook:"
+msgstr "Facebook:"
+
+msgid "Instagram"
+msgstr "Instagram"
+
+msgid "Instagram:"
+msgstr "Instagram:"
+
+msgid "Address"
+msgstr "Cím"
+
+msgid "Address:"
+msgstr "Cím:"
+
+msgid "Please select a valid city."
+msgstr "Válassz érvényes települést."
+
+msgid "Search by name or email (same country as above; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear."
+msgstr "Keresés név vagy e-mail alapján (a fenti ország; nem new szerepű jelentkezők). Tagból klubelnök lesz; elnök / alelnök szerepe megmarad. Üresen hagyva törölhető."
+
