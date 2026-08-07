@@ -5,6 +5,48 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-07 — Email sablonok: kereső UI + nyelvi TAB + seed
+
+### Mi változott / miért
+- Index fejléc: nyelv szűrő | kereső | lapozó | New (a kereső nem a card-body-ban „szétcsúszva”).
+- Form: szöveges mezők (name / subject / body_html / body_text) **nyelvi TAB**-okon (`en/hu/de/fr/it/sk`); mentés minden nyelvre (slug közös).
+- Seed: 3 küldött email típus × 6 nyelv = 18 sor (`membership_application`, `membership_approved`, `club_national_fee_recorded`) — tartalom a meglévő view/`__()` szövegekből, `{placeholder}`-ekkel.
+- Helper: `EmailTemplateDefaults`; migráció `SeedEmailTemplates`.
+
+### Érintett
+- `templates/President/EmailTemplates/{index,form}.php`, `templates/element/admin/email_template_language_fields.php`
+- `src/Controller/President/EmailTemplatesController.php`, `src/Utility/EmailTemplateDefaults.php`
+- `config/Migrations/20260807170000_SeedEmailTemplates.php`
+- `doc/membership.md`, `resources/locales/{hu_HU,de_DE,fr_FR,it_IT,sk_SK}/default.po`
+
+---
+
+## 2026-08-07 — Email sablon form: nyelvi TAB = csak kimenő mezők
+
+### Mi változott / miért
+- Nyelvi TAB-okon csak `subject` / `body_html` / `body_text` (ami a tagoknak kimegy).
+- A `name` admin címke — nem a nyelvi listában; mentéskor megmarad / seed default.
+
+### Érintett
+- `templates/element/admin/email_template_language_fields.php`, `src/Controller/President/EmailTemplatesController.php`, `doc/membership.md`
+
+---
+
+## 2026-08-07 — Email sablonok: nyelvi szűrő default = UI nyelv
+
+### Mi változott / miért
+- President Email templates index: nyelvi Select2 szűrő alapértéke a **helyi UI nyelv** (`I18n::getLocale()` → `languages.id`), nem „összes”.
+- Query → session → helyi nyelv → 0 (All languages); `language_id` az URL-ben marad (lapozó/kereső).
+- `admin/table_search` opcionális rejtett mezők (`tableSearchHidden`) — a keresés nem dobja el a nyelvi szűrőt.
+- Új sablon form: továbbra is UI nyelv default `language_id`.
+
+### Érintett
+- `src/Controller/President/EmailTemplatesController.php`
+- `templates/President/EmailTemplates/index.php`, `templates/element/admin/table_search.php`
+- `doc/membership.md`, `resources/locales/hu_HU/default.po`
+
+---
+
 ## 2026-08-07 — Clubs form címkék: hu/de/fr/it/sk
 
 ### Mi változott / miért

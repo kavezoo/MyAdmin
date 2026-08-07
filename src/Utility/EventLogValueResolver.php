@@ -37,7 +37,7 @@ class EventLogValueResolver
             return static::markerLabel((string)$value, __('changed'));
         }
 
-        if ($field === 'avatar') {
+        if ($field === 'avatar' || $field === 'logo') {
             return static::avatarLabel($value);
         }
 

@@ -155,6 +155,9 @@ $nationalFeeDateFormatted = (string)($nationalFeeDateFormatted ?? '');
 					<?php if ($countryLabel !== ''): ?>
 						<div class="record-view-row"><dt><?= __('Country') ?></dt><dd><?= h($countryLabel) ?></dd></div>
 					<?php endif; ?>
+					<?php if (!empty($languageLabel)): ?>
+						<div class="record-view-row"><dt><?= __('Language') ?></dt><dd><?= h($languageLabel) ?></dd></div>
+					<?php endif; ?>
 					<?php if ($clubLabel !== ''): ?>
 						<div class="record-view-row"><dt><?= __('Club') ?></dt><dd><?= h($clubLabel) ?></dd></div>
 					<?php endif; ?>

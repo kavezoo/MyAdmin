@@ -8,9 +8,11 @@ $controller = (string)$this->request->getParam('controller');
 $isDashboard = $controller === 'Dashboard';
 $isMembers = $controller === 'Members';
 $isClubs = $controller === 'Clubs';
+$isEmailTemplates = $controller === 'EmailTemplates';
 $home = ['prefix' => 'President', 'controller' => 'Dashboard', 'action' => 'index'];
 $membersUrl = ['prefix' => 'President', 'controller' => 'Members', 'action' => 'index'];
 $clubsUrl = ['prefix' => 'President', 'controller' => 'Clubs', 'action' => 'index'];
+$emailTemplatesUrl = ['prefix' => 'President', 'controller' => 'EmailTemplates', 'action' => 'index'];
 ?>
 <div class="left main-sidebar">
 	<div class="sidebar-inner leftscroll">
@@ -29,6 +31,11 @@ $clubsUrl = ['prefix' => 'President', 'controller' => 'Clubs', 'action' => 'inde
 				<li class="submenu">
 					<a href="<?= $this->Url->build($clubsUrl) ?>"<?= $isClubs ? ' class="active"' : '' ?>>
 						<i class="fa fa-fw fa-sitemap"></i><span> <?= __('Clubs') ?> </span>
+					</a>
+				</li>
+				<li class="submenu">
+					<a href="<?= $this->Url->build($emailTemplatesUrl) ?>"<?= $isEmailTemplates ? ' class="active"' : '' ?>>
+						<i class="fa fa-fw fa-envelope"></i><span> <?= __('Email templates') ?> </span>
 					</a>
 				</li>
 				<?= $this->element('panel/switcher') ?>

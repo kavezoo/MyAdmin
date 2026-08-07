@@ -198,6 +198,18 @@
 					$search.trigger('focus');
 				}
 			});
+
+			var $language = $('#language-id');
+			if ($language.length) {
+				$language.select2({
+					theme: 'bootstrap-5',
+					width: '100%',
+					minimumResultsForSearch: 8,
+					dropdownParent: $(document.body),
+					placeholder: $language.data('placeholder') || '',
+					allowClear: true
+				});
+			}
 		}
 
 		$country.off('change.usersAuthCountry').on('change.usersAuthCountry', function (e) {

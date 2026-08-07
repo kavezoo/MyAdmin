@@ -320,7 +320,7 @@ class EventLogBehavior extends Behavior
                 continue;
             }
 
-            if ($field === 'avatar') {
+            if ($field === 'avatar' || $field === 'logo') {
                 $fromNorm = $this->normalizeAvatarValue($from);
                 $toNorm = $this->normalizeAvatarValue($to);
                 if ($fromNorm === $toNorm) {
@@ -365,7 +365,7 @@ class EventLogBehavior extends Behavior
             if (!$entity->has($field) && !array_key_exists($field, $entity->toArray())) {
                 continue;
             }
-            if ($field === 'avatar') {
+            if ($field === 'avatar' || $field === 'logo') {
                 $changes[$field]['to'] = $this->normalizeAvatarValue($entity->get($field));
                 continue;
             }

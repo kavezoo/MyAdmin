@@ -39,6 +39,11 @@ class UsersTable extends CakeDCUsersTable
             'className' => 'Clubs',
             'joinType' => 'LEFT',
         ]);
+        $this->belongsTo('Languages', [
+            'foreignKey' => 'language_id',
+            'className' => 'Languages',
+            'joinType' => 'LEFT',
+        ]);
         // Child-side CounterCache for parent count columns
         $this->addBehavior('CounterCache', [
             'Countries' => ['user_count'],
@@ -62,6 +67,9 @@ class UsersTable extends CakeDCUsersTable
         $validator
             ->nonNegativeInteger('club_id')
             ->allowEmptyString('club_id');
+        $validator
+            ->integer('language_id')
+            ->allowEmptyString('language_id');
         $validator
             ->scalar('avatar')
             ->maxLength('avatar', 255)
@@ -111,7 +119,9 @@ class UsersTable extends CakeDCUsersTable
             ->requirePresence('club_id')
             ->notBlank('club_id', __('Please select your club.'))
             ->nonNegativeInteger('club_id')
-            ->greaterThan('club_id', 0, __('Please select your club.'));
+            ->greaterThan('club_id', 0, __('Please select your club.'))
+            ->integer('language_id')
+            ->allowEmptyString('language_id');
 
         return $validator;
     }
@@ -144,7 +154,9 @@ class UsersTable extends CakeDCUsersTable
             ->requirePresence('club_id')
             ->notBlank('club_id', __('Please select your club.'))
             ->nonNegativeInteger('club_id')
-            ->greaterThan('club_id', 0, __('Please select your club.'));
+            ->greaterThan('club_id', 0, __('Please select your club.'))
+            ->integer('language_id')
+            ->allowEmptyString('language_id');
 
         return $validator;
     }
@@ -252,6 +264,10 @@ class UsersTable extends CakeDCUsersTable
         ]);
         $rules->add($rules->existsIn(['country_id'], 'Countries'), [
             'errorField' => 'country_id',
+            'allowNullableNulls' => true,
+        ]);
+        $rules->add($rules->existsIn(['language_id'], 'Languages'), [
+            'errorField' => 'language_id',
             'allowNullableNulls' => true,
         ]);
         $rules->add(function ($entity) {

@@ -9,6 +9,8 @@ use App\Auth\SetupAccess;
 $controller = (string)$this->request->getParam('controller');
 $isLanguages = $controller === 'Languages';
 $isCountries = $controller === 'Countries';
+$isCounties = $controller === 'Counties';
+$isCities = $controller === 'Cities';
 $isSetups = $controller === 'Setups';
 $isEventLogs = $controller === 'EventLogs';
 $isDashboard = $controller === 'Dashboard';
@@ -28,7 +30,7 @@ $showEventLogsMenu = EventLogAccess::canSearch($this->request);
 				</li>
 
 				<li class="submenu">
-					<a href="#"<?= (($showSetupsMenu && $isSetups) || ($showLanguagesMenu && $isLanguages) || $isCountries || ($showEventLogsMenu && $isEventLogs)) ? ' class="active"' : '' ?>>
+					<a href="#"<?= (($showSetupsMenu && $isSetups) || ($showLanguagesMenu && $isLanguages) || $isCountries || $isCounties || $isCities || ($showEventLogsMenu && $isEventLogs)) ? ' class="active"' : '' ?>>
 						<i class="fa fa-fw fa-cogs"></i> <span> <?= __('Settings') ?> </span> <span class="menu-arrow"></span>
 					</a>
 					<ul class="list-unstyled">
@@ -44,6 +46,12 @@ $showEventLogsMenu = EventLogAccess::canSearch($this->request);
 						<?php endif; ?>
 						<li<?= $isCountries ? ' class="active"' : '' ?>>
 							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Countries', 'action' => 'index']) ?>"><?= __('Countries') ?></a>
+						</li>
+						<li<?= $isCounties ? ' class="active"' : '' ?>>
+							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Counties', 'action' => 'index']) ?>"><?= __('Counties') ?></a>
+						</li>
+						<li<?= $isCities ? ' class="active"' : '' ?>>
+							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'index']) ?>"><?= __('Cities') ?></a>
 						</li>
 						<?php if ($showEventLogsMenu): ?>
 							<li<?= $isEventLogs ? ' class="active"' : '' ?>>

@@ -28,6 +28,7 @@ Kapcsolódó: [users-auth.md](users-auth.md), Cursor rule `.cursor/rules/users-a
 Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 
 - `first_name` (egy „név” mező), `country_id` (>0), `club_id` (>0, `clubs.enabled=1`, `visible=1`) — **telefon opcionális**
+- **`language_id` (opcionális):** `languages.id` — ha be van állítva, a tagság-emailek ezen a nyelven mennek (`email_templates`); különben az ország `locale`-ja, majd App default.
 - Klub lista: `ClubsTable::optionsForCountry(country_id)` — csak az adott ország **enabled + visible** klubjai, **és** az adott évben befizetett országos (nemzeti) tagdíj (`national_membership_fee_date` éve = aktuális év); `pos` majd `name` sorrend. A user jelenlegi klubja akkor is listázódik, ha a tagdíj hiányzik.
 - Profil / complete-profile **országváltás**: nincs oldal-újratöltés / leave kérdés — AJAX `UsersController::clubsForCountry` frissíti a klub Select2-t.
 - Profil szerkesztés ország select: **minden** `Countries.visible = true` sor (`AdminCountry::visibleOptionsWithLocale`), + a user mentett országa ha hiányzik a listából.
@@ -103,7 +104,8 @@ Kötelező profilmezők (`MembershipProfile::requiredFields()`):
 | ACL / státusz | `src/Auth/MembershipProfile.php` (`FIELD_JOINED`, `isJoined`, activityDescriptions) |
 | Tagdíj | `src/Utility/MembershipFee.php` (`isClubFeeUnpaid`, `clearClubFeeOnClubSwitch`, …); panel warning: `element/panel/club_fee_unpaid_alert` (`PanelAppController`) |
 | Service | `src/Service/MembershipService.php` |
-| Mailer | `src/Mailer/MembershipMailer.php` + `templates/email/{html,text}/membership_*.php` |
+| Mailer | `src/Mailer/MembershipMailer.php` + DB `email_templates` (`EmailTemplateService`); fallback: `templates/email/{html,text}/membership_*.php` |
+| Email sablonok CRUD | `President\EmailTemplatesController`, `templates/President/EmailTemplates/` |
 | Profil form | `UsersController::completeProfile` / `edit`, `templates/Users/complete_profile.php` / `edit.php`; view: `profile` → `view.php` |
 | Clubpresident tagok + jelentkező kártyák | `Clubpresident\MembersController` (+ legacy `ApplicantsController` redirect); `edit` + `form` |
 | Tag edit form | `templates/element/users/member_edit_form.php` (+ `…/Members/form.php`) |
@@ -127,6 +129,9 @@ Permissions: `completeProfile` a `role => '*'` Users action listában.
 
 - **applicationReceived** → clubpresident(ek), link: `/clubpresident/members`
 - **membershipApproved** → új tag, link: `/login`
+- **clubNationalFeeRecorded** → klubelnök, országos tagdíj rögzítés után
+- **Nyelv:** `users.language_id` → ország `locale` → App default. Tartalom: `email_templates` (slug + language), ha nincs enabled sor → view template + `__()`.
+- **CRUD:** President `/president/email-templates` (nyelvenként egy slug). Index nyelvi szűrő: alap = aktuális UI nyelv; „All languages” = 0; session + URL `language_id`. Form nyelvi TAB: csak kimenő mezők (`subject` / `body_html` / `body_text`); `name` admin címke. Seed: `EmailTemplateDefaults` + `SeedEmailTemplates` migráció.
 
 Transport: `config/app.php` / `app_local.php` `Email` + `EmailTransport`.
 

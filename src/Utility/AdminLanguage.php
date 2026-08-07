@@ -93,6 +93,133 @@ class AdminLanguage
     }
 
     /**
+     * Profile / email-template Select2: language id => login-style label.
+     * Visible languages only.
+     *
+     * @return array<int, string>
+     */
+    public static function idOptions(?string $uiLocale = null): array
+    {
+        $uiLocale = AdminCountry::normalizeTranslateLocale(
+            ($uiLocale !== null && $uiLocale !== '') ? $uiLocale : I18n::getLocale()
+        );
+
+        /** @var \App\Model\Table\LanguagesTable $languages */
+        $languages = (new self())->fetchTable('Languages');
+        try {
+            $rows = $languages->find()
+                ->select([
+                    'Languages.id',
+                    'Languages.code',
+                    'Languages.endonim_name',
+                    'Languages.name',
+                    'Languages.pos',
+                ])
+                ->where(['Languages.visible' => true])
+                ->orderBy([
+                    'CASE WHEN Languages.code = \'en_GB\' THEN 0 WHEN Languages.code LIKE \'en_%\' THEN 1 ELSE 2 END' => 'ASC',
+                    'Languages.pos' => 'ASC',
+                    'Languages.code' => 'ASC',
+                ])
+                ->disableHydration()
+                ->all()
+                ->toList();
+        } catch (\Throwable) {
+            $rows = [];
+        }
+
+        if ($rows === []) {
+            return [];
+        }
+
+        $meta = [];
+        foreach ($rows as $row) {
+            $id = (int)($row['id'] ?? 0);
+            $code = trim((string)($row['code'] ?? ''));
+            if ($id < 1 || $code === '') {
+                continue;
+            }
+            $storedEndo = trim((string)($row['endonim_name'] ?? ''));
+            $meta[$id] = [
+                'code' => $code,
+                'langUi' => static::languageName($code, $uiLocale),
+                'langNative' => $storedEndo !== ''
+                    ? $storedEndo
+                    : static::languageName($code, $code),
+                'regionUi' => static::regionName($code, $uiLocale),
+            ];
+        }
+
+        $labels = [];
+        foreach ($meta as $id => $m) {
+            $labels[$id] = static::formatLoginLabel($m['langUi'], $m['langNative'], '');
+        }
+
+        $counts = array_count_values($labels);
+        foreach ($labels as $id => $label) {
+            if (($counts[$label] ?? 0) < 2) {
+                continue;
+            }
+            $region = $meta[$id]['regionUi'];
+            if ($region === '') {
+                continue;
+            }
+            $labels[$id] = static::formatLoginLabel(
+                $meta[$id]['langUi'],
+                $meta[$id]['langNative'],
+                $region
+            );
+        }
+
+        asort($labels, SORT_NATURAL | SORT_FLAG_CASE);
+
+        return $labels;
+    }
+
+    /**
+     * Label for a languages.id (visible or not).
+     */
+    public static function labelById(int $languageId, ?string $uiLocale = null): string
+    {
+        if ($languageId < 1) {
+            return '';
+        }
+        $options = static::idOptions($uiLocale);
+        if (isset($options[$languageId])) {
+            return $options[$languageId];
+        }
+
+        /** @var \App\Model\Table\LanguagesTable $languages */
+        $languages = (new self())->fetchTable('Languages');
+        try {
+            $row = $languages->find()
+                ->select(['Languages.id', 'Languages.code', 'Languages.endonim_name'])
+                ->where(['Languages.id' => $languageId])
+                ->disableHydration()
+                ->first();
+        } catch (\Throwable) {
+            $row = null;
+        }
+        if (!is_array($row)) {
+            return '';
+        }
+        $code = trim((string)($row['code'] ?? ''));
+        if ($code === '') {
+            return '';
+        }
+
+        return static::loginLabel($code, $uiLocale);
+    }
+
+    /**
+     * languages.id for a locale code (exact, then language-part fallback).
+     */
+    public static function idForLocale(string $locale): int
+    {
+        return EmailTemplateService::languageIdForLocale($locale);
+    }
+
+    /**
      * Single login row / “Selected language” label in the current UI locale.
      */
     public static function loginLabel(string $localeCode, ?string $uiLocale = null): string

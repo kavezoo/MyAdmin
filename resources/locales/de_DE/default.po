@@ -3302,3 +3302,18 @@ msgstr "Bitte einen gültigen Ort wählen."
 
 msgid "Search by name or email (same country as above; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear."
 msgstr "Suche nach Name oder E-Mail (gleiches Land wie oben; keine Bewerber mit Rolle new). Mitglieder werden Clubpräsident; Präsident / Vizepräsident behalten ihre Rolle. Leer lassen zum Entfernen."
+
+msgid "Membership application (to club president)"
+msgstr "Mitgliedschaftsbewerbung (an Clubpräsident)"
+
+msgid "Membership approved (to member)"
+msgstr "Mitgliedschaft genehmigt (an Mitglied)"
+
+msgid "Club national fee recorded (to club president)"
+msgstr "Nationaler Clubbeitrag erfasst (an Clubpräsident)"
+
+msgid "Please fill name, subject and both bodies for each language you edit."
+msgstr "Bitte Name, Betreff und beide Textkörper für jede bearbeitete Sprache ausfüllen."
+
+msgid "Showing templates for all languages"
+msgstr "Vorlagen für alle Sprachen anzeigen"

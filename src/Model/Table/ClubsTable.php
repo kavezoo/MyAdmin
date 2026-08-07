@@ -87,6 +87,21 @@ class ClubsTable extends Table
     }
 
     /**
+     * Remove logo file after the club row is deleted.
+     *
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param \ArrayObject<string, mixed> $options
+     * @return void
+     */
+    public function afterDelete(\Cake\Event\EventInterface $event, EntityInterface $entity, \ArrayObject $options): void
+    {
+        $logo = $entity->get('logo');
+        $stored = is_string($logo) ? $logo : null;
+        \App\Utility\ClubLogo::deleteStored($stored, (int)$entity->get('id'));
+    }
+
+    /**
      * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
      * @param \Cake\Datasource\EntityInterface $entity
      * @param \ArrayObject<string, mixed> $options
@@ -374,6 +389,11 @@ class ClubsTable extends Table
             ->scalar('short_name')
             ->maxLength('short_name', 250)
             ->allowEmptyString('short_name');
+
+        $validator
+            ->scalar('logo')
+            ->maxLength('logo', 255)
+            ->allowEmptyString('logo');
 
         $validator
             ->email('email', false, __('Please enter a valid email address.'))

@@ -97,6 +97,7 @@ class EventLogPresenter
             'club_membership_fee_date' => __('Club membership fee'),
             'national_membership_fee_date' => __('National pipe association membership fee'),
             'avatar' => __('Profile picture'),
+            'logo' => __('Logo'),
             'password' => __('Password'),
             'value' => __('Value'),
             'slug' => __('Identifier'),

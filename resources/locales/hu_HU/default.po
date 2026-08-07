@@ -3303,3 +3303,141 @@ msgstr "Válassz érvényes települést."
 msgid "Search by name or email (same country as above; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear."
 msgstr "Keresés név vagy e-mail alapján (a fenti ország; nem new szerepű jelentkezők). Tagból klubelnök lesz; elnök / alelnök szerepe megmarad. Üresen hagyva törölhető."
 
+
+msgid "Email templates"
+msgstr "E-mail sablonok"
+
+msgid "New email template"
+msgstr "Új e-mail sablon"
+
+msgid "Edit email template"
+msgstr "E-mail sablon szerkesztése"
+
+msgid "Email template details"
+msgstr "E-mail sablon részletei"
+
+msgid "The email template has been saved."
+msgstr "Az e-mail sablon mentésre került."
+
+msgid "HTML body"
+msgstr "HTML törzs"
+
+msgid "Text body"
+msgstr "Szöveges törzs"
+
+msgid "All languages"
+msgstr "Összes nyelv"
+
+msgid "Showing templates for {0}"
+msgstr "Sablonok megjelenítve: {0}"
+
+msgid "Showing templates for all languages"
+msgstr "Sablonok megjelenítve: minden nyelv"
+
+msgid "Please fill name, subject and both bodies for each language you edit."
+msgstr "Minden szerkesztett nyelvnél töltsd ki a nevet, a tárgyat és mindkét törzsszöveget."
+
+msgid "Please fill subject and both bodies for each language you edit."
+msgstr "Minden szerkesztett nyelvnél töltsd ki a tárgyat és mindkét törzsszöveget."
+
+msgid "Select template..."
+msgstr "Válassz sablont..."
+
+msgid "Template"
+msgstr "Sablon"
+
+msgid "Same as country (default)"
+msgstr "Ország szerinti (alapértelmezett)"
+
+msgid "Emails and messages use this language when set; otherwise your country’s language."
+msgstr "Az e-mailek és üzenetek ezt a nyelvet használják, ha be van állítva; különben az ország nyelvét."
+
+msgid "Membership application (to club president)"
+msgstr "Tagság jelentkezés (klubelnöknek)"
+
+msgid "Membership approved (to member)"
+msgstr "Tagság jóváhagyva (tagnak)"
+
+msgid "Club national fee recorded (to club president)"
+msgstr "Klub országos tagdíj rögzítve (klubelnöknek)"
+
+msgid "One template per language. Placeholders: {applicantName}, {clubName}, {listUrl}, …"
+msgstr "Nyelvenként egy sablon. Helyőrzők: {applicantName}, {clubName}, {listUrl}, …"
+
+msgid "Counties"
+msgstr "Megyék"
+
+msgid "Cities"
+msgstr "Települések"
+
+msgid "New county"
+msgstr "Új megye"
+
+msgid "Edit county"
+msgstr "Megye szerkesztése"
+
+msgid "County details"
+msgstr "Megye részletei"
+
+msgid "The county has been saved."
+msgstr "A megye mentésre került."
+
+msgid "Capital city"
+msgstr "Megyeszékhely"
+
+msgid "Region"
+msgstr "Régió"
+
+msgid "New city"
+msgstr "Új település"
+
+msgid "Edit city"
+msgstr "Település szerkesztése"
+
+msgid "City details"
+msgstr "Település részletei"
+
+msgid "The city has been saved."
+msgstr "A település mentésre került."
+
+msgid "Showing counties for {0}"
+msgstr "Megyék megjelenítve: {0}"
+
+msgid "All countries"
+msgstr "Összes ország"
+
+msgid "This template slug already exists for the selected language."
+msgstr "Ez a sablonazonosító már létezik a kiválasztott nyelven."
+
+msgid "Use lowercase letters, numbers and underscores only."
+msgstr "Csak kisbetű, szám és aláhúzás engedélyezett."
+
+msgid "Logo"
+msgstr "Logó"
+
+msgid "Logo:"
+msgstr "Logó:"
+
+msgid "Remove logo"
+msgstr "Logó törlése"
+
+msgid "Delete logo"
+msgstr "Logó törlése"
+
+msgid "Do you really want to delete this club logo?"
+msgstr "Biztosan törölni szeretnéd a klub logóját?"
+
+msgid "Club logo removed."
+msgstr "A klub logója törölve."
+
+msgid "The club was saved, but the logo could not be uploaded."
+msgstr "A klub mentve, de a logót nem sikerült feltölteni."
+
+msgid "Showing cities for {0}"
+msgstr "Települések megjelenítve: {0}"
+
+msgid "Showing cities for all countries"
+msgstr "Települések megjelenítve: összes ország"
+
+msgid "Showing counties for all countries"
+msgstr "Megyék megjelenítve: összes ország"

@@ -225,6 +225,22 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 					]) ?>
 				</div>
 
+				<div class="mb-3">
+					<label class="form-label" for="language-id"><?= __('Language') ?></label>
+					<?= $this->Form->control('language_id', [
+						'label' => false,
+						'type' => 'select',
+						'options' => $languageOptions ?? [],
+						'empty' => __('Same as country (default)'),
+						'class' => 'form-select js-language-select',
+						'id' => 'language-id',
+						'required' => false,
+						'value' => (int)($user->language_id ?? 0) > 0 ? (int)$user->language_id : null,
+						'data-placeholder' => __('Same as country (default)'),
+					]) ?>
+					<div class="form-text"><?= __('Emails and messages use this language when set; otherwise your country’s language.') ?></div>
+				</div>
+
 				<dl class="record-view-fields mb-0">
 					<div class="record-view-row"><dt><?= __('Email') ?></dt><dd><?= h((string)$user->email) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Username') ?></dt><dd><?= h((string)$user->username) ?></dd></div>

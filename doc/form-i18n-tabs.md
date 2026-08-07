@@ -18,7 +18,8 @@ Ha a Table-en van **Translate** behavior szöveges mezőkkel (`name`, `descripti
 
 Minták: Samples, Parents.  
 Countries: **nincs** nyelvi TAB (seedelt országnevek).  
-Cities / Setups: nincs Translate → nincs nyelvi TAB.
+Cities / Setups: nincs Translate → nincs nyelvi TAB.  
+**Email templates** (President): nincs Cake Translate — külön TAB UI (`email_template_language_fields`), egy DB sor / (`language_id` + `slug`); TAB mezők: `subject`, `body_html`, `body_text` (kimenő email); `name` admin címke, nem a TAB-on.
 
 ---
 

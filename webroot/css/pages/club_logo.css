@@ -1,0 +1,40 @@
+/* Club logo preview (President Clubs form / view / index). */
+
+.club-logo-preview {
+	object-fit: cover;
+	background: #f1f3f5;
+}
+
+.club-logo-preview-wrap .club-logo-preview,
+.club-logo-preview-wrap .club-logo-placeholder {
+	width: 120px;
+	height: 120px;
+}
+
+.club-logo-placeholder {
+	border: 1px dashed #adb5bd;
+	background: #f8f9fa;
+}
+
+.club-logo-preview--sm,
+.club-logo-placeholder--sm {
+	width: 36px;
+	height: 36px;
+	object-fit: cover;
+}
+
+.club-logo-hint {
+	font-size: 0.9rem;
+}
+
+.club-index-name-with-logo {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+}
+
+.club-index-name-with-logo .club-logo-preview--sm,
+.club-index-name-with-logo .club-logo-placeholder--sm {
+	flex-shrink: 0;
+	border-radius: 0.35rem;
+}

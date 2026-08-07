@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -75,5 +78,40 @@ class CountiesTable extends Table
         $rules->add($rules->existsIn(['country_id'], 'Countries'), ['errorField' => 'country_id']);
 
         return $rules;
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param \ArrayObject<string, mixed> $options
+     * @return void
+     */
+    public function beforeDelete(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
+    {
+        if (!$this->canDelete($entity)) {
+            $entity->setError('_delete', [
+                __('Cannot delete this record because it has related child records.'),
+            ]);
+            $event->stopPropagation();
+            $event->setResult(false);
+        }
+    }
+
+    /**
+     * Block delete while cities reference this county (live count — no CounterCache column yet).
+     *
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @return bool
+     */
+    public function canDelete(EntityInterface $entity): bool
+    {
+        $id = $entity->get($this->getPrimaryKey());
+        if ($id === null || $id === '') {
+            return true;
+        }
+
+        return $this->Cities->find()
+            ->where(['Cities.county_id' => $id])
+            ->count() === 0;
     }
 }

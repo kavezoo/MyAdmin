@@ -13,7 +13,7 @@ use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
 use App\Utility\MembershipFee;
 
-$this->Html->css(['pages/index', 'pages/users_list_avatar', 'pages/membership_fee'], ['block' => true]);
+$this->Html->css(['pages/index', 'pages/users_list_avatar', 'pages/membership_fee', 'pages/club_logo'], ['block' => true]);
 
 $rowDoubleClickAction = 'modal';
 

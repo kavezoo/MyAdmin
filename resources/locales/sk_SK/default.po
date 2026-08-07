@@ -272,13 +272,13 @@ msgid "Record club national fee payment"
 msgstr "Record club national fee payment"
 
 msgid "Club annual membership fee recorded for {0}"
-msgstr "Club annual membership fee recorded for {0}"
+msgstr "Ročný členský poplatok klubu zaznamenaný pre {0}"
 
 msgid "We confirm that the annual membership fee payment for club {0} has been received by the leadership and has been booked."
-msgstr "We confirm that the annual membership fee payment for club {0} has been received by the leadership and has been booked."
+msgstr "Potvrdzujeme, že platba ročného členského poplatku klubu {0} bola vedením prijatá a zaúčtovaná."
 
 msgid "The payment date is {0}. Your club's annual membership fee for {1} is settled, and membership is valid toward {2}."
-msgstr "The payment date is {0}. Your club's annual membership fee for {1} is settled, and membership is valid toward {2}."
+msgstr "Dátum platby je {0}. Ročný členský poplatok vášho klubu za {1} je uhradený a členstvo platí voči {2}."
 
 msgid "the Hungarian Pipe Club Association (MPE)"
 msgstr "the Hungarian Pipe Club Association (MPE)"
@@ -302,7 +302,7 @@ msgid "Clubs in {0} — membership year {1}"
 msgstr "Clubs in {0} — membership year {1}"
 
 msgid "your club"
-msgstr "your club"
+msgstr "váš klub"
 
 msgid "Club membership fee record created for {0}"
 msgstr "Club membership fee record created for {0}"
@@ -384,3 +384,66 @@ msgstr "Vyberte platnú obec."
 
 msgid "Search by name or email (same country as above; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear."
 msgstr "Hľadanie podľa mena alebo e-mailu (rovnaká krajina ako vyššie; nie žiadatelia s rolou new). Členovia sa stanú prezidentom klubu; prezident / viceprezident si rolú ponechá. Nechajte prázdne na vymazanie."
+
+msgid "New membership application: {0}"
+msgstr "Nová žiadosť o členstvo: {0}"
+
+msgid "Your membership has been approved"
+msgstr "Vaše členstvo bolo schválené"
+
+msgid "Hello{0},"
+msgstr "Dobrý deň{0},"
+
+msgid "A new user has completed their profile and applied for membership in {0}."
+msgstr "Nový používateľ doplnil profil a požiadal o členstvo v klube {0}."
+
+msgid "Name"
+msgstr "Meno"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Club"
+msgstr "Klub"
+
+msgid "Open members list"
+msgstr "Otvoriť zoznam členov"
+
+msgid "Please review the application and approve membership if appropriate."
+msgstr "Skontrolujte žiadosť a v prípade potreby schváľte členstvo."
+
+msgid "The club president has approved your membership in {0}."
+msgstr "Prezident klubu schválil vaše členstvo v klube {0}."
+
+msgid "You are now a full member and can sign in to the site."
+msgstr "Teraz ste plnohodnotným členom a môžete sa prihlásiť na stránku."
+
+msgid "Sign in"
+msgstr "Prihlásiť sa"
+
+msgid "Thank you."
+msgstr "Ďakujeme."
+
+msgid "Membership application (to club president)"
+msgstr "Žiadosť o členstvo (prezidentovi klubu)"
+
+msgid "Membership approved (to member)"
+msgstr "Členstvo schválené (členovi)"
+
+msgid "Club national fee recorded (to club president)"
+msgstr "Národný poplatok klubu zaznamenaný (prezidentovi klubu)"
+
+msgid "Please fill name, subject and both bodies for each language you edit."
+msgstr "Vyplňte názov, predmet a oba texty pre každý upravovaný jazyk."
+
+msgid "Showing templates for all languages"
+msgstr "Zobrazenie šablón pre všetky jazyky"
+
+msgid "Showing templates for {0}"
+msgstr "Zobrazenie šablón pre {0}"
+
+msgid "Email templates"
+msgstr "E-mailové šablóny"
+
+msgid "All languages"
+msgstr "Všetky jazyky"

@@ -50,6 +50,7 @@
 | `role` | string | `AppRoles` kulcsok |
 | `country_id` | int | Ország (regisztráció / profil) |
 | `club_id` | int | 0 = nincs; FK soft |
+| `language_id` | int NULL | opcionális; FK soft → `languages.id` (`club_id` után); email locale |
 | `enabled` | bool | App belépéskapu (`findActive` + middleware) |
 | `membership_status` | string | `incomplete` / `pending` / `approved` |
 | `membership_joined_date` | date | Tagként csatlakozás (approve napja) |
@@ -199,13 +200,28 @@ src/Controller/New/AppController.php
 src/Controller/Clubpresident/MembersController.php
 src/Controller/President/MembersController.php
 src/Controller/President/ClubsController.php
+src/Controller/President/EmailTemplatesController.php
+src/Controller/Admin/CitiesController.php
+src/Controller/Admin/CountiesController.php
+src/Utility/EmailTemplateService.php
+src/Utility/EmailTemplateSlugs.php
+src/Mailer/MembershipMailer.php
 src/Controller/Concerns/PanelMemberListTrait.php
 src/Middleware/RestrictNewRoleMiddleware.php
 src/Middleware/RequireUserEnabledMiddleware.php
 templates/element/admin/header.php
 templates/Users/{complete_profile,edit,view}.php
+templates/President/EmailTemplates/
+templates/Admin/{Cities,Counties}/
 ```
 
+### Email sablonok + geo (Admin)
+
+| Elem | Hol |
+|------|-----|
+| `email_templates` | nyelvenkénti subject/body; President CRUD |
+| Locale | `users.language_id` → ország locale → default |
+| Cities / Counties / Countries | Admin Settings CRUD |
 ---
 
 ## 11. Ellenőrző checklist (smoke)

@@ -69,6 +69,29 @@ return [
                     'locale',
                 ],
             ],
+            'Counties' => [
+                'label' => 'Counties',
+                'controller' => 'Counties',
+                'titleField' => 'name',
+                'labelsKey' => 'county',
+                'fields' => [
+                    'name',
+                    'shortname',
+                    'capitalcity',
+                    'region',
+                ],
+            ],
+            'Cities' => [
+                'label' => 'Cities',
+                'controller' => 'Cities',
+                'titleField' => 'name',
+                'labelsKey' => 'city',
+                'fields' => [
+                    'name',
+                    'shortname',
+                    'zip',
+                ],
+            ],
             'Setups' => [
                 'label' => 'Setups',
                 'controller' => 'Setups',
@@ -113,6 +136,20 @@ return [
                     'web',
                     'facebook',
                     'insta',
+                ],
+            ],
+            'EmailTemplates' => [
+                'label' => 'Email templates',
+                'controller' => 'EmailTemplates',
+                'titleField' => 'name',
+                'labelsKey' => 'email_template',
+                'includeInGlobal' => false,
+                'fields' => [
+                    'slug',
+                    'name',
+                    'subject',
+                    'body_html',
+                    'body_text',
                 ],
             ],
             // Continents: nincs külön Admin CRUD index — globális kereséshez később felvehető:

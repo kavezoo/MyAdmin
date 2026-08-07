@@ -14,6 +14,7 @@ use Cake\ORM\Entity;
  * @property string $clubpresident_id Legacy/sync column (same user as club_president_id; '' if none)
  * @property string $name
  * @property string $short_name
+ * @property string|null $logo Club logo web-relative path
  * @property string $email
  * @property bool $enabled
  * @property string $address
@@ -43,6 +44,7 @@ class Club extends Entity
         'clubpresident_id' => true,
         'name' => true,
         'short_name' => true,
+        'logo' => true,
         'email' => true,
         'enabled' => true,
         'address' => true,
@@ -61,4 +63,19 @@ class Club extends Entity
         'city' => true,
         'users' => true,
     ];
+
+    /**
+     * @param mixed $logo Stored web path string; ignore upload objects from form binding.
+     */
+    protected function _setLogo(mixed $logo): ?string
+    {
+        if ($logo === null || $logo === '') {
+            return null;
+        }
+        if (!is_string($logo)) {
+            return null;
+        }
+
+        return $logo;
+    }
 }

@@ -12,7 +12,7 @@
 use App\Auth\MembershipProfile;
 use App\Utility\MembershipFee;
 
-$this->Html->css(['pages/index', 'pages/membership_fee'], ['block' => true]);
+$this->Html->css(['pages/index', 'pages/membership_fee', 'pages/club_logo'], ['block' => true]);
 
 /**
  * Row double-click: 'modal' | 'edit' | 'none'
@@ -208,7 +208,25 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 								<?php if ($showIdColumn): ?>
 									<td class="number id"><?= h($club->id) ?></td>
 								<?php endif; ?>
-								<td class="string name"><?= h($club->name) ?></td>
+								<td class="string name">
+									<div class="club-index-name-with-logo">
+										<?php
+										$logoStored = $club->get('logo');
+										$clubLogoUrl = \App\Utility\ClubLogo::publicUrlFor(
+											(int)$club->id,
+											is_string($logoStored) ? $logoStored : null
+										);
+										?>
+										<?php if ($clubLogoUrl !== ''): ?>
+											<img src="<?= h($clubLogoUrl) ?>" alt="" class="club-logo-preview--sm" width="36" height="36">
+										<?php else: ?>
+											<span class="club-logo-placeholder--sm d-inline-flex align-items-center justify-content-center text-secondary" aria-hidden="true">
+												<i class="fa fa-shield"></i>
+											</span>
+										<?php endif; ?>
+										<span><?= h($club->name) ?></span>
+									</div>
+								</td>
 								<td class="string city">
 									<?php
 									$cityName = '';
