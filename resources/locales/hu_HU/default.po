@@ -163,7 +163,7 @@ msgid "user"
 msgstr "felhasználó"
 
 #: ./src/Auth/MembershipProfile.php:99
-msgid "Membership approved — member since {0}"
+msgid "Membership approved â member since {0}"
 msgstr "Tagság jóváhagyva — tagként: {0}"
 
 #: ./src/Auth/MembershipProfile.php:101
@@ -1304,7 +1304,7 @@ msgid "{0} payment removed (was {1} for {2})"
 msgstr "{0} befizetés eltávolítva (korábban {1} / {2})"
 
 #: ./src/Utility/MembershipFee.php:281
-msgid "{0} payment date changed for {1}: {2} → {3}"
+msgid "{0} payment date changed for {1}: {2} â {3}"
 msgstr "{0} befizetés dátuma módosítva ({1}): {2} → {3}"
 
 #: ./src/Utility/MembershipFee.php:290
@@ -1504,11 +1504,11 @@ msgid "Endonym:"
 msgstr "Endoním:"
 
 #: ./templates/Admin/Countries/form.php:124
-msgid "Endonym — how the country name is written in its own language/script (e.g. {0})."
+msgid "Endonym â how the country name is written in its own language/script (e.g. {0})."
 msgstr "Endoním — az ország neve a saját nyelvén/írásrendszerében (pl. {0})."
 
 #: ./templates/Admin/Countries/form.php:126
-msgid "Endonym — how the country name is written in its own language/script."
+msgid "Endonym â how the country name is written in its own language/script."
 msgstr "Endoním — az ország neve a saját nyelvén/írásrendszerében."
 
 #: ./templates/Admin/Countries/form.php:133
@@ -2012,7 +2012,7 @@ msgid "English canonical name (also stored as Translate default locale)."
 msgstr "Angol kanonikus név (Translate alapértelmezett locale is)."
 
 #: ./templates/Admin/Languages/form.php:102
-msgid "Endonym — how the language name is written in itself (e.g. magyar, Deutsch)."
+msgid "Endonym â how the language name is written in itself (e.g. magyar, Deutsch)."
 msgstr "Endoním — a nyelv neve saját magán (pl. magyar, Deutsch)."
 
 #: ./templates/Admin/Languages/form.php:145
@@ -2270,11 +2270,11 @@ msgid "Review applicants"
 msgstr "Jelentkezők áttekintése"
 
 #: ./templates/Clubpresident/Dashboard/index.php:62
-msgid "Welcome to the Club president panel. Choose where you want to go — each card explains the destination."
+msgid "Welcome to the Club president panel. Choose where you want to go â each card explains the destination."
 msgstr "Üdvözöl a klubelnök panel. Válaszd ki, hová szeretnél menni — minden kártya elmagyarázza a célt."
 
 #: ./templates/Clubpresident/Members/index.php:125
-msgid "Members of {0} — membership year {1}"
+msgid "Members of {0} â membership year {1}"
 msgstr "{0} tagjai — tagsági év: {1}"
 
 #: ./templates/Clubpresident/Members/index.php:306
@@ -2364,7 +2364,7 @@ msgid "Go to Profile"
 msgstr "Ugrás a Profilhoz"
 
 #: ./templates/Member/Dashboard/index.php:30
-msgid "Welcome to the Member panel. Choose where you want to go — each card explains the destination."
+msgid "Welcome to the Member panel. Choose where you want to go â each card explains the destination."
 msgstr "Üdvözöl a tag panel. Válaszd ki, hová szeretnél menni — minden kártya elmagyarázza a célt."
 
 #: ./templates/New/Dashboard/index.php:21
@@ -2430,7 +2430,7 @@ msgid "Disabled clubs cannot be selected on the membership profile."
 msgstr "A letiltott klubok nem választhatók a tagsági profilon."
 
 #: ./templates/President/Clubs/index.php:138
-msgid "Clubs in {0} — membership year {1}"
+msgid "Clubs in {0} â membership year {1}"
 msgstr "Klubok — {0} — tagsági év: {1}"
 
 #: ./templates/President/Clubs/index.php:330
@@ -2468,11 +2468,11 @@ msgid "Go to Clubs"
 msgstr "Ugrás a Klubokhoz"
 
 #: ./templates/President/Dashboard/index.php:36
-msgid "Welcome to the President panel. Choose where you want to go — each card explains the destination."
+msgid "Welcome to the President panel. Choose where you want to go â each card explains the destination."
 msgstr "Üdvözöl az elnök panel. Válaszd ki, hová szeretnél menni — minden kártya elmagyarázza a célt."
 
 #: ./templates/President/Members/index.php:166
-msgid "Members in {0} — membership year {1}"
+msgid "Members in {0} â membership year {1}"
 msgstr "Tagok — {0} — tagsági év: {1}"
 
 #: ./templates/President/Members/index.php:192
@@ -2568,6 +2568,9 @@ msgstr "Ehhez az országhoz jelenleg nincs aktív, országos tagdíjat befizetet
 msgid "Select club..."
 msgstr "Válassz klubot..."
 
+msgid "All clubs in this country (including those without a national membership fee payment this year)."
+msgstr "Az ország összes klubja (azok is, akiknek ebben az évben még nincs nemzeti tagdíj-befizetésük)."
+
 #: ./templates/Users/complete_profile.php:119
 msgid "Submit application"
 msgstr "Jelentkezés elküldése"
@@ -2582,7 +2585,7 @@ msgid "Update your personal details and profile picture."
 msgstr "Frissítsd a személyes adataidat és a profilképed."
 
 #: ./templates/Users/edit.php:103
-msgid "For a consistent look across the site, use a square image of 1000×1000 pixels. Other sizes or aspect ratios may not display well."
+msgid "For a consistent look across the site, use a square image of 1000Ã1000 pixels. Other sizes or aspect ratios may not display well."
 msgstr "Az egységes megjelenéshez használj 1000×1000 pixeles négyzetes képet. Más méret vagy arány gyengébben jelenhet meg."
 
 #: ./templates/Users/edit.php:116
@@ -2590,7 +2593,7 @@ msgid "Upload image"
 msgstr "Kép feltöltése"
 
 #: ./templates/Users/edit.php:124
-msgid "JPEG, PNG or WebP. Max. 5 MB. Recommended: 1000×1000 px square."
+msgid "JPEG, PNG or WebP. Max. 5 MB. Recommended: 1000Ã1000 px square."
 msgstr "JPEG, PNG vagy WebP. Max. 5 MB. Ajánlott: 1000×1000 px négyzet."
 
 #: ./templates/Users/edit.php:136
@@ -2608,7 +2611,7 @@ msgid "Changing your club has important consequences"
 msgstr "A klubváltásnak fontos következményei vannak"
 
 #: ./templates/Users/edit.php:201
-msgid "If you choose a different club and save, your role will be set to “new”, and your club membership fee will be cleared — you must pay it again at the new club. Your national membership fee is not affected. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
+msgid "If you choose a different club and save, your role will be set to ânewâ, and your club membership fee will be cleared â you must pay it again at the new club. Your national membership fee is not affected. You will not be able to use this system until the president of the chosen club approves your membership application and registers you as a member."
 msgstr "Ha másik klubot választasz és mented, a szerepköröd „új tag” lesz, és a klub tagdíjad törlődik — az új klubban újra be kell fizetned. Az országos (MPE) tagdíjad nem változik. A rendszert addig nem használhatod, amíg a választott klub elnöke el nem fogadja a tagsági jelentkezésedet és tagként nem rögzít."
 
 #: ./templates/Users/edit.php:277
@@ -2641,7 +2644,7 @@ msgid "Browse all activity"
 msgstr "Összes aktivitás böngészése"
 
 #: ./templates/Users/event_log.php:34
-msgid "Search activity…"
+msgid "Search activityâ¦"
 msgstr "Aktivitás keresése…"
 
 #: ./templates/Users/event_log.php:43
@@ -2732,7 +2735,7 @@ msgid "Settings for {0}"
 msgstr "Beállítások: {0}"
 
 #: ./templates/element/admin/activity_log_setup_toggles.php:24
-msgid "Your working country — toggles apply only to this country."
+msgid "Your working country â toggles apply only to this country."
 msgstr "A munkországod — a kapcsolók csak erre az országra vonatkoznak."
 
 #: ./templates/element/admin/activity_log_setup_toggles.php:31
@@ -2774,7 +2777,7 @@ msgid "Show to users"
 msgstr "Megjelenítés a felhasználóknak"
 
 #: ./templates/element/admin/activity_log_setup_toggles.php:72
-msgid "Controls the “My activity” menu item for users in this country."
+msgid "Controls the âMy activityâ menu item for users in this country."
 msgstr "A „Saját aktivitásom” menüpontot vezérli az ország felhasználóinál."
 
 #: ./templates/element/admin/breadcrumb.php:46
@@ -2914,7 +2917,7 @@ msgstr "Bezárás"
 
 #: ./templates/element/admin/modal_linked_record_view.php:11
 #: ./templates/element/admin/modal_record_view.php:11
-msgid "Loading…"
+msgid "Loadingâ¦"
 msgstr "Betöltés…"
 
 #: ./templates/element/admin/sidebar.php:32
@@ -2946,7 +2949,7 @@ msgid "New applicants"
 msgstr "Új jelentkezők"
 
 #: ./templates/element/clubpresident/applicant_cards.php:28
-msgid "Pending membership applications — review and approve or reject below."
+msgid "Pending membership applications â review and approve or reject below."
 msgstr "Függő tagsági jelentkezések — tekintsd át, majd hagyd jóvá vagy utasítsd el lent."
 
 #: ./templates/element/flash/default.php:30
@@ -3016,7 +3019,7 @@ msgid "Role:"
 msgstr "Szerepkör:"
 
 #: ./templates/element/users/member_edit_form.php:137
-msgid "You cannot change this member’s role."
+msgid "You cannot change this memberâs role."
 msgstr "Ennek a tagnak a szerepkörét nem módosíthatod."
 
 #: ./templates/element/users/member_edit_form.php:139
@@ -3212,7 +3215,7 @@ msgstr "Új érték hozzáadása a listához."
 
 #: ./templates/layout/admin.php:100
 msgid "Apply"
-msgstr "Alkalmaz"
+msgstr "Jelentkezés"
 
 #: ./templates/layout/admin.php:104
 msgid "Custom"
@@ -3237,19 +3240,19 @@ msgstr "Belső hiba történt."
 msgid "Your club has been updated. Your role is unchanged."
 msgstr "A klubod frissítve. A szerepköröd változatlan maradt."
 
-msgid "If you choose a different club and save, your role stays the same. Only your club membership fee will be cleared — you must pay it again at the new club. Your national membership fee is not affected."
+msgid "If you choose a different club and save, your role stays the same. Only your club membership fee will be cleared â you must pay it again at the new club. Your national membership fee is not affected."
 msgstr "Ha másik klubot választasz és mented, a szerepköröd változatlan marad. Csak a klub tagdíjad törlődik — az új klubban újra be kell fizetned. Az országos (MPE) tagdíjad nem változik."
 
 msgid "Change club?"
 msgstr "Klubváltás?"
 
-msgid "Do you really want to change your club? Your role will stay the same. Only your club membership fee will be cleared — you must pay it again at the new club."
+msgid "Do you really want to change your club? Your role will stay the same. Only your club membership fee will be cleared â you must pay it again at the new club."
 msgstr "Biztosan klubot szeretnél váltani? A szerepköröd változatlan marad. Csak a klub tagdíjad törlődik — az új klubban újra be kell fizetned."
 
 msgid "Yes, change club"
 msgstr "Igen, klubváltás"
 
-msgid "Welcome to {0}. Choose a module below — each card describes where the button will take you."
+msgid "Welcome to {0}. Choose a module below â each card describes where the button will take you."
 msgstr "Üdvözöl a {0}. Válassz modult alább — minden kártya leírja, hová visz a gomb."
 
 msgid "Short name"
@@ -3349,7 +3352,7 @@ msgstr "Sablon"
 msgid "Same as country (default)"
 msgstr "Ország szerinti (alapértelmezett)"
 
-msgid "Emails and messages use this language when set; otherwise your country’s language."
+msgid "Emails and messages use this language when set; otherwise your countryâs language."
 msgstr "Az e-mailek és üzenetek ezt a nyelvet használják, ha be van állítva; különben az ország nyelvét."
 
 msgid "Membership application (to club president)"
@@ -3361,7 +3364,7 @@ msgstr "Tagság jóváhagyva (tagnak)"
 msgid "Club national fee recorded (to club president)"
 msgstr "Klub országos tagdíj rögzítve (klubelnöknek)"
 
-msgid "One template per language. Placeholders: {applicantName}, {clubName}, {listUrl}, …"
+msgid "One template per language. Placeholders: {applicantName}, {clubName}, {listUrl}, â¦"
 msgstr "Nyelvenként egy sablon. Helyőrzők: {applicantName}, {clubName}, {listUrl}, …"
 
 msgid "Counties"
@@ -3441,3 +3444,426 @@ msgstr "Települések megjelenítve: összes ország"
 
 msgid "Showing counties for all countries"
 msgstr "Megyék megjelenítve: összes ország"
+
+msgid "Sub-teams"
+msgstr "Alcsapatok"
+
+msgid "Sub-team details"
+msgstr "Alcsapat részletei"
+
+msgid "New sub-team"
+msgstr "Új alcsapat"
+
+msgid "Edit sub-team"
+msgstr "Alcsapat szerkesztése"
+
+msgid "Sub-teams (alcsapatok) for competitions"
+msgstr "Verseny-alcsapatok (alcsapatok)"
+
+msgid "Assign applicants"
+msgstr "Jelentkezők besorolása"
+
+msgid "Team members"
+msgstr "Csapattagok"
+
+msgid "No members assigned to this team yet."
+msgstr "Ehhez az alcsapathoz még nincs besorolt tag."
+
+msgid "Remove from team"
+msgstr "Eltávolítás a csapatból"
+
+msgid "Move the member back to unassigned applicants."
+msgstr "A tag visszakerül a besorolatlan jelentkezõkhöz."
+
+msgid "Member removed from the team."
+msgstr "A tag eltávolítva az alcsapatból."
+
+msgid "Could not remove member."
+msgstr "A tagot nem sikerült eltávolítani."
+
+msgid "Member not found on this team."
+msgstr "A tag nem található ezen az alcsapaton."
+
+msgid "The team has been saved."
+msgstr "Az alcsapat mentve."
+
+msgid "Ready to compete"
+msgstr "Indulásra kész"
+
+msgid "Below minimum"
+msgstr "Létszám alatt"
+
+msgid "Below minimum  move members if needed"
+msgstr "Létszám alatt  ha kell, helyezz át tagokat"
+
+msgid "Minimum reached"
+msgstr "Minimum elérve"
+
+msgid "No club members have applied yet."
+msgstr "Még egy klubtag sem jelentkezett."
+
+msgid "Member assigned to the team."
+msgstr "A tag besorolva az alcsapatba."
+
+msgid "Could not assign member."
+msgstr "A tagot nem sikerült besorolni."
+
+msgid "Select a competition that is currently open for applications."
+msgstr "Válassz olyan versenyt, ahol jelenleg nyitva van a jelentkezés."
+
+msgid "applications closed"
+msgstr "jelentkezés lezárva"
+
+msgid "Default: club short name + serial (stored on subclubs), e.g. Ibafai PC 1."
+msgstr "Alapértelmezés: klub rövid név + sorszám (a subclubs táblában), pl. Ibafai PC 1."
+
+msgid "The sub-club record could not be saved."
+msgstr "A subclub rekord mentése nem sikerült."
+
+msgid "You must be logged in to save a sub-team."
+msgstr "Alcsapat mentéséhez be kell jelentkezned."
+
+msgid "Invalid sub-club."
+msgstr "Érvénytelen subclub."
+
+msgid "Competition applicants"
+msgstr "Versenyjelentkezők"
+
+msgid "Assign club members who applied to a competition into a sub-team (alcsapat)."
+msgstr "A versenyre jelentkezett klubtagok besorolása alcsapatba."
+
+msgid "No club members have applied to a competition yet."
+msgstr "Még egy klubtag sem jelentkezett versenyre."
+
+msgid "— Unassigned —"
+msgstr "— Nincs besorolva —"
+
+msgid "Create at least one sub-team for this competition before assigning members."
+msgstr "A tagok besorolása előtt hozz létre legalább egy alcsapatot ehhez a versenyhez."
+
+msgid "Current sub-team"
+msgstr "Jelenlegi alcsapat"
+
+msgid "Assign to"
+msgstr "Besorolás"
+
+msgid "Applicant not found."
+msgstr "A jelentkező nem található."
+
+msgid "This member does not belong to your club."
+msgstr "Ez a tag nem a te klubodhoz tartozik."
+
+msgid "Invalid sub-team for this competition."
+msgstr "Érvénytelen alcsapat ehhez a versenyhez."
+
+msgid "Member assigned to the sub-team."
+msgstr "A tag besorolva az alcsapatba."
+
+msgid "Member unassigned from the sub-team."
+msgstr "A tag eltávolítva az alcsapatból."
+
+msgid "All applicants"
+msgstr "Összes jelentkező"
+
+msgid "Awaiting team assignment"
+msgstr "Vár a besorolásra"
+
+msgid "Registered"
+msgstr "Jelentkezett"
+
+msgid "Open and upcoming competitions in your country"
+msgstr "Nyitott és közelgő versenyek az országodban"
+
+msgid "Your profile has no country set, so competitions cannot be listed."
+msgstr "A profilodon nincs ország beállítva, ezért a versenyek nem listázhatók."
+
+msgid "Browse open competitions in your country, apply, and withdraw until your club president assigns a sub-team."
+msgstr "Nézd a nyitott versenyeket az országodban, jelentkezz, vagy vonjad vissza, amíg a klubelnök be nem sorol."
+
+msgid "Go to Competitions"
+msgstr "Versenyekhez"
+
+msgid "Go to Clubs"
+msgstr "Klubokhoz"
+
+msgid "All competitions"
+msgstr "Összes verseny"
+
+msgid "You are not registered yet — the club president must assign you to a sub-team."
+msgstr "Még nem számítasz jelentkezettnek — a klubelnöknek alcsapatba kell sorolnia."
+
+msgid "Withdraw application"
+msgstr "Jelentkezés visszavonása"
+
+msgid "Withdraw your application? This permanently deletes your application record."
+msgstr "Visszavonod a jelentkezést? Ez véglegesen törli a jelentkezési rekordot."
+
+msgid "Your application has been withdrawn."
+msgstr "A jelentkezésed visszavonva."
+
+msgid "You have no application to withdraw for this competition."
+msgstr "Ehhez a versenyhez nincs visszavonható jelentkezésed."
+
+msgid "Could not withdraw the application. Please try again."
+msgstr "A jelentkezést nem sikerült visszavonni. Próbáld újra."
+
+msgid "Application not found."
+msgstr "A jelentkezés nem található."
+
+msgid "You must be logged in."
+msgstr "Be kell jelentkezned."
+
+msgid "Application deleted."
+msgstr "Jelentkezés törölve."
+
+msgid "Could not delete the application. Please try again."
+msgstr "A jelentkezést nem sikerült törölni. Próbáld újra."
+
+msgid "Members apply first. Assign a sub-team to register them; delete if they should not compete."
+msgstr "Először a tag jelentkezik. Alcsapatba sorolással lesz hivatalos; töröld, ha nem indul."
+
+msgid "No club members have applied to a competition yet. Members apply from the Member panel → Competitions."
+msgstr "Még egy klubtag sem jelentkezett versenyre. A tagok a Tag panel → Versenyek menüből jelentkeznek."
+
+msgid "Delete this application — the member will not compete."
+msgstr "Jelentkezés törlése — a tag nem indul a versenyen."
+
+msgid "Delete this application? The member will no longer be listed for this competition."
+msgstr "Törlöd a jelentkezést? A tag nem lesz többé listázva ehhez a versenyhez."
+
+msgid "Go to Sub-teams"
+msgstr "Alcsapatokhoz"
+
+msgid "Go to Competition applicants"
+msgstr "Versenyjelentkezőkhöz"
+
+msgid "Go to Email templates"
+msgstr "Email sablonokhoz"
+
+msgid "Go to Archive"
+msgstr "Archívumhoz"
+
+msgid "Create and manage club sub-teams (alcsapatok) for open competitions."
+msgstr "Alcsapatok létrehozása és kezelése a nyitott versenyekhez."
+
+msgid "Assign members who applied to a competition into a sub-team, or delete applications that should not compete."
+msgstr "A versenyre jelentkezett tagok alcsapatba sorolása, vagy a nem induló jelentkezések törlése."
+
+msgid "View your club details and browse other clubs in countries that have clubs."
+msgstr "Saját klub adatlapja és más klubok böngészése azokban az országokban, ahol van klub."
+
+msgid "Announce and manage competitions for your country: dates, minimum team size, and visibility."
+msgstr "Versenyek kiírása és kezelése az országodban: dátumok, minimum létszám, láthatóság."
+
+msgid "Edit system email templates by language (content used when the application sends mail)."
+msgstr "Rendszer email sablonok szerkesztése nyelvenként (a kiküldött levelek tartalma)."
+
+msgid "Competition archive"
+msgstr "Versenyarchívum"
+
+msgid "Past competitions you took part in, with results when available."
+msgstr "Múltbeli versenyek, amelyeken részt vettél, eredménnyel ha van."
+
+msgid "Confirm application"
+msgstr "Jelentkezés megerősítése"
+
+msgid "Do you really want to apply to this competition?"
+msgstr "Valóban jelentkezel erre a versenyre?"
+
+msgid "Yes, apply"
+msgstr "Igen, jelentkezem"
+
+msgid "Your application has been submitted. Your club president will assign a team."
+msgstr "A jelentkezésed elküldve. A klubelnök fogja besorolni az alcsapatba."
+
+msgid "Yes, withdraw"
+msgstr "Igen, visszavonom"
+
+msgid "Back to list"
+msgstr "Vissza a listához"
+
+msgid "Application details"
+msgstr "Jelentkezés adatai"
+
+msgid "Save changes"
+msgstr "Módosítások mentése"
+
+msgid "Your application details have been saved."
+msgstr "A jelentkezésed adatai mentve."
+
+msgid "The application deadline has passed. Only your club president can change these details now."
+msgstr "A jelentkezési határidő lejárt. Ezeket az adatokat már csak a klubelnök módosíthatja."
+
+msgid "The application deadline has passed. Contact your club president to withdraw."
+msgstr "A jelentkezési határidő lejárt. Visszavonáshoz keresd a klubelnököt."
+
+msgid "The application deadline has passed. Your details are read-only — ask your club president if something must change."
+msgstr "A jelentkezési határidő lejárt. Az adataid csak olvashatók — ha változtatni kell, keresd a klubelnököt."
+
+msgid "Edit application"
+msgstr "Jelentkezés szerkesztése"
+
+msgid "Edit application details"
+msgstr "Jelentkezés adatainak szerkesztése"
+
+msgid "Application details have been saved."
+msgstr "A jelentkezés adatai mentve."
+
+msgid "The application deadline has passed. Only the club president may change these details (and should inform the presidency if needed)."
+msgstr "A jelentkezési határidő lejárt. Ezeket az adatokat már csak a klubelnök módosíthatja (szükség esetén jelezze az elnökség felé)."
+
+msgid "Do you want to save the changes to your application details?"
+msgstr "Elmented a jelentkezési adataid módosításait?"
+
+msgid "Yes, save"
+msgstr "Igen, mentem"
+
+msgid "Competitions"
+msgstr "Versenyek"
+
+msgid "Competition"
+msgstr "Verseny"
+
+msgid "Open and upcoming competitions"
+msgstr "Nyitott és közelgő versenyek"
+
+msgid "No competitions available right now."
+msgstr "Jelenleg nincs elérhető verseny."
+
+msgid "Open for applications"
+msgstr "Jelentkezés nyitva"
+
+msgid "Applications closed"
+msgstr "Jelentkezés lezárva"
+
+msgid "Not open yet"
+msgstr "Még nem nyílt meg"
+
+msgid "Apply / details"
+msgstr "Jelentkezés / részletek"
+
+msgid "Apply:"
+msgstr "Jelentkezés:"
+
+msgid "Apply to this competition"
+msgstr "Jelentkezés erre a versenyre"
+
+msgid "Assigned to team"
+msgstr "Alcsapatba sorolva"
+
+msgid "Your application:"
+msgstr "A jelentkezésed:"
+
+msgid "Lunch for attendant"
+msgstr "Ebéd a kísérőnek"
+
+msgid "Special lunch"
+msgstr "Speciális ebédigény"
+
+msgid "Comment"
+msgstr "Megjegyzés"
+
+msgid "The application deadline has passed. You can only view this competition."
+msgstr "A jelentkezési határidő lejárt. Ezt a versenyt csak megtekintheted."
+
+msgid "Archive"
+msgstr "Archívum"
+
+msgid "Min. team size"
+msgstr "Min. csapatlétszám"
+
+msgid "Application from"
+msgstr "Jelentkezés kezdete"
+
+msgid "Application deadline"
+msgstr "Jelentkezési határidő"
+
+msgid "Competition datetime"
+msgstr "Verseny időpontja"
+
+msgid "This competition has ended."
+msgstr "Ez a verseny véget ért."
+
+msgid "You have already applied to this competition."
+msgstr "Már jelentkeztél erre a versenyre."
+
+msgid "Applications for this competition are closed."
+msgstr "A jelentkezés erre a versenyre lezárult."
+
+msgid "Complete your club membership before applying."
+msgstr "Jelentkezés előtt egészítsd ki a klubtagságodat."
+
+msgid "Below minimum — move members if needed"
+msgstr "Létszám alatt — ha kell, helyezz át tagokat"
+
+msgid "Status"
+msgstr "Állapot"
+
+msgid "Competing sub-teams"
+msgstr "Induló alcsapatok"
+
+msgid "(minimum roster reached)"
+msgstr "(elérte a minimális létszámot)"
+
+msgid "Competing applicants"
+msgstr "Induló jelentkezők"
+
+msgid "(on qualifying sub-teams)"
+msgstr "(min. létszámot elérő alcsapatokban)"
+
+msgid "Team"
+msgstr "Csapat"
+
+msgid "Applied"
+msgstr "Jelentkezés"
+
+msgid "Go to Counties"
+msgstr "Megyékhez"
+
+msgid "Go to Cities"
+msgstr "Városokhoz"
+
+msgid "Manage counties (regions) linked to countries."
+msgstr "Országokhoz tartozó megyék (régiók) kezelése."
+
+msgid "Manage cities linked to counties and countries."
+msgstr "Megyékhez és országokhoz tartozó városok kezelése."
+
+msgid "You"
+msgstr "Te"
+
+msgid "Member profile updated (to member)"
+msgstr "Tag adatlap módosítva (tagnak)"
+
+msgid "Your membership profile has been updated"
+msgstr "A tagsági adatlapodat frissítették"
+
+msgid "Your membership profile details have been changed by an officer."
+msgstr "A tagsági adatlapod adatait egy tisztségviselő módosította."
+
+msgid "Club: {0}"
+msgstr "Klub: {0}"
+
+msgid "If you did not expect this change, please contact your club or national leadership."
+msgstr "Ha nem számítottál erre a változásra, lépj kapcsolatba a kluboddal vagy az országos vezetőséggel."
+
+msgid "This template slug already exists for the selected country and language."
+msgstr "Ez a sablonkulcs már létezik a kiválasztott országhoz és nyelvhez."
+
+msgid "You can only apply to competitions after your club membership fee is paid for this year."
+msgstr "Csak akkor jelentkezhetsz versenyre, ha a klub tagdíjad az idei évre rendezett."
+
+msgid "Club fee unpaid"
+msgstr "Klub tagdíj rendezetlen"
+
+msgid "Stored on subclubs. Default: club short name + serial per competition, e.g. „Ibafai PC 1” (restarts at 1 for each competition)."
+msgstr "A subclubs táblán tárolódik. Alapértelmezés: klub short name + sorszám versenyenként, pl. „Ibafai PC 1” (új versenynél 1-től indul)."
+
+msgid "Event"
+msgstr "Esemény"
+
+msgid "You can only join a club that has settled its national membership fee for this year with {0}."
+msgstr "Csak olyan klubhoz csatlakozhatsz, amely az idei évre rendezte a tagdíját {0} felé."
+
+msgid "Only clubs with national membership fee paid for this year can organize a competition."
+msgstr "Csak azok a klubok rendezhetnek versenyt, akiknek a nemzeti tagsága az idei évre rendezett."

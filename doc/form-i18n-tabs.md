@@ -20,7 +20,7 @@ Ha a Table-en van **Translate** behavior szöveges mezőkkel (`name`, `descripti
 
 Countries: **nincs** nyelvi TAB (seedelt országnevek).  
 Cities / Setups: nincs Translate → nincs nyelvi TAB.  
-**Email templates** (President): nincs Cake Translate — nyelvi TAB a `templates/President/EmailTemplates/form.php`-ban; egy DB sor / (`language_id` + `slug`); mezők: `subject`, **`body_html` (`.editor` / Trumbowyg)**, `body_text` (plain); `name` admin címke.
+**Email templates** (Admin / President): nincs Cake Translate — nyelvi TAB a `templates/{Prefix}/EmailTemplates/form.php`-ban; egy DB sor / (`country_id` + `language_id` + `slug`); mezők: `subject`, **`body_html` (`.editor` / Trumbowyg)**, `body_text` (plain); `name` admin címke.
 
 ---
 

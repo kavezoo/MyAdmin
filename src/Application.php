@@ -26,6 +26,7 @@ use App\Auth\CurrentUser;
 use App\Auth\MembershipProfile;
 use App\Auth\RoleHome;
 use App\Utility\EventLogger;
+use App\Utility\UserUiLanguage;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Datasource\FactoryLocator;
@@ -190,6 +191,30 @@ class Application extends BaseApplication
                 $request = is_object($controller) && method_exists($controller, 'getRequest')
                     ? $controller->getRequest()
                     : null;
+
+                if ($userId !== null && (string)$userId !== '') {
+                    $languageId = UserUiLanguage::syncFromLoginRequest((string)$userId, $request);
+                    if ($languageId > 0) {
+                        if (is_array($user)) {
+                            $user['language_id'] = $languageId;
+                            $event->setData('user', $user);
+                        } elseif (is_object($user) && method_exists($user, 'set')) {
+                            $user->set('language_id', $languageId);
+                        }
+                        if (
+                            is_object($controller)
+                            && method_exists($controller, 'components')
+                            && $controller->components()->has('Authentication')
+                        ) {
+                            try {
+                                $fresh = $controller->fetchTable('Users')->get($userId);
+                                $controller->Authentication->setIdentity($fresh);
+                            } catch (\Throwable) {
+                                // Identity refresh is best-effort after language sync.
+                            }
+                        }
+                    }
+                }
 
                 EventLogger::log([
                     'module' => 'Auth',

@@ -1,0 +1,48 @@
+---
+description: View gyerek TAB-ok + Admin teljes CRUD minden táblára (örök)
+alwaysApply: true
+---
+
+# Admin CRUD + view related tabs (örök)
+
+Teljes spec: **`doc/admin-konvenciok.md`** (Kapcsolt gyerek táblák), **`doc/admin-full-crud.md`**, **`doc/uj-projekt-sema-playbook.md`**.
+
+## 1. Admin panel = teljes értékű CRUD minden domain táblára
+
+Az **Admin** prefix (`/admin/...`) a rendszer **összes** domain tábláját kezeli teljes CRUD-dal (index / add / edit / view / delete + `recordGet` modal), nem csak a geo/ref adatokat.
+
+| Kötelező Admin modulok (minimum) | Tábla |
+|----------------------------------|-------|
+| Languages, Countries, Counties, Cities | ref |
+| Setups, Event logs (read) | keret |
+| Users (Members) | `users` |
+| Clubs | `clubs` |
+| Competitions (+ nested gyerekek a view-n) | `competitions` |
+| Email templates | `email_templates` |
+| Competition teams / applicants (vagy Competitions view tabokon) | `competitions_clubs` / `competitions_users` |
+
+President / Clubpresident panelek **ország-/klub-scope** üzleti UI-k — **nem** helyettesítik az Admin teljes CRUD-ot.
+
+Új tábla → Admin CRUD + `PanelNav::admin()` (`navGroup`: domain=`main`, ref/config=`settings`) + `admin_search.php` + view related tabs.
+
+## 2. Minden view — gyerekek TAB-ban (CRUD + modal)
+
+Ha a Table-en van **hasMany** / **belongsToMany**:
+
+1. Controller `view()`: `contain` a gyerekeket (név szerint ASC).
+2. Template: `element/admin/view_related_tabs` — **üres tab is**.
+3. Tábla: `.index-data-table.related-records-table` + `data-get-url` / `data-edit-url` / `data-view-url` / `data-delete-url` a **gyerek** CRUD-jára.
+4. Név: `.record-modal-link` + Actions View/Edit (+ Delete szabály szerint).
+5. Modal: `modal_linked_record_view` / `modal_record_view`; `pages/index.js`.
+6. belongsTo **ne** tab — fő `dl` + link.
+
+**Tilos:** gyereklista csak inline a card-body-ban related tabs nélkül; tab nélküli „lásd a listán” elintézés; modal URL a szülő listára.
+
+## 3. Checklist új / hiányzó view
+
+- [ ] Asszociációk felmérve (hasMany / HABTM)
+- [ ] Minden gyereknek van Admin (vagy panel) CRUD + `recordGet`
+- [ ] `view_related_tabs` + modal data-* URL-ek
+- [ ] Doc + PanelNav
+
+Módosítás után: `doc/valtozasok.md` + `admin-full-crud.md` / `admin-konvenciok.md`.

@@ -3,13 +3,18 @@ declare(strict_types=1);
 
 namespace App\Controller\President;
 
+use App\Utility\AdminCountry;
 use App\Utility\AdminLanguage;
 use App\Utility\EmailTemplateService;
 use App\Utility\EmailTemplateSlugs;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 
 /**
- * Email templates — per language (`email_templates`).
+ * Email templates — per country + language (`email_templates`).
+ *
+ * Always scoped to the officer's country (CurrentUser::countryId). No country switcher.
+ * Unique key: (country_id, language_id, slug).
  *
  * @property \App\Model\Table\EmailTemplatesTable $EmailTemplates
  */
@@ -117,6 +122,18 @@ class EmailTemplatesController extends AppController
         $this->viewBuilder()->setVar('breadcrumb', __('Email templates'));
         $this->setAccessFlags();
 
+        $countryId = $this->officerCountryId();
+        if ($countryId < 1) {
+            $this->Flash->warning(__('Your account is not assigned to a country yet. Contact an administrator.'));
+            $this->set('emailTemplates', $this->emptyPaginated($this->indexLimit));
+            $this->set('filterLanguageId', 0);
+            $this->set('filterLanguageLabel', '');
+            $this->set('languageOptions', []);
+            $this->set('slugOptions', EmailTemplateSlugs::options());
+
+            return;
+        }
+
         [$filterLanguageId, $languageOptions] = $this->resolveLanguageFilter();
         $filterLanguageLabel = $filterLanguageId > 0
             ? (string)($languageOptions[$filterLanguageId] ?? '')
@@ -161,7 +178,9 @@ class EmailTemplatesController extends AppController
             'Languages' => $this->EmailTemplates->Languages->getTarget(),
         ]);
 
-        $query = $this->EmailTemplates->find()->contain(['Languages']);
+        $query = $this->EmailTemplates->find()
+            ->contain(['Languages'])
+            ->where(['EmailTemplates.country_id' => $countryId]);
         if ($filterLanguageId > 0) {
             $query->where(['EmailTemplates.language_id' => $filterLanguageId]);
         }
@@ -179,7 +198,8 @@ class EmailTemplatesController extends AppController
             'emailTemplates',
             'filterLanguageId',
             'filterLanguageLabel',
-            'languageOptions'
+            'languageOptions',
+            'countryId'
         ));
         $this->set('slugOptions', EmailTemplateSlugs::options());
     }
@@ -189,9 +209,11 @@ class EmailTemplatesController extends AppController
      */
     public function add()
     {
+        $countryId = $this->officerCountryId();
         $emailTemplate = $this->newEntityWithSchemaDefaults($this->EmailTemplates);
         $emailTemplate->enabled = true;
         $emailTemplate->visible = true;
+        $emailTemplate->country_id = $countryId;
 
         $prefillSlug = trim((string)$this->request->getQuery('slug'));
         if ($prefillSlug !== '' && isset(EmailTemplateSlugs::options()[$prefillSlug])) {
@@ -199,17 +221,17 @@ class EmailTemplatesController extends AppController
         }
 
         if ($this->request->is('post')) {
-            $savedId = $this->saveTranslationsFromRequest($emailTemplate);
+            $savedId = $this->saveTranslationsFromRequest($emailTemplate, $countryId);
             if ($savedId !== null) {
                 $this->rememberLastVisited('EmailTemplates', $savedId);
                 $this->Flash->success(__('The email template has been saved.'));
 
                 return $this->redirectToEmailTemplatesIndex($savedId);
             }
-            $this->Flash->error(__('The record could not be saved. Please try again.'));
+            $this->flashEntityErrors($emailTemplate);
         }
 
-        $this->setFormOptions($emailTemplate);
+        $this->setFormOptions($emailTemplate, $countryId);
         $this->set(compact('emailTemplate'));
         $this->setAccessFlags();
         $this->set('title', __('New email template'));
@@ -223,21 +245,22 @@ class EmailTemplatesController extends AppController
      */
     public function edit(?string $id = null)
     {
-        $emailTemplate = $this->EmailTemplates->get($id, contain: ['Languages']);
+        $countryId = $this->officerCountryId();
+        $emailTemplate = $this->getScopedEmailTemplate($id, $countryId, ['Languages']);
         $this->rememberLastVisited('EmailTemplates', $emailTemplate->id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $savedId = $this->saveTranslationsFromRequest($emailTemplate);
+            $savedId = $this->saveTranslationsFromRequest($emailTemplate, $countryId);
             if ($savedId !== null) {
                 $this->rememberLastVisited('EmailTemplates', $savedId);
                 $this->Flash->success(__('The email template has been saved.'));
 
                 return $this->redirectToEmailTemplatesIndex($savedId);
             }
-            $this->Flash->error(__('The record could not be saved. Please try again.'));
+            $this->flashEntityErrors($emailTemplate);
         }
 
-        $this->setFormOptions($emailTemplate);
+        $this->setFormOptions($emailTemplate, $countryId);
         $this->set(compact('emailTemplate'));
         $this->setAccessFlags();
         $this->set('title', __('Edit email template'));
@@ -251,10 +274,12 @@ class EmailTemplatesController extends AppController
      */
     public function view(?string $id = null)
     {
-        $emailTemplate = $this->EmailTemplates->get($id, contain: ['Languages']);
+        $countryId = $this->officerCountryId();
+        $emailTemplate = $this->getScopedEmailTemplate($id, $countryId, ['Languages', 'Countries']);
         $this->rememberLastVisited('EmailTemplates', $emailTemplate->id);
         $this->set(compact('emailTemplate'));
         $this->setAccessFlags();
+        $this->set('countryLabel', AdminCountry::label((int)$emailTemplate->country_id));
         $this->set('languageLabel', AdminLanguage::labelById((int)$emailTemplate->language_id));
         $this->set('slugLabel', EmailTemplateSlugs::options()[(string)$emailTemplate->slug] ?? (string)$emailTemplate->slug);
         $this->set('title', __('Email template details'));
@@ -268,8 +293,10 @@ class EmailTemplatesController extends AppController
     public function delete(?string $id = null): ?Response
     {
         $this->request->allowMethod(['post', 'delete']);
+        $countryId = $this->officerCountryId();
+        $emailTemplate = $this->getScopedEmailTemplate($id, $countryId);
 
-        return $this->deleteEntityOrFail($this->EmailTemplates, $this->EmailTemplates->get($id));
+        return $this->deleteEntityOrFail($this->EmailTemplates, $emailTemplate);
     }
 
     /**
@@ -281,9 +308,18 @@ class EmailTemplatesController extends AppController
     public function recordGet(?string $id = null): Response
     {
         $this->request->allowMethod(['get']);
+        $countryId = $this->officerCountryId();
 
         try {
-            $emailTemplate = $this->EmailTemplates->get($id, contain: ['Languages']);
+            $emailTemplate = $this->getScopedEmailTemplate($id, $countryId, ['Languages', 'Countries']);
+        } catch (NotFoundException $e) {
+            return $this->response
+                ->withStatus(404)
+                ->withType('application/json')
+                ->withStringBody(json_encode([
+                    'success' => false,
+                    'message' => __('Record not found.'),
+                ], JSON_UNESCAPED_UNICODE));
         } catch (\Throwable $e) {
             return $this->response
                 ->withStatus(404)
@@ -303,6 +339,7 @@ class EmailTemplatesController extends AppController
                 'success' => true,
                 'record' => [
                     'id' => $emailTemplate->id,
+                    'country' => AdminCountry::label((int)$emailTemplate->country_id),
                     'language' => AdminLanguage::labelById((int)$emailTemplate->language_id),
                     'slug' => $slugOptions[(string)$emailTemplate->slug] ?? (string)$emailTemplate->slug,
                     'name' => $emailTemplate->name,
@@ -324,20 +361,27 @@ class EmailTemplatesController extends AppController
     }
 
     /**
-     * Save slug + shared flags + per-language text fields.
+     * Save slug + shared flags + per-language text fields (always officer country).
      *
      * @return int|null Primary saved row id (active / first language)
      */
-    protected function saveTranslationsFromRequest(\App\Model\Entity\EmailTemplate $anchor): ?int
+    protected function saveTranslationsFromRequest(\App\Model\Entity\EmailTemplate $anchor, int $countryId): ?int
     {
-        $data = $this->request->getData();
-        $slug = trim((string)($data['slug'] ?? $anchor->slug ?? ''));
-        $slugOptions = EmailTemplateSlugs::options();
-        if ($slug === '' || !isset($slugOptions[$slug])) {
-            $anchor->setError('slug', __('Select template...'));
+        if ($countryId < 1) {
+            $anchor->setError('country_id', __('Your account is not assigned to a country yet. Contact an administrator.'));
 
             return null;
         }
+
+        $data = $this->request->getData();
+        $slug = trim((string)($data['slug'] ?? $anchor->slug ?? ''));
+        if ($slug === '' || !preg_match('/^[a-z0-9_]+$/', $slug)) {
+            $anchor->setError('slug', __('Use lowercase letters, numbers and underscores only.'));
+
+            return null;
+        }
+
+        $anchor->country_id = $countryId;
 
         $enabled = !empty($data['enabled']);
         $visible = !empty($data['visible']);
@@ -381,6 +425,9 @@ class EmailTemplatesController extends AppController
                 if ($existingId > 0) {
                     try {
                         $entity = $this->EmailTemplates->get($existingId);
+                        if ((int)$entity->country_id !== $countryId) {
+                            $entity = null;
+                        }
                     } catch (\Throwable $e) {
                         $entity = null;
                     }
@@ -388,6 +435,7 @@ class EmailTemplatesController extends AppController
                 if ($entity === null) {
                     $entity = $this->EmailTemplates->find()
                         ->where([
+                            'EmailTemplates.country_id' => $countryId,
                             'EmailTemplates.language_id' => $languageId,
                             'EmailTemplates.slug' => $slug,
                         ])
@@ -405,6 +453,7 @@ class EmailTemplatesController extends AppController
                 }
 
                 $payload = [
+                    'country_id' => $countryId,
                     'language_id' => $languageId,
                     'slug' => $slug,
                     'name' => $name,
@@ -420,6 +469,7 @@ class EmailTemplatesController extends AppController
 
                 $entity = $this->EmailTemplates->patchEntity($entity, $payload, [
                     'fields' => [
+                        'country_id',
                         'language_id',
                         'slug',
                         'name',
@@ -433,6 +483,9 @@ class EmailTemplatesController extends AppController
                 ]);
                 if ($entity->getErrors() || !$this->EmailTemplates->save($entity)) {
                     $connection->rollback();
+                    foreach ($entity->getErrors() as $field => $errs) {
+                        $anchor->setError($field, $errs);
+                    }
 
                     return null;
                 }
@@ -465,15 +518,18 @@ class EmailTemplatesController extends AppController
      * @param \App\Model\Entity\EmailTemplate $emailTemplate
      * @return void
      */
-    protected function setFormOptions(\App\Model\Entity\EmailTemplate $emailTemplate): void
+    protected function setFormOptions(\App\Model\Entity\EmailTemplate $emailTemplate, int $countryId): void
     {
         $tabs = $this->buildLanguageTabs();
         $translations = [];
         $slug = (string)($emailTemplate->slug ?? '');
 
-        if ($slug !== '') {
+        if ($slug !== '' && $countryId > 0) {
             $rows = $this->EmailTemplates->find()
-                ->where(['EmailTemplates.slug' => $slug])
+                ->where([
+                    'EmailTemplates.slug' => $slug,
+                    'EmailTemplates.country_id' => $countryId,
+                ])
                 ->all();
             foreach ($rows as $row) {
                 $lid = (int)$row->language_id;
@@ -512,6 +568,22 @@ class EmailTemplatesController extends AppController
         $this->set('emailTemplateLanguageTabs', $tabs);
         $this->set('emailTemplateTranslations', $translations);
         $this->set('emailTemplateActiveLanguageId', $activeLanguageId);
+        $this->set('countryId', $countryId);
+        $this->set('countryLabel', $countryId > 0 ? AdminCountry::label($countryId) : '');
+    }
+
+    /**
+     * @param list<string> $contain
+     */
+    protected function getScopedEmailTemplate(?string $id, int $countryId, array $contain = []): \App\Model\Entity\EmailTemplate
+    {
+        /** @var \App\Model\Entity\EmailTemplate $emailTemplate */
+        $emailTemplate = $this->EmailTemplates->get($id, contain: $contain);
+        if ($countryId < 1 || (int)$emailTemplate->country_id !== $countryId) {
+            throw new NotFoundException(__('Record not found.'));
+        }
+
+        return $emailTemplate;
     }
 
     /**

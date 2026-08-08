@@ -48,8 +48,8 @@ ACL: `App\Auth\EventLogAccess`.
 
 ## UI
 
-- **User:** profil menü → **My activity** (`Tevékenységem`) — időrendi lista, emberi összefoglaló (nem module/action kód); csak ha `users_activity_log_visible`
-- **Officer:** sidebar → **Event logs** — technikai index (module, action, IP, …)
+- **User:** profil menü → **My activity** — tömör időrend (`activity_log.css`); összefoglaló sortöréssel
+- **Officer:** sidebar → **Event logs** — kompakt tábla (`event_logs.css`): kis sormagasság, olvasható betű; **Event** oszlop = description + változások, `white-space: pre-wrap` / sortörés
 - **Officer beállítások:** index és view fejléc alatt — **working country** (`AdminCountry::id`) Setups kapcsolók:
   - **Activity logging** — `toggleActivityLogging` (POST)
   - **Users see own activity** — `toggleUsersActivityView` (POST)

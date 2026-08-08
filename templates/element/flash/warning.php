@@ -6,13 +6,11 @@
  * @var array $params
  * @var string $message
  */
-if (!isset($params['escape']) || $params['escape'] !== false) {
-	$message = h($message);
-}
+$escape = !isset($params['escape']) || $params['escape'] !== false;
 if ($this->usesFlashToast()):
 	$jsFlags = JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 ?>
-flashMessage(<?= json_encode(__('Warning'), $jsFlags) ?>, <?= json_encode($message, $jsFlags) ?>, 'warning');
+flashMessage(<?= json_encode(__('Warning'), $jsFlags) ?>, <?= json_encode((string)$message, $jsFlags) ?>, 'warning');
 <?php else: ?>
-<div class="message warning" onclick="this.classList.add('hidden')"><?= $message ?></div>
+<div class="message warning" onclick="this.classList.add('hidden')"><?= $escape ? h($message) : $message ?></div>
 <?php endif; ?>

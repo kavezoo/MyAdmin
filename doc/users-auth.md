@@ -72,14 +72,19 @@ Nincs URL nyelv-prefix. Panelek (Admin chrome):
 
 **Panel váltás:** `PanelAccess` + `element/panel/switcher` — **„Roles” / hu: Szerepkörök** almenü (összecsukható); felfelé / lefelé linkek nyíl ikonnal. Admin → Member / Clubpresident / President / Admin (**nincs** New). Minden role sidebar ugyanazt az elemet hívja.
 
-**Panel Dashboard:** minden prefix `/…` kezdőlapján a modulok **Bootstrap card**-okban (`panel/dashboard_nav_cards`): cím, szöveges leírás (hova vezet a gomb), gomb. Clubpresident: pending jelentkezők alert + Members card.
+**Panel Dashboard ↔ sidebar:** `App\Utility\PanelNav` — minden prefixen a vezérlőpult kártyái és a menüpontok **ugyanazok** (Dashboard home kivételével). Clubpresident: pending jelentkezők alert + Members card. **Rule:** `panel-nav-conventions.mdc` (alwaysApply).
+
+**Taglista önmaga:** President / Clubpresident Members — `membershipRosterOrSelfCondition()`; UI **You** badge.
+
+**Saját klub:** Clubs indexeken `My club` + `table-success` (`Users.club_id`).
 
 - `App\Auth\AppRoles` — szerepkör konstansok / címkék
+- `App\Utility\PanelNav` — panel dashboard + sidebar célok
 - `App\Auth\PanelAccess` — elérhető prefixek, sidebar switcher
 - `App\Auth\RoleHome` — `prefix()` / `path()` / `url()` / `brand()` / `sidebarElement()`
 - `App\Controller\PanelAppController` — locale + `admin` layout + `panel*` view változók
-- `App\Controller\{New,Member,Clubpresident,President}\` — Dashboard placeholder
-- `templates/element/{new,member,clubpresident,president}/sidebar.php`
+- `App\Controller\{New,Member,Clubpresident,President}\` — Dashboard
+- `templates/element/{new,member,clubpresident,president,admin}/sidebar.php` + `panel/sidebar_nav_items`
 - Login után: `Users.Authentication.afterLogin` → **`$event->setResult(RoleHome::url($role))`** (ne `return` — CakePHP 5.2 deprecation)
 
 `/` → bejelentkezve: role home; vendég: `/login` (`LocalesController::home`).
@@ -173,7 +178,7 @@ foreach ($panelPrefixes as $prefix) {
 - Complete-profile / profile: név (`autocapitalize=words`); telefon (`type=tel`, `inputmode=tel`). Profil szerkesztés: egy **Name** mező (`first_name`), mint regisztráción.
 - Mobil billentyűzet: `type` + `inputmode` + `autocomplete` a Users auth űrlapokon.
 - Register: **ország** Select2 — címke = `endonim_name`, csak `Countries.visible = true`; `normalizeRegistrationData` (username←email); `country_id` kötelező; **ne** duplikáld a `nonNegativeInteger` szabályt a `validationRegister`-ben.
-- Locale login után: **login session/cookie nyelv** (`?locale=` / POST `locale`), fallback: user `country_id` → `Countries.locale` → `BrowserLocale::persist` (`AppUiLocale` ≥ 1 év) + panel `forLoggedIn`.
+- Locale login után: **login session/cookie nyelv** (`?locale=` / POST `locale`) → mentés `users.language_id`-be (`UserUiLanguage::syncFromLoginRequest` az `EVENT_AFTER_LOGIN`-ban); UI fallback: session/cookie → ország `locale` → `BrowserLocale::persist` (`AppUiLocale` ≥ 1 év) + panel `forLoggedIn`. Profil / complete-profile formon **nincs** nyelvmező.
 
 ### 5.1 `active` vs `enabled`
 

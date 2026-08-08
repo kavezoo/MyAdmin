@@ -518,11 +518,14 @@ a {
   width: 250px;
   z-index: 10;
   background: #262D33;
-  bottom: 70px;
-  margin-bottom: -70px;
+  bottom: 0;
+  margin-bottom: 0;
   margin-top: 0;
-  padding-bottom: 70px;
-  position: absolute; }
+  padding-bottom: 0;
+  /* Stay visible while the main content scrolls (independent of page scroll). */
+  position: fixed;
+  height: calc(100vh - 50px);
+  overflow: hidden; }
 
 .content-page {
   margin-left: 250px;
@@ -533,13 +536,27 @@ a {
     margin-top: 50px; }
 
 .main-sidebar.left {
-  position: absolute; }
+  position: fixed; }
 
 body.adminbody .main-sidebar.left {
   bottom: 0px;
   margin-bottom: 0px;
   margin-top: 0;
   padding-bottom: 0px; }
+
+/* Own scrollbar when the menu is taller than the viewport; wheel only scrolls this pane when the cursor is over it. */
+.sidebar-inner {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch; }
+
+/* Enlarged (icon) mode: flyout submenus must not be clipped by overflow. */
+#main.enlarged .left.main-sidebar {
+  overflow: visible; }
+#main.enlarged .left.main-sidebar .sidebar-inner {
+  overflow: visible; }
 
 .button-menu-mobile {
   background: transparent;
@@ -592,9 +609,6 @@ body.adminbody .main-sidebar.left {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-
-.sidebar-inner {
-  height: 100%; }
 
 #sidebar-menu, #sidebar-menu ul, #sidebar-menu li, #sidebar-menu a {
   border: 0;
@@ -1128,7 +1142,8 @@ body.adminbody-void {
   min-height: 1170px; }
 
 .mobile.smallscreen .sidebar-inner.leftscroll {
-	overflow: scroll !important;
+	overflow-y: auto !important;
+	overscroll-behavior: contain;
 }
 
 button:focus {

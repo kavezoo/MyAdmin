@@ -190,8 +190,10 @@ $applicants = $applicants ?? [];
 								$clubLastPaymentFormatted = MembershipFee::lastPaymentFormatted($clubFeeDate);
 								$nationalLastPaymentFormatted = MembershipFee::lastPaymentFormatted($nationalFeeDate);
 								$isEnabled = (int)($member->enabled ?? 0) === 1;
+								$isMe = ($currentUserId ?? '') !== '' && $memberId === (string)$currentUserId;
+								$rowClass = trim((!$isEnabled ? 'table-secondary' : '') . ($isMe ? ' table-success' : ''));
 								?>
-								<tr id="record-<?= h($memberId) ?>" data-id="<?= h($memberId) ?>" data-can-delete="0"<?= !$isEnabled ? ' class="table-secondary"' : '' ?>>
+								<tr id="record-<?= h($memberId) ?>" data-id="<?= h($memberId) ?>" data-can-delete="0"<?= $rowClass !== '' ? ' class="' . h($rowClass) . '"' : '' ?>>
 									<?php if ($showIdColumn): ?>
 										<td class="number id"><?= h($memberId) ?></td>
 									<?php endif; ?>
@@ -200,6 +202,7 @@ $applicants = $applicants ?? [];
 											'user' => $member,
 											'displayName' => $name,
 											'size' => 40,
+											'isCurrentUser' => $isMe,
 										]) ?>
 									</td>
 									<td class="string email"><?= h((string)$member->email) ?></td>

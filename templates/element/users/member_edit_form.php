@@ -10,6 +10,8 @@
  * @var bool $showRole
  * @var array<string, string> $roleOptions
  * @var bool $roleSelectDisabled
+ * @var bool $showClubSelect
+ * @var array<int, string> $clubOptions
  */
 use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
@@ -19,6 +21,8 @@ $feeField = (string)($feeField ?? MembershipFee::FIELD_CLUB);
 $feeLabel = (string)($feeLabel ?? __('Membership fee'));
 $showEnabled = (bool)($showEnabled ?? false);
 $showRole = (bool)($showRole ?? false);
+$showClubSelect = (bool)($showClubSelect ?? false);
+$clubOptions = $clubOptions ?? [];
 $roleOptions = $roleOptions ?? [];
 $currentRole = strtolower(trim((string)($member->get('role') ?? '')));
 $roleSelectDisabled = (bool)($roleSelectDisabled ?? false);
@@ -46,11 +50,23 @@ $displayName = MembershipProfile::displayName($member);
 if ($displayName === '') {
 	$displayName = (string)($member->get('email') ?? '');
 }
+$selectedClubId = (int)($member->get('club_id') ?? 0);
 
-$this->Html->css([
+$css = [
 	'/plugins/tempus-dominus/css/tempus-dominus.min',
 	'pages/form',
-], ['block' => true]);
+];
+$scripts = [
+	'popper',
+	'/plugins/tempus-dominus/js/tempus-dominus.min',
+	'/plugins/inputmask/jquery.inputmask.min',
+	'pages/form',
+];
+if ($showClubSelect) {
+	array_unshift($css, '/plugins/select2-4.1.0/css/select2.min', '/plugins/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min');
+	array_splice($scripts, -1, 0, ['/plugins/select2-4.1.0/js/select2.full.min']);
+}
+$this->Html->css($css, ['block' => true]);
 
 $config = [
 	'indexUrl' => $this->Url->build(['action' => 'index']),
@@ -63,12 +79,7 @@ $this->Html->scriptBlock(
 	['block' => 'script']
 );
 // Tempus Dominus 6 needs Popper for correct popup placement (same as other Admin date forms).
-$this->Html->script([
-	'popper',
-	'/plugins/tempus-dominus/js/tempus-dominus.min',
-	'/plugins/inputmask/jquery.inputmask.min',
-	'pages/form',
-], ['block' => 'scriptBottom']);
+$this->Html->script($scripts, ['block' => 'scriptBottom']);
 ?>
 <div class="row">
 	<div class="col-12 col-xxl-11 p-2 pt-3">
@@ -119,6 +130,24 @@ $this->Html->script([
 							]) ?>
 						</div>
 					</div>
+
+					<?php if ($showClubSelect): ?>
+						<div class="form-group row mb-3">
+							<?= $this->Form->adminLabel('club_id', __('Club:'), ['for' => 'club-id']) ?>
+							<div class="col-12 col-md-10 col-xl-5">
+								<?= $this->Form->control('club_id', [
+									'label' => false,
+									'type' => 'select',
+									'options' => $clubOptions,
+									'empty' => __('Select club...'),
+									'class' => 'form-select',
+									'id' => 'club-id',
+									'value' => $selectedClubId > 0 ? $selectedClubId : null,
+								]) ?>
+								<div class="form-text"><?= __('All clubs in this country (including those without a national membership fee payment this year).') ?></div>
+							</div>
+						</div>
+					<?php endif; ?>
 
 					<?php if ($showRole): ?>
 						<div class="form-group row mb-3">

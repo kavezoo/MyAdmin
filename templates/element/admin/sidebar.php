@@ -2,21 +2,20 @@
 /**
  * @var \App\View\AppView $this
  */
-use App\Auth\EventLogAccess;
-use App\Auth\LanguageAccess;
-use App\Auth\SetupAccess;
+use App\Utility\PanelNav;
 
 $controller = (string)$this->request->getParam('controller');
-$isLanguages = $controller === 'Languages';
-$isCountries = $controller === 'Countries';
-$isCounties = $controller === 'Counties';
-$isCities = $controller === 'Cities';
-$isSetups = $controller === 'Setups';
-$isEventLogs = $controller === 'EventLogs';
 $isDashboard = $controller === 'Dashboard';
-$showSetupsMenu = SetupAccess::canAccessModule($this->request);
-$showLanguagesMenu = LanguageAccess::canAccessModule($this->request);
-$showEventLogsMenu = EventLogAccess::canSearch($this->request);
+$navItems = PanelNav::forPrefix('Admin', $this->getRequest());
+$mainItems = PanelNav::itemsInGroup($navItems, PanelNav::NAV_GROUP_MAIN);
+$settingsItems = PanelNav::itemsInGroup($navItems, PanelNav::NAV_GROUP_SETTINGS);
+$settingsActive = false;
+foreach ($settingsItems as $item) {
+	if (PanelNav::isActive($item, $this->getRequest())) {
+		$settingsActive = true;
+		break;
+	}
+}
 ?>
 <!-- Left Sidebar -->
 <div class="left main-sidebar">
@@ -29,37 +28,30 @@ $showEventLogsMenu = EventLogAccess::canSearch($this->request);
 					</a>
 				</li>
 
-				<li class="submenu">
-					<a href="#"<?= (($showSetupsMenu && $isSetups) || ($showLanguagesMenu && $isLanguages) || $isCountries || $isCounties || $isCities || ($showEventLogsMenu && $isEventLogs)) ? ' class="active"' : '' ?>>
-						<i class="fa fa-fw fa-cogs"></i> <span> <?= __('Settings') ?> </span> <span class="menu-arrow"></span>
-					</a>
-					<ul class="list-unstyled">
-						<?php if ($showSetupsMenu): ?>
-							<li<?= $isSetups ? ' class="active"' : '' ?>>
-								<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Setups', 'action' => 'index']) ?>"><?= __('Setups') ?></a>
-							</li>
-						<?php endif; ?>
-						<?php if ($showLanguagesMenu): ?>
-							<li<?= $isLanguages ? ' class="active"' : '' ?>>
-								<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Languages', 'action' => 'index']) ?>"><?= __('Languages') ?></a>
-							</li>
-						<?php endif; ?>
-						<li<?= $isCountries ? ' class="active"' : '' ?>>
-							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Countries', 'action' => 'index']) ?>"><?= __('Countries') ?></a>
-						</li>
-						<li<?= $isCounties ? ' class="active"' : '' ?>>
-							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Counties', 'action' => 'index']) ?>"><?= __('Counties') ?></a>
-						</li>
-						<li<?= $isCities ? ' class="active"' : '' ?>>
-							<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'index']) ?>"><?= __('Cities') ?></a>
-						</li>
-						<?php if ($showEventLogsMenu): ?>
-							<li<?= $isEventLogs ? ' class="active"' : '' ?>>
-								<a href="<?= $this->Url->build(['prefix' => 'Admin', 'controller' => 'EventLogs', 'action' => 'index']) ?>"><?= __('Event logs') ?></a>
-							</li>
-						<?php endif; ?>
-					</ul>
-				</li>
+				<?= $this->element('panel/sidebar_nav_items', ['items' => $mainItems]) ?>
+
+				<?php if ($settingsItems !== []): ?>
+					<li class="submenu">
+						<a href="#"<?= $settingsActive ? ' class="active"' : '' ?>>
+							<i class="fa fa-fw fa-cogs"></i> <span> <?= __('Settings') ?> </span> <span class="menu-arrow"></span>
+						</a>
+						<ul class="list-unstyled">
+							<?php foreach ($settingsItems as $item):
+								$title = (string)($item['title'] ?? '');
+								$url = $item['url'] ?? null;
+								if ($title === '' || $url === null || $url === [] || $url === '') {
+									continue;
+								}
+								$href = is_array($url) ? $this->Url->build($url) : (string)$url;
+								$active = PanelNav::isActive($item, $this->getRequest());
+								?>
+								<li<?= $active ? ' class="active"' : '' ?>>
+									<a href="<?= h($href) ?>"><?= h($title) ?></a>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					</li>
+				<?php endif; ?>
 				<?= $this->element('panel/switcher') ?>
 			</ul>
 			<div class="clearfix"></div>

@@ -139,6 +139,10 @@ class CountriesController extends AppController
             $this->Countries->find()->contain(['Continents']),
             $this->Countries
         );
+        $ownCountryCondition = \App\Utility\AdminCountryScope::countriesIndexCondition($this->request);
+        if ($ownCountryCondition !== []) {
+            $query->where($ownCountryCondition);
+        }
         if ($countriesVisibleOnly) {
             $query->where(['Countries.visible' => true]);
         }
@@ -234,6 +238,12 @@ class CountriesController extends AppController
 
         $this->setTranslateLocales();
         $country = $this->Countries->get($id, contain: ['Continents']);
+        if (!\App\Utility\AdminCountryScope::canChangeCountry($this->request)) {
+            $own = \App\Utility\AdminCountryScope::ownCountryId($this->request);
+            if ($own < 1 || (int)$country->id !== $own) {
+                return $this->denyWithFlashWarning(__('You are not allowed to access records from another country.'));
+            }
+        }
         $this->rememberLastVisited('Countries', $country->id);
         $selectedVisibleIds = $this->Countries->additionalLanguageIds((int)$country->id);
 
@@ -301,12 +311,27 @@ class CountriesController extends AppController
         $country = $this->Countries->get($id, contain: [
             'Continents',
             'Users' => function ($q) {
-                return $q->orderBy(['Users.email' => 'ASC']);
+                return $q->orderBy(['Users.email' => 'ASC'])->limit(200);
             },
             'Setups' => function ($q) {
                 return $q->orderBy(['Setups.pos' => 'ASC', 'Setups.name' => 'ASC']);
             },
+            'Counties' => function ($q) {
+                return $q->orderBy(['Counties.name' => 'ASC'])->limit(200);
+            },
+            'Cities' => function ($q) {
+                return $q->orderBy(['Cities.name' => 'ASC'])->limit(200);
+            },
+            'Clubs' => function ($q) {
+                return $q->orderBy(['Clubs.name' => 'ASC'])->limit(200);
+            },
         ]);
+        if (!\App\Utility\AdminCountryScope::canChangeCountry($this->request)) {
+            $own = \App\Utility\AdminCountryScope::ownCountryId($this->request);
+            if ($own < 1 || (int)$country->id !== $own) {
+                return $this->denyWithFlashWarning(__('You are not allowed to access records from another country.'));
+            }
+        }
         $this->rememberLastVisited('Countries', $country->id);
         $this->set(compact('country'));
         $this->setCountryAccessFlags($country);
@@ -359,6 +384,19 @@ class CountriesController extends AppController
                     'success' => false,
                     'message' => __('Record not found.'),
                 ], JSON_UNESCAPED_UNICODE));
+        }
+
+        if (!\App\Utility\AdminCountryScope::canChangeCountry($this->request)) {
+            $own = \App\Utility\AdminCountryScope::ownCountryId($this->request);
+            if ($own < 1 || (int)$country->id !== $own) {
+                return $this->response
+                    ->withStatus(403)
+                    ->withType('application/json')
+                    ->withStringBody(json_encode([
+                        'success' => false,
+                        'message' => __('You are not allowed to access records from another country.'),
+                    ], JSON_UNESCAPED_UNICODE));
+            }
         }
 
         $this->rememberLastVisited('Countries', $country->id);

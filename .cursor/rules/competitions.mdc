@@ -1,0 +1,37 @@
+---
+description: Versenyek (competitions) — panelek, min. létszám, jelentkezés, contain LEFT
+globs: "**/*Competition*","**/competitions/**","doc/competitions.md"
+alwaysApply: false
+---
+
+# Versenyek — kötelező minta
+
+Spec: **`doc/competitions.md`**. Ne találj ki eltérő folyamatot.
+
+## Folyamat
+
+President kiír → Member jelentkezik (`competitions_users`, pending) → Clubpresident alcsapatba teszi (`competition_club_id` + assigned).
+
+## Panelek
+
+| Prefix | Mit |
+|--------|-----|
+| President | CRUD + **view related tabs** (csak min. létszámot elérő alcsapatok + azok assigned tagjai) |
+| Clubpresident | `competition-teams` CRUD; `competition-applicants` besorolás/törlés/edit |
+| Member | lista / view / apply / withdraw / archive; view layout: `pages/competition_view.css` |
+| President view | ugyanez a layout: meta balra, leírás jobbra; mobil: meta → leírás |
+
+## Kötelező szabályok
+
+1. **Min. létszám (President view):** tabokon csak `user_count >= minimum_team_size` alcsapatok; jelentkezők csak ezeken az assigned tagok.
+2. **Pending lista contain:** `CompetitionsClubs` → `Subclubs` = **LEFT** join — INNER kiszűri a `competition_club_id` NULL sorokat.
+3. **Név:** alcsapat neve = `subclubs.name` (nincs `competitions_clubs.name`). Felkínált `{short_name} {n}` **versenyenként** (`suggestNextName`); új verseny → 1; form versenyváltáskor AJAX `suggestedName`.
+4. **CounterCache:** `competitions.user_count` = assigned; `lunch_for_the_attendant` = SUM (closure, ne `sum` kulcs); `competitions_clubs.user_count` = besoroltak; **`clubs.competition_count`** = rendező klub (`Competitions.club_id`). Jelentkezés/visszavonás (törlés) után frissül.
+5. **Withdraw:** lista **és** adatlap ugyanaz — `competitions_users` **törlés** + redirect a versenylistára. Adatlapon: rejtett `#form-withdraw-application` + gomb `form=` attribútummal (ne a `#form-horizontal` submitja); SWAL után `allowFormLeave()`. Gomb csak ha `CompetitionApplication::hasApplication()`.
+6. **PanelNav:** új verseny-menüpont → `PanelNav` (dashboard + sidebar).
+7. Jelentkezés adatok: tag határidőig szerkeszt; klubelnök határidő után is.
+8. **Klub tagdíj (jelentkezés):** Apply csak ha az idei klub tagdíj rendezett (`CompetitionApplication::memberMayApply`).
+9. **Rendező klub (kiírás):** Admin / President form Select2 + mentés: csak **nemzeti tagság az idei évre rendezett** klubok (`Clubs::optionsForCompetitionOrganizer` / `isAllowedCompetitionOrganizer`). Szerkesztéskor a meglévő rendező marad a listán, ha a tagdíja lejárt.
+10. **Alcsapat törlés (Clubpresident):** csak ha `competitions_clubs.user_count = 0` (nincs besorolt tag); Delete gomb = `a.btn-row-delete` (ne bare `<button>` — `pages/index.js`).
+
+Kanban (húzós besorolás) — **nincs** még; ne ígérd / ne építsd, amíg a user nem kéri.

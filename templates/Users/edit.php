@@ -17,6 +17,7 @@
  */
 use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
+use App\Utility\MembershipFee;
 use App\Utility\PhoneNumber;
 use App\Utility\UserAvatar;
 use CakeDC\Users\Utility\UsersUrl;
@@ -193,6 +194,9 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 
 				<div class="mb-3">
 					<label class="form-label" for="club-id"><?= __('Club') ?> <span class="text-danger">*</span></label>
+					<div class="form-text mb-2">
+						<?= h(__('You can only join a club that has settled its national membership fee for this year with {0}.', MembershipFee::nationalAssociationName($selectedCountryId > 0 ? $selectedCountryId : null))) ?>
+					</div>
 					<div class="users-profile-club-warning alert alert-warning border border-warning mb-3" role="alert">
 						<div class="fw-bold users-profile-club-warning-title">
 							<i class="fa fa-exclamation-triangle me-1" aria-hidden="true"></i>
@@ -223,22 +227,6 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 						'value' => $selectedClubId > 0 ? $selectedClubId : null,
 						'data-placeholder' => __('Select club...'),
 					]) ?>
-				</div>
-
-				<div class="mb-3">
-					<label class="form-label" for="language-id"><?= __('Language') ?></label>
-					<?= $this->Form->control('language_id', [
-						'label' => false,
-						'type' => 'select',
-						'options' => $languageOptions ?? [],
-						'empty' => __('Same as country (default)'),
-						'class' => 'form-select js-language-select',
-						'id' => 'language-id',
-						'required' => false,
-						'value' => (int)($user->language_id ?? 0) > 0 ? (int)$user->language_id : null,
-						'data-placeholder' => __('Same as country (default)'),
-					]) ?>
-					<div class="form-text"><?= __('Emails and messages use this language when set; otherwise your country’s language.') ?></div>
 				</div>
 
 				<dl class="record-view-fields mb-0">

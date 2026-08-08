@@ -9,6 +9,7 @@
  * @var int $selectedCountryId
  * @var string $completeProfileUrl
  */
+use App\Utility\MembershipFee;
 use App\Utility\PhoneNumber;
 
 $this->assign('title', __('Complete your profile'));
@@ -95,6 +96,9 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 				</div>
 				<div class="mb-3">
 					<label class="form-label" for="club-id"><?= __('Club') ?></label>
+					<div class="form-text mb-2">
+						<?= h(__('You can only join a club that has settled its national membership fee for this year with {0}.', MembershipFee::nationalAssociationName($selectedCountryId > 0 ? $selectedCountryId : null))) ?>
+					</div>
 					<div class="form-text mb-2 js-club-need-country<?= $selectedCountryId < 1 ? '' : ' d-none' ?>"><?= __('Select your country first to see available clubs.') ?></div>
 					<div class="alert alert-warning mb-2 js-club-empty-warning<?= ($selectedCountryId > 0 && $clubOptionsEmpty) ? '' : ' d-none' ?>">
 						<?= __('There are no active clubs with a paid national membership fee for this country yet. Please choose another country from the list above.') ?>
@@ -112,21 +116,7 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 						'data-placeholder' => __('Select club...'),
 					]) ?>
 				</div>
-				<div class="mb-0">
-					<label class="form-label" for="language-id"><?= __('Language') ?></label>
-					<?= $this->Form->control('language_id', [
-						'label' => false,
-						'type' => 'select',
-						'options' => $languageOptions ?? [],
-						'empty' => __('Same as country (default)'),
-						'class' => 'form-select js-language-select',
-						'id' => 'language-id',
-						'required' => false,
-						'value' => (int)($user->language_id ?? 0) > 0 ? (int)$user->language_id : null,
-						'data-placeholder' => __('Same as country (default)'),
-					]) ?>
-					<div class="form-text"><?= __('Emails and messages use this language when set; otherwise your country’s language.') ?></div>
-				</div>
+
 			</div>
 			<div class="card-footer">
 				<button type="submit" class="btn btn-primary">

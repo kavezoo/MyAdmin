@@ -7,6 +7,7 @@ use Cake\Core\Configure;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 /**
  * Admin text search helpers (index + global header).
@@ -105,7 +106,10 @@ class AdminSearch
     /**
      * Global search across configured models (combined list for pagination).
      *
-     * @return list<array{model: string, label: string, controller: string, labelsKey: string, id: int, title: string}>
+     * Country-scoped tables: non-superuser → own country; superuser → working country
+     * (AdminCountry::id). Models without country_id are unchanged.
+     *
+     * @return list<array{model: string, label: string, controller: string, labelsKey: string, id: int|string, title: string}>
      */
     public static function searchAll(string $term, ?int $limitPerModel = null): array
     {
@@ -126,6 +130,10 @@ class AdminSearch
 
         $results = [];
         $locator = TableRegistry::getTableLocator();
+        $request = Router::getRequest();
+        $scopeCountryId = AdminCountryScope::canChangeCountry($request)
+            ? AdminCountry::id($request)
+            : AdminCountryScope::ownCountryId($request);
 
         foreach (static::models() as $alias => $meta) {
             if (!is_array($meta)) {
@@ -145,6 +153,15 @@ class AdminSearch
             }
 
             $query = static::applyToQuery($table->find(), $table, $term);
+            if ($alias === 'Countries') {
+                $cond = AdminCountryScope::countriesIndexCondition($request);
+                if ($cond !== []) {
+                    $query->where($cond);
+                }
+            } elseif ($table->getSchema()->hasColumn('country_id') && $scopeCountryId > 0) {
+                $query->where([$table->aliasField('country_id') => $scopeCountryId]);
+            }
+
             $titleField = (string)($meta['titleField'] ?? 'name');
             $controller = (string)($meta['controller'] ?? $alias);
             $label = (string)($meta['label'] ?? $alias);
@@ -155,8 +172,12 @@ class AdminSearch
             }
 
             foreach ($query->limit($limit)->all() as $entity) {
-                $id = (int)$entity->get($pk);
-                if ($id < 1) {
+                $rawId = $entity->get($pk);
+                if ($rawId === null || $rawId === '') {
+                    continue;
+                }
+                $id = is_numeric($rawId) ? (int)$rawId : (string)$rawId;
+                if (is_int($id) && $id < 1) {
                     continue;
                 }
                 $title = (string)$entity->get($titleField);

@@ -7,33 +7,14 @@
  * @var bool $waiting Profile complete — waiting for club president approval
  * @var list<string> $missingFields Human labels of missing required fields
  */
-use CakeDC\Users\Utility\UsersUrl;
+use App\Utility\PanelNav;
 
 $needsCompletion = (bool)($needsCompletion ?? false);
 $waiting = (bool)($waiting ?? false);
 $missingFields = $missingFields ?? [];
 $this->assign('title', __('Dashboard'));
 
-$cards = [];
-if ($waiting) {
-	$cards[] = [
-		'title' => __('Profile'),
-		'text' => __('View the profile you submitted. Your club president will review your application.'),
-		'url' => UsersUrl::actionUrl('profile'),
-		'button' => __('Go to Profile'),
-		'btnClass' => 'btn-primary',
-		'icon' => 'fa-user',
-	];
-} elseif ($needsCompletion) {
-	$cards[] = [
-		'title' => __('Complete your profile'),
-		'text' => __('Enter the missing details so you can submit your membership application.'),
-		'url' => '/complete-profile',
-		'button' => __('Go to Complete profile'),
-		'btnClass' => 'btn-primary',
-		'icon' => 'fa-id-card',
-	];
-}
+$cards = PanelNav::forPrefix('New', $this->getRequest());
 ?>
 <div class="row">
 	<div class="col-12 p-2 pt-3">

@@ -7,28 +7,68 @@ use Cake\Datasource\EntityInterface;
 use function Cake\I18n\__;
 
 /**
- * Flatten entity validation errors for Flash toast and form summaries.
+ * Flatten entity validation / rule errors for Flash toasts and form summaries.
+ *
+ * Convention: on save failure always show *why* (field messages), not only a generic Flash.
+ * See doc/admin-konvenciok.md → „Mentés hibakezelés”; rule: admin-form-save-errors.mdc.
  */
 class EntityFormErrors
 {
+    /**
+     * @param array<string, mixed> $errors Entity::getErrors() tree
+     * @param array<string, string> $fieldLabels Optional human labels (field => label)
+     * @return list<string>
+     */
+    public static function flatLines(array $errors, array $fieldLabels = []): array
+    {
+        $lines = [];
+        foreach ($errors as $field => $fieldErrors) {
+            $label = $fieldLabels[(string)$field] ?? (string)$field;
+            foreach (static::flattenMessages($fieldErrors) as $message) {
+                $message = trim($message);
+                if ($message === '') {
+                    continue;
+                }
+                $lines[] = $label . ': ' . $message;
+            }
+        }
+
+        return array_values(array_unique($lines));
+    }
+
     /**
      * @param array<string, string> $fieldLabels
      * @return list<string>
      */
     public static function labeledLines(EntityInterface $entity, array $fieldLabels = []): array
     {
-        $lines = [];
-        foreach ($entity->getErrors() as $field => $errors) {
-            $label = $fieldLabels[$field] ?? (string)$field;
-            foreach (static::flattenMessages($errors) as $message) {
-                $lines[] = $label . ': ' . $message;
-            }
-        }
-
-        return $lines;
+        return static::flatLines($entity->getErrors(), $fieldLabels);
     }
 
     /**
+     * Single Flash toast string (semicolon-separated).
+     *
+     * @param array<string, string> $fieldLabels
+     */
+    public static function flashText(
+        EntityInterface|array $entityOrErrors,
+        array $fieldLabels = [],
+        ?string $fallback = null,
+    ): string {
+        $errors = $entityOrErrors instanceof EntityInterface
+            ? $entityOrErrors->getErrors()
+            : $entityOrErrors;
+        $lines = static::flatLines(is_array($errors) ? $errors : [], $fieldLabels);
+        if ($lines === []) {
+            return $fallback ?? (string)__('The record could not be saved. Please try again.');
+        }
+
+        return implode('; ', $lines);
+    }
+
+    /**
+     * Multiline summary (e.g. form alert box).
+     *
      * @param array<string, string> $fieldLabels
      */
     public static function summaryText(

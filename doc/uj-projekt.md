@@ -311,7 +311,8 @@ Ha a projektben **tagsági jelentkezés** + klubok + tagdíj kell (nem minden pr
 1. Auth előbb: §2.9 + [users-auth.md](users-auth.md)
 2. Teljes greenfield playbook: **[membership-greenfield.md](membership-greenfield.md)** (lépéssorrend §2, séma §3, ACL §5, UI §8–9, checklist §11)
 3. Részletes viselkedés: [membership.md](membership.md)
-4. Cursor rules: `membership-greenfield.mdc`, `panel-member-index.mdc`
+4. Cursor rules: `membership-greenfield.mdc`, `panel-member-index.mdc`, **`panel-nav-conventions.mdc`**
+5. Versenyek (ha kell): [competitions.md](competitions.md) + `competitions.mdc`
 5. Séma mátrix: [uj-projekt-sema-playbook.md](uj-projekt-sema-playbook.md) §1.6
 
 **Ne** találj ki új UX-et (approve flow, tagdíj warning, klubelnök assign, President pending kapcsoló).

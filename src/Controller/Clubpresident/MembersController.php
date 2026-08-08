@@ -46,7 +46,7 @@ class MembersController extends AppController
         $query = $this->scopeToPresidentClub(
             $users->find()->where([
                 'Users.active' => 1,
-            ] + $this->membershipRosterRoleCondition())
+            ] + $this->membershipRosterOrSelfCondition())
         );
 
         $applicants = $this->scopeToPresidentClub(
@@ -82,6 +82,7 @@ class MembersController extends AppController
             $this->panelMemberPaginateOptions($this->panelMemberSortableFields(false))
         ));
         $this->set(compact('clubName', 'clubId', 'clubCountryId', 'membershipYear', 'applicants'));
+        $this->set('currentUserId', $this->currentMemberListUserId());
     }
 
     /**
@@ -110,7 +111,9 @@ class MembersController extends AppController
                         MembershipFee::FIELD_CLUB => true,
                     ],
                 ]);
+                $dirty = $member->getDirty();
                 if ($users->save($member)) {
+                    (new MembershipService())->notifyMemberProfileUpdated($member, $dirty);
                     $this->Flash->success(__('The member has been saved.'));
 
                     return $this->redirect(['action' => 'index']);
@@ -194,7 +197,7 @@ class MembersController extends AppController
             $users->find()->where([
                 'Users.id' => (string)$id,
                 'Users.active' => 1,
-            ] + $this->membershipRosterRoleCondition())
+            ] + $this->membershipRosterOrSelfCondition())
         )->first();
         if ($member === null) {
             return $this->response
@@ -343,7 +346,7 @@ class MembersController extends AppController
                 'Users.id' => (string)$id,
                 'Users.active' => 1,
                 'Users.enabled' => 1,
-            ] + $this->membershipRosterRoleCondition())
+            ] + $this->membershipRosterOrSelfCondition())
         )->first();
         if ($member === null) {
             throw new NotFoundException(__('Member not found.'));
@@ -409,7 +412,7 @@ class MembersController extends AppController
             $users->find()->where([
                 'Users.id' => $id,
                 'Users.active' => 1,
-            ] + $this->membershipRosterRoleCondition())
+            ] + $this->membershipRosterOrSelfCondition())
         );
         if ($containClub) {
             $query->contain(['Clubs']);

@@ -20,10 +20,12 @@ use Cake\Validation\Validator;
  * Also mirrors into NOT NULL `clubpresident_id` ('' when none).
  * Member / editor → role becomes `clubpresident`; president / vp keep their role.
  * `user_count` = CounterCache from Users.club_id.
+ * `competition_count` = CounterCache from Competitions.club_id.
  *
  * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
  * @property \App\Model\Table\CitiesTable&\Cake\ORM\Association\BelongsTo $Cities
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
+ * @property \App\Model\Table\CompetitionsTable&\Cake\ORM\Association\HasMany $Competitions
  */
 class ClubsTable extends Table
 {
@@ -60,8 +62,21 @@ class ClubsTable extends Table
         $this->setEntityClass(\App\Model\Entity\Club::class);
 
         $this->addBehavior('Timestamp');
+        // Soft city_id=0 (no city): skip Cities.club_count update.
         $this->addBehavior('CounterCache', [
             'Countries' => ['club_count'],
+            'Cities' => [
+                'club_count' => function ($event, $entity, $table, $original) {
+                    $cityId = (int)($original
+                        ? ($entity->getOriginal('city_id') ?? 0)
+                        : ($entity->get('city_id') ?? 0));
+                    if ($cityId < 1) {
+                        return false;
+                    }
+
+                    return $table->find()->where(['Clubs.city_id' => $cityId])->count();
+                },
+            ],
         ]);
 
         // Explicit EventLog (also auto-attached in Application) — national club fee date, …
@@ -82,6 +97,11 @@ class ClubsTable extends Table
         $this->hasMany('Users', [
             'foreignKey' => 'club_id',
             'className' => 'Users',
+            'dependent' => false,
+        ]);
+        $this->hasMany('Competitions', [
+            'foreignKey' => 'club_id',
+            'className' => 'Competitions',
             'dependent' => false,
         ]);
     }
@@ -131,7 +151,27 @@ class ClubsTable extends Table
     }
 
     /**
-     * @deprecated Use {@see countRelatedChildren()} / `user_count` CounterCache.
+     * Members + hosted competitions block club delete.
+     */
+    public function countRelatedChildren(EntityInterface $entity): int
+    {
+        $id = $entity->get($this->getPrimaryKey());
+        if ($id !== null && $id !== '') {
+            $row = $this->find()
+                ->select(['user_count', 'competition_count'])
+                ->where([$this->aliasField($this->getPrimaryKey()) => $id])
+                ->disableHydration()
+                ->first();
+            if (is_array($row)) {
+                return (int)($row['user_count'] ?? 0) + (int)($row['competition_count'] ?? 0);
+            }
+        }
+
+        return (int)($entity->get('user_count') ?? 0) + (int)($entity->get('competition_count') ?? 0);
+    }
+
+    /**
+     * @deprecated Use {@see countRelatedChildren()} / `user_count` + `competition_count`.
      */
     public function countRelatedUsers(EntityInterface $entity): int
     {
@@ -467,17 +507,23 @@ class ClubsTable extends Table
      * Profile / complete-profile: enabled + visible clubs that paid the national
      * association fee for the current year (pos, name).
      *
+     * President member reassignment: pass `$requireNationalFeePaid = false` — every
+     * enabled+visible club in the country (no fee-year filter).
+     *
      * @param int $includeClubId Always list the user's current club (even if unpaid / hidden / disabled).
      *
      * @return array<int, string>
      */
-    public function optionsForCountry(int $countryId, int $includeClubId = 0): array
-    {
+    public function optionsForCountry(
+        int $countryId,
+        int $includeClubId = 0,
+        bool $requireNationalFeePaid = true,
+    ): array {
         if ($countryId < 1) {
             return [];
         }
 
-        $options = $this->findSelectableForCountry($countryId, requireNationalFeePaid: true)
+        $options = $this->findSelectableForCountry($countryId, $requireNationalFeePaid)
             ->find('list', keyField: 'id', valueField: 'name')
             ->toArray();
 
@@ -493,6 +539,70 @@ class ClubsTable extends Table
         }
 
         return $options;
+    }
+
+    /**
+     * Whether a club may be assigned by a country officer (same country, enabled + visible —
+     * **no** national fee filter — or the member's already-assigned club).
+     */
+    public function isAllowedForOfficerAssign(int $clubId, int $countryId, int $allowExistingClubId = 0): bool
+    {
+        if ($clubId < 1 || $countryId < 1) {
+            return false;
+        }
+
+        if ($allowExistingClubId > 0 && $clubId === $allowExistingClubId) {
+            $own = $this->find()
+                ->select(['id', 'country_id'])
+                ->where(['Clubs.id' => $clubId])
+                ->disableHydration()
+                ->first();
+
+            return $own !== null && (int)($own['country_id'] ?? 0) === $countryId;
+        }
+
+        return $this->exists([
+            'Clubs.id' => $clubId,
+            'Clubs.country_id' => $countryId,
+            'Clubs.enabled' => true,
+            'Clubs.visible' => true,
+        ]);
+    }
+
+    /**
+     * Clubs that may host / organize a competition (enabled + visible + national fee paid this year).
+     *
+     * @param int $includeClubId Keep current organizer on edit even if fee lapsed
+     * @return array<int, string>
+     */
+    public function optionsForCompetitionOrganizer(int $countryId, int $includeClubId = 0): array
+    {
+        return $this->optionsForCountry($countryId, $includeClubId, requireNationalFeePaid: true);
+    }
+
+    /**
+     * Club may organize a competition in the country (national fee paid this year),
+     * or is the already-selected organizer on edit (`$allowExistingClubId`).
+     */
+    public function isAllowedCompetitionOrganizer(
+        int $clubId,
+        int $countryId,
+        int $allowExistingClubId = 0,
+    ): bool {
+        if ($clubId < 1 || $countryId < 1) {
+            return false;
+        }
+
+        if ($allowExistingClubId > 0 && $clubId === $allowExistingClubId) {
+            return $this->exists([
+                'Clubs.id' => $clubId,
+                'Clubs.country_id' => $countryId,
+            ]);
+        }
+
+        return $this->findSelectableForCountry($countryId, requireNationalFeePaid: true)
+            ->where(['Clubs.id' => $clubId])
+            ->count() > 0;
     }
 
     /**

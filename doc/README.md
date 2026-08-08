@@ -14,12 +14,15 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | **CakeDC auth (login / regisztráció / profil)** | **[users-auth.md](users-auth.md)** |
 | **Kódba nyúlás — API cheat sheet** | **[MyAdminUsage.md](MyAdminUsage.md)** (`Setup::get`, …) |
 | UI / asset / view részletszabály | [admin-konvenciok.md](admin-konvenciok.md) |
+| **Admin teljes CRUD + view gyerek TAB** | **[admin-full-crud.md](admin-full-crud.md)** (+ rule `admin-view-related-tabs.mdc`) |
 | **Countries Admin lista** | **[countries-admin.md](countries-admin.md)** |
 | **Languages Admin** | **[languages-admin.md](languages-admin.md)** |
 | **Ország→ország láthatóság** | **[country-visibilities.md](country-visibilities.md)** |
 | **Eseménynapló** | **[event-logs.md](event-logs.md)** |
 | **Login nyelv** | **[login-language.md](login-language.md)** |
 | **Tagság jelentkezés** | **[membership.md](membership.md)** — greenfield: **[membership-greenfield.md](membership-greenfield.md)** |
+| **Versenyek (competitions)** | **[competitions.md](competitions.md)** — panelek, min. létszám, jelentkezés |
+| **`*_count` / CounterCache** | **[counter-caches.md](counter-caches.md)** — minden prefix; rebuild |
 | **Verseny kivetítő / óra (terv)** | **[race-display.md](race-display.md)** — döntések; kód még nincs |
 | Fordítás | [i18n.md](i18n.md) |
 | **Form nyelvi TAB-ok** | **[form-i18n-tabs.md](form-i18n-tabs.md)** |
@@ -36,6 +39,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | [keretrendszer.md](keretrendszer.md) | Tartós vs. törölhető részek; éles checklist |
 | [struktura.md](struktura.md) | Könyvtárak, routing, element inventory |
 | [admin-konvenciok.md](admin-konvenciok.md) | Layout, assetek, index/form/view, JS API (részlet) |
+| **[admin-full-crud.md](admin-full-crud.md)** | Admin minden tábla CRUD + view related tabs gap lista |
 | [i18n.md](i18n.md) | `__()` szabály, locale, .po, Translate keresés/sort |
 | **[form-i18n-tabs.md](form-i18n-tabs.md)** | **Form nyelvi TAB-ok** + ország tooltip + Cake 5.3 buktatók |
 | **[countries-admin.md](countries-admin.md)** | **Countries index**: visible-only, oszlopsorrend, CSS, i18n |
@@ -45,6 +49,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | **[login-language.md](login-language.md)** | Login **nyelv** Select2; `languages` + i18n nevek; register = ország |
 | **[membership.md](membership.md)** | Tagság: `new` → profil → clubpresident → `member` |
 | **[membership-greenfield.md](membership-greenfield.md)** | **Tagság + role panelek greenfield** — lépéssorrend, séma, ACL, checklist |
+| **[competitions.md](competitions.md)** | **Versenyek** — kiírás, alcsapat, jelentkezés, min. létszám, panel layout |
 | **[race-display.md](race-display.md)** | **Verseny kivetítő + óra** — architektúra döntések (polling, token, offline LAN); implementáció folyamatban |
 | [middleware.md](middleware.md) | Locale szám- és dátumnormalizálás |
 | [crud-utmutato.md](crud-utmutato.md) | Új Admin CRUD modul lépései |
@@ -71,7 +76,9 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | `uj-projekt-sema.mdc` | **alwaysApply** — új/éles projekt: séma + kapcsolatok szerint minden megoldás |
 | `pos-db-default.mdc` | `pos` mindig DB DEFAULT |
 | `membership-greenfield.mdc` | Tagság + role panelek greenfield — `membership-greenfield.md` |
+| `panel-nav-conventions.mdc` | **alwaysApply** — PanelNav, taglista önmaga, My club |
 | `panel-member-index.mdc` | President / Clubpresident taglista index minta |
+| `competitions.mdc` | Versenyek domain (min. létszám, LEFT join, PanelNav) |
 
 Új projektbe másold a `doc/` **és** a `.cursor/rules/` mappát.
 
@@ -82,6 +89,11 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - UI szövegek: `__('English msgid')`; panel locale: **bejelentkezés után** login session/cookie, majd user ország (`BrowserLocale::forLoggedIn`); headerben **nincs** nyelvválasztó; **nincs** URL `/{lang}`
 - **Szerepkör panelek:** `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös Admin chrome; `new` csak `/new` — [users-auth.md](users-auth.md) §0–2
 - **Tagság (ha kell):** `new` → `/complete-profile` → approve → `member`; klubelnök, tagdíj, role ACL — [membership-greenfield.md](membership-greenfield.md) + [membership.md](membership.md); rule: `membership-greenfield.mdc`
+- **Panel navigáció:** dashboard kártya ↔ sidebar **ugyanaz** (`PanelNav`); Admin: domain top-level, Settings = ref/geo/setups; taglista **önmaga** mindig; klublistán **My club** — rule: `panel-nav-conventions.mdc`
+- **`*_count` / CounterCache:** minden séma számláló → Cake `CounterCache` a **gyerek** (vagy HABTM through) Table-en; soft FK `0` → closure `false`; SUM → closure (ne `'sum'`); törlés = CounterCache mezők; rebuild: `bin/cake rebuild_counter_caches` — [counter-caches.md](counter-caches.md); rule: `counter-caches.mdc`
+- **Admin ország-szűrés:** listák saját országra (admin) / superuser Select2 csak országokkal ahol van rekord — [admin-country-scope.md](admin-country-scope.md); rule: `admin-country-scope.mdc`
+- **Admin teljes CRUD + view gyerek TAB:** minden domain tábla Admin CRUD; minden view hasMany/HABTM → `view_related_tabs` + modal CRUD — [admin-full-crud.md](admin-full-crud.md); rule: `admin-view-related-tabs.mdc`
+- **Versenyek (ha kell):** [competitions.md](competitions.md); President view = min. létszám tabok; pending contain Subclubs LEFT — rule: `competitions.mdc`
 - **Verseny kivetítő (tervezett):** két ablak, ~1 s polling, display token, offline = helyi LAN (+ azonos gépes BroadcastChannel); részletek — [race-display.md](race-display.md) (**kód még nincs**)
 - **CakeDC auth baseline:** ValiAdmin login; email login; ország + `country_id`; Flash toast; RoleHome afterLogin (`setResult`); header Belépve + Profile…; search role-gated — **projektenként változhat** (role/form/SSO) — [users-auth.md](users-auth.md); rule: `users-auth.mdc`
 - Országnevek: DB `countries` + Translate `i18n`; földrész: `continents` + `countries.continent_id` + Continents i18n (CLDR); Admin lista UI: **[countries-admin.md](countries-admin.md)**; ACL: superuser teljes / admin `visible`+`pos` — seed: `php tmp/seed_continents.php` ([i18n.md](i18n.md))
@@ -90,6 +102,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - **Index card footer:** mindig `admin/index_footer` (= `index_counter` + `index_pagination`); lapozó: **First | Previous | számok | Next | Last** (disabled a széleken) — [admin-konvenciok.md](admin-konvenciok.md) Lapozó; rule: `admin-paginator.mdc`
 - Admin dialógusok: **SweetAlert2** (`MyAdmin.swal` / `alert` / `alertError` / `confirmDelete` / `confirmLeave` / `flashSwal`) — soha `window.alert`; Bootstrap modal FocusTrap pause; popup **árnyék** + z-index 20000 (`style.css`)
 - **Mentetlen form:** `#form-horizontal` dirty → leave Swal (`confirmLeave`); változatlan → nincs kérdés — [admin-konvenciok.md](admin-konvenciok.md); rule: `admin-form-unsaved.mdc`
+- **Mentés hiba Flash:** validáció / `save` false → **`$this->flashEntityErrors($entity)`** (konkrét okok); ne csak generikus üzenet — [admin-konvenciok.md](admin-konvenciok.md); rule: `admin-form-save-errors.mdc`
 - **Form / view lábléc gombok:** ikon+szöveg egyben (`nowrap`); szűk helyen egész gomb új sorba (`flex-wrap`) — [admin-konvenciok.md](admin-konvenciok.md); rule: `admin-form-footer-buttons.mdc`
 - **Form kötelező `*`:** label előtt, piros, validatorból — `FormHelper::adminLabel` — rule: `admin-form-required.mdc`
 - **Új/éles projekt:** séma + kapcsolatok szerint **minden** keretrendszer-megoldás — [uj-projekt-sema-playbook.md](uj-projekt-sema-playbook.md); rule: `uj-projekt-sema.mdc`
@@ -108,7 +121,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - Form: `#name` autofókusz + `pages/form.js`; Select2 „+” ahol egyszerű create; **HABTM multiple** mindkét oldalon; **belongsTo lista**: `visible` + `pos`/`name` sorrend; form végén **`visible` → `pos`**; **`<hr>` mindig közvetlenül a `visible` fölött** (soha más mező fölött) — rule: `admin-form-visible-hr.mdc`; `fetchTable()`, ne Association
 - Oszlop DEFAULT (`pos`, `visible`, …): **DB séma** + `UsesDatabaseColumnDefaultsTrait` — ne PHP hardcode
 - **`pos`:** PHP-ból **békén hagyjuk** — mindig DB DEFAULT (**általában `1000`**); **tilos** állítani / növelgetni (`1`/`10`/`$pos += 10`). **Majd a felhasználó**, ha akarja, a formon megnöveli (rule: `.cursor/rules/pos-db-default.mdc`)
-- **`*_count`:** **CounterCache** (hasMany → gyerek Table; HABTM → through + `cascadeCallbacks`); törlésvédelem: `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()`; **ne** élő COUNT / controller `count(_ids)`
+- **`*_count`:** **CounterCache** (hasMany → gyerek Table; HABTM → through + `cascadeCallbacks`); soft FK `0` → closure `false`; SUM → closure; törlésvédelem: CounterCache mezők (`PreventsDeleteWithChildrenTrait` / `canDelete`); **ne** élő COUNT / controller `count(_ids)` — [counter-caches.md](counter-caches.md)
 - Modal kapcsolt névlisták: utolsó **20** (`modified DESC`), megjelenítés **ABC ASC**; view tab lehet teljes ABC lista
 
 ## UI forrás

@@ -22,6 +22,8 @@ Ez a fájl a **részletes viselkedési specifikáció**: layout, asset, index/fo
 - JS (body végén): modernizr, jquery, moment, bootstrap.bundle, bridge, detect, fastclick, blockUI, nicescroll, pikeadmin, sweetalert2, **`app.js`**
 - CSRF: `<meta name="csrfToken">`
 
+**Sidebar (örök):** `.main-sidebar.left` = **`position: fixed`** (header alatt, viewport magasság); a tartalom görgetése **nem** mozdítja el. A menü saját scrollbarja: `.sidebar-inner` (`overflow-y: auto` + `overscroll-behavior: contain`) — csak ha a kurzor a sidebar fölött van / a menü magasabb a viewportnál. JS: `MyAdmin.initFixedSidebarScroll()` (wheel a sidebar fölött nem görgeti a tartalmat). Összecsukott (enlarged) módban overflow visible a flyout almenük miatt. CSS: `webroot/css/style.css`.
+
 **Nem** kerül a layoutba: Select2, Trumbowyg, Tempus Dominus, inputmask, page CSS/JS.
 
 ### Template — oldalspecifikus
@@ -243,7 +245,7 @@ Agent rule: `.cursor/rules/admin-paginator.mdc`.
 | Last (») | `Paginator->last(__('Last'))` | `!$this->Paginator->hasNext()` (manuális disabled LI) |
 
 Msgid (csak accessibility / tooltip): `First` / `Previous` / `Next` / `Last` / `Pagination`.  
-**Lapozáskor** (`?page=` a queryben): `clearLastVisited($model)` — az utoljára megtekintett kiemelés törlődik.
+**Lapozáskor** (`?page=` a queryben): `clearLastVisited($model)` — az utoljára kezelt kiemelés törlődik (**kivéve** a mentés/clear-search `_resolveLastVisitedPage` hopját).
 
 ### Setups (típusos beállítások)
 
@@ -258,36 +260,46 @@ EAV modul — teljes specek: **[setups.md](setups.md)**. Rule: `.cursor/rules/se
 | Form | type → widget (`setups_form.js`); `secret` = titkosított adat + encrypt |
 | Olvasás | **bárhol:** `Setup::get('slug', $default)` |
 
+### Admin ország-szűrés (örök)
+
+`country_id`-s Admin listák: **mindig** országra szűrtek (nincs „All countries”).  
+Admin role → saját ország; **superuser** → Select2, csak országok ahol van rekord az adott táblán.  
+Részlet: [admin-country-scope.md](admin-country-scope.md). Trait: `AdminCountryScopeTrait` / `beginAdminCountryScopedIndex()`.
+
 ### Utolsó rekord (`.last-visited`) — session
 
-Az utoljára megtekintett / szerkesztésre megnyitott / sikeresen mentett (új vagy szerkesztett) rekord sessionben:
+Az utoljára **kezelt** rekord sessionben: megtekintett, szerkesztésre megnyitott, **és** sikeresen mentett (új vagy módosított). Indexen zöld kiemelés + görgetés a sorhoz.
 
 | Kulcs | Tartalom |
 |-------|----------|
-| `Admin.lastVisited` | pl. `['Countries' => 12, 'Clubs' => 3, '_last' => ['model' => 'Countries', 'id' => 12]]` |
+| `Admin.lastVisited` | pl. `['Countries' => 12, 'Users' => 'uuid…', '_last' => ['model' => 'Users', 'id' => '…']]` |
 
 | Esemény | Mentés |
 |---------|--------|
 | `view` / `edit` (betöltés) | `rememberLastVisited('Alias', $id)` |
-| `add` / `edit` sikeres `save` | ugyanaz az új/mentett id-vel |
+| `add` / `edit` sikeres `save` | ugyanaz az új/mentett id-vel → `redirectToIndexList` |
 | `recordGet` / linked get | modal megtekintés is |
 
-Index: `$this->setLastVisitedForIndex('Alias')` → template `$lastVisitedId` → sor `class="last-visited"`.  
-CSS: `style.css` (zöld kiemelés). A `index.js` modalnál is állítja a class-t; **betöltéskor** a last-visited sorhoz **görget** (viewport teteje ≈ header + breadcrumb + ~mt-3).
+**PK típus:** int **és** UUID string (`normalizeLastVisitedId` — tilos `(int)$uuid`). Template: int → `(int)$lastVisitedId === (int)$row->id`; UUID → `(string)$lastVisitedId === (string)$row->id`.
+
+Index: `$this->setLastVisitedForIndex('Alias')` → `$lastVisitedId` → sor `class="last-visited"`.  
+CSS: `style.css`. `index.js` modalnál is állítja; **betöltéskor** görget (header + breadcrumb + ~mt-3), kivéve ha aktív a táblakereső mező.
+
+**Mentés után oldal:** `redirectToIndexList` beállítja `_resolveLastVisitedPage` → `resolveIndexPageForLastVisited` a last-visited sort tartalmazó `page`-re irányít (új rekord / más oldalra került sor is). A flag sessionben megmarad a merge során; a resolve hop **nem** hív `clearLastVisited`-et.
 
 ### Index lista állapot (sort / page / keresés) — session + URL
 
 | Kulcs | Tartalom |
 |-------|----------|
-| `Admin.indexState[Alias]` | `sort`, `direction`, `page`, `q`, opcionális `limit` |
+| `Admin.indexState[Alias]` | `sort`, `direction`, `page`, `q`, opcionális `limit`; belső: `_resolveLastVisitedPage`, `_pageBeforeSearch` |
 
 - **URL a forrás** (könyvjelzőzhető): sort / direction / **page** (1 is!) / q / limit — `App\View\Helper\PaginatorHelper` (Cake alapból elhagyná a `page=1`-et).
 - Index state helpers: `IndexListCrudTrait` (Admin + President panelek; session kulcs panel szerint).
 - Üres index URL → redirect a mentett kanonikus URL-re (`applyIndexListState` Response).
-- Mentés / „Back to list”: `redirectToIndexList('Alias')` / `$indexListUrl`.
+- Mentés / „Back to list”: `redirectToIndexList('Alias')` / `$indexListUrl` (+ last-visited oldal resolve, ha van id).
 - Kereső param: `q` (`AdminSearch::queryParam()`).
 - **Keresés indítás** (form: csak `q`): mindig **1. oldal** + kanonikus redirect.
-- **Lapozás / sort** (ha a `page` változik): `clearLastVisited`.
+- **Lapozás / sort** (ha a `page` változik **és** nincs `_resolveLastVisitedPage`): `clearLastVisited`.
 - **Keresés törlése** (`?clear_search=1`): last-visited oldal kiszámítása + **redirect** kanonikus URL-re; scroll a `.last-visited` sorra.
 
 ### Keresés (index + globális)
@@ -529,26 +541,48 @@ $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the 
 
 ### CounterCache — `*_count` mezők (kötelező)
 
-A megjelenített / törléshez használt `city_count`, `sample_count` stb. **CounterCache**-ből jön. Manuális `find()->count()` a `countRelatedChildren`-ben **tilos** (duplikált logika, elcsúszhat).
+A megjelenített / törléshez használt `*_count` **CounterCache**-ből jön — **minden prefix** ORM `save`/`delete` frissíti.  
+**Teljes térkép, soft FK, SUM closure, rebuild, greenfield checklist:** **[counter-caches.md](counter-caches.md)**; rule (alwaysApply): `counter-caches.mdc`.
+
+Manuális `find()->count()` a `countRelatedChildren`-ben **tilos** (kivéve dokumentált kivétel, pl. Competition delete = bármely jelentkező).
 
 | Kapcsolat | Hol a CounterCache? | Frissülő mező |
 |-----------|---------------------|---------------|
-| hasMany / belongsTo (pl. Sample → Parent) | **Gyerek** Table (`SamplesTable`) | `Parents.sample_count` |
-| belongsToMany / HABTM | **Through** Table (`CitiesSamplesTable`) | mindkét oldal: `Samples.city_count`, `Cities.sample_count` |
+| hasMany / belongsTo | **Gyerek** Table | szülő `*_count` |
+| belongsToMany / HABTM | **Through** Table + `cascadeCallbacks` | mindkét oldal `*_count` |
+| Soft FK `0` | gyerek CounterCache **closure → `false`** | ne `id=0` |
+| SUM / feltétel (Cake 5) | closure (`SelectQuery` / `int`) — **ne** legacy `'sum'` | pl. lunch, pipe qty |
 
 ```php
-// SamplesTable — hasMany számláló a szülőn
+// Egyszerű — hasMany számláló a szülőn (gyerek Table)
 $this->belongsTo('Parents', […]);
 $this->addBehavior('CounterCache', [
     'Parents' => ['sample_count'],
 ]);
+
+// Soft FK 0 — skip
+$this->addBehavior('CounterCache', [
+    'Clubs' => [
+        'user_count' => function ($event, $entity, $table, $original) {
+            $clubId = (int)($original
+                ? ($entity->getOriginal('club_id') ?? 0)
+                : ($entity->get('club_id') ?? 0));
+            if ($clubId < 1) {
+                return false;
+            }
+
+            return $table->find()->where(['Users.club_id' => $clubId])->count();
+        },
+    ],
+]);
+
+// HABTM — through
 $this->belongsToMany('Cities', [
     'through' => 'CitiesSamples',
     'dependent' => true,
     'cascadeCallbacks' => true, // kötelező: join törlés → CounterCache
 ]);
-
-// CitiesSamplesTable — HABTM számlálók
+// CitiesSamplesTable:
 $this->addBehavior('CounterCache', [
     'Samples' => ['city_count'],
     'Cities' => ['sample_count'],
@@ -562,7 +596,8 @@ protected function relatedChildrenCountField(): string
 ```
 
 `countRelatedChildren()` a traitben a CounterCache oszlopot olvassa (lehetőleg friss DB értékkel, ha van PK).  
-UI / `can_delete` / index Delete: ugyanez a mező (`*_count > 0`).
+UI / `can_delete` / index Delete: ugyanez a mező (`*_count > 0`).  
+Ország: `user_count` + `club_count` + `setup_count`. Klub: `user_count` + `competition_count`.
 
 Újraszámolás (import / elcsúszás után):
 
@@ -612,12 +647,14 @@ $numberDecimals = [
     'decimal' => 2,
 ];
 
-$showIdColumn = true;       // id (#)
+$showIdColumn = true;       // id (#) — UUID (36 karakter) PK-nál: false
 $showCountColumn = true;    // *_count (gyerek számosság)
 $showVisibleColumn = true;  // visible
 $showCreatedColumn = true;  // created
 $showModifiedColumn = true; // modified — külön kapcsolható
 ```
+
+**UUID PK:** ha az `id` ~36 karakteres string (pl. `users`, `competitions`), a listán **`$showIdColumn = false`** — a hosszú ID belóg a többi oszlopba. Numerikus AUTO_INCREMENT `id`-nál marad `true`. (President/Clubpresident Members listák már így vannak.)
 
 Használat:
 
@@ -629,7 +666,7 @@ LocaleNumberParser::format($row->pos, decimals: $numberDecimals['integer']);
 | Változó | Oszlop |
 |---------|--------|
 | `$numberDecimals['integer']` / `['decimal']` | tizedesjegyek a listában |
-| `$showIdColumn` | `id` (`#`) |
+| `$showIdColumn` | `id` (`#`); UUID PK → `false` |
 | `$showCountColumn` | `*_count` (pl. `city_count`, `sample_count`) |
 | `$showVisibleColumn` | `visible` |
 | `$showCreatedColumn` | `created` (önállóan) |
@@ -714,11 +751,13 @@ Minden **hasMany** / **belongsToMany** külön Bootstrap **tab**-ban a fő card 
 |---------|---------|
 | Element | `templates/element/admin/view_related_tabs.php` |
 | Tab megjelenés | **Mindig** — üresnél is (`__('No related records.')`) |
+| Opcionális toolbar | `toolbar` kulcs: HTML a pane tetején (pl. „Assign applicants”) |
 | Tábla osztály | `.index-data-table.related-records-table` + `data-get-url` / `edit` / `view` / `delete` / `labels` / `title` / `delete-form-prefix` |
 | **Name** oszlop | Félkövér `.record-modal-link` → ugyanaz a linked modal |
 | Dupla klikk soron | `$rowDoubleClickAction` (`modal` / `edit` / `none`) — a tábla `data-*` URL-jeivel |
 | Actions | legalább View + Edit; rejtett delete form a modal törléshez |
 | belongsTo | **ne** legyen tab — fő `dl` + `.record-modal-link` |
+| Admin teljes CRUD | Minden domain tábla Admin CRUD + view TAB — **`doc/admin-full-crud.md`**, rule `admin-view-related-tabs.mdc` |
 
 ```php
 <?= $this->element('admin/view_related_tabs', [
@@ -787,13 +826,24 @@ Ha a domain első mezője nem `name`, a **fő azonosító / címke** mezőt tedd
 
 ### Mentés hibakezelés (kötelező)
 
-A felhasználó **soha** ne lásson nyers PHP hibát (TypeError, stack trace) mentéskor.
+A felhasználó **soha** ne lásson nyers PHP hibát (TypeError, stack trace) mentéskor.  
+Validáció / `save` false esetén **mutasd az okot** (mezőhibák Flash-ben) — ne csak a generikus üzenetet.
 
 | Kontextus | Viselkedés |
 |-----------|------------|
-| `add` / `edit` | `patchEntity` + `save` `try { … } catch (\Throwable)` — Flash: `__('The record could not be saved. Please try again.')` |
-| `save` false (validáció) | Ugyanaz a Flash (és a mezőhibák a formon) |
+| `add` / `edit` `save` false | `$this->flashEntityErrors($entity)` — mező: üzenet (`; `-zel); üres fa → generikus fallback |
+| Váratlan `Throwable` | `try/catch` → Flash: `__('The record could not be saved. Please try again.')` (nincs stack) |
 | Select2 create | JSON `{ success: false, message }` — első entity error, vagy udvarias fallback; `Throwable` catch |
+
+```php
+if ($Table->save($entity)) { /* success */ }
+$this->flashEntityErrors($entity);
+// opcionális: $this->flashEntityErrors($entity, null, ['name' => __('Name')]);
+```
+
+- Trait: `IndexListCrudTrait::flashEntityErrors()`
+- Utility: `App\Utility\EntityFormErrors`
+- Rule: `admin-form-save-errors.mdc`
 
 ### `beforeMarshal` + DB oszlop DEFAULT-ok (PHP 8+)
 

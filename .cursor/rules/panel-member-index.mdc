@@ -17,10 +17,11 @@ Ha **President** / **Clubpresident** (vagy más panel) **Users** alapú listát 
 5. **Logikai mezők** — `active`, `enabled`: zöld pipa / piros X (nem nyers 0/1).
 6. **Modal** — `admin/modal_record_view` + kapcsolt esetén `modal_linked_record_view`; `recordGet` JSON `can_delete: false` ha nincs törlés.
 7. **Actions** — view + **edit** (űrlap, nem view) + delete gombok; törlés `btn-secondary disabled` ha tiltott. Modal `editUrl` → `edit`. **President + Clubpresident:** Enable/Disable AJAX (`toggleEnabled`) + SWAL (**disable = warning**, **enable = success**). Közös edit form: `element/users/member_edit_form`.
-8. **Controller** — `sortableFields` a `paginate()`-ben; `recordGet` (+ szülő `clubRecordGet`); ACL scope (**President:** ország / **Clubpresident:** saját `club_id` — `scopeToPresidentClub()`, más klub soha); `edit` + `canDelete=false`.
-9. **JS** — `pages/index.js` + domain script (pl. tagdíj SWAL); ne hagyd ki a modalt.
-10. **Clubpresident** — nincs külön Applicants menü; pending jelentkezők **kártyákon** a tábla fölött (`applicant_cards` element); Approve/Reject → `membership_joined_date` / `enabled`; lista = **csak** a bejelentkezett user klubja.
+8. **Controller** — `sortableFields` a `paginate()`-ben; `recordGet` (+ szülő `clubRecordGet`); ACL scope (**President:** ország / **Clubpresident:** saját `club_id` — `scopeToPresidentClub()`, más klub soha); index WHERE: **`membershipRosterOrSelfCondition()`** (roster **vagy** bejelentkezett user — admin/superuser is); `edit` + `canDelete=false`.
+9. **Önmaga UI** — saját sor: `table-success` + `list_name_cell` `isCurrentUser` → **You** badge. Fee-szűrő ne rejtse önmagát.
+10. **JS** — `pages/index.js` + domain script (pl. tagdíj SWAL); ne hagyd ki a modalt.
+11. **Clubpresident** — nincs külön Applicants menü; pending jelentkezők **kártyákon** a tábla fölött (`applicant_cards` element); Approve/Reject → `membership_joined_date` / `enabled`; lista = **csak** a bejelentkezett user klubja (+ önmaga).
 
 Referencia: `templates/President/Members/index.php`, `src/Controller/Concerns/PanelMemberListTrait.php`; Admin index minta: `doc/admin-konvenciok.md`, `doc/minta-tanulsagok.md`.
 
-Spec: `doc/admin-konvenciok.md` (Index lista), `doc/membership.md` § Taglisták.
+Spec: `doc/admin-konvenciok.md` (Index lista), `doc/membership.md` § Taglisták; rule: `panel-nav-conventions.mdc`.

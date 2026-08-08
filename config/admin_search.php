@@ -118,15 +118,11 @@ return [
                     'actor_role',
                 ],
             ],
-            /**
-             * President prefix CRUD — index `q` search only (not Admin global `/admin/search`).
-             */
             'Clubs' => [
                 'label' => 'Clubs',
                 'controller' => 'Clubs',
                 'titleField' => 'name',
                 'labelsKey' => 'club',
-                'includeInGlobal' => false,
                 'fields' => [
                     'name',
                     'short_name',
@@ -138,18 +134,71 @@ return [
                     'insta',
                 ],
             ],
+            'Users' => [
+                'label' => 'Users',
+                'controller' => 'Users',
+                'titleField' => 'email',
+                'labelsKey' => 'user',
+                'fields' => [
+                    'username',
+                    'email',
+                    'first_name',
+                    'last_name',
+                    'phone',
+                    'role',
+                ],
+            ],
+            /**
+             * Admin + panel index `q` search. Global `/admin/search` only when `includeInGlobal` is not false.
+             */
             'EmailTemplates' => [
                 'label' => 'Email templates',
                 'controller' => 'EmailTemplates',
                 'titleField' => 'name',
                 'labelsKey' => 'email_template',
-                'includeInGlobal' => false,
                 'fields' => [
                     'slug',
                     'name',
                     'subject',
                     'body_html',
                     'body_text',
+                ],
+            ],
+            'Competitions' => [
+                'label' => 'Competitions',
+                'controller' => 'Competitions',
+                'titleField' => 'name',
+                'labelsKey' => 'competition',
+                'fields' => [
+                    'name',
+                    'title',
+                    'subtitle',
+                    'subtitle2',
+                    'description',
+                    'racing_pipe_1_title',
+                    'racing_pipe_2_title',
+                    'racing_pipe_3_title',
+                ],
+            ],
+            'CompetitionsClubs' => [
+                'label' => 'Competition teams',
+                'controller' => 'CompetitionTeams',
+                'titleField' => 'id',
+                'labelsKey' => 'competitions_club',
+                'includeInGlobal' => false,
+                'fields' => [
+                    'Subclubs.name',
+                ],
+            ],
+            // Alias for panel controller name (index state / URLs)
+            'CompetitionTeams' => [
+                'label' => 'Competition teams',
+                'controller' => 'CompetitionTeams',
+                'titleField' => 'id',
+                'labelsKey' => 'competitions_club',
+                'includeInGlobal' => false,
+                'fields' => [
+                    'Subclubs.name',
                 ],
             ],
             // Continents: nincs külön Admin CRUD index — globális kereséshez később felvehető:

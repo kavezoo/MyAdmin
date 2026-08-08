@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\President;
 
 use App\Auth\AppRoles;
+use App\Auth\CurrentUser;
 use App\Auth\MembershipProfile;
 use App\Utility\ActivityLogLocale;
 use App\Utility\AdminCountry;
@@ -67,10 +68,11 @@ class ClubsController extends AppController
         $officerCountryId = $this->officerCountryId();
         if ($officerCountryId < 1) {
             $this->Flash->warning(__('Your account is not assigned to a country yet. Contact an administrator.'));
-            $this->set('clubs', $this->emptyPaginated($this->indexLimit));
+			$this->set('clubs', $this->emptyPaginated($this->indexLimit));
             $this->set('countryLabel', '');
             $this->set('countryId', 0);
             $this->set('clubPresidents', []);
+            $this->set('myClubId', CurrentUser::clubId($this->getRequest()));
 
             return;
         }
@@ -93,6 +95,7 @@ class ClubsController extends AppController
                 'enabled',
                 'visible',
                 'user_count',
+                'competition_count',
                 MembershipFee::FIELD_CLUB_ENTITY,
                 'created',
                 'modified',
@@ -122,7 +125,9 @@ class ClubsController extends AppController
         }
         $clubPresidents = $this->loadClubPresidentsMap($clubIds, $countryId);
 
-        $this->set(compact('clubs', 'clubPresidents'));
+        $myClubId = CurrentUser::clubId($this->getRequest());
+
+        $this->set(compact('clubs', 'clubPresidents', 'myClubId'));
         $this->set('countryId', $countryId);
         $this->set('countryLabel', AdminCountry::label($countryId));
         $this->set('membershipYear', MembershipFee::currentYear());
@@ -403,6 +408,10 @@ class ClubsController extends AppController
                     'pos' => LocaleNumberParser::format($club->pos, decimals: 0),
                     'user_count' => LocaleNumberParser::formatCount(
                         (int)($club->get('user_count') ?? 0),
+                        decimals: 0
+                    ),
+                    'competition_count' => LocaleNumberParser::formatCount(
+                        (int)($club->get('competition_count') ?? 0),
                         decimals: 0
                     ),
                     MembershipFee::FIELD_CLUB_ENTITY => $club->get(MembershipFee::FIELD_CLUB_ENTITY)

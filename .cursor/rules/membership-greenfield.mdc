@@ -21,6 +21,9 @@ Ha a projektben **tagsági jelentkezés** + **role panelek** (`new` → profil �
 | Role edit (President) | Max president; VP nem állíthat president-et; nincs admin a listában |
 | Jelentkezők | Clubpresident: klub scope; President: kapcsoló + ország scope |
 | Approve scope | VP/president: `country_id`; clubpresident: `club_id` (`MembershipService`) |
+| Taglista önmaga | `membershipRosterOrSelfCondition()` — roster **vagy** bejelentkezett user (You badge) |
+| Dashboard ↔ menü | `PanelNav` — kártya és sidebar **ugyanaz** (`panel-nav-conventions.mdc`) |
+| Saját klub listán | `My club` badge + `table-success` (President + panel böngésző) |
 | `pos` | DB DEFAULT — `pos-db-default.mdc` |
 
 Módosítás után: `doc/valtozasok.md` + `membership.md` / `membership-greenfield.md` ha a minta változott.

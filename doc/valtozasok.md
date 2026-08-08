@@ -5,6 +5,741 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-08 — Clubpresident alcsapat lista: keskeny verseny + modal
+
+### Mi változott / miért
+- Verseny oszlop keskenyebb; alcsapat név hangsúlyosabb.
+- Verseny név = linked modal (read-only) → `competitionRecordGet` (ország-scope).
+
+### Érintett
+- `templates/Clubpresident/CompetitionTeams/index.php`
+- `Clubpresident/CompetitionTeamsController::competitionRecordGet`
+- `doc/competitions.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Clubpresident: alcsapat törlés (csak üres csapat)
+
+### Mi változott / miért
+- Alcsapat törlés nem ment: a gomb `<button>` volt, a JS csak `a.btn-row-delete`-re figyelt.
+- Most: lista + view `<a class="btn-row-delete">`; JS elfogadja a view footer törlést is.
+- Törlés csak ha nincs besorolt tag (`user_count === 0` / `canDelete`); siker után az árva `subclubs` névrekord is törlődik.
+
+### Érintett
+- `webroot/js/pages/index.js`
+- `templates/Clubpresident/CompetitionTeams/index.php`, `view.php`
+- `Clubpresident/CompetitionTeamsController::delete`
+- `doc/competitions.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Profil: csak országos tagdíjas klubhoz csatlakozás (szöveg)
+
+### Mi változott / miért
+- Profil szerkesztés + complete-profile: klubmező felett form-text — csak az a klub választható, amely az idei nemzeti tagdíjat rendezte `{0}` felé (`MembershipFee::nationalAssociationName`; HU: az MPE).
+
+### Érintett
+- `templates/Users/edit.php`, `complete_profile.php` (+ `resources/auth_templates/…`)
+- `hu_HU/default.po`, `doc/membership.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — CounterCache: dokumentálva + memorizálva (alwaysApply)
+
+### Mi változott / miért
+- Teljes specre rögzítve: térkép, soft FK, SUM closure, törlésvédelem, greenfield checklist, rebuild.
+- Agent memória: `counter-caches.mdc` (alwaysApply) bővítve — ne kérdezze újra.
+
+### Érintett
+- `doc/counter-caches.md`, `doc/admin-konvenciok.md`, `doc/README.md`, `doc/minta-tanulsagok.md`, `doc/uj-projekt-sema-playbook.md`
+- `.cursor/rules/counter-caches.mdc`, `uj-projekt-sema.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — CounterCache: minden `*_count` + setup_count + soft FK skip
+
+### Mi változott / miért
+- Audit: minden séma `*_count` / összegző oszlop CounterCache a gyerek Table-en.
+- Új `countries.setup_count` (`Setups` CounterCache) — ország törlésvédelem: user + club + setup (nincs élő COUNT).
+- Soft FK `0` (`Users.club_id` / `country_id`, `Clubs.city_id`, `Cities.county_id`): CounterCache closure → `false`.
+
+### Érintett
+- Migráció `20260808240000_AddCountriesSetupCount`, `config/schema/countries.sql`
+- `UsersTable`, `ClubsTable`, `CitiesTable`, `SetupsTable`, `CountriesTable`, `CounterCaches`
+- `doc/counter-caches.md`, `counter-caches.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Klublista: competition_count minden prefixen
+
+### Mi változott / miért
+- Member / Clubpresident klubböngésző index + view: **Competitions** számláló (`clubs.competition_count`) a Members mellett.
+- Rendezhető oszlop a `PanelClubBrowserTrait`-ben. (Admin / President listákon már korábban megvolt.)
+
+### Érintett
+- `templates/element/panel/clubs_index.php`, `clubs_view.php`
+- `PanelClubBrowserTrait`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Verseny rendező klub: csak rendezett nemzeti tagság + competition_count
+
+### Mi változott / miért
+- Versenykiírás (Admin + President): Select2 és mentés csak azokra a klubokra, akiknek a **nemzeti tagsága az idei évre rendezett**.
+- Új `clubs.competition_count` (CounterCache a `Competitions.club_id`-ről, `user_count` után); rebuild + klub törlésvédelem (tagok + versenyek).
+- Klub index/view: Competitions számláló; Admin klub view related tab.
+
+### Érintett
+- Migráció `20260808230000_AddClubsCompetitionCount`, `config/schema/clubs.sql`
+- `ClubsTable` / `CompetitionsTable` CounterCache, `CounterCaches`, Admin/President Competitions + Clubs
+- `doc/competitions.md`, `doc/counter-caches.md`, `competitions.mdc`, `counter-caches.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Event logs: kompakt sorok + esemény sortörés
+
+### Mi változott / miért
+- Admin event log lista: kisebb sormagasság, olvasható betűméret; az esemény szövege sortöréssel (`pre-wrap`).
+- Oszlop: **Event** = description + változások összefoglaló.
+- User „My activity”: tömörebb sorok, summary wrap.
+
+### Érintett
+- `webroot/css/pages/event_logs.css`, `activity_log.css`
+- `templates/Admin/EventLogs/index.php`, `element/admin/event_log_changes.php`
+- `doc/event-logs.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Alcsapat név számláló versenyenként
+
+### Mi változott / miért
+- Felkínált alcsapatnév `{short_name} {n}` mindig az **adott verseny** meglévő csapatai alapján; új verseny → 1-től.
+- Új alcsapat form: verseny Select2 váltáskor AJAX frissíti a nevet (`suggestedName`), ha a user nem írta át.
+
+### Érintett
+- `SubclubsTable::suggestNextName`, `Clubpresident/CompetitionTeamsController::suggestedName`
+- `templates/Clubpresident/CompetitionTeams/form.php`
+- `doc/competitions.md`, `competitions.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Index: UUID id oszlop rejtve
+
+### Mi változott / miért
+- 36 karakteres UUID PK listákon nincs `#` / id oszlop (túl széles, belóg).
+- Admin Users + Admin/President Competitions: `$showIdColumn = false`.
+
+### Érintett
+- `templates/Admin/Users/index.php`, `templates/Admin/Competitions/index.php`, `templates/President/Competitions/index.php`
+- `doc/admin-konvenciok.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Versenyjelentkezés: kötelező idei klub tagdíj
+
+### Mi változott / miért
+- Member csak akkor jelentkezhet versenyre, ha a klub tagdíja az idei évre rendezett (`CompetitionApplication::memberMayApply`).
+- UI: Apply gomb/űrlap tiltva + figyelmeztetés; POST `apply` Flash hiba.
+
+### Érintett
+- `CompetitionApplication::memberMayApply`, `Member/CompetitionsController`, `Member/DashboardController`
+- `templates/Member/Competitions/{index,view}.php`, `templates/Member/Dashboard/index.php`
+- `doc/competitions.md`, `competitions.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Profil: nincs nyelvmező; language_id belépéskor
+
+### Mi változott / miért
+- Own profile / complete-profile formról le a Language Select2 (nem mentődött / nem kell).
+- Belépés után (`EVENT_AFTER_LOGIN`): a login UI locale → `users.language_id` (`UserUiLanguage::syncFromLoginRequest`).
+- Profil view: Language sor csak ha van mentett `language_id`.
+
+### Érintett
+- `templates/Users/{edit,complete_profile}.php`, `resources/auth_templates/Users/…`
+- `webroot/js/pages/users_profile.js`, `users_auth_country.js`
+- `src/Utility/UserUiLanguage.php`, `src/Application.php`, `UsersController::prepareProfileViewVars`
+- `doc/membership.md`, `doc/users-auth.md`, `doc/membership-greenfield.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — EmailTemplates: country_id + tag profil módosítás email
+
+### Mi változott / miért
+- `email_templates.country_id`: egyediség `(country_id, language_id, slug)`; Admin/President csak saját ország sablonjai.
+- Küldés: címzett **ország + saját nyelv** (`users.language_id` → ország locale → en_GB fallback ugyanazon országon belül).
+- Új sablon: `member_profile_updated` — officer/admin tag-adatlap mentés után email a tagnak (szerkeszthető).
+- Migráció újraseedi minden országra × nyelvre a 4 slugot (alapsablonok országonként).
+
+### Érintett
+- Migráció `20260808220000_EmailTemplatesCountryAndMemberProfile`, `config/schema/email_templates.sql`
+- `EmailTemplates` Entity/Table, `EmailTemplateService`, `EmailTemplateSlugs`, `EmailTemplateDefaults`
+- `MembershipMailer::memberProfileUpdated`, `MembershipService::notifyMemberProfileUpdated`
+- President/Clubpresident `MembersController::edit`, Admin `UsersController::edit`
+- Admin/President EmailTemplates CRUD + templatek
+- `doc/membership.md`, `doc/admin-country-scope.md`, `doc/form-i18n-tabs.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — President verseny view: leírás jobbra
+
+### Mi változott / miért
+- President `/president/competitions/view`: Member mintájú layout — meta balra, leírás jobbra; mobil: meta → leírás.
+- Közös CSS: `pages/competition_view.css` (President + Member).
+
+### Érintett
+- `templates/President/Competitions/view.php`, `webroot/css/pages/competition_view.css`
+- `doc/competitions.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — CounterCache: minden prefix frissíti a `*_count` mezőket
+
+### Mi változott / miért
+- Kötelező: gyerek CRUD minden prefixen ORM `save`/`delete` → CounterCache.
+- Új / bekötött: `Countries.club_count`, `Counties.city_count`, `Cities.club_count`; verseny `attendant_count` + `national_pipe_club_member_count`.
+- Verseny törlés: bármely jelentkező sor blokkol (nem csak assigned `user_count`).
+- `App\Utility\CounterCaches` + `bin/cake rebuild_counter_caches` teljes rebuild.
+
+### Érintett
+- Migráció `20260808210000_AddMissingCounterCacheColumns`
+- `CompetitionsUsersTable`, `ClubsTable`, `CitiesTable`, `CountiesTable`, `CompetitionsTable`
+- `src/Utility/CounterCaches.php`, `RebuildCounterCachesCommand`
+- sémák: countries/counties/cities/competitions.sql
+- `doc/counter-caches.md`, `.cursor/rules/counter-caches.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Member adatlap: visszavonás = lista (törlés + lista)
+
+### Mi változott / miért
+- Az adatlap Withdraw gombja a szerkesztő form mellett volt; a megbízható minta: rejtett `#form-withdraw-application` + `form=` a gombon.
+- Viselkedés = lista: `competitions_users` törlés → redirect `/member/competitions` (controller már így volt).
+
+### Érintett
+- `templates/Member/Competitions/view.php`
+- `doc/competitions.md`, `.cursor/rules/competitions.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Admin: ország-szűrés (saját / superuser select)
+
+### Mi változott / miért
+- Admin listák `country_id` szerint kötelezően szűrtek; nincs „All countries”.
+- Nem-superuser admin: csak saját ország; superuser: Select2, opciók = országok ahol van rekord az adott táblán.
+- ACL: idegen ország rekord view/edit/delete/recordGet tiltva; globális keresés is scoped.
+- Countries: admin csak a saját ország sort látja.
+
+### Érintett
+- `src/Utility/AdminCountryScope.php`, `AdminCountryScopeTrait`, `Admin\AppController`
+- Controllers: Clubs, Users, Competitions, Cities, Counties, Setups, EventLogs, Countries
+- `AdminSearch::searchAll`, templates `admin/index_country_scope`, `working_country_select`, indexek
+- `doc/admin-country-scope.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Admin menü: domain ≠ Settings
+
+### Mi változott / miért
+- A nem konfigurációs CRUD (Users, Clubs, Competitions, Email templates) **külön top-level** menüpont, nem a Settings alatt.
+- Settings almenü: Setups, Languages, Countries, Counties, Cities, Event logs.
+- `PanelNav` `navGroup` + `itemsInGroup()`; Admin sidebar: `sidebar_nav_items` (main) + Settings submenu.
+
+### Érintett
+- `src/Utility/PanelNav.php`, `templates/element/admin/sidebar.php`
+- `.cursor/rules/panel-nav-conventions.mdc`, `doc/admin-full-crud.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Last-visited: UUID + mentés utáni oldal/scroll
+
+### Mi változott / miért
+- Admin (és panel) listán az utoljára **kezelt** rekord (view / edit / add–save) kiemelése és görgetése.
+- UUID PK (`Users`, `Competitions`, …): `rememberLastVisited` eddig `(int)`-re kényszerítette → `0`, nem tárolódott.
+- Mentés után `redirectToIndexList` beállítja `_resolveLastVisitedPage`; a flag a session merge-ben **megmarad**, a resolve hop nem törli a kiemelést.
+- `resolveIndexPageForLastVisited` csak akkor redirectel, ha a last-visited más oldalon van.
+
+### Érintett
+- `src/Controller/Concerns/IndexListCrudTrait.php`
+- `doc/admin-konvenciok.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Sidebar: fixed, tartalomtól független görgetés
+
+### Mi változott / miért
+- A sidebar eddig `position: absolute` volt → a tartalommal együtt lejjebb gördült, és eltűnt a viewportból.
+- Most **fixed** a header alatt; a menü saját scrollbarja (`.sidebar-inner`); a tartalom görgetése nem viszi magával.
+- Enlarged (ikon) mód: overflow visible a flyout almenük miatt.
+- `MyAdmin.initFixedSidebarScroll()`: a sidebar fölött a kerék nem görgeti a tartalmat (szélénél sem „átfolyik”).
+
+### Érintett
+- `webroot/css/style.css`, `webroot/js/app.js`, `doc/admin-konvenciok.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — President: tag áttehető másik klubba (Select)
+
+### Mi változott / miért
+- President Members edit: **Club** Select2 — az ország összes enabled+visible klubja.
+- **Nincs** éves nemzeti tagdíj szűrés a listán (`optionsForCountry(..., requireNationalFeePaid: false)`); a profil/regisztráció select továbbra is fee-szűrt.
+- Klubváltáskor: role változatlan; klub tagdíj nullázás; régi klub kijelölt elnök törlése ha ő volt.
+
+### Érintett
+- `src/Model/Table/ClubsTable.php` (`optionsForCountry` 3. param, `isAllowedForOfficerAssign`)
+- `src/Controller/President/MembersController.php`
+- `templates/element/users/member_edit_form.php`, `templates/President/Members/form.php`
+- `doc/membership.md`, `doc/membership-greenfield.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Tag visszavonás: ne kérdezzen mentésről
+
+### Mi változott / miért
+- A Withdraw gomb a szerkesztő `#form-horizontal` **belül** volt; a JS `closest('form')` a update formot submitolta → „Save changes?” SWAL.
+- Fix: `form=` attribútum elsőbbsége + `allowFormLeave()`; visszavonás után lista (mint induláskor, nincs jelentkezés).
+
+### Érintett
+- `templates/Member/Competitions/view.php`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Tag jelentkezés: számlálók + Withdraw gomb
+
+### Mi változott / miért
+- **Bug:** CakePHP 5 CounterCache nem támogatja a legacy `'sum' => …` kulcsot → a `lunch_for_the_attendant` frissítése hibázott / 0-n maradt jelentkezéskor és visszavonáskor.
+- **Fix:** lunch SUM closure; `user_count` csak `assigned`; alcsapat `user_count` szintén assigned.
+- **UI:** Withdraw gomb **csak** aktív jelentkezésnél (`CompetitionApplication::hasApplication()`); nincs / törölt rekord → nincs gomb, lista Apply.
+- Visszavonás ha nincs sor: info Flash („no application to withdraw”); soft-withdrawn sor újraaktiválható apply-nál.
+- `bin/cake rebuild_counter_caches` most a verseny számlálókat is újraszámolja.
+
+### Érintett
+- `src/Model/Table/CompetitionsUsersTable.php`, `src/Utility/CompetitionApplication.php`
+- `src/Controller/Member/{Competitions,Dashboard}Controller.php`
+- `templates/Member/Competitions/{index,view}.php`, `templates/Member/Dashboard/index.php`
+- `src/Command/RebuildCounterCachesCommand.php`
+- `doc/competitions.md`, `.cursor/rules/competitions.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — View related tabs gap zárás + Clubpresident teams
+
+### Mi változott / miért
+- **Admin Countries/Counties/Cities view**: gyerek TAB-ok modalos CRUD-dal (`view_related_tabs`).
+  - Countries: Users, Setups, Counties, Cities, Clubs
+  - Counties: Cities
+  - Cities: Clubs
+- **Clubpresident CompetitionTeams view**: inline lista helyett `view_related_tabs` (Team members) + modal; `CompetitionApplicants::recordGet`.
+- `view_related_tabs` element: opcionális `toolbar` HTML a tab pane tetején.
+- Örök szabály már rögzítve: `admin-view-related-tabs.mdc` + `doc/admin-full-crud.md`.
+
+### Érintett
+- `templates/Admin/{Countries,Counties,Cities}/view.php`
+- `templates/Clubpresident/CompetitionTeams/view.php`
+- `templates/element/admin/view_related_tabs.php`
+- `src/Controller/Clubpresident/CompetitionApplicantsController.php`
+- `doc/admin-full-crud.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Admin Competitions + EmailTemplates teljes CRUD
+
+### Mi változott / miért
+- **Admin\CompetitionsController**: globális verseny CRUD ország szűrővel (mint Clubs); view: min. létszám tabok (`view_related_tabs`).
+- **Admin\CompetitionTeamsController** + **Admin\CompetitionApplicantsController**: nested gyerek modal CRUD (`recordGet`, view, edit, delete).
+- **Admin\EmailTemplatesController**: President mintából, Admin session (`Admin.emailTemplatesFilterLanguageId`).
+- Sablonok: `templates/Admin/{Competitions,EmailTemplates,CompetitionTeams,CompetitionApplicants}/`.
+- `PanelNav::admin()`: Competitions + Email templates menü/kártya.
+- `admin_search.php`: Competitions + EmailTemplates globális keresésben (`includeInGlobal` false törölve).
+
+### Érintett
+- `src/Controller/Admin/{Competitions,CompetitionTeams,CompetitionApplicants,EmailTemplates}Controller.php`
+- `templates/Admin/{Competitions,EmailTemplates,CompetitionTeams,CompetitionApplicants}/`
+- `src/Utility/PanelNav.php`, `config/admin_search.php`
+- `doc/admin-full-crud.md`, `doc/valtozasok.md`
+
+### Gap
+- Admin CompetitionTeams: nincs külön index/add (alcsapat létrehozás továbbra is Clubpresident UI).
+- Ország váltás a verseny formon: klublista nem AJAX — mentés után / újratöltés után frissül.
+
+---
+
+## 2026-08-08 — Admin Users teljes CRUD
+
+### Mi változott / miért
+- Új `Admin\UsersController`: index (ország szűrő, keresés, lapozó), add/edit/view/delete, `recordGet`, `clubRecordGet`, `applicationRecordGet`.
+- Form: email, jelszó (csak add), név, role, country/club, tagság mezők, active/enabled, Tempus dátumok.
+- View: fő mezők + klub linked modal; **Competition applications** TAB (`competitions_users`, read-only modal).
+- `UsersTable`: `hasMany CompetitionsUsers`, `canDelete()` / `beforeDelete()` (versenyjelentkezés vagy klubelnök → tiltott törlés).
+- `PanelNav::admin()` + `admin_search.php`: Users bejegyzés.
+
+### Érintett
+- `src/Controller/Admin/UsersController.php`
+- `templates/Admin/Users/{index,form,view}.php`
+- `src/Model/Table/UsersTable.php`
+- `src/Utility/PanelNav.php`
+- `config/admin_search.php`
+- `doc/admin-full-crud.md`, `doc/valtozasok.md`
+
+### Blokker
+- `Admin\CompetitionsUsers` CRUD még nincs — a Users view Applicants tab csak olvasható modal (`applicationRecordGet`); edit/delete URL üres.
+
+---
+
+## 2026-08-08 — Admin Clubs teljes CRUD sablonok
+
+### Mi változott / miért
+- `Admin\ClubsController` működő index / form / view sablonok: globális klublista ország szűrővel, form (Select2, visible+pos), view + **Members** gyerek TAB (`view_related_tabs`, Admin Users CRUD URL-ek).
+- `PanelNav::admin()` + `admin_search.php`: Clubs bejegyzés (globális keresésben is).
+- A `ClubsTable`-en nincs `CompetitionsClubs` hasMany — verseny TAB kihagyva.
+
+### Érintett
+- `templates/Admin/Clubs/{index,form,view}.php`
+- `src/Utility/PanelNav.php`
+- `config/admin_search.php`
+- `doc/admin-full-crud.md`, `doc/valtozasok.md`
+
+### Blokker
+- ~~`Admin\UsersController` még nincs~~ — **kész** (2026-08-08 Admin Users CRUD).
+
+---
+
+## 2026-08-08 — Dokumentáció: panel + verseny örök szabályok
+
+### Mi változott / miért
+- Tartós döntések egy helyre: agent ne kérdezzen / ne felejtsen.
+- Rules: `panel-nav-conventions.mdc` (alwaysApply), `competitions.mdc`.
+- Frissítve: `competitions.md`, `membership.md`, `membership-greenfield.md`, `users-auth.md`, `README.md`, `panel-member-index.mdc`, `membership-greenfield.mdc`.
+
+### Tartalom (rövid)
+- PanelNav = dashboard ↔ menü
+- Taglista: önmaga mindig (+ You)
+- Klublista: My club
+- Verseny: min. létszám tabok, Subclubs LEFT, Member view layout
+
+### Érintett
+- `.cursor/rules/{panel-nav-conventions,competitions,panel-member-index,membership-greenfield}.mdc`
+- `doc/{competitions,membership,membership-greenfield,users-auth,README,struktura,valtozasok}.md`
+
+---
+
+## 2026-08-08 — Taglista: bejelentkezett user mindig (önmaga)
+
+### Mi változott / miért
+- President / Clubpresident Members: roster role-ok **vagy** a bejelentkezett `Users.id` — admin/superuser panelváltáskor is látszik.
+- „Only national fee paid” szűrő nem rejti el önmagát.
+- UI: zöld sor + **You** badge.
+
+### Érintett
+- `PanelMemberListTrait::membershipRosterOrSelfCondition`
+- `President/Clubpresident MembersController`, `element/users/list_name_cell`
+- `doc/membership.md`
+
+---
+
+## 2026-08-08 — President klublista: „My club” jelzés
+
+### Mi változott / miért
+- `/president/clubs` index: saját klub (`Users.club_id`) — zöld sor + **My club** badge (ugyanaz a minta, mint Member/Clubpresident böngészőben).
+
+### Érintett
+- `President/ClubsController::index`, `templates/President/Clubs/index.php`
+- `doc/membership.md`
+
+---
+
+## 2026-08-08 — PanelNav: dashboard kártyák = sidebar menü (minden prefix)
+
+### Mi változott / miért
+- Egy forrás: `App\Utility\PanelNav` — dashboard card és sidebar link ugyanazok a célok.
+- Prefixek: Admin, President, Clubpresident, Member, New.
+- Member menü: **Profile** + **Competition archive** is (korábban csak a dashboardon voltak).
+- Admin dashboard: **Counties** + **Cities** kártyák (menüvel egyezés).
+
+### Érintett
+- `src/Utility/PanelNav.php`
+- `templates/element/panel/sidebar_nav_items.php`
+- `templates/element/{admin,president,clubpresident,member,new}/sidebar.php`
+- `templates/{Admin,President,Clubpresident,Member,New}/Dashboard/index.php`
+- `doc/membership.md`, `doc/users-auth.md`, `doc/competitions.md`, `doc/struktura.md`
+
+---
+
+## 2026-08-08 — President verseny view: gyerek TAB-ok (min. létszám)
+
+### Mi változott / miért
+- `/president/competitions/view`: **Sub-teams** + **Applicants** related tabs (`view_related_tabs`).
+- Csak azok az alcsapatok (`competitions_clubs`), ahol `user_count >= minimum_team_size`.
+- Jelentkezők tab: csak **assigned** tagok ezekben az alcsapatokban.
+- Adatlapon: Competing sub-teams / Competing applicants számlálók.
+
+### Érintett
+- `President/CompetitionsController::view`
+- `templates/President/Competitions/view.php`
+- `CompetitionsClubsTable::filterMeetingMinimum`
+- `doc/competitions.md`
+- locale `.po` (hu/de/fr/it/sk)
+
+---
+
+## 2026-08-08 — Clubpresident jelentkezők: pending sorok hiányoztak
+
+### Mi változott / miért
+- `CompetitionsClubs` → `Subclubs` INNER JOIN a nested containnél kiszűrte a **pending** jelentkezéseket (`competition_club_id` NULL).
+- Join → **LEFT**, így a besorolatlan jelentkezők is megjelennek.
+
+### Érintett
+- `src/Model/Table/CompetitionsClubsTable.php`
+- `doc/competitions.md`
+
+---
+
+## 2026-08-08 — Member verseny adatlap: Leírás jobbra (CSS grid)
+
+### Mi változott / miért
+- Nagy képernyő (`lg+` / ≥992px): bal oszlop = meta + alatta inputok; jobb = **Leírás** (`grid-row: 1 / -1`, lehet hosszabb).
+- Mobil: flex order — meta → leírás → inputok alul.
+
+### Érintett
+- `templates/Member/Competitions/view.php`
+- `webroot/css/pages/competition_view.css`
+- `doc/competitions.md`
+
+---
+
+## 2026-08-08 — Verseny UI i18n (hu/de/fr/it/sk)
+
+### Mi változott / miért
+- Verseny / jelentkezés / alcsapat címkék feltöltve: `hu_HU`, `de_DE` (+AT/CH/LI), `fr_FR` (+MC), `it_IT` (+SM/VA), `sk_SK`.
+- Angol = msgid (alap).
+
+### Érintett
+- `resources/locales/{hu_HU,de_*,fr_*,it_*,sk_SK}/default.po`
+- `tmp/i18n_upsert_competitions.php`
+
+---
+
+## 2026-08-08 — Jelentkezés adatok: tag határidőig, utána klubelnök
+
+### Mi változott / miért
+- Tag: ebéd/pipa/megjegyzés **szerkeszthető a jelentkezési határidőig**; utána csak olvasás (+ visszavonás tiltva).
+- Klubelnök: `/clubpresident/competition-applicants/edit` — határidő után is módosíthat.
+
+### Érintett
+- `Member/CompetitionsController` (`updateApplication`), view + `element/competitions/application_fields`
+- `CompetitionApplicantsController::edit` + template
+- `doc/competitions.md`
+
+---
+
+## 2026-08-08 — Member: jelentkezés lista + visszavonás CounterCache
+
+### Mi változott / miért
+- Jelentkezés / visszavonás után mindig a versenylista.
+- Lista kártyán **Withdraw** (SWAL); törléskor CounterCache (`user_count`, `lunch_for_the_attendant`, alcsapat `user_count`).
+
+### Érintett
+- `Member/CompetitionsController`, index/view templatek, `CompetitionsUsersTable`
+- `doc/competitions.md`
+
+---
+
+## 2026-08-08 — Flash toast UTF-8 (Simple Notify)
+
+### Mi változott / miért
+- Toast szöveg `textContent`-tel (ne `innerHTML` + előzetes `h()`), hogy az ékezetek ne „fura” karakterként jelenjenek meg.
+- Jelentkezés siker Flash HU fordítás.
+
+### Érintett
+- `templates/element/admin/script_flash.php`, `templates/element/flash/{success,error,warning,info,default}.php`
+- `resources/locales/hu_HU/default.po`
+
+---
+
+## 2026-08-08 — hu_HU .po mojibake javítás
+
+### Mi változott / miért
+- Sérült UTF-8 fordítások (`MÃ©gsem`, `TÃ¶rlÃ©s`, …) javítva a SWAL / gomb feliratoknál (~570 `msgstr`).
+
+### Érintett
+- `resources/locales/hu_HU/default.po`
+
+---
+
+## 2026-08-08 — Member jelentkezés SWAL megerősítés
+
+### Mi változott / miért
+- Verseny jelentkezés submit előtt SweetAlert: „valóban jelentkezel?”
+
+### Érintett
+- `templates/Member/Competitions/view.php`
+
+---
+
+## 2026-08-08 — Member jelentkezés → vissza a listára
+
+### Mi változott / miért
+- Sikeres versenyjelentkezés után redirect a `/member/competitions` listára (nem a view-n marad).
+
+### Érintett
+- `src/Controller/Member/CompetitionsController.php` (`apply`)
+
+---
+
+## 2026-08-08 — Panel vezérlőpult: minden menüpont kártyán
+
+### Mi változott / miért
+- Sidebar menüpontok a **Dashboard** kártyáin is elérhetők (ne csak a menüből).
+- Clubpresident: Members, Clubs, Sub-teams, Competition applicants.
+- President: Members, Clubs, Competitions, Email templates.
+- Member: Profile, Competitions, Archive, Clubs (+ versenylista a dashboardon).
+
+### Érintett
+- `templates/{Clubpresident,President,Member}/Dashboard/index.php`
+- `doc/competitions.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-08 — Member versenyek + jelentkezés törlés
+
+### Mi változott / miért
+- Tag panel: versenyek a **dashboardon** és `/member/competitions` listán (ország + visible + nem zárult).
+- Hivatalos jelentkezett = csak alcsapatba **besorolt** (`assigned` + `competition_club_id`); CounterCache `user_count` is így.
+- Tag: **Withdraw** → `competitions_users` törlés; klubelnök: ugyanez a Competition applicants oldalon.
+
+### Érintett
+- `Member/{Dashboard,Competitions}Controller` + templatek
+- `CompetitionApplicantsController` `delete`, `CompetitionApplication`, `CompetitionsUsersTable`
+- `doc/competitions.md`
+
+---
+
+## 2026-08-08 — Klubelnök: jelentkezők alcsapatba sorolása
+
+### Mi változott / miért
+- Tag jelentkezés (`competitions_users`) → klubelnök állítja be, melyik **alcsapatban** (`competitions_clubs` / `subclubs`) indul.
+- Új menü: **Competition applicants** (`/clubpresident/competition-applicants`) — versenyenként lista + Select alcsapat + Save.
+- Per-team applicants oldal linkel az összes jelentkezőhöz.
+
+### Érintett
+- `src/Controller/Clubpresident/CompetitionApplicantsController.php`
+- `templates/Clubpresident/CompetitionApplicants/index.php`
+- `templates/element/clubpresident/sidebar.php`, `CompetitionTeams/applicants.php`
+- `doc/competitions.md`
+
+---
+
+## 2026-08-08 — competitions_clubs.name törölve
+
+### Mi változott / miért
+- A versenyre jelentkezett klub (`competitions_clubs`) **nem** tárol nevet — a név csak a `subclubs`-on van.
+- Migráció: meglévő `name` → `subclubs` backfill, majd oszlop + unique index drop; `subclub_id` NOT NULL.
+
+### Érintett
+- `config/Migrations/20260808200000_DropCompetitionsClubsName.php`, `config/schema/competitions.sql`
+- Entity/Table `CompetitionsClub*`, CompetitionTeams + Member templatek, `admin_search.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-08 — Alcsapat név: short_name + sorszám → subclubs
+
+### Mi változott / miért
+- `{klub short_name} {n}` generálás a **`subclubs`** táblán (`SubclubsTable::suggestNextName`), klub+verseny szerint.
+- Alcsapat mentés: létrehoz / frissít `subclubs` sort, `competitions_clubs.subclub_id` + név tükör.
+
+### Érintett
+- `src/Model/Table/SubclubsTable.php`
+- `src/Controller/Clubpresident/CompetitionTeamsController.php`
+- form hint, `doc/competitions.md`
+
+---
+
+## 2026-08-08 — Mentés hiba: mindig mutasd az okot
+
+### Mi változott / miért
+- Validáció / `save` false → Flash-ben a **konkrét** mezőhibák (`flashEntityErrors`), ne csak generikus üzenet.
+- Közös: `IndexListCrudTrait::flashEntityErrors` + `EntityFormErrors`; rule + specek.
+
+### Érintett
+- `src/Utility/EntityFormErrors.php`, `src/Controller/Concerns/IndexListCrudTrait.php`
+- `CompetitionTeamsController`, `President/CompetitionsController` (helyi másolat törölve)
+- `.cursor/rules/admin-form-save-errors.mdc`, `doc/admin-konvenciok.md`, `admin-oldal.md`, `README.md`
+
+---
+
+## 2026-08-08 — Clubpresident alcsapatok: teljes CRUD + gyerekek
+
+### Mi változott / miért
+- `/clubpresident/competition-teams` standard CRUD: index (modal/`recordGet`), view, add/edit/delete.
+- View: besorolt tagok (`competitions_users`) gyereklista + unassign; Assign applicants külön action.
+- Menü: **Sub-teams** (alcsapatok).
+
+### Érintett
+- `src/Controller/Clubpresident/CompetitionTeamsController.php`
+- `templates/Clubpresident/CompetitionTeams/{index,view,form,applicants}.php`
+- `templates/element/clubpresident/sidebar.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-08 — Competition teams mentés: club_id validáció
+
+### Mi változott / miért
+- Alcsapat mentés mindig elbukott: `club_id` nincs a formon → `requirePresence` sticky hiba → üres lista (0 sor a DB-ben).
+- Mentéskor a `club_id` bekerül a patch adatba; mezőhibák Flash-ben.
+
+### Érintett
+- `src/Controller/Clubpresident/CompetitionTeamsController.php`
+
+---
+
+## 2026-08-08 — Klub böngésző (Clubpresident + Member)
+
+### Mi változott / miért
+- Klubelnök és tagok megnézhetik a saját klub adatlapját, és listázhatják a többi (visible+enabled) klubot.
+- Alap szűrő: saját ország; select = csak olyan országok, ahol van legalább egy klub.
+- Read-only (`index` + `view`); saját klub kiemelve („My club”).
+
+### Érintett
+- `src/Controller/Concerns/PanelClubBrowserTrait.php`
+- `src/Controller/{Clubpresident,Member}/ClubsController.php`
+- `templates/element/panel/clubs_{index,view}.php` + prefix wrapper templatek
+- `templates/element/{clubpresident,member}/sidebar.php`
+- `doc/membership.md`, `doc/membership-greenfield.md`
+
+---
+
+## 2026-08-08 — Competitions form: hibák + összesítő mezők tisztítás
+
+### Mi változott / miért
+- Mentés hiba: mezőnkénti / általános ok Flash-ben (korábban `country_id`/`user_id` requirePresence a form nélkül bukott).
+- Kiíró formról le: lunch / special lunch / pipe count / counter mezők.
+- DB: `competitions.special_lunch`, `racing_pipe_*_count` törölve; pipe **title** marad (üresen hagyható); lunch sum + qty az alkalmazásokon.
+
+### Érintett
+- `config/Migrations/20260808190000_DropCompetitionSummaryColumns.php`
+- `src/Controller/President/CompetitionsController.php`, Entity/Table, form, Member apply view, schema, admin_search
+
+---
+
+## 2026-08-08 — Competitions CRUD + sémajavítás
+
+### Mi változott / miért
+- Séma: `competitions_users.competition_id` + status/result; `competitions_clubs.name`; nullable acceptance; counter DEFAULT 0.
+- **President** `/president/competitions` — országos versenykiírás CRUD.
+- **Clubpresident** `/clubpresident/competition-teams` — alcsapatok + tag besorolás (min. létszám jelzés).
+- **Member** `/member/competitions` — jelentkezés ablak szerint; lezárt után csak view/secondary; `end_datetime` után nem a listán; archívum.
+- Email template form: slug Select2 helyett szöveges kulcs (rendszer).
+
+### Érintett
+- `config/Migrations/20260808180000_AlterCompetitionsSchema.php`, `config/schema/competitions.sql`
+- `src/Model/{Entity,Table}/Competition*` / `Subclub*`
+- `src/Controller/{President,Clubpresident,Member}/…`
+- `templates/{President/Competitions,Clubpresident/CompetitionTeams,Member/Competitions}/`
+- sidebars, `config/admin_search.php`, `src/Utility/CompetitionApplication.php`
+- EmailTemplates form + save slug validáció
+
+---
+
 ## 2026-08-08 — Email templates index: nyelvszűrő javítás
 
 ### Mi változott / miért

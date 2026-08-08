@@ -128,36 +128,10 @@ $this->Html->script([
 					<?= h($rowDoubleClickHint) ?>
 					<?php if ($filterCountryLabel !== ''): ?>
 						<div class="text-muted"><?= h(__('Showing counties for {0}', $filterCountryLabel)) ?></div>
-					<?php elseif ($filterCountryId < 1): ?>
-						<div class="text-muted"><?= h(__('Showing counties for all countries')) ?></div>
 					<?php endif; ?>
 				</div>
 				<div class="float-right d-flex align-items-center gap-2 flex-wrap justify-content-end">
-					<form method="get" action="<?= h($this->Url->build(['action' => 'index'])) ?>"
-						class="counties-country-filter mb-0"
-						id="counties-country-filter">
-						<?php foreach ($filterQuery as $name => $value): ?>
-							<?php if (!is_scalar($value)) {
-								continue;
-							} ?>
-							<input type="hidden" name="<?= h((string)$name) ?>" value="<?= h((string)$value) ?>">
-						<?php endforeach; ?>
-						<select name="country_id"
-							id="counties-country-id"
-							class="form-select"
-							style="min-width: 14rem;"
-							aria-label="<?= h(__('Country')) ?>"
-							data-ajax-url="<?= h($this->Url->build(['action' => 'countryOptions'])) ?>"
-							data-placeholder="<?= h(__('Select country...')) ?>">
-							<?php if ($filterCountryId < 1): ?>
-								<option value="0" selected><?= h(__('All countries')) ?></option>
-							<?php else: ?>
-								<option value="<?= (int)$filterCountryId ?>" selected>
-									<?= h($filterCountryLabel !== '' ? $filterCountryLabel : (string)$filterCountryId) ?>
-								</option>
-							<?php endif; ?>
-						</select>
-					</form>
+					<?= $this->element('admin/index_country_scope') ?>
 					<span class="index-header-sep" aria-hidden="true">|</span>
 					<?php
 					$indexSearch = (string)($this->get('indexSearch') ?? '');

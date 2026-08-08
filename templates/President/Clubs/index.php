@@ -8,6 +8,7 @@
  * @var string $countryLabel
  * @var int $countryId
  * @var int $membershipYear
+ * @var int $myClubId
  */
 use App\Auth\MembershipProfile;
 use App\Utility\MembershipFee;
@@ -38,6 +39,7 @@ $showModifiedColumn = true;
 $countryLabel = (string)($countryLabel ?? '');
 $countryId = (int)($countryId ?? 0);
 $membershipYear = (int)($membershipYear ?? MembershipFee::currentYear());
+$myClubId = (int)($myClubId ?? 0);
 $clubEntityFeeLabel = MembershipFee::clubEntityFeeLabel($countryId);
 
 $showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
@@ -55,7 +57,7 @@ if ($showVisibleColumn) {
 	$indexColspan++;
 }
 if ($showCountColumn) {
-	$indexColspan++;
+	$indexColspan += 2; // members + competitions
 }
 if ($showTimestampColumn) {
 	$indexColspan++;
@@ -113,6 +115,7 @@ $config = [
 		'visible' => __('Visible'),
 		'pos' => __('Position'),
 		'user_count' => __('Members'),
+		'competition_count' => __('Competitions'),
 		MembershipFee::FIELD_CLUB_ENTITY => $clubEntityFeeLabel,
 		'created' => __('Created'),
 		'modified' => __('Modified'),
@@ -177,6 +180,7 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 							<?php endif; ?>
 							<?php if ($showCountColumn): ?>
 								<th scope="col" class="number count"><?= $this->Paginator->sort('user_count', __('Members')) ?></th>
+								<th scope="col" class="number count"><?= $this->Paginator->sort('competition_count', __('Competitions')) ?></th>
 							<?php endif; ?>
 							<?php if ($showTimestampColumn): ?>
 								<th scope="col" class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
@@ -195,8 +199,11 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 						<?php foreach ($clubs as $club): ?>
 							<?php
 							$userCount = (int)($club->user_count ?? 0);
-							$canDeleteRow = $userCount === 0;
+							$competitionCount = (int)($club->competition_count ?? 0);
+							$canDeleteRow = $userCount === 0 && $competitionCount === 0;
 							$isLastVisited = isset($lastVisitedId) && (int)$lastVisitedId === (int)$club->id;
+							$isMine = $myClubId > 0 && (int)$club->id === $myClubId;
+							$rowClass = trim(($isLastVisited ? 'last-visited' : '') . ($isMine ? ' table-success' : ''));
 							$president = $clubPresidents[(int)$club->id] ?? null;
 							$feeDate = $club->get(MembershipFee::FIELD_CLUB_ENTITY);
 							$feePaid = MembershipFee::isPaidForYear($feeDate, $membershipYear);
@@ -204,7 +211,7 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 							$feeLastFormatted = MembershipFee::lastPaymentFormatted($feeDate);
 							$formId = 'club-national-fee-form-' . (int)$club->id;
 							?>
-							<tr id="record-<?= (int)$club->id ?>" data-id="<?= (int)$club->id ?>" data-can-delete="<?= $canDeleteRow ? '1' : '0' ?>"<?= $isLastVisited ? ' class="last-visited"' : '' ?>>
+							<tr id="record-<?= (int)$club->id ?>" data-id="<?= (int)$club->id ?>" data-can-delete="<?= $canDeleteRow ? '1' : '0' ?>"<?= $rowClass !== '' ? ' class="' . h($rowClass) . '"' : '' ?>>
 								<?php if ($showIdColumn): ?>
 									<td class="number id"><?= h($club->id) ?></td>
 								<?php endif; ?>
@@ -225,6 +232,9 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 											</span>
 										<?php endif; ?>
 										<span><?= h($club->name) ?></span>
+										<?php if ($isMine): ?>
+											<span class="badge text-bg-primary ms-1"><?= __('My club') ?></span>
+										<?php endif; ?>
 									</div>
 								</td>
 								<td class="string city">
@@ -292,6 +302,7 @@ $membersDeleteUrl = $this->Url->build(['prefix' => 'President', 'controller' => 
 								<?php endif; ?>
 								<?php if ($showCountColumn): ?>
 									<td class="number count text-end"><?= h(\App\Utility\LocaleNumberParser::formatCount($userCount, decimals: $numberDecimals['integer'])) ?></td>
+									<td class="number count text-end"><?= h(\App\Utility\LocaleNumberParser::formatCount($competitionCount, decimals: $numberDecimals['integer'])) ?></td>
 								<?php endif; ?>
 								<?php if ($showTimestampColumn): ?>
 									<td class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">

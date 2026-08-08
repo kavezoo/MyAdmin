@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Utility\CounterCaches;
 use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Cake\ORM\Table;
 
 /**
  * Rebuild CounterCache columns after import / schema drift.
@@ -23,7 +23,7 @@ class RebuildCounterCachesCommand extends Command
     protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser->setDescription(
-            'Rebuild CounterCache fields: Countries.user_count, Clubs.user_count.'
+            'Rebuild all CounterCache / summary columns (users, clubs, cities, counties, competitions).'
         );
 
         return $parser;
@@ -36,31 +36,12 @@ class RebuildCounterCachesCommand extends Command
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $users = $this->fetchTable('Users');
-        $countries = $this->fetchTable('Countries');
-
-        // Translate LEFT JOIN makes ORDER BY id ambiguous during CounterCache parent scans.
-        $this->withoutTranslate($countries);
-
-        $io->out('Updating Countries.user_count (Users → Countries CounterCache)…');
-        $users->getBehavior('CounterCache')->updateCounterCache('Countries');
-
-        $io->out('Updating Clubs.user_count (Users → Clubs CounterCache)…');
-        $users->getBehavior('CounterCache')->updateCounterCache('Clubs');
-
+        $io->out('Rebuilding CounterCache fields…');
+        foreach (CounterCaches::rebuildAll() as $step) {
+            $io->out('  • ' . $step);
+        }
         $io->success('CounterCache rebuild finished.');
 
         return static::CODE_SUCCESS;
-    }
-
-    /**
-     * @param \Cake\ORM\Table $table
-     * @return void
-     */
-    protected function withoutTranslate(Table $table): void
-    {
-        if ($table->hasBehavior('Translate')) {
-            $table->removeBehavior('Translate');
-        }
     }
 }

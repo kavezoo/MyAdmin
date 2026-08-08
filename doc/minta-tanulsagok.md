@@ -91,17 +91,37 @@ A Tempus naptár: `dateFormat.intl` + `Intl.Locale.weekInfo` (fallback: `dateFor
 
 ## 2. CounterCache + törlésvédelem (kötelező minta)
 
+**Éles térkép + soft FK + SUM:** [counter-caches.md](counter-caches.md); rule: `counter-caches.mdc` (alwaysApply).
+
 **Ne** írj manuális `find()->count()`-ot a `countRelatedChildren`-be, és **ne** állíts `*_count = count(_ids)`-t a controllerben.
 
 | Kapcsolat | CounterCache hol? | Mező |
 |-----------|-------------------|------|
-| hasMany / belongsTo | **Gyerek** Table | pl. `Parents.sample_count`, `Countries.user_count` (Users → Countries) |
+| hasMany / belongsTo | **Gyerek** Table | pl. `Parents.sample_count`, `Countries.user_count` |
 | belongsToMany | **Through** Table | pl. `Samples.city_count`, `Cities.sample_count` |
+| Soft FK `0` | closure → `false` | ne `id=0` |
+| SUM / feltétel | closure (Cake 5: ne `'sum'`) | lunch, pipe qty |
 
 ```php
 // Gyerek Table (Samples → Parents)
 $this->belongsTo('Parents', […]);
 $this->addBehavior('CounterCache', ['Parents' => ['sample_count']]);
+
+// Soft FK (Users.club_id = 0)
+$this->addBehavior('CounterCache', [
+    'Clubs' => [
+        'user_count' => function ($event, $entity, $table, $original) {
+            $clubId = (int)($original
+                ? ($entity->getOriginal('club_id') ?? 0)
+                : ($entity->get('club_id') ?? 0));
+            if ($clubId < 1) {
+                return false;
+            }
+
+            return $table->find()->where(['Users.club_id' => $clubId])->count();
+        },
+    ],
+]);
 
 // HABTM mindkét oldalon
 $this->belongsToMany('Cities', [
@@ -128,6 +148,7 @@ protected function relatedChildrenCountField(): string
 ```
 
 - Trait: `countRelatedChildren()` / `canDelete()` a CounterCache oszlopot olvassa (**friss DB** érték PK mellett).
+- Ország: `user_count` + `club_count` + `setup_count`. Klub: `user_count` + `competition_count`.
 - Új rekord: `*_count = 0` csak ha NOT NULL és nincs DB DEFAULT.
 - Elcsúszás / import után: `bin/cake rebuild_counter_caches`
 - UI: lásd §3 (Delete gomb kinézet)

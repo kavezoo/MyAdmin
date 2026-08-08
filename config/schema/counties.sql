@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `counties` (
   `region` varchar(100) NOT NULL,
   `pos` int(11) NOT NULL DEFAULT 1000,
   `visible` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `city_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: cities in this county',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   PRIMARY KEY (`id`),

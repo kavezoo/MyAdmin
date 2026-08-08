@@ -18,10 +18,11 @@ Ha **új projektet** indítunk, **éles DB**-re építünk, vagy **új CRUD** mo
 | Translate szöveg | Form nyelvi TAB + `data-name-target` fókusz; index `AdminTranslate` (tilos COALESCE) |
 | date/time/datetime | Tempus + dátum middleware |
 | int/decimal | inputmask + szám middleware; pénz → `formatCurrency` |
+| `country_id` / ország scope | Admin: saját ország; superuser Select2 = országok gyerekrekorddal — `admin-country-scope.mdc` |
+| `*_count` / gyerek | CounterCache a **gyerek** Table-en + Delete disabled ha > 0 — **minden prefix** ORM save/delete; soft FK `0` → closure `false`; SUM → closure (`counter-caches.mdc`) |
 | `pos` | PHP-ból **békén hagyjuk** (DB DEFAULT **1000**); ne növeljük — majd a user (`pos-db-default.mdc`) |
 | `text` / hosszú HTML tartalom | Form `form.php`: `.editor` + Trumbowyg assetek ugyanott (`pages/form.js`) — JeffAdmin5 minta |
 | `visible` + `pos` | Form végén; **`<hr>` mindig a `visible` fölött** (`admin-form-visible-hr.mdc`) |
-| `*_count` / gyerek | CounterCache + Delete disabled ha > 0 |
 | belongsTo | Select2 visible+pos/name; opcionális „+” |
 | HABTM | Mindkét form multiple Select2 + through CounterCache |
 | Ország→ország láthatóság | `country_visibilities`; TAB = saját + extras; **self lock** — `country-visibilities.md` |

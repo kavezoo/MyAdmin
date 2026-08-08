@@ -21,6 +21,51 @@ class MembershipService
     use MailerAwareTrait;
 
     /**
+     * Member-facing fields: officer edits trigger a notification email to the member.
+     *
+     * @var list<string>
+     */
+    public const PROFILE_NOTIFY_FIELDS = [
+        'first_name',
+        'last_name',
+        'phone',
+        'email',
+        'club_id',
+        'enabled',
+        'role',
+        'language_id',
+        MembershipFee::FIELD_CLUB,
+        MembershipFee::FIELD_NATIONAL,
+    ];
+
+    /**
+     * After an officer/admin saves member profile fields that affect the member → email.
+     *
+     * @param list<string> $dirtyFields Field names dirty before save
+     */
+    public function notifyMemberProfileUpdated(EntityInterface $member, array $dirtyFields): void
+    {
+        $relevant = array_values(array_intersect($dirtyFields, self::PROFILE_NOTIFY_FIELDS));
+        if ($relevant === []) {
+            return;
+        }
+
+        $email = trim((string)($member->get('email') ?? ''));
+        if ($email === '') {
+            return;
+        }
+
+        $clubName = $this->clubName((int)($member->get('club_id') ?? 0));
+        try {
+            /** @var \App\Mailer\MembershipMailer $mailer */
+            $mailer = $this->getMailer('Membership');
+            $mailer->send('memberProfileUpdated', [$member, $clubName]);
+        } catch (\Throwable $e) {
+            Log::warning('Member profile updated email failed: ' . $e->getMessage(), ['scope' => ['membership']]);
+        }
+    }
+
+    /**
      * After profile save: mark pending and email club presidents once.
      */
     public function onProfileCompleted(EntityInterface $user): void

@@ -8,6 +8,8 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\EmailTemplate $emailTemplate
  * @var array<string, string> $slugOptions
+ * @var string $countryLabel
+ * @var int $countryId
  * @var list<array{language_id: int, locale: string, code: string, label: string}> $emailTemplateLanguageTabs
  * @var array<int, array{id?: int|null, name?: string, subject?: string, body_html?: string, body_text?: string}> $emailTemplateTranslations
  * @var int $emailTemplateActiveLanguageId
@@ -55,6 +57,11 @@ $this->Html->script([
 
 $isEdit = !$emailTemplate->isNew();
 $slugOptions = $slugOptions ?? [];
+$countryLabel = (string)($countryLabel ?? '');
+$countryId = (int)($countryId ?? ($emailTemplate->country_id ?? 0));
+if ($countryLabel === '' && $countryId > 0) {
+	$countryLabel = \App\Utility\AdminCountry::label($countryId);
+}
 $emailTemplateLanguageTabs = $emailTemplateLanguageTabs ?? [];
 $emailTemplateTranslations = $emailTemplateTranslations ?? [];
 $emailTemplateActiveLanguageId = (int)($emailTemplateActiveLanguageId ?? 0);
@@ -92,23 +99,28 @@ $langFields = [
 					'autocomplete' => 'off',
 				]) ?>
 					<div class="form-group row mb-3">
-						<?= $this->Form->adminLabel('slug', __('Template:'), ['for' => 'slug']) ?>
+						<?= $this->Form->adminLabel('slug', __('Template key:'), ['for' => 'slug']) ?>
 						<div class="col-12 col-md-10 col-xl-5">
 							<?= $this->Form->control('slug', [
 								'label' => false,
-								'type' => 'select',
-								'options' => $slugOptions,
-								'empty' => __('Select template...'),
-								'class' => 'js-example-basic-single form-select',
+								'type' => 'text',
+								'class' => 'form-control font-monospace',
 								'id' => 'slug',
-								'data-placeholder' => __('Select template...'),
-								'disabled' => $isEdit,
+								'readonly' => $isEdit,
+								'autocomplete' => 'off',
 							]) ?>
-							<?php if ($isEdit): ?>
-								<?= $this->Form->hidden('slug', ['value' => (string)$emailTemplate->slug]) ?>
-							<?php endif; ?>
+							<div class="form-text"><?= __('System key (e.g. membership_application). Set with the developer — not a user-facing list.') ?></div>
 						</div>
 					</div>
+
+					<?php if ($countryLabel !== ''): ?>
+					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-md-2 col-form-label"><?= __('Country:') ?></label>
+						<div class="col-12 col-md-10 col-xl-5">
+							<p class="form-control-plaintext mb-0"><?= h($countryLabel) ?></p>
+						</div>
+					</div>
+					<?php endif; ?>
 
 					<?php if ($emailTemplateLanguageTabs !== []): ?>
 					<div class="form-group row mb-3">

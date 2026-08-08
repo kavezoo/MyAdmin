@@ -65,7 +65,9 @@ if ($countriesVisibleOnly) {
 }
 ```
 
-Ne keverd a Setups working-country Select2-vel — ez **csak** a Countries listára vonatkozik.
+Ne keverd a Setups / lista working-country Select2-vel — a **visible_only** switch **csak** a Countries listára vonatkozik.
+
+**Admin ország-szűrés (örök):** nem-superuser admin a Countries listán **csak a saját ország** sorát látja. Superuser: teljes lista. Részlet: [admin-country-scope.md](admin-country-scope.md).
 
 ---
 

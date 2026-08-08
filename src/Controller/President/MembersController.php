@@ -58,13 +58,14 @@ class MembersController extends AppController
         $where = [
             'Users.country_id' => $countryId,
             'Users.active' => 1,
-        ] + $this->membershipRosterRoleCondition();
-        if ($nationalPaidOnly) {
-            $where = array_merge($where, MembershipFee::paidForYearConditions(
-                'Users.' . MembershipFee::FIELD_NATIONAL,
-                $membershipYear
-            ));
-        }
+        ] + $this->membershipRosterOrSelfCondition(
+            $nationalPaidOnly
+                ? MembershipFee::paidForYearConditions(
+                    'Users.' . MembershipFee::FIELD_NATIONAL,
+                    $membershipYear
+                )
+                : []
+        );
 
         $query = $users->find()
             ->contain(['Clubs'])
@@ -95,6 +96,7 @@ class MembersController extends AppController
             $this->panelMemberPaginateOptions($this->panelMemberSortableFields(true))
         ));
         $this->set(compact('countryLabel', 'countryId', 'membershipYear', 'nationalPaidOnly', 'showApplicants', 'applicants'));
+        $this->set('currentUserId', $this->currentMemberListUserId());
     }
 
     /**
@@ -112,47 +114,81 @@ class MembersController extends AppController
         $member = $this->findScopedMember((string)$id, containClub: true);
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->fetchTable('Users');
+        /** @var \App\Model\Table\ClubsTable $clubs */
+        $clubs = $this->fetchTable('Clubs');
         $countryId = (int)($member->get('country_id') ?? 0);
+        $previousClubId = (int)($member->get('club_id') ?? 0);
         $actorRole = CurrentUser::role($this->getRequest());
         $targetRole = strtolower(trim((string)($member->get('role') ?? '')));
         $canEditRole = AppRoles::canEditTargetRole($actorRole, $targetRole);
         $roleOptions = AppRoles::assignableOptionsForActor($actorRole);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            try {
-                $data = $this->request->getData();
-                $requestedRole = strtolower(trim((string)($data['role'] ?? '')));
-                $accessible = [
-                    'first_name' => true,
-                    'phone' => true,
-                    'enabled' => true,
-                    MembershipFee::FIELD_NATIONAL => true,
-                ];
-                if (
-                    $canEditRole
-                    && $requestedRole !== ''
-                    && AppRoles::canAssignRole($actorRole, $requestedRole)
-                ) {
-                    $accessible['role'] = true;
-                } else {
-                    unset($data['role']);
+            $data = $this->request->getData();
+            $requestedRole = strtolower(trim((string)($data['role'] ?? '')));
+            $newClubId = (int)($data['club_id'] ?? 0);
+            $accessible = [
+                'first_name' => true,
+                'phone' => true,
+                'enabled' => true,
+                'club_id' => true,
+                MembershipFee::FIELD_NATIONAL => true,
+                MembershipFee::FIELD_CLUB => true,
+            ];
+            if (
+                $canEditRole
+                && $requestedRole !== ''
+                && AppRoles::canAssignRole($actorRole, $requestedRole)
+            ) {
+                $accessible['role'] = true;
+            } else {
+                unset($data['role']);
+            }
+
+            if ($newClubId < 1 || !$clubs->isAllowedForOfficerAssign($newClubId, $countryId, $previousClubId)) {
+                $member->setError('club_id', __('Please select a club in your country.'));
+                $this->flashEntityErrors($member, null, [
+                    'club_id' => __('Club'),
+                ]);
+            } else {
+                $data['club_id'] = $newClubId;
+                if ($newClubId !== $previousClubId) {
+                    // Club switch: reset club fee only (role unchanged — officer move).
+                    $data[MembershipFee::FIELD_CLUB] = null;
                 }
 
                 $member = $users->patchEntity($member, $data, [
                     'accessibleFields' => $accessible,
                 ]);
-                if ($users->save($member)) {
-                    $this->Flash->success(__('The member has been saved.'));
+                if (!$member->hasErrors()) {
+                    $dirty = $member->getDirty();
+                    if ($users->save($member)) {
+                        if ($newClubId !== $previousClubId && $previousClubId > 0) {
+                            $clubs->clearDesignatedPresidentIfUser($previousClubId, (string)$member->id);
+                        }
+                        (new MembershipService())->notifyMemberProfileUpdated($member, $dirty);
+                        $this->Flash->success(__('The member has been saved.'));
 
-                    return $this->redirect(['action' => 'index']);
+                        return $this->redirect(['action' => 'index']);
+                    }
                 }
-            } catch (\Throwable $e) {
-                // Unexpected errors → user-facing flash
+                $this->flashEntityErrors($member, null, [
+                    'club_id' => __('Club'),
+                    'first_name' => __('Name'),
+                    'phone' => __('Phone'),
+                    'role' => __('Role'),
+                ]);
             }
-            $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
 
-        $this->set(compact('member'));
+        $clubOptions = $clubs->optionsForCountry(
+            $countryId,
+            $previousClubId,
+            requireNationalFeePaid: false,
+        );
+
+        $this->set(compact('member', 'clubOptions'));
+        $this->set('showClubSelect', true);
         $this->set('feeField', MembershipFee::FIELD_NATIONAL);
         $this->set('feeLabel', MembershipFee::nationalFeeLabel($countryId));
         $this->set('showEnabled', true);
@@ -251,7 +287,7 @@ class MembersController extends AppController
                 'Users.country_id' => $countryId,
                 'Users.active' => 1,
                 'Users.enabled' => 1,
-            ] + $this->membershipRosterRoleCondition())
+            ] + $this->membershipRosterOrSelfCondition())
             ->first();
         if ($member === null) {
             throw new NotFoundException(__('Member not found.'));
@@ -313,7 +349,7 @@ class MembersController extends AppController
                 'Users.id' => (string)$id,
                 'Users.country_id' => $countryId,
                 'Users.active' => 1,
-            ] + $this->membershipRosterRoleCondition())
+            ] + $this->membershipRosterOrSelfCondition())
             ->first();
         if ($member === null) {
             return $this->response

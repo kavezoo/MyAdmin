@@ -1,29 +1,13 @@
 <?php
 /**
- * President panel — Dashboard.
+ * President panel — Dashboard (all menu destinations as cards).
  *
  * @var \App\View\AppView $this
  */
-$this->assign('title', __('Dashboard'));
+use App\Utility\PanelNav;
 
-$cards = [
-	[
-		'title' => __('Members'),
-		'text' => __('Open the list of members in your country: national membership fees, enable/disable accounts, and member details.'),
-		'url' => ['prefix' => 'President', 'controller' => 'Members', 'action' => 'index'],
-		'button' => __('Go to Members'),
-		'btnClass' => 'btn-primary',
-		'icon' => 'fa-users',
-	],
-	[
-		'title' => __('Clubs'),
-		'text' => __('Manage clubs in your country: create and edit clubs, assign club presidents, visibility and position.'),
-		'url' => ['prefix' => 'President', 'controller' => 'Clubs', 'action' => 'index'],
-		'button' => __('Go to Clubs'),
-		'btnClass' => 'btn-primary',
-		'icon' => 'fa-sitemap',
-	],
-];
+$this->assign('title', __('Dashboard'));
+$cards = PanelNav::forPrefix('President', $this->getRequest());
 ?>
 <div class="row">
 	<div class="col-12 p-2 pt-3">

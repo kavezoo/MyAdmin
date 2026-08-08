@@ -30,7 +30,7 @@ Utána ellenőrizd:
 - Select2 „+” mezőnként: `select2Create…` JSON action(ök) — single és multiple is; válasz `{ success, id, text }` (hiba: `{ success: false, message }`). Ha a cél entitás túl összetett → csak multiple választás, nincs „+”.
 - HABTM form: `related._ids` + `associated` + üres `_ids` = `[]` + `*_count` frissítés — [admin-konvenciok.md](admin-konvenciok.md) → „HABTM — multiple Select2”
 - `view`: `contain` a belongsTo + gyerek asszociációkra (a tab sheet-ekhez kell az adat)
-- `add` / `edit` → `$this->render('form')`; mentés **try/catch** + Flash ([admin-oldal.md](admin-oldal.md) → űrlap)
+- `add` / `edit` → `$this->render('form')`; mentés hiba → **`$this->flashEntityErrors($entity)`** (konkrét okok) + `Throwable` catch generikus Flash ([admin-oldal.md](admin-oldal.md); rule: `admin-form-save-errors.mdc`)
 - `$this->set('title', __('…'))` + breadcrumb
 - Lista: `applyIndexListState('Alias')` → `applyIndexSearch` → `resolveIndexPageForLastVisited` (clear után) → `$this->paginate($query, $paginateOptions)` — controller tetején `$indexLimit` / `$indexMaxLimit`; `setLastVisitedForIndex('Alias')`
 - Save után: `return $this->redirectToIndexList('Alias');` (sort / page / `q` sessionből)

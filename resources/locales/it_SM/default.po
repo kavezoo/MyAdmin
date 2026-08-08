@@ -3212,7 +3212,7 @@ msgstr "Aggiungi un nuovo valore all’elenco."
 
 #: ./templates/layout/admin.php:100
 msgid "Apply"
-msgstr "Applica"
+msgstr "Iscriviti"
 
 #: ./templates/layout/admin.php:104
 msgid "Custom"
@@ -3302,3 +3302,334 @@ msgstr "Seleziona una città valida."
 
 msgid "Search by name or email (same country as above; not applicants with role new). Members become club president; a president or vice president keeps their role. Leave empty to clear."
 msgstr "Cerca per nome o e-mail (stesso paese di cui sopra; non candidati con ruolo new). I membri diventano presidente del club; un presidente / vicepresidente mantiene il ruolo. Lascia vuoto per rimuovere."
+
+msgid "Competitions"
+msgstr "Competizioni"
+
+msgid "Competition"
+msgstr "Competizione"
+
+msgid "Competition applicants"
+msgstr "Candidati alla competizione"
+
+msgid "Competition archive"
+msgstr "Archivio competizioni"
+
+msgid "Sub-teams"
+msgstr "Sotto-squadre"
+
+msgid "Sub-team details"
+msgstr "Dettagli sotto-squadra"
+
+msgid "New sub-team"
+msgstr "Nuova sotto-squadra"
+
+msgid "Edit sub-team"
+msgstr "Modifica sotto-squadra"
+
+msgid "Sub-teams (alcsapatok) for competitions"
+msgstr "Sotto-squadre per le competizioni"
+
+msgid "Open and upcoming competitions"
+msgstr "Competizioni aperte e imminenti"
+
+msgid "Open and upcoming competitions in your country"
+msgstr "Competizioni aperte e imminenti nel tuo paese"
+
+msgid "No competitions available right now."
+msgstr "Nessuna competizione disponibile al momento."
+
+msgid "Open for applications"
+msgstr "Iscrizioni aperte"
+
+msgid "Applications closed"
+msgstr "Iscrizioni chiuse"
+
+msgid "Not open yet"
+msgstr "Non ancora aperto"
+
+msgid "Apply / details"
+msgstr "Iscriviti / dettagli"
+
+msgid "Apply:"
+msgstr "Iscrizione:"
+
+msgid "Apply to this competition"
+msgstr "Iscriviti a questa competizione"
+
+msgid "Confirm application"
+msgstr "Conferma iscrizione"
+
+msgid "Do you really want to apply to this competition?"
+msgstr "Vuoi davvero iscriverti a questa competizione?"
+
+msgid "Yes, apply"
+msgstr "Sì, mi iscrivo"
+
+msgid "Do you want to save the changes to your application details?"
+msgstr "Vuoi salvare le modifiche ai dettagli della tua iscrizione?"
+
+msgid "Yes, save"
+msgstr "Sì, salva"
+
+msgid "Save changes"
+msgstr "Salva modifiche"
+
+msgid "Application details"
+msgstr "Dettagli iscrizione"
+
+msgid "Your application details have been saved."
+msgstr "I dettagli della tua iscrizione sono stati salvati."
+
+msgid "Application details have been saved."
+msgstr "I dettagli dell’iscrizione sono stati salvati."
+
+msgid "Your application has been submitted. Your club president will assign a team."
+msgstr "La tua iscrizione è stata inviata. Il presidente del club ti assegnerà una squadra."
+
+msgid "Withdraw application"
+msgstr "Ritira iscrizione"
+
+msgid "Yes, withdraw"
+msgstr "Sì, ritira"
+
+msgid "Withdraw your application? This permanently deletes your application record."
+msgstr "Ritirare l’iscrizione? Questo elimina definitivamente il record."
+
+msgid "Your application has been withdrawn."
+msgstr "La tua iscrizione è stata ritirata."
+
+msgid "Could not withdraw the application. Please try again."
+msgstr "Impossibile ritirare l’iscrizione. Riprova."
+
+msgid "Awaiting team assignment"
+msgstr "In attesa di assegnazione squadra"
+
+msgid "Registered"
+msgstr "Iscritto"
+
+msgid "Assigned to team"
+msgstr "Assegnato alla squadra"
+
+msgid "Your application:"
+msgstr "La tua iscrizione:"
+
+msgid "You are not registered yet — the club president must assign you to a sub-team."
+msgstr "Non sei ancora iscritto — il presidente del club deve assegnarti a una sotto-squadra."
+
+msgid "Lunch for attendant"
+msgstr "Pranzo per accompagnatore"
+
+msgid "Special lunch"
+msgstr "Pranzo speciale"
+
+msgid "Comment"
+msgstr "Commento"
+
+msgid "Edit application"
+msgstr "Modifica iscrizione"
+
+msgid "Edit application details"
+msgstr "Modifica dettagli iscrizione"
+
+msgid "Go to Competitions"
+msgstr "Vai alle competizioni"
+
+msgid "Go to Sub-teams"
+msgstr "Vai alle sotto-squadre"
+
+msgid "Go to Competition applicants"
+msgstr "Vai ai candidati"
+
+msgid "Go to Archive"
+msgstr "Vai all’archivio"
+
+msgid "All competitions"
+msgstr "Tutte le competizioni"
+
+msgid "All applicants"
+msgstr "Tutti i candidati"
+
+msgid "Assign applicants"
+msgstr "Assegna candidati"
+
+msgid "— Unassigned —"
+msgstr "— Non assegnato —"
+
+msgid "Current sub-team"
+msgstr "Sotto-squadra attuale"
+
+msgid "Assign to"
+msgstr "Assegna a"
+
+msgid "Member assigned to the sub-team."
+msgstr "Membro assegnato alla sotto-squadra."
+
+msgid "Member unassigned from the sub-team."
+msgstr "Membro rimosso dalla sotto-squadra."
+
+msgid "Application deleted."
+msgstr "Iscrizione eliminata."
+
+msgid "The application deadline has passed. You can only view this competition."
+msgstr "La scadenza per l’iscrizione è passata. Puoi solo visualizzare questa competizione."
+
+msgid "The application deadline has passed. Your details are read-only — ask your club president if something must change."
+msgstr "La scadenza è passata. I tuoi dettagli sono in sola lettura — contatta il presidente del club se serve una modifica."
+
+msgid "The application deadline has passed. Only your club president can change these details now."
+msgstr "La scadenza è passata. Solo il presidente del club può ancora modificare questi dettagli."
+
+msgid "The application deadline has passed. Contact your club president to withdraw."
+msgstr "La scadenza è passata. Contatta il presidente del club per ritirare l’iscrizione."
+
+msgid "The application deadline has passed. Only the club president may change these details (and should inform the presidency if needed)."
+msgstr "La scadenza è passata. Solo il presidente del club può modificare questi dettagli (e dovrebbe informare la presidenza se necessario)."
+
+msgid "Create at least one sub-team for this competition before assigning members."
+msgstr "Crea almeno una sotto-squadra per questa competizione prima di assegnare i membri."
+
+msgid "No club members have applied to a competition yet."
+msgstr "Nessun membro del club si è ancora iscritto a una competizione."
+
+msgid "No club members have applied to a competition yet. Members apply from the Member panel → Competitions."
+msgstr "Nessun membro si è ancora iscritto. I membri si iscrivono dal pannello Membro → Competizioni."
+
+msgid "Members apply first. Assign a sub-team to register them; delete if they should not compete."
+msgstr "Prima il membro si iscrive. L’assegnazione alla sotto-squadra lo rende ufficiale; elimina se non deve gareggiare."
+
+msgid "Assign club members who applied to a competition into a sub-team (alcsapat)."
+msgstr "Assegna i membri iscritti a una sotto-squadra."
+
+msgid "Browse open competitions in your country, apply, and withdraw until your club president assigns a sub-team."
+msgstr "Sfoglia le competizioni aperte nel tuo paese, iscriviti o ritirati finché il presidente del club non assegna una sotto-squadra."
+
+msgid "Create and manage club sub-teams (alcsapatok) for open competitions."
+msgstr "Crea e gestisci sotto-squadre per le competizioni aperte."
+
+msgid "Announce and manage competitions for your country: dates, minimum team size, and visibility."
+msgstr "Annuncia e gestisci le competizioni del tuo paese: date, dimensione minima squadra e visibilità."
+
+msgid "Past competitions you took part in, with results when available."
+msgstr "Competizioni passate a cui hai partecipato, con risultati se disponibili."
+
+msgid "Your profile has no country set, so competitions cannot be listed."
+msgstr "Nessun paese impostato sul profilo, le competizioni non possono essere elencate."
+
+msgid "Archive"
+msgstr "Archivio"
+
+msgid "Min. team size"
+msgstr "Dimensione min. squadra"
+
+msgid "Application from"
+msgstr "Iscrizioni dal"
+
+msgid "Application deadline"
+msgstr "Scadenza iscrizione"
+
+msgid "Competition datetime"
+msgstr "Data/ora competizione"
+
+msgid "This competition has ended."
+msgstr "Questa competizione è terminata."
+
+msgid "You have already applied to this competition."
+msgstr "Ti sei già iscritto a questa competizione."
+
+msgid "Applications for this competition are closed."
+msgstr "Le iscrizioni a questa competizione sono chiuse."
+
+msgid "Complete your club membership before applying."
+msgstr "Completa l’appartenenza al club prima di iscriverti."
+
+msgid "Application not found."
+msgstr "Iscrizione non trovata."
+
+msgid "Invalid sub-team for this competition."
+msgstr "Sotto-squadra non valida per questa competizione."
+
+msgid "This member does not belong to your club."
+msgstr "Questo membro non appartiene al tuo club."
+
+msgid "Delete this application — the member will not compete."
+msgstr "Elimina iscrizione — il membro non gareggerà."
+
+msgid "Delete this application? The member will no longer be listed for this competition."
+msgstr "Eliminare l’iscrizione? Il membro non sarà più elencato per questa competizione."
+
+msgid "Could not delete the application. Please try again."
+msgstr "Impossibile eliminare l’iscrizione. Riprova."
+
+msgid "The team has been saved."
+msgstr "La sotto-squadra è stata salvata."
+
+msgid "Ready to compete"
+msgstr "Pronto a gareggiare"
+
+msgid "Below minimum — move members if needed"
+msgstr "Sotto il minimo — sposta i membri se necessario"
+
+msgid "Team members"
+msgstr "Membri della squadra"
+
+msgid "No members assigned to this team yet."
+msgstr "Nessun membro ancora assegnato a questa sotto-squadra."
+
+msgid "Remove from team"
+msgstr "Rimuovi dalla squadra"
+
+msgid "Status"
+msgstr "Stato"
+
+msgid "Competing sub-teams"
+msgstr "Sotto-squadre in gara"
+
+msgid "(minimum roster reached)"
+msgstr "(organico minimo raggiunto)"
+
+msgid "Competing applicants"
+msgstr "Iscritti in gara"
+
+msgid "(on qualifying sub-teams)"
+msgstr "(nelle sotto-squadre qualificate)"
+
+msgid "Team"
+msgstr "Squadra"
+
+msgid "Applied"
+msgstr "Iscrizione"
+
+msgid "Go to Counties"
+msgstr "Vai alle province"
+
+msgid "Go to Cities"
+msgstr "Vai alle città"
+
+msgid "Manage counties (regions) linked to countries."
+msgstr "Gestisci le province (regioni) collegate ai paesi."
+
+msgid "Manage cities linked to counties and countries."
+msgstr "Gestisci le città collegate a province e paesi."
+
+msgid "You"
+msgstr "Tu"
+
+msgid "Member profile updated (to member)"
+msgstr "Profilo membro aggiornato (al membro)"
+
+msgid "Your membership profile has been updated"
+msgstr "Il tuo profilo di iscrizione è stato aggiornato"
+
+msgid "Your membership profile details have been changed by an officer."
+msgstr "I dettagli del tuo profilo di iscrizione sono stati modificati da un responsabile."
+
+msgid "Club: {0}"
+msgstr "Club: {0}"
+
+msgid "If you did not expect this change, please contact your club or national leadership."
+msgstr "Se non ti aspettavi questa modifica, contatta il tuo club o la dirigenza nazionale."
+
+msgid "This template slug already exists for the selected country and language."
+msgstr "Questa chiave modello esiste già per il paese e la lingua selezionati."
+

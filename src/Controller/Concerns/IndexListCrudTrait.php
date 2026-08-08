@@ -5,6 +5,7 @@ namespace App\Controller\Concerns;
 
 use App\Utility\AdminSearch;
 use App\Utility\AdminTranslate;
+use App\Utility\EntityFormErrors;
 use Cake\Datasource\EntityInterface;
 use Cake\Http\Response;
 use Cake\ORM\Query\SelectQuery;
@@ -145,7 +146,7 @@ trait IndexListCrudTrait
         $searchSubmit = $incomingQ && !$hasPagingMeta;
 
         $merged = [];
-        foreach (['_pageBeforeSearch'] as $internal) {
+        foreach (['_pageBeforeSearch', '_resolveLastVisitedPage'] as $internal) {
             if (isset($saved[$internal])) {
                 $merged[$internal] = $saved[$internal];
             }
@@ -187,7 +188,8 @@ trait IndexListCrudTrait
         } else {
             $prevPage = (string)($saved['page'] ?? '');
             $newPage = (string)($merged['page'] ?? '1');
-            if ($prevPage !== $newPage) {
+            // Resolving last-visited page must not wipe the highlight on the redirect hop.
+            if ($prevPage !== $newPage && empty($merged['_resolveLastVisitedPage'])) {
                 $this->clearLastVisited($model);
             }
             unset($merged['_pageBeforeSearch']);
@@ -299,7 +301,6 @@ trait IndexListCrudTrait
         }
 
         $saved = is_array($all[$model]) ? $all[$model] : [];
-        unset($saved['_resolveLastVisitedPage']);
 
         $limit = (int)($this->request->getQuery('limit') ?: ($saved['limit'] ?? $this->indexLimit));
         if ($limit < 1) {
@@ -316,13 +317,28 @@ trait IndexListCrudTrait
         }
         unset($saved['_pageBeforeSearch']);
 
+        $currentPage = max(1, (int)($this->request->getQuery('page') ?: ($saved['page'] ?? 1)));
         $saved['page'] = (string)$page;
+
+        if ($currentPage === $page) {
+            unset($saved['_resolveLastVisitedPage']);
+            $all[$model] = $saved;
+            $session->write($sessionKey, $all);
+            $requestQuery = $this->publicIndexState($saved);
+            $this->request = $this->request->withQueryParams($requestQuery);
+            $this->set('indexSearch', (string)($requestQuery[AdminSearch::queryParam()] ?? ''));
+
+            return null;
+        }
+
+        // Keep flag across the page redirect so applyIndexListState does not clear last-visited.
+        $saved['_resolveLastVisitedPage'] = '1';
         $all[$model] = $saved;
         $session->write($sessionKey, $all);
 
         $requestQuery = $this->publicIndexState($saved);
         $this->request = $this->request->withQueryParams($requestQuery);
-        $this->set('indexSearch', '');
+        $this->set('indexSearch', (string)($requestQuery[AdminSearch::queryParam()] ?? ''));
 
         return $this->redirect($this->indexListUrlFromState($model, $requestQuery));
     }
@@ -330,14 +346,16 @@ trait IndexListCrudTrait
     /**
      * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
      * @param array<string, mixed> $paginateOptions
+     * @param int|string $recordId Numeric PK or UUID
      */
     protected function findRecordPageNumber(
         SelectQuery $query,
-        int $recordId,
+        int|string $recordId,
         int $limit,
         array $paginateOptions = [],
     ): int {
-        if ($limit < 1 || $recordId < 1) {
+        $recordId = $this->normalizeLastVisitedId($recordId);
+        if ($limit < 1 || $recordId === null) {
             return 1;
         }
 
@@ -371,17 +389,28 @@ trait IndexListCrudTrait
                     continue;
                 }
                 $id = $row[$pk] ?? $row[$alias . '__' . $pk] ?? null;
-                if ($id !== null) {
-                    $ids[] = (int)$id;
+                $normalized = $this->normalizeLastVisitedId($id);
+                if ($normalized !== null) {
+                    $ids[] = $normalized;
                 }
             }
 
-            $position = array_search($recordId, $ids, true);
+            $needle = $recordId;
+            $position = array_search($needle, $ids, true);
+            if ($position === false) {
+                // Loose compare for int/string numeric ids stored differently.
+                foreach ($ids as $i => $candidate) {
+                    if ((string)$candidate === (string)$needle) {
+                        $position = $i;
+                        break;
+                    }
+                }
+            }
             if ($position === false) {
                 return 1;
             }
 
-            return (int)floor($position / $limit) + 1;
+            return (int)floor((int)$position / $limit) + 1;
         } catch (\Throwable $e) {
             return 1;
         }
@@ -408,9 +437,24 @@ trait IndexListCrudTrait
         return $this->indexListUrlFromState($model, $this->getIndexState($model));
     }
 
+    /**
+     * After add/edit/view handling: go to the index page that contains the last-visited row.
+     */
     protected function redirectToIndexList(?string $model = null): Response
     {
         $model = $model ?: (string)$this->request->getParam('controller');
+        if ($model !== '' && $this->getLastVisitedId($model) !== null) {
+            $session = $this->request->getSession();
+            $sessionKey = $this->indexStateSessionKey();
+            $all = $session->read($sessionKey);
+            if (!is_array($all)) {
+                $all = [];
+            }
+            $saved = is_array($all[$model] ?? null) ? $all[$model] : [];
+            $saved['_resolveLastVisitedPage'] = '1';
+            $all[$model] = $saved;
+            $session->write($sessionKey, $all);
+        }
 
         return $this->redirect($this->indexListUrl($model));
     }
@@ -429,13 +473,16 @@ trait IndexListCrudTrait
         return AdminSearch::applyToQuery($query, $table, $term);
     }
 
+    /**
+     * Remember last viewed / edited / saved record (int PK or UUID).
+     */
     protected function rememberLastVisited(string $model, int|string|null $id): void
     {
-        if ($model === '' || $id === null || $id === '') {
+        if ($model === '') {
             return;
         }
-        $id = (int)$id;
-        if ($id < 1) {
+        $normalized = $this->normalizeLastVisitedId($id);
+        if ($normalized === null) {
             return;
         }
 
@@ -446,10 +493,10 @@ trait IndexListCrudTrait
             $all = [];
         }
 
-        $all[$model] = $id;
+        $all[$model] = $normalized;
         $all['_last'] = [
             'model' => $model,
-            'id' => $id,
+            'id' => $normalized,
         ];
         $session->write($sessionKey, $all);
     }
@@ -477,15 +524,52 @@ trait IndexListCrudTrait
         $session->write($sessionKey, $all);
     }
 
-    protected function getLastVisitedId(string $model): ?int
+    /**
+     * @return int|string|null
+     */
+    protected function getLastVisitedId(string $model): int|string|null
     {
         $all = $this->request->getSession()->read($this->lastVisitedSessionKey());
         if (!is_array($all) || !isset($all[$model])) {
             return null;
         }
-        $id = (int)$all[$model];
 
-        return $id > 0 ? $id : null;
+        return $this->normalizeLastVisitedId($all[$model]);
+    }
+
+    /**
+     * Normalize session / comparison id: positive int, or non-empty string (UUID).
+     *
+     * @return int|string|null
+     */
+    protected function normalizeLastVisitedId(mixed $id): int|string|null
+    {
+        if ($id === null || $id === '') {
+            return null;
+        }
+        if (is_int($id)) {
+            return $id > 0 ? $id : null;
+        }
+        if (is_float($id)) {
+            $asInt = (int)$id;
+
+            return $asInt > 0 ? $asInt : null;
+        }
+        if (!is_string($id) && !is_numeric($id)) {
+            return null;
+        }
+        $asString = trim((string)$id);
+        if ($asString === '') {
+            return null;
+        }
+        // Pure integer PK (avoid casting UUIDs — (int)"597cc7…" === 597).
+        if (ctype_digit($asString)) {
+            $asInt = (int)$asString;
+
+            return $asInt > 0 ? $asInt : null;
+        }
+
+        return $asString;
     }
 
     protected function setLastVisitedForIndex(string $model): void
@@ -495,7 +579,17 @@ trait IndexListCrudTrait
 
     protected function deleteEntityOrFail(Table $table, EntityInterface $entity): ?Response
     {
+        $model = $table->getAlias();
+        $pk = $table->getPrimaryKey();
+        $deletedId = is_string($pk) ? $entity->get($pk) : null;
+
         if ($table->delete($entity)) {
+            if (
+                $deletedId !== null
+                && (string)$this->getLastVisitedId($model) === (string)$deletedId
+            ) {
+                $this->clearLastVisited($model);
+            }
             $this->Flash->success(__('The record has been deleted.'));
         } else {
             $errors = $entity->getError('_delete');
@@ -505,7 +599,7 @@ trait IndexListCrudTrait
             $this->Flash->error($message);
         }
 
-        return $this->redirectToIndexList();
+        return $this->redirectToIndexList($model);
     }
 
     protected function newEntityWithSchemaDefaults(Table $table): EntityInterface
@@ -518,6 +612,20 @@ trait IndexListCrudTrait
         }
 
         return $entity;
+    }
+
+    /**
+     * Flash validation / rule errors so the user sees *why* save failed.
+     *
+     * @param \Cake\Datasource\EntityInterface|array<string, mixed> $entityOrErrors
+     * @param array<string, string> $fieldLabels Optional field => human label
+     */
+    protected function flashEntityErrors(
+        EntityInterface|array $entityOrErrors,
+        ?string $fallback = null,
+        array $fieldLabels = [],
+    ): void {
+        $this->Flash->error(EntityFormErrors::flashText($entityOrErrors, $fieldLabels, $fallback));
     }
 
     protected function containRelatedForModal(string $alias): \Closure

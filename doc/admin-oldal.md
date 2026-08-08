@@ -201,12 +201,12 @@ Edit gomb a modalban a View details **előtt** (UX konvenció).
 
 | Eset | Viselkedés |
 |------|------------|
-| Validáció / `save` false | Flash: `__('The record could not be saved. Please try again.')` |
-| Váratlan kivétel (`Throwable`) | Ugyanaz a Flash — **ne** nyers PHP TypeError / stack trace a felhasználónak |
+| Validáció / `save` false | `$this->flashEntityErrors($entity)` — **konkrét** mezőhibák a Flash toastban (`EntityFormErrors`); üres → generikus szöveg |
+| Váratlan kivétel (`Throwable`) | Flash: `__('The record could not be saved. Please try again.')` — **ne** nyers PHP TypeError / stack trace |
 | Select2 „+” validáció | JSON `{ success: false, message }` — első entity hibaüzenet, ha van |
 | Select2 „+” kivétel | JSON udvarias üzenet (ugyanaz a „could not be saved” szöveg) |
 
-`add` / `edit`: `patchEntity` + `save` **try/catch**-ben.  
+`add` / `edit`: `patchEntity` + `save`; hibaágon **mindig** `flashEntityErrors` (rule: `admin-form-save-errors.mdc`).  
 Add: `newEntityWithSchemaDefaults()` — `pos` / `visible` / `logikai` a sémából.  
 Model `beforeMarshal`: `$data` = **`ArrayObject`** — `array_key_exists($k, $data)` **tilos**; `UsesDatabaseColumnDefaultsTrait` + `getArrayCopy()`.
 

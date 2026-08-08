@@ -14,4 +14,6 @@ echo $this->element('users/member_edit_form', [
 	'showRole' => $showRole ?? false,
 	'roleOptions' => $roleOptions ?? [],
 	'roleSelectDisabled' => $roleSelectDisabled ?? false,
+	'showClubSelect' => $showClubSelect ?? false,
+	'clubOptions' => $clubOptions ?? [],
 ]);

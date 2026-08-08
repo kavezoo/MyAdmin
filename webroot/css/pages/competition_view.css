@@ -1,0 +1,65 @@
+/**
+ * Competition view layout (Member + President).
+ * Desktop (lg+): meta (+ form) left, description right.
+ * Mobile: stacked in document order — meta → description → form (if any).
+ */
+.competition-view-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.competition-view-layout .c-meta {
+	order: 1;
+}
+
+.competition-view-layout .c-desc {
+	order: 2;
+}
+
+.competition-view-layout .c-form {
+	order: 3;
+}
+
+.competition-view-layout .competition-description {
+	min-height: 4rem;
+}
+
+@media (min-width: 992px) {
+	.competition-view-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		grid-template-rows: auto 1fr;
+		align-items: start;
+		gap: 1.5rem 1.75rem;
+	}
+
+	.competition-view-layout .c-meta {
+		grid-column: 1;
+		grid-row: 1;
+		order: unset;
+	}
+
+	.competition-view-layout .c-form {
+		grid-column: 1;
+		grid-row: 2;
+		order: unset;
+	}
+
+	.competition-view-layout .c-desc {
+		grid-column: 2;
+		grid-row: 1 / -1;
+		order: unset;
+		align-self: stretch;
+	}
+
+	/* President (meta + desc only): description still fills the right column */
+	.competition-view-layout:not(:has(.c-form)) {
+		grid-template-rows: auto;
+	}
+
+	.competition-view-layout:not(:has(.c-form)) .c-desc {
+		grid-row: 1;
+		align-self: start;
+	}
+}

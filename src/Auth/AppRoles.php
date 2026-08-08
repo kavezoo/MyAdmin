@@ -111,7 +111,10 @@ class AppRoles
      * Roles shown on President / Clubpresident Members lists (fee roster).
      *
      * Includes officers who are also club/country members (e.g. clubpresident
-     * must see themselves). Excludes `new` (applicant cards) and admin/superuser.
+     * must see themselves). Excludes `new` (applicant cards) and admin/superuser
+     * from the role list — those still appear via
+     * {@see \App\Controller\Concerns\PanelMemberListTrait::membershipRosterOrSelfCondition()}
+     * when they are the logged-in user.
      *
      * @return list<string>
      */

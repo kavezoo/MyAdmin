@@ -13,6 +13,8 @@ use Cake\ORM\Locator\LocatorAwareTrait;
  * 1. users.language_id → languages.code
  * 2. users.country_id → countries.locale
  * 3. App default locale
+ *
+ * Templates are scoped by recipient country_id + language.
  */
 class EmailTemplateService
 {
@@ -48,6 +50,21 @@ class EmailTemplateService
         }
 
         return (string)\Cake\Core\Configure::read('App.defaultLocale') ?: 'en_GB';
+    }
+
+    /**
+     * Country id for a user entity / array-like.
+     */
+    public static function countryIdForUser(mixed $user): int
+    {
+        if ($user instanceof EntityInterface) {
+            return (int)($user->get('country_id') ?? 0);
+        }
+        if (is_array($user)) {
+            return (int)($user['country_id'] ?? 0);
+        }
+
+        return 0;
     }
 
     public static function languageIdForLocale(string $locale): int
@@ -167,17 +184,33 @@ class EmailTemplateService
     }
 
     /**
-     * Load enabled template for user locale (with en_GB / first enabled fallback).
+     * Load enabled template for user country + locale (with country-locale / en_GB fallback).
      *
      * @return array{subject: string, body_html: string, body_text: string}|null
      */
     public static function renderForUser(mixed $user, string $slug, array $vars): ?array
     {
+        $countryId = static::countryIdForUser($user);
         $locale = static::localeForUser($user);
         $languageId = static::languageIdForLocale($locale);
-        $template = static::findTemplate($languageId, $slug);
-        if ($template === null && $locale !== 'en_GB') {
-            $template = static::findTemplate(static::languageIdForLocale('en_GB'), $slug);
+        $template = static::findTemplate($countryId, $languageId, $slug);
+
+        if ($template === null && $countryId > 0) {
+            $countryLocale = AdminCountry::localeForCountry($countryId);
+            if ($countryLocale !== null && $countryLocale !== '' && $countryLocale !== $locale) {
+                $template = static::findTemplate(
+                    $countryId,
+                    static::languageIdForLocale($countryLocale),
+                    $slug
+                );
+            }
+        }
+        if ($template === null && $countryId > 0 && $locale !== 'en_GB') {
+            $template = static::findTemplate(
+                $countryId,
+                static::languageIdForLocale('en_GB'),
+                $slug
+            );
         }
         if ($template === null) {
             return null;
@@ -190,13 +223,16 @@ class EmailTemplateService
         ];
     }
 
-    protected static function findTemplate(int $languageId, string $slug): ?EntityInterface
+    protected static function findTemplate(int $countryId, int $languageId, string $slug): ?EntityInterface
     {
-        if ($languageId < 1) {
+        if ($languageId < 1 || $slug === '') {
             return null;
         }
         /** @var \App\Model\Table\EmailTemplatesTable $table */
         $table = (new self())->fetchTable('EmailTemplates');
+        if ($countryId > 0) {
+            return $table->findEnabledByCountryLanguageAndSlug($countryId, $languageId, $slug);
+        }
 
         return $table->findEnabledByLanguageAndSlug($languageId, $slug);
     }

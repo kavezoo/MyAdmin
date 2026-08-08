@@ -25,6 +25,7 @@ use Cake\ORM\Entity;
  * @property bool $visible
  * @property int $pos
  * @property int $user_count
+ * @property int $competition_count
  * @property string|null $club_president_id Designated club president (Users.id)
  * @property \Cake\I18n\Date|null $national_membership_fee_date
  * @property \Cake\I18n\DateTime $created
@@ -55,6 +56,7 @@ class Club extends Entity
         'visible' => true,
         'pos' => true,
         'user_count' => false,
+        'competition_count' => false,
         'club_president_id' => true,
         'national_membership_fee_date' => true,
         'created' => true,

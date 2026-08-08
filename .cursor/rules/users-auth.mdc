@@ -14,13 +14,14 @@ Teljes spec: **`doc/users-auth.md`** (§0 baseline / képlékeny). Greenfield: *
 3. Templatek: **`templates/Users/`** (App), **nem** `templates/plugin/CakeDC/…`.
 4. Layout login: ValiAdmin; `login-box local-login` + `.local-login-form`; Flash = Simple Notify.
 5. Permissions: App Usersnél **ne** `'plugin' => false`.
-6. Panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös `admin` layout; `RoleHome` + `PanelAccess` (officer → member; clubpresident ha `club_id`); afterLogin **`$event->setResult()`**.
+6. Panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös `admin` layout; `RoleHome` + `PanelAccess` (officer → member; clubpresident ha `club_id`); afterLogin **`$event->setResult()`**. Dashboard ↔ menü: **`PanelNav`** — rule `panel-nav-conventions.mdc`.
 7. Regisztráció default role → **csak** `/new`. Header search: csak president+ (és admin/superuser).
-8. Login: **nyelv** Select2 = endoním (saját nyelv neve) + látható országok locale-jai; Register: **ország** = `endonim_name` + csak `visible`; `users.country_id`. Belépés után UI = login nyelv (session/cookie).
+8. Login: **nyelv** Select2 = endoním (saját nyelv neve) + látható országok locale-jai; Register: **ország** = `endonim_name` + csak `visible`; `users.country_id`. Belépés után UI = login nyelv (session/cookie) **és** `users.language_id` mentése (`UserUiLanguage`). Profil / complete-profile: **nincs** nyelvmező.
 9. Belépés: CakeDC **`active`** + app **`enabled`** (`findActive`); session: `RequireUserEnabledMiddleware`.
 10. App ACL „superuser” = **`Users.role === superuser` VAGY** CakeDC **`is_superuser`** (szigorú 1/true). Flag `0` → nincs teljes Countries jog. **Setups modul** (menü/URL): **csak** superuser (`SetupAccess::canAccessModule`).
-11. Tagság: `new` → kötelező `/complete-profile` → clubpresident Approve → `member` — **`doc/membership.md`**; **greenfield:** **`doc/membership-greenfield.md`** + `membership-greenfield.mdc`.
+11. Tagság: `new` → kötelező `/complete-profile` → clubpresident Approve → `member` — **`doc/membership.md`**; **greenfield:** **`doc/membership-greenfield.md`** + `membership-greenfield.mdc`. Taglista **önmaga**; klublista **My club** — `panel-nav-conventions.mdc`.
 12. Auth login URL (`unauthorizedHandler.url`, `UsersUrl::actionUrl`): **mindig** `prefix => false` + `plugin => false` — különben panel URL-ről (`/president`) a Router `/president/users/login`-re örököl.
+13. Versenyek (ha kell): **`doc/competitions.md`** + `competitions.mdc`.
 
 ## Képlékeny (projektenként)
 

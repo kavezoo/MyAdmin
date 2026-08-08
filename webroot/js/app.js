@@ -336,6 +336,41 @@
 		});
 	};
 
+	/**
+	 * Fixed sidebar: keep page scroll independent; when the pointer is over the
+	 * sidebar (full-width mode), wheel events scroll the menu pane only.
+	 *
+	 * @returns {void}
+	 */
+	App.initFixedSidebarScroll = function () {
+		var sidebar = document.querySelector('.main-sidebar.left');
+		if (!sidebar) {
+			return;
+		}
+		sidebar.addEventListener(
+			'wheel',
+			function (e) {
+				if (document.getElementById('main') && document.getElementById('main').classList.contains('enlarged')) {
+					return;
+				}
+				var inner = sidebar.querySelector('.sidebar-inner') || sidebar;
+				var canScroll = inner.scrollHeight > inner.clientHeight + 1;
+				if (!canScroll) {
+					// Short menu: do not scroll the page while hovering the sidebar.
+					e.preventDefault();
+					return;
+				}
+				var atTop = inner.scrollTop <= 0;
+				var atBottom = inner.scrollTop + inner.clientHeight >= inner.scrollHeight - 1;
+				var scrollingDown = e.deltaY > 0;
+				if ((scrollingDown && atBottom) || (!scrollingDown && atTop)) {
+					e.preventDefault();
+				}
+			},
+			{ passive: false }
+		);
+	};
+
 	$(function () {
 		App.initTooltips();
 
@@ -345,6 +380,7 @@
 		}, 0);
 
 		App.initScrollTop();
+		App.initFixedSidebarScroll();
 
 		$(document).on('click', '#btn-delete', function (e) {
 			e.preventDefault();

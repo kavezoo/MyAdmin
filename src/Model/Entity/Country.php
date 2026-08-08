@@ -23,6 +23,8 @@ use Cake\ORM\Entity;
  * @property bool $visible
  * @property int $pos
  * @property int $user_count
+ * @property int $club_count
+ * @property int $setup_count
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
  * @property \App\Model\Entity\Continent $continent
@@ -46,5 +48,8 @@ class Country extends Entity
         '_translations' => true,
         'visible_countries' => true,
         'visible_countries._ids' => true,
+        'user_count' => false,
+        'club_count' => false,
+        'setup_count' => false,
     ];
 }

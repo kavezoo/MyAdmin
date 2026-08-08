@@ -50,7 +50,7 @@
 | `role` | string | `AppRoles` kulcsok |
 | `country_id` | int | Ország (regisztráció / profil) |
 | `club_id` | int | 0 = nincs; FK soft |
-| `language_id` | int NULL | opcionális; FK soft → `languages.id` (`club_id` után); email locale |
+| `language_id` | int NULL | belépéskor a login UI nyelv (`UserUiLanguage`); FK soft → `languages.id`; email locale |
 | `enabled` | bool | App belépéskapu (`findActive` + middleware) |
 | `membership_status` | string | `incomplete` / `pending` / `approved` |
 | `membership_joined_date` | date | Tagként csatlakozás (approve napja) |
@@ -85,7 +85,13 @@ Séma fájlok: `config/schema/clubs.sql`, `config/schema/users_membership.sql`; 
 | `president`, `vicepresident` | President | `/president` (+ Member; Clubpresident ha `club_id`) |
 | `admin`, `superuser` | Admin | `/admin` |
 
-**Roster listák** (`membershipRosterRoles`): member, editor, clubpresident, president, vicepresident — **nincs** `new`, admin, superuser.
+**Roster listák** (`membershipRosterRoles`): member, editor, clubpresident, president, vicepresident — **nincs** `new`, admin, superuser a role listában.
+
+**Önmaga a taglistán (kötelező):** `PanelMemberListTrait::membershipRosterOrSelfCondition()` = roster **vagy** bejelentkezett `Users.id` (ugyanabban a klub/ország scope-ban). Így admin/superuser panelváltáskor is megjelenik. UI: **You** badge + zöld sor. Rule: `panel-nav-conventions.mdc`.
+
+**Dashboard ↔ sidebar:** `App\Utility\PanelNav` — minden panel cél kártya **és** menüpont. Rule: `panel-nav-conventions.mdc`.
+
+**Saját klub a klublistán:** `My club` badge (`Users.club_id`) — President Clubs + Member/Clubpresident böngésző.
 
 **Header** (`element/admin/header.php`): hamburger mellett **név** + **rang** (`AppRoles::label`); `is_superuser` flag → „· Superuser” ha role ≠ `superuser`.
 
@@ -104,6 +110,15 @@ Csak **President / VP** taglistán: `element/users/member_edit_form` + `showRole
 | President | VP role szabadon (member / clubpresident / president …) |
 
 Helperök: `AppRoles::assignableOptionsForActor()`, `canAssignRole()`, `canEditTargetRole()`.
+
+### Klubváltás (President Members edit)
+
+| Szabály | Implementáció |
+|---------|----------------|
+| Select lista | Ország összes **enabled + visible** klubja |
+| Tagdíj szűrés | **Nincs** (`optionsForCountry(..., requireNationalFeePaid: false)`) |
+| Profil select | Továbbra is fee-szűrt (`requireNationalFeePaid: true`) |
+| Klubváltáskor | Role változatlan; `club_membership_fee_date` = null; régi `club_president_id` törlés ha ő volt |
 
 ---
 
@@ -132,6 +147,13 @@ Select2: ugyanaz az ország, `role != new`.
 - Scope: **csak** `Users.club_id` = bejelentkezett user klubja
 - Approve → `MembershipService::approve` (club scope)
 - Element: `clubpresident/applicant_cards` + `clubpresident_applicants.css` (kártya **shadow**)
+
+### Klub böngésző (`/clubpresident/clubs`, `/member/clubs`)
+
+- Read-only lista + view; csak `visible` + `enabled` klubok.
+- Ország szűrő: default = user `country_id`; select = országok, ahol van legalább egy ilyen klub (`PanelClubBrowserTrait`).
+- Saját klub (`Users.club_id`) kiemelve („My club”).
+- Template: `element/panel/clubs_index` / `clubs_view`.
 
 ### President / VP (`/president/members`)
 
@@ -170,7 +192,10 @@ Megjelenítés pénzhez: `MembershipFee::formatCurrency()` / `LocaleNumberParser
 | Element / asset | Hol |
 |-----------------|-----|
 | `element/panel/club_fee_unpaid_alert.php` | Dashboardok |
-| `element/panel/dashboard_nav_cards.php` | Panel dashboard |
+| `element/panel/dashboard_nav_cards.php` | Panel dashboard — **PanelNav** kártyák |
+| `element/panel/sidebar_nav_items.php` | Sidebar — **ugyanaz** a PanelNav lista |
+| `src/Utility/PanelNav.php` | Egy forrás: dashboard ↔ menü |
+| `element/panel/clubs_index.php` | Klubböngésző + **My club** |
 | `element/clubpresident/applicant_cards.php` | Clubpresident + President (pending) |
 | `element/users/member_edit_form.php` | Tag szerkesztés |
 | `element/users/membership_fee_status.php` | Profil tagdíj |
@@ -219,9 +244,10 @@ templates/Admin/{Cities,Counties}/
 
 | Elem | Hol |
 |------|-----|
-| `email_templates` | nyelvenkénti subject/body; President CRUD |
-| Locale | `users.language_id` → ország locale → default |
-| Cities / Counties / Countries | Admin Settings CRUD |
+| `email_templates` | ország + nyelv subject/body; Admin + President CRUD; egyediség `(country_id, language_id, slug)` |
+| Locale | belépéskor `users.language_id` ← login UI; email: language_id → ország locale → default |
+| Cities / Counties / Countries | Admin Settings CRUD (ref/geo) |
+| Users / Clubs / Competitions / Email templates | Admin **top-level** domain CRUD (nem Settings) |
 ---
 
 ## 11. Ellenőrző checklist (smoke)
@@ -236,6 +262,9 @@ templates/Admin/{Cities,Counties}/
 - [ ] Klubváltás warning dashboard + profil (officer / member szöveg)
 - [ ] Tagdíj unpaid: warning stílus (nem piros danger)
 - [ ] Header: név + rang minden prefix alatt (közös `admin` layout)
+- [ ] PanelNav: minden dashboard kártya = sidebar menü (és fordítva)
+- [ ] Members lista: bejelentkezett user **látszik** (You badge) — admin panelváltáskor is
+- [ ] Clubs lista: saját klub **My club** badge
 - [ ] Reject → user nem lép be (`enabled=0`)
 - [ ] Activity logging off → nincs felesleges `event_logs` approve-nál
 
@@ -251,6 +280,9 @@ templates/Admin/{Cities,Counties}/
 | Officer klubváltás → role=new | clubpresident / president / vp: **role marad** (`keepsRoleOnClubSwitch`) |
 | Unpaid tagdíj piros danger | **warning** CSS + `alert-warning` |
 | Applicant approve URL clubpresident only | President prefix is `approve` / `reject` action |
+| Taglista csak `role IN roster` | **`membershipRosterOrSelfCondition()`** — önmaga is (admin) |
+| Új menüpont csak a sidebarban | **`PanelNav`** → dashboard + sidebar |
+| Pending jelentkezők üres lista (contain Subclubs INNER) | Subclubs **LEFT** join |
 | `pos` klub seedben 1,2,3 | DB DEFAULT **1000**; user formon állítja |
 
 ---

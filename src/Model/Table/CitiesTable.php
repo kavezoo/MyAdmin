@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -10,12 +12,16 @@ use Cake\Validation\Validator;
 /**
  * Cities — települések (ország + megye, ZIP / koordináták).
  *
+ * CounterCache: Counties.city_count (this table). Cities.club_count via ClubsTable.
+ *
  * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
  * @property \App\Model\Table\CountiesTable&\Cake\ORM\Association\BelongsTo $Counties
  * @property \App\Model\Table\ClubsTable&\Cake\ORM\Association\HasMany $Clubs
  */
 class CitiesTable extends Table
 {
+    use PreventsDeleteWithChildrenTrait;
+
     /**
      * @param array<string, mixed> $config
      * @return void
@@ -28,6 +34,21 @@ class CitiesTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
         $this->setEntityClass(\App\Model\Entity\City::class);
+
+        $this->addBehavior('CounterCache', [
+            'Counties' => [
+                'city_count' => function ($event, $entity, $table, $original) {
+                    $countyId = (int)($original
+                        ? ($entity->getOriginal('county_id') ?? 0)
+                        : ($entity->get('county_id') ?? 0));
+                    if ($countyId < 1) {
+                        return false;
+                    }
+
+                    return $table->find()->where(['Cities.county_id' => $countyId])->count();
+                },
+            ],
+        ]);
 
         $this->belongsTo('Countries', [
             'foreignKey' => 'country_id',
@@ -86,7 +107,7 @@ class CitiesTable extends Table
     /**
      * Select2 label: "Name (ZIP)" or just name.
      */
-    public function optionLabel(\Cake\Datasource\EntityInterface $city): string
+    public function optionLabel(EntityInterface $city): string
     {
         $name = trim((string)$city->get('name'));
         $zip = trim((string)($city->get('zip') ?? ''));
@@ -95,5 +116,13 @@ class CitiesTable extends Table
         }
 
         return $name;
+    }
+
+    /**
+     * Clubs block city delete (CounterCache club_count).
+     */
+    protected function relatedChildrenCountField(): string
+    {
+        return 'club_count';
     }
 }

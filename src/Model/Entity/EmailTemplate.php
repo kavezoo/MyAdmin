@@ -6,9 +6,10 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Email template (per language).
+ * Email template (per country + language).
  *
  * @property int $id
+ * @property int $country_id
  * @property int $language_id
  * @property string $slug
  * @property string $name
@@ -20,6 +21,7 @@ use Cake\ORM\Entity;
  * @property int $pos
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
+ * @property \App\Model\Entity\Country|null $country
  * @property \App\Model\Entity\Language|null $language
  */
 class EmailTemplate extends Entity
@@ -28,6 +30,7 @@ class EmailTemplate extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
+        'country_id' => true,
         'language_id' => true,
         'slug' => true,
         'name' => true,
@@ -39,6 +42,7 @@ class EmailTemplate extends Entity
         'pos' => true,
         'created' => true,
         'modified' => true,
+        'country' => true,
         'language' => true,
     ];
 }

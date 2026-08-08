@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Clubpresident;
 
+use App\Controller\Concerns\IndexListCrudTrait;
 use App\Controller\PanelAppController;
 use ArrayIterator;
 use Cake\Datasource\Paging\PaginatedResultSet;
@@ -17,6 +18,8 @@ use Cake\ORM\Query\SelectQuery;
  */
 abstract class AppController extends PanelAppController
 {
+    use IndexListCrudTrait;
+
     /**
      * Empty paginated set for index_pagination (CakePHP 5 PaginatorHelper).
      */
@@ -34,6 +37,21 @@ abstract class AppController extends PanelAppController
             'hasNextPage' => false,
             'requestedPage' => 1,
         ]);
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface $event
+     * @return void
+     */
+    public function beforeRender(EventInterface $event): void
+    {
+        parent::beforeRender($event);
+
+        $controller = (string)$this->request->getParam('controller');
+        if ($controller === '' || $controller === 'Dashboard' || $controller === 'Members') {
+            return;
+        }
+        $this->set('indexListUrl', $this->indexListUrl($controller));
     }
 
     /**

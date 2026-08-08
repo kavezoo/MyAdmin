@@ -22,6 +22,7 @@ $this->Html->css([
 	'/plugins/select2-4.1.0/css/select2.min',
 	'/plugins/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min',
 	'pages/index',
+	'pages/event_logs',
 ], ['block' => true]);
 $this->Html->script('/plugins/select2-4.1.0/js/select2.full.min', ['block' => 'scriptBottom']);
 $this->Html->script('pages/event_logs_index', ['block' => 'scriptBottom']);
@@ -115,7 +116,7 @@ $redirectTarget = $this->request->getRequestTarget();
 					</div>
 				</form>
 
-				<table class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table">
+				<table class="table table-responsive-xl table-bordered table-hover table-striped table-sm mb-0 index-data-table event-logs-table">
 					<thead>
 						<tr>
 							<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
@@ -123,7 +124,7 @@ $redirectTarget = $this->request->getRequestTarget();
 							<th scope="col" class="string user"><?= __('User') ?></th>
 							<th scope="col" class="string module"><?= $this->Paginator->sort('module', __('Module')) ?></th>
 							<th scope="col" class="string action"><?= $this->Paginator->sort('action', __('Action')) ?></th>
-							<th scope="col" class="string changes"><?= __('Data changes') ?></th>
+							<th scope="col" class="string changes"><?= __('Event') ?></th>
 							<th scope="col" class="string ip"><?= $this->Paginator->sort('ip', __('IP')) ?></th>
 							<th scope="col" class="actions"><?= __('Actions') ?></th>
 						</tr>
@@ -144,6 +145,7 @@ $redirectTarget = $this->request->getRequestTarget();
 								$userLabel = '—';
 							}
 							$changes = EventLogChanges::fromRequestData($eventLog->request_data ?? null);
+							$description = trim((string)($eventLog->description ?? ''));
 							?>
 							<tr id="record-<?= (int)$eventLog->id ?>" data-id="<?= (int)$eventLog->id ?>">
 								<td class="number id"><?= (int)$eventLog->id ?></td>
@@ -155,20 +157,23 @@ $redirectTarget = $this->request->getRequestTarget();
 								<td class="string user">
 									<?= h($userLabel) ?>
 									<?php if (!empty($eventLog->actor_role)): ?>
-										<br><span class="text-muted small"><?= h($eventLog->actor_role) ?></span>
+										<br><span class="text-muted"><?= h($eventLog->actor_role) ?></span>
 									<?php endif; ?>
 								</td>
 								<td class="string module"><code><?= h($eventLog->module) ?></code></td>
 								<td class="string action"><span class="badge text-bg-secondary"><?= h($eventLog->action) ?></span></td>
 								<td class="string changes">
+									<?php if ($description !== ''): ?>
+										<div class="event-log-description"><?= h($description) ?></div>
+									<?php endif; ?>
 									<?php if ($changes !== []): ?>
 										<?= $this->element('admin/event_log_changes', [
 											'changes' => $changes,
 											'module' => (string)($eventLog->module ?? ''),
 											'compact' => true,
 										]) ?>
-									<?php else: ?>
-										<span class="text-muted"><?= h((string)($eventLog->description ?? '—')) ?></span>
+									<?php elseif ($description === ''): ?>
+										<span class="text-muted">—</span>
 									<?php endif; ?>
 								</td>
 								<td class="string ip"><code><?= h((string)($eventLog->ip ?? '')) ?></code></td>

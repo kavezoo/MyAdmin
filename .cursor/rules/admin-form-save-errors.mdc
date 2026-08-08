@@ -1,0 +1,36 @@
+---
+description: Mentés hiba Flash — mindig mutasd az okot (entity errors)
+alwaysApply: true
+---
+
+# Mentés hiba — tájékoztatás az okról (örök)
+
+Ha `save` / validáció **nem sikerül**, a felhasználó **lássa, miért** — ne csak a generikus „could not be saved” üzenetet.
+
+## Kötelező
+
+```php
+if ($this->Things->save($thing)) {
+    $this->Flash->success(__('The thing has been saved.'));
+    return $this->redirectToIndexList('Things');
+}
+$this->flashEntityErrors($thing); // IndexListCrudTrait + EntityFormErrors
+// opcionális címkék: $this->flashEntityErrors($thing, null, ['name' => __('Name')]);
+```
+
+- Helper: `IndexListCrudTrait::flashEntityErrors($entity|array, ?$fallback, $fieldLabels = [])`
+- Utility: `App\Utility\EntityFormErrors::flashText()` / `flatLines()` / `summaryText()`
+- Flash toast: mezőhibák `; `-nel összefűzve (`mező: üzenet`)
+- Üres error fa → fallback: `__('The record could not be saved. Please try again.')`
+- Váratlan `Throwable`: továbbra is generikus Flash (ne stack trace); **validáció** esetén viszont mindig a konkrét okok
+
+## Tilos
+
+- Csak `__('The record could not be saved. Please try again.')` validációs hibánál, ha van `$entity->getErrors()`
+- Saját másoló `flashTeamErrors` / `walk($errors)` a controllerben — használd a traitet
+- Nyers PHP TypeError / stack trace a UI-n
+
+## Hol
+
+Minden Admin / panel `add` / `edit` (és egyéb mentés) action.  
+Spec: `doc/admin-konvenciok.md` → „Mentés hibakezelés”; `doc/admin-oldal.md`.

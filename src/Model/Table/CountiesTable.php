@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
-use ArrayObject;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\EventInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -14,11 +13,14 @@ use Cake\Validation\Validator;
 /**
  * Counties — megyék / régiók (országhoz kötve).
  *
+ * CounterCache: city_count via CitiesTable.
+ *
  * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
  * @property \App\Model\Table\CitiesTable&\Cake\ORM\Association\HasMany $Cities
  */
 class CountiesTable extends Table
 {
+    use PreventsDeleteWithChildrenTrait;
     use UsesDatabaseColumnDefaultsTrait;
 
     /**
@@ -81,37 +83,10 @@ class CountiesTable extends Table
     }
 
     /**
-     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
-     * @param \Cake\Datasource\EntityInterface $entity
-     * @param \ArrayObject<string, mixed> $options
-     * @return void
+     * Cities block county delete (CounterCache city_count).
      */
-    public function beforeDelete(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
+    protected function relatedChildrenCountField(): string
     {
-        if (!$this->canDelete($entity)) {
-            $entity->setError('_delete', [
-                __('Cannot delete this record because it has related child records.'),
-            ]);
-            $event->stopPropagation();
-            $event->setResult(false);
-        }
-    }
-
-    /**
-     * Block delete while cities reference this county (live count — no CounterCache column yet).
-     *
-     * @param \Cake\Datasource\EntityInterface $entity
-     * @return bool
-     */
-    public function canDelete(EntityInterface $entity): bool
-    {
-        $id = $entity->get($this->getPrimaryKey());
-        if ($id === null || $id === '') {
-            return true;
-        }
-
-        return $this->Cities->find()
-            ->where(['Cities.county_id' => $id])
-            ->count() === 0;
+        return 'city_count';
     }
 }

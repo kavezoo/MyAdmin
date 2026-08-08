@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS `countries` (
   `visible` tinyint(1) NOT NULL DEFAULT 1,
   `pos` int(11) NOT NULL DEFAULT 1000,
   `user_count` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `club_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: clubs in this country',
+  `setup_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: setups in this country',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   PRIMARY KEY (`id`),

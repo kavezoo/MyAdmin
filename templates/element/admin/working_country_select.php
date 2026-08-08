@@ -1,8 +1,9 @@
 <?php
 /**
- * Admin working-country Select2 (Setups index header).
+ * Admin working-country Select2 (index headers / Setups).
  *
  * Persists via ?country_id= → session + cookie (AdminCountry).
+ * Keeps other query params (sort, q, …) and resets page to 1.
  *
  * @var \App\View\AppView $this
  * @var int $workingCountryId

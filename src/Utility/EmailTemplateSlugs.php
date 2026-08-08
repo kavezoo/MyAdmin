@@ -14,6 +14,8 @@ final class EmailTemplateSlugs
 
     public const CLUB_NATIONAL_FEE_RECORDED = 'club_national_fee_recorded';
 
+    public const MEMBER_PROFILE_UPDATED = 'member_profile_updated';
+
     /**
      * @return array<string, string> slug => admin label msgid
      */
@@ -23,6 +25,7 @@ final class EmailTemplateSlugs
             self::MEMBERSHIP_APPLICATION => __('Membership application (to club president)'),
             self::MEMBERSHIP_APPROVED => __('Membership approved (to member)'),
             self::CLUB_NATIONAL_FEE_RECORDED => __('Club national fee recorded (to club president)'),
+            self::MEMBER_PROFILE_UPDATED => __('Member profile updated (to member)'),
         ];
     }
 }

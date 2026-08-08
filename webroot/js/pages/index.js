@@ -484,7 +484,7 @@
 			});
 		});
 
-		$(document).on('click', '.index-data-table tbody a.btn-row-delete', function (e) {
+		$(document).on('click', '.index-data-table tbody .btn-row-delete, .record-view-footer-actions .btn-row-delete', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 
@@ -500,10 +500,18 @@
 			var $row = $btn.closest('tr');
 			var recordId = $btn.attr('data-id') || $row.attr('data-id');
 			if (!recordId) {
+				// View footer: form id="delete-form-{id}"
+				var $form = $btn.closest('form[id^="delete-form-"]');
+				if ($form.length) {
+					var formId = String($form.attr('id') || '');
+					recordId = formId.replace(/^delete-form-/, '');
+				}
+			}
+			if (!recordId) {
 				return;
 			}
 
-			if ($row.attr('data-can-delete') === '0') {
+			if ($row.length && $row.attr('data-can-delete') === '0') {
 				return;
 			}
 

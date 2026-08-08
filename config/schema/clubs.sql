@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `clubs` (
   `visible` tinyint(1) NOT NULL DEFAULT 1,
   `pos` int(11) NOT NULL DEFAULT 1000,
   `user_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: users with this club_id',
+  `competition_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: competitions hosted by this club',
   `club_president_id` char(36) DEFAULT NULL COMMENT 'Designated club president (Users.id); role may stay president/vp',
   `national_membership_fee_date` date DEFAULT NULL COMMENT 'National association club fee paid on (year on date = membership year)',
   `created` datetime NOT NULL,

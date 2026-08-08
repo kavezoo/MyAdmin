@@ -37,7 +37,7 @@ Cursor rule: `.cursor/rules/uj-projekt-sema.mdc` (`alwaysApply`).
 | `visible` | Switch; lista végén `visible` → `pos`; Countries: visible-only szűrő | admin-konvenciok, countries-admin |
 | `pos` | PHP-ból **békén hagyjuk** (DB **DEFAULT `1000`**); ne állítsuk / ne növeljük — **majd a user** a formon | `pos-db-default` |
 | `TEXT` / hosszú HTML (leírás, email body, …) | Form `form.php`: `textarea.editor` + **Trumbowyg** assetek ugyanott + `pages/form.js`; plain text → sima textarea | admin-konvenciok |
-| `*_count` | **CounterCache** (ne élő COUNT) | minta-tanulsagok, crud-utmutato |
+| `*_count` | **CounterCache** a gyerek/through Table-en (ne élő COUNT); soft FK `0` → closure `false`; SUM → closure | [counter-caches.md](counter-caches.md), minta-tanulsagok §2 |
 | `created` / `modified` | Timestamp behavior; form header editnél | — |
 | Oszlop DEFAULT (DB) | `UsesDatabaseColumnDefaultsTrait` + séma DEFAULT | minta-tanulsagok |
 
@@ -115,7 +115,7 @@ Minden új táblánál:
 [ ] Dátum/szám oszlopok? → Tempus / inputmask + middleware mezők
 [ ] belongsTo Select2 (+ „+” ha egyszerű)
 [ ] HABTM? → mindkét oldal multiple Select2
-[ ] Form: adminLabel, #form-horizontal, visible/pos, unsaved
+[ ] Form: adminLabel, #form-horizontal, visible/pos, unsaved, **save hiba → flashEntityErrors**
 [ ] Index: admin_search mezők, oszloptípusok, footer
 [ ] View: dl + related tabs
 [ ] .po msgid-ek + cache clear
@@ -164,6 +164,7 @@ Minden új táblánál:
 | Form i18n TAB | form-i18n-tabs.md | admin-form-i18n-tabs.mdc |
 | Kötelező `*` | admin-konvenciok.md | admin-form-required.mdc |
 | Unsaved leave | admin-konvenciok.md | admin-form-unsaved.mdc |
+| Mentés hiba Flash (konkrét okok) | admin-konvenciok.md | admin-form-save-errors.mdc |
 | Translate search/sort | i18n.md | admin-translate-search-sort.mdc |
 | Countries index | countries-admin.md | admin-countries-index.mdc |
 | Auth | users-auth.md | users-auth.mdc |

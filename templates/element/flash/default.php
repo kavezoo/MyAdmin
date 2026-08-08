@@ -10,9 +10,7 @@ $class = 'message';
 if (!empty($params['class'])) {
 	$class .= ' ' . $params['class'];
 }
-if (!isset($params['escape']) || $params['escape'] !== false) {
-	$message = h($message);
-}
+$escape = !isset($params['escape']) || $params['escape'] !== false;
 if ($this->usesFlashToast()):
 	$status = 'info';
 	if (!empty($params['class'])) {
@@ -27,7 +25,7 @@ if ($this->usesFlashToast()):
 	}
 	$jsFlags = JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 ?>
-flashMessage(<?= json_encode(__('Message'), $jsFlags) ?>, <?= json_encode($message, $jsFlags) ?>, <?= json_encode($status, $jsFlags) ?>);
+flashMessage(<?= json_encode(__('Message'), $jsFlags) ?>, <?= json_encode((string)$message, $jsFlags) ?>, <?= json_encode($status, $jsFlags) ?>);
 <?php else: ?>
-<div class="<?= h($class) ?>" onclick="this.classList.add('hidden')"><?= $message ?></div>
+<div class="<?= h($class) ?>" onclick="this.classList.add('hidden')"><?= $escape ? h($message) : $message ?></div>
 <?php endif; ?>

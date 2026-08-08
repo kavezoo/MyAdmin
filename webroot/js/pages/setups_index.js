@@ -1,5 +1,5 @@
 /**
- * Setups index — working country Select2 change → reload with ?country_id=
+ * Working country Select2 — change → reload with ?country_id= (keeps other query params).
  */
 (function ($) {
 	'use strict';
@@ -13,18 +13,32 @@
 		$el.select2({
 			theme: 'bootstrap-5',
 			width: '100%',
-			// Always allow typing — options are page-locale country names (Translate).
 			minimumResultsForSearch: 0
 		});
 
 		$el.on('change', function () {
-			var url = $el.data('change-url') || window.location.pathname;
 			var id = $el.val();
 			if (!id) {
 				return;
 			}
-			var sep = url.indexOf('?') >= 0 ? '&' : '?';
-			window.location.href = url + sep + 'country_id=' + encodeURIComponent(id);
+			var base = $el.data('change-url') || window.location.pathname;
+			var url;
+			try {
+				url = new URL(base, window.location.origin);
+			} catch (e) {
+				url = new URL(window.location.href);
+				url.pathname = String(base).split('?')[0];
+			}
+			// Preserve current list query (sort / q / limit), replace country + page.
+			var current = new URL(window.location.href);
+			current.searchParams.forEach(function (value, key) {
+				if (!url.searchParams.has(key)) {
+					url.searchParams.set(key, value);
+				}
+			});
+			url.searchParams.set('country_id', String(id));
+			url.searchParams.set('page', '1');
+			window.location.href = url.pathname + url.search;
 		});
 	});
 })(jQuery);

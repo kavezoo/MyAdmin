@@ -83,6 +83,36 @@ class MembershipMailer extends Mailer
     }
 
     /**
+     * Notify the member that an officer updated their profile.
+     */
+    public function memberProfileUpdated(EntityInterface $member, string $clubName): void
+    {
+        $name = $this->personName($member);
+        $loginUrl = Router::url([
+            'plugin' => null,
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login',
+            '_full' => true,
+        ]);
+        $vars = [
+            'memberName' => $name,
+            'clubName' => $clubName !== '' ? $clubName : __('your club'),
+            'loginUrl' => $loginUrl,
+        ];
+
+        $locale = EmailTemplateService::localeForUser($member);
+        $this->deliverLocalized(
+            $member,
+            EmailTemplateSlugs::MEMBER_PROFILE_UPDATED,
+            $vars,
+            $locale,
+            fn () => __('Your membership profile has been updated'),
+            'member_profile_updated',
+        );
+    }
+
+    /**
      * Notify club president that the club's national annual fee was recorded.
      */
     public function clubNationalFeeRecorded(

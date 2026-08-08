@@ -9,6 +9,7 @@ use App\Utility\AdminCountry;
 use App\Utility\MembershipFee;
 use Cake\Datasource\EntityInterface;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 
 /**
  * Shared member-list index helpers (President / Clubpresident Members).
@@ -18,6 +19,9 @@ trait PanelMemberListTrait
     /**
      * WHERE fragment: active roster roles (member, editor, clubpresident, president, vp).
      *
+     * Prefer {@see membershipRosterOrSelfCondition()} on Members lists so the
+     * logged-in user always appears (e.g. admin/superuser using the panel).
+     *
      * @return array<string, mixed>
      */
     protected function membershipRosterRoleCondition(): array
@@ -25,6 +29,51 @@ trait PanelMemberListTrait
         return [
             'Users.role IN' => AppRoles::membershipRosterRoles(),
         ];
+    }
+
+    /**
+     * Logged-in user id for member-list “always include self”.
+     */
+    protected function currentMemberListUserId(?ServerRequest $request = null): string
+    {
+        $request ??= $this->getRequest();
+        $identity = $request->getAttribute('identity');
+        if ($identity === null) {
+            return '';
+        }
+        if (method_exists($identity, 'getIdentifier')) {
+            return (string)$identity->getIdentifier();
+        }
+        if (method_exists($identity, 'get')) {
+            return (string)($identity->get('id') ?? '');
+        }
+
+        return '';
+    }
+
+    /**
+     * Roster roles **or** the current user (same club/country scope still required by caller).
+     *
+     * Ensures president / clubpresident / admin switching into the panel always
+     * sees themselves on the Members index even when their `role` is outside the roster.
+     *
+     * @param array<string, mixed> $extraOnRoster Extra AND conditions on the roster branch only
+     *        (e.g. national fee paid filter) — not applied to the self branch.
+     * @return array{OR: list<array<string, mixed>>}
+     */
+    protected function membershipRosterOrSelfCondition(array $extraOnRoster = []): array
+    {
+        $rosterBranch = array_merge(
+            ['Users.role IN' => AppRoles::membershipRosterRoles()],
+            $extraOnRoster
+        );
+        $or = [$rosterBranch];
+        $selfId = $this->currentMemberListUserId();
+        if ($selfId !== '') {
+            $or[] = ['Users.id' => $selfId];
+        }
+
+        return ['OR' => $or];
     }
 
     /**

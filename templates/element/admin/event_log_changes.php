@@ -19,7 +19,7 @@ if ($changes === []) {
 }
 ?>
 <?php if ($compact): ?>
-	<div class="small event-log-changes text-muted mb-0">
+	<div class="event-log-changes mb-0">
 		<?= h(EventLogPresenter::friendlyChangeSummary($changes, $module, 400)) ?>
 	</div>
 <?php else: ?>

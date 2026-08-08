@@ -4,15 +4,12 @@
  *
  * @var \App\View\AppView $this
  */
+use App\Utility\PanelNav;
+
 $controller = (string)$this->request->getParam('controller');
 $isDashboard = $controller === 'Dashboard';
-$isMembers = $controller === 'Members';
-$isClubs = $controller === 'Clubs';
-$isEmailTemplates = $controller === 'EmailTemplates';
 $home = ['prefix' => 'President', 'controller' => 'Dashboard', 'action' => 'index'];
-$membersUrl = ['prefix' => 'President', 'controller' => 'Members', 'action' => 'index'];
-$clubsUrl = ['prefix' => 'President', 'controller' => 'Clubs', 'action' => 'index'];
-$emailTemplatesUrl = ['prefix' => 'President', 'controller' => 'EmailTemplates', 'action' => 'index'];
+$navItems = PanelNav::forPrefix('President', $this->getRequest());
 ?>
 <div class="left main-sidebar">
 	<div class="sidebar-inner leftscroll">
@@ -23,21 +20,7 @@ $emailTemplatesUrl = ['prefix' => 'President', 'controller' => 'EmailTemplates',
 						<i class="fa fa-fw fa-tachometer"></i><span> <?= __('Dashboard') ?> </span>
 					</a>
 				</li>
-				<li class="submenu">
-					<a href="<?= $this->Url->build($membersUrl) ?>"<?= $isMembers ? ' class="active"' : '' ?>>
-						<i class="fa fa-fw fa-users"></i><span> <?= __('Members') ?> </span>
-					</a>
-				</li>
-				<li class="submenu">
-					<a href="<?= $this->Url->build($clubsUrl) ?>"<?= $isClubs ? ' class="active"' : '' ?>>
-						<i class="fa fa-fw fa-sitemap"></i><span> <?= __('Clubs') ?> </span>
-					</a>
-				</li>
-				<li class="submenu">
-					<a href="<?= $this->Url->build($emailTemplatesUrl) ?>"<?= $isEmailTemplates ? ' class="active"' : '' ?>>
-						<i class="fa fa-fw fa-envelope"></i><span> <?= __('Email templates') ?> </span>
-					</a>
-				</li>
+				<?= $this->element('panel/sidebar_nav_items', ['items' => $navItems]) ?>
 				<?= $this->element('panel/switcher') ?>
 			</ul>
 			<div class="clearfix"></div>

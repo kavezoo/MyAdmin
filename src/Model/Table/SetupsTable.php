@@ -63,6 +63,10 @@ class SetupsTable extends Table
             'foreignKey' => 'country_id',
             'joinType' => 'INNER',
         ]);
+
+        $this->addBehavior('CounterCache', [
+            'Countries' => ['setup_count'],
+        ]);
     }
 
     /**

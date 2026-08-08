@@ -746,6 +746,12 @@ class UsersController extends CakeDCUsersController
                 ?? AdminCountry::label($countryId);
         }
         $this->set('countryLabel', $countryLabel);
+        $languageLabel = '';
+        $languageId = $user !== null ? (int)($user->get('language_id') ?? 0) : 0;
+        if ($languageId > 0) {
+            $languageLabel = AdminLanguage::labelById($languageId);
+        }
+        $this->set('languageLabel', $languageLabel);
         $this->setMembershipFeeViewVars($user);
     }
 

@@ -69,6 +69,7 @@ $users = $club->users ?? [];
 $usersList = is_array($users) ? $users : iterator_to_array($users);
 $usersCount = count($usersList);
 $userCountCached = (int)($club->user_count ?? $usersCount);
+$competitionCountCached = (int)($club->competition_count ?? 0);
 $countryLabel = (string)($countryLabel ?? '');
 
 ob_start();
@@ -262,6 +263,7 @@ $usersTable = ob_get_clean();
 					<div class="record-view-row"><dt><?= __('Visible') ?></dt><dd><?= $club->visible ? __('Yes') : __('No') ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Position') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($club->pos, decimals: 0)) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Members') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::formatCount($userCountCached, decimals: 0)) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Competitions') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::formatCount($competitionCountCached, decimals: 0)) ?></dd></div>
 					<?php if ($usersCount > 0): ?>
 						<div class="record-view-row">
 							<dt><?= __('Member list') ?></dt>

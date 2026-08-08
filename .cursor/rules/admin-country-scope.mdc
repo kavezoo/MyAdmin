@@ -1,0 +1,21 @@
+---
+description: Admin listák ország-szűrése — saját ország vs superuser select (örök)
+alwaysApply: true
+---
+
+# Admin ország-szűrés (örök)
+
+Teljes spec: **`doc/admin-country-scope.md`**.
+
+## Szabály
+
+1. **Admin** (nem superuser): minden `country_id`-s táblán **csak** `Users.country_id` — nincs országválasztó, nincs „All countries”.
+2. **Superuser**: lista fejléc Select2 (`admin/index_country_scope` / `working_country_select`); opciók = országok, ahol **van ≥1 sor** az **aktuális** táblán (`AdminCountryScope::optionsWithRecords`).
+3. View / edit / delete / `recordGet`: idegen ország → deny.
+4. Form: admin lockolt country; superuser teljes `AdminCountry::options()` (új rekord üres országban is OK).
+5. Countries lista: admin csak saját `Countries.id` sor.
+6. Új Admin CRUD `country_id`-vel → `beginAdminCountryScopedIndex($table)` + WHERE + index element.
+
+Táblák: Users, Clubs, Competitions, Cities, Counties, Setups, EventLogs, **EmailTemplates** (`country_id`; egyediség: country+language+slug). Languages: nincs ország.
+
+Utility: `AdminCountryScope` + `AdminCountryScopeTrait` (`Admin\AppController`).

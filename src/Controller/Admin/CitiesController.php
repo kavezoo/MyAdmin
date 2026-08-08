@@ -89,18 +89,11 @@ class CitiesController extends AppController
         $this->viewBuilder()->setVar('breadcrumb', __('Cities'));
         $this->setAccessFlags();
 
-        [$filterCountryId, $filterCountryLabel, $countryOptions] = $this->resolveCountryFilter();
-
-        // Keep country_id in the URL so paginator / sort links preserve the filter.
-        if (!array_key_exists('country_id', $this->request->getQueryParams())) {
-            $params = $this->request->getQueryParams();
-            $params['country_id'] = (string)$filterCountryId;
-            if (!isset($params['page'])) {
-                $params['page'] = '1';
-            }
-
-            return $this->redirect(['action' => 'index', '?' => $params]);
+        $scoped = $this->beginAdminCountryScopedIndex($this->Cities);
+        if ($scoped instanceof Response) {
+            return $scoped;
         }
+        $filterCountryId = $scoped['countryId'];
 
         $redirect = $this->applyIndexListState('Cities');
         if ($redirect !== null) {
@@ -125,10 +118,11 @@ class CitiesController extends AppController
             'Countries' => $this->Cities->Countries->getTarget(),
         ]);
 
-        $query = $this->Cities->find()->contain(['Countries', 'Counties']);
-        if ($filterCountryId > 0) {
-            $query->where(['Cities.country_id' => $filterCountryId]);
-        }
+        $query = $this->applyAdminCountryWhere(
+            $this->Cities->find()->contain(['Countries', 'Counties']),
+            $this->Cities,
+            $filterCountryId
+        );
         $query = $this->applyIndexSearch($query, $this->Cities);
 
         $redirect = $this->resolveIndexPageForLastVisited('Cities', $query, $paginateOptions);
@@ -141,15 +135,10 @@ class CitiesController extends AppController
 
         $flagIds = array_values(array_unique(array_filter([
             $filterCountryId,
-            CurrentUser::countryId($this->request),
+            \App\Auth\CurrentUser::countryId($this->request),
         ])));
 
-        $this->set(compact(
-            'cities',
-            'filterCountryId',
-            'filterCountryLabel',
-            'countryOptions'
-        ));
+        $this->set(compact('cities'));
         $this->set('countryFlags', AdminCountry::iso2Map($flagIds));
     }
 
@@ -322,7 +311,13 @@ class CitiesController extends AppController
      */
     public function view(?string $id = null)
     {
-        $city = $this->Cities->get($id, contain: ['Countries', 'Counties']);
+        $city = $this->Cities->get($id, contain: [
+            'Countries',
+            'Counties',
+            'Clubs' => function ($q) {
+                return $q->orderBy(['Clubs.name' => 'ASC']);
+            },
+        ]);
         $this->rememberLastVisited('Cities', $city->id);
         $this->set(compact('city'));
         $this->setAccessFlags($city);

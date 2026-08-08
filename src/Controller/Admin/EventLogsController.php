@@ -113,7 +113,9 @@ class EventLogsController extends AppController
             ->combine('module', 'module')
             ->toArray();
 
-        $countryOptions = $canFilterCountries ? AdminCountry::masterVisibleOptions() : [];
+        $countryOptions = $canFilterCountries
+            ? \App\Utility\AdminCountryScope::optionsWithRecords($this->EventLogs)
+            : [];
         $filterCountryLabel = AdminCountry::label($filterCountryId);
         $userSearchUrl = Router::url([
             'prefix' => 'Admin',
@@ -326,18 +328,10 @@ class EventLogsController extends AppController
     protected function resolveFilterCountryId(bool $canFilterCountries): int
     {
         if ($canFilterCountries) {
-            $fromQuery = (int)$this->request->getQuery('country_id');
-            if ($fromQuery > 0) {
-                $options = AdminCountry::masterVisibleOptions();
-                if (isset($options[$fromQuery])) {
-                    return $fromQuery;
-                }
-            }
-            // Prefer working Admin country, then user country
-            $working = AdminCountry::id();
-            if ($working > 0) {
-                return $working;
-            }
+            return \App\Utility\AdminCountryScope::resolveCountryId(
+                $this->getRequest(),
+                $this->EventLogs
+            );
         }
 
         $mine = \App\Auth\CurrentUser::countryId($this->getRequest());

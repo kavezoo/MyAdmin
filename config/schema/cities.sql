@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `cities` (
   `lng` varchar(20) NOT NULL COMMENT 'gmap',
   `lat2` varchar(20) NOT NULL COMMENT 'import txt',
   `lng2` varchar(20) NOT NULL COMMENT 'import txt',
+  `club_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: clubs in this city',
   PRIMARY KEY (`id`),
   KEY `shortname` (`shortname`),
   KEY `country_id` (`country_id`),

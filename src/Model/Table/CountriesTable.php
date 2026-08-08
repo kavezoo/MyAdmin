@@ -22,12 +22,13 @@ use Cake\Validation\Validator;
 /**
  * Countries Model — matches `countries` schema.
  *
- * Columns: iso2, name, endonim_name, locale, timezone, phone_prefix, continent_id, visible, pos, user_count, created, modified
+ * Columns: iso2, name, endonim_name, locale, timezone, phone_prefix, continent_id, visible, pos,
+ *          user_count, club_count, setup_count, created, modified
  * - `name` Translate EAV → i18n (model=Countries)
  * - `endonim_name` endonym (native script), not translated
  * - `timezone` IANA (display/save via AdminTimezone + LocaleDateParser)
  * - belongsTo Continents via continent_id
- * - `user_count`: CounterCache from UsersTable (belongsTo Countries)
+ * - `user_count` / `club_count` / `setup_count`: CounterCache (Users / Clubs / Setups)
  * - Access: superuser full CRUD; admin visible + pos only (see CountryAccess)
  *
  * Note: BelongsToMany `VisibleCountries` is kept for association wiring / save helpers,
@@ -397,24 +398,17 @@ class CountriesTable extends Table
     }
 
     /**
-     * Delete only when no users and no setups reference the country.
-     * Users: CounterCache `user_count` (fresh DB read). Setups: live count (no setup_count column yet).
+     * Delete only when no users, clubs, or setups reference the country
+     * (CounterCache columns — fresh DB read).
      *
      * @param \Cake\Datasource\EntityInterface $entity
      * @return bool
      */
     public function canDelete(EntityInterface $entity): bool
     {
-        if ($this->countUsers($entity) > 0) {
-            return false;
-        }
-
-        $setups = $this->fetchTable('Setups');
-        $setupCount = $setups->find()
-            ->where(['Setups.country_id' => $entity->get('id')])
-            ->count();
-
-        return $setupCount === 0;
+        return $this->countUsers($entity) === 0
+            && $this->countClubs($entity) === 0
+            && $this->countSetups($entity) === 0;
     }
 
     /**
@@ -425,19 +419,51 @@ class CountriesTable extends Table
      */
     public function countUsers(EntityInterface $entity): int
     {
+        return $this->countCachedRelated($entity, 'user_count');
+    }
+
+    /**
+     * Related clubs — CounterCache `club_count`.
+     *
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @return int
+     */
+    public function countClubs(EntityInterface $entity): int
+    {
+        return $this->countCachedRelated($entity, 'club_count');
+    }
+
+    /**
+     * Related setups — CounterCache `setup_count`.
+     *
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @return int
+     */
+    public function countSetups(EntityInterface $entity): int
+    {
+        return $this->countCachedRelated($entity, 'setup_count');
+    }
+
+    /**
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param string $field CounterCache column
+     * @return int
+     */
+    protected function countCachedRelated(EntityInterface $entity, string $field): int
+    {
         $id = $entity->get($this->getPrimaryKey());
         if ($id !== null && $id !== '') {
             $row = $this->find()
-                ->select(['user_count'])
+                ->select([$field])
                 ->where([$this->aliasField($this->getPrimaryKey()) => $id])
                 ->disableHydration()
                 ->first();
-            if (is_array($row) && array_key_exists('user_count', $row)) {
-                return (int)$row['user_count'];
+            if (is_array($row) && array_key_exists($field, $row)) {
+                return (int)$row[$field];
             }
         }
 
-        return (int)($entity->get('user_count') ?? 0);
+        return (int)($entity->get($field) ?? 0);
     }
 
     /**

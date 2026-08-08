@@ -4,10 +4,12 @@
  *
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\EmailTemplate $emailTemplate
+ * @var string $countryLabel
  * @var string $languageLabel
  * @var string $slugLabel
  */
 $this->Html->css(['pages/index'], ['block' => true]);
+$countryLabel = (string)($countryLabel ?? '');
 $languageLabel = (string)($languageLabel ?? '');
 $slugLabel = (string)($slugLabel ?? (string)$emailTemplate->slug);
 ?>
@@ -29,6 +31,7 @@ $slugLabel = (string)($slugLabel ?? (string)$emailTemplate->slug);
 			<div class="card-body">
 				<dl class="row record-view-fields mb-0">
 					<div class="record-view-row"><dt><?= __('ID') ?></dt><dd><?= h((string)$emailTemplate->id) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Country') ?></dt><dd><?= h($countryLabel !== '' ? $countryLabel : \App\Utility\AdminCountry::label((int)$emailTemplate->country_id)) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Language') ?></dt><dd><?= h($languageLabel) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Template') ?></dt><dd><?= h($slugLabel) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h((string)$emailTemplate->name) ?></dd></div>

@@ -7,8 +7,9 @@
  *   id: string,
  *   title: string,
  *   count?: int|null,
- *   table: string
- * }> $relatedTabs Each tab: unique id, title, optional count, HTML table markup (or empty → no-data message)
+ *   table: string,
+ *   toolbar?: string|null
+ * }> $relatedTabs Each tab: unique id, title, optional count, HTML table markup (or empty → no-data message), optional toolbar HTML
  */
 $relatedTabs = $relatedTabs ?? [];
 if ($relatedTabs === []) {
@@ -54,6 +55,7 @@ $first = true;
 				$paneId = 'related-pane-' . $tab['id'];
 				$tabId = 'related-tab-' . $tab['id'];
 				$tableHtml = trim((string)($tab['table'] ?? ''));
+				$toolbarHtml = trim((string)($tab['toolbar'] ?? ''));
 				$isEmpty = $tableHtml === '';
 			?>
 				<div
@@ -63,6 +65,11 @@ $first = true;
 					aria-labelledby="<?= h($tabId) ?>"
 					tabindex="0"
 				>
+					<?php if ($toolbarHtml !== ''): ?>
+						<div class="d-flex justify-content-end flex-wrap gap-2 mb-2">
+							<?= $toolbarHtml ?>
+						</div>
+					<?php endif; ?>
 					<?php if ($isEmpty): ?>
 						<p class="text-muted text-center py-4 mb-0"><?= __('No related records.') ?></p>
 					<?php else: ?>

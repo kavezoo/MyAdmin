@@ -1,0 +1,49 @@
+---
+description: Role panelek — dashboard↔menü, taglista önmaga, saját klub jelzés (örök)
+alwaysApply: true
+---
+
+# Role panelek — navigáció + listák (örök)
+
+Teljes spec: **`doc/membership.md`**, **`doc/users-auth.md`**, **`doc/membership-greenfield.md`**.  
+Utility: **`App\Utility\PanelNav`**.
+
+## 1. Dashboard kártya ↔ sidebar menü (kétirányú)
+
+Minden prefixen (`Admin`, `President`, `Clubpresident`, `Member`, `New`):
+
+1. Új menüpont / dashboard cél → **csak** `PanelNav::forPrefix()` (ne másold kézzel a sidebarba és a dashboardba külön).
+2. Sidebar: `element/panel/sidebar_nav_items` (Admin: **domain** top-level; **Settings** almenü csak ref/geo/setups/logs).
+3. Dashboard: `element/panel/dashboard_nav_cards` + ugyanaz a lista.
+4. **Dashboard home** (`Dashboard/index`) a menüben külön marad — nem kártya.
+
+**Admin `navGroup`:** `PanelNav::NAV_GROUP_MAIN` = Users, Clubs, Competitions, Email templates (külön menüpont); `NAV_GROUP_SETTINGS` = Setups, Languages, Countries, Counties, Cities, Event logs. Helper: `PanelNav::itemsInGroup()`.
+
+**Tilos:** csak a dashboardon vagy csak a menüben új cél; elágazó duplikált `$cards` / `<li>` listák; domain CRUD a Settings alá.
+
+## 2. Taglista — önmaga mindig (President / Clubpresident)
+
+`/president/members`, `/clubpresident/members` (és minden Users-alapú panel roster):
+
+1. Szűrés: `membershipRosterOrSelfCondition()` — roster role-ok **vagy** bejelentkezett `Users.id`.
+2. Scope változatlan: President = `country_id`; Clubpresident = `club_id`.
+3. Admin / superuser panelváltáskor **is** látszik, ha a scope illik.
+4. „Only national fee paid” és hasonló szűrő: **önmagát ne rejtse** (extra feltétel csak a roster ágon).
+5. UI: saját sor → `table-success` + **You** badge (`list_name_cell` `isCurrentUser`).
+
+**Tilos:** csak `membershipRosterRoleCondition()` a Members indexen (kimarad az admin).
+
+## 3. Klublista — saját klub jelzés
+
+| Hol | Jelzés |
+|-----|--------|
+| Member / Clubpresident böngésző | `element/panel/clubs_index` — `My club` + `table-success` |
+| President `/president/clubs` | ugyanaz (`myClubId` = `CurrentUser::clubId`) |
+
+`Users.club_id` a saját klub; 0 → nincs badge.
+
+## 4. Új panel cél / új Members CRUD
+
+Checklist: PanelNav bejegyzés → sidebar+dashboard; Members → `OrSelf`; Clubs index → My club ha van `club_id`.
+
+Módosítás után: `doc/valtozasok.md` + `membership.md` / `users-auth.md` / `membership-greenfield.md`.

@@ -1,6 +1,6 @@
 <?php
 /**
- * County view.
+ * County view + related Cities tab.
  *
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\County $county
@@ -8,11 +8,107 @@
  * @var bool $canDelete
  */
 $this->Html->css(['pages/index'], ['block' => true]);
+$this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
+
 $countryLabel = (string)($countryLabel ?? \App\Utility\AdminCountry::label((int)$county->country_id));
 $canDelete = (bool)($canDelete ?? false);
+
+$citiesGetUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'recordGet']);
+$citiesEditUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'edit']);
+$citiesViewUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'view']);
+$citiesDeleteUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'delete']);
+
+$tooltipDetails = '<b>' . __('View details') . '</b><br>' . __('View the selected record details.');
+$tooltipEdit = '<b>' . __('Edit') . '</b><br>' . __('Edit the selected record.');
+$tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
+
+$config = [
+	'rowDoubleClickAction' => 'modal',
+	'entityFieldLabels' => [
+		'city' => [
+			'id' => __('ID'),
+			'name' => __('Name'),
+			'shortname' => __('Short name'),
+			'zip' => __('ZIP'),
+			'country' => __('Country'),
+			'county' => __('County'),
+		],
+	],
+];
+$this->Html->scriptBlock(
+	'window.MyAdmin = window.MyAdmin || {}; window.MyAdmin.config = Object.assign(window.MyAdmin.config || {}, '
+	. json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+	. ');',
+	['block' => 'script']
+);
+
+$cities = $county->cities ?? [];
+$citiesList = is_array($cities) ? $cities : iterator_to_array($cities);
+$citiesCount = count($citiesList);
+
+ob_start();
+if ($citiesCount > 0):
+?>
+<table
+	class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table related-records-table"
+	data-get-url="<?= h($citiesGetUrl) ?>"
+	data-edit-url="<?= h($citiesEditUrl) ?>"
+	data-view-url="<?= h($citiesViewUrl) ?>"
+	data-delete-url="<?= h($citiesDeleteUrl) ?>"
+	data-delete-form-prefix="city"
+	data-labels="city"
+	data-title="<?= h(__('City details')) ?>"
+>
+	<thead>
+		<tr>
+			<th scope="col" class="string name"><?= __('Name') ?></th>
+			<th scope="col" class="string zip"><?= __('ZIP') ?></th>
+			<th scope="col" class="actions"><?= __('Actions') ?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($citiesList as $city): ?>
+			<tr id="related-city-<?= (int)$city->id ?>" data-id="<?= (int)$city->id ?>" data-can-delete="1">
+				<td class="string name">
+					<a href="#"
+						class="record-modal-link fw-bold"
+						data-id="<?= (int)$city->id ?>"
+						data-labels="city"
+						data-title="<?= h(__('City details')) ?>"
+					><?= h((string)$city->name) ?><span class="record-modal-link-icon">&nbsp;<i class="fa fa-link" aria-hidden="true"></i></span></a>
+				</td>
+				<td class="string zip"><?= h((string)($city->zip ?? '')) ?: '—' ?></td>
+				<td class="actions">
+					<?= $this->Html->link(
+						'<i class="fa fa-eye"></i>',
+						['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'view', $city->id],
+						['escape' => false, 'class' => 'btn btn-sm btn-outline-info', 'title' => $tooltipDetails, 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true']
+					) ?>
+					<?= $this->Html->link(
+						'<i class="fa fa-pencil"></i>',
+						['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'edit', $city->id],
+						['escape' => false, 'class' => 'btn btn-sm btn-outline-primary', 'title' => $tooltipEdit, 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true']
+					) ?>
+					<a role="button" href="#" class="btn btn-sm btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$city->id ?>">
+						<i class="fa fa-trash"></i>
+					</a>
+					<?= $this->Form->create(null, [
+						'url' => ['prefix' => 'Admin', 'controller' => 'Cities', 'action' => 'delete', $city->id],
+						'id' => 'delete-form-city-' . $city->id,
+						'class' => 'd-none js-row-delete-form',
+					]) ?>
+					<?= $this->Form->end() ?>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+<?php
+endif;
+$citiesTable = (string)ob_get_clean();
 ?>
 <div class="row">
-	<div class="col-12 col-xxl-10 p-2 pt-3">
+	<div class="col-12 col-xxl-11 p-2 pt-3">
 		<div class="card mb-3 shadow border border-2">
 			<div class="card-header">
 				<div class="float-left">
@@ -57,5 +153,18 @@ $canDelete = (bool)($canDelete ?? false);
 				</div>
 			</div>
 		</div>
+
+		<?= $this->element('admin/view_related_tabs', [
+			'relatedTabs' => [
+				[
+					'id' => 'cities',
+					'title' => __('Cities'),
+					'count' => $citiesCount,
+					'table' => $citiesTable,
+				],
+			],
+		]) ?>
 	</div>
 </div>
+
+<?= $this->element('admin/modal_linked_record_view') ?>

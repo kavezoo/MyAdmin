@@ -447,3 +447,346 @@ msgstr "E-mailové šablóny"
 
 msgid "All languages"
 msgstr "Všetky jazyky"
+
+msgid "Competitions"
+msgstr "Súťaže"
+
+msgid "Competition"
+msgstr "Súťaž"
+
+msgid "Competition applicants"
+msgstr "Prihlásení na súťaž"
+
+msgid "Competition archive"
+msgstr "Archív súťaží"
+
+msgid "Sub-teams"
+msgstr "Podtímy"
+
+msgid "Sub-team details"
+msgstr "Detail podtímu"
+
+msgid "New sub-team"
+msgstr "Nový podtím"
+
+msgid "Edit sub-team"
+msgstr "Upraviť podtím"
+
+msgid "Sub-teams (alcsapatok) for competitions"
+msgstr "Podtímy pre súťaže"
+
+msgid "Open and upcoming competitions"
+msgstr "Otvorené a nadchádzajúce súťaže"
+
+msgid "Open and upcoming competitions in your country"
+msgstr "Otvorené a nadchádzajúce súťaže vo vašej krajine"
+
+msgid "No competitions available right now."
+msgstr "Momentálne nie sú dostupné žiadne súťaže."
+
+msgid "Open for applications"
+msgstr "Prihlasovanie otvorené"
+
+msgid "Applications closed"
+msgstr "Prihlasovanie uzavreté"
+
+msgid "Not open yet"
+msgstr "Ešte nie je otvorené"
+
+msgid "Apply / details"
+msgstr "Prihlásiť sa / podrobnosti"
+
+msgid "Apply"
+msgstr "Prihlásiť sa"
+
+msgid "Apply:"
+msgstr "Prihláška:"
+
+msgid "Apply to this competition"
+msgstr "Prihlásiť sa na túto súťaž"
+
+msgid "Submit application"
+msgstr "Odoslať prihlášku"
+
+msgid "Confirm application"
+msgstr "Potvrdiť prihlášku"
+
+msgid "Do you really want to apply to this competition?"
+msgstr "Naozaj sa chcete prihlásiť na túto súťaž?"
+
+msgid "Yes, apply"
+msgstr "Áno, prihlasujem sa"
+
+msgid "Do you want to save the changes to your application details?"
+msgstr "Chcete uložiť zmeny údajov prihlášky?"
+
+msgid "Yes, save"
+msgstr "Áno, uložiť"
+
+msgid "Save changes"
+msgstr "Uložiť zmeny"
+
+msgid "Application details"
+msgstr "Údaje prihlášky"
+
+msgid "Your application details have been saved."
+msgstr "Údaje vašej prihlášky boli uložené."
+
+msgid "Application details have been saved."
+msgstr "Údaje prihlášky boli uložené."
+
+msgid "Your application has been submitted. Your club president will assign a team."
+msgstr "Vaša prihláška bola odoslaná. Prezident klubu vás zaradí do tímu."
+
+msgid "Withdraw application"
+msgstr "Zrušiť prihlášku"
+
+msgid "Yes, withdraw"
+msgstr "Áno, zrušiť"
+
+msgid "Withdraw your application? This permanently deletes your application record."
+msgstr "Zrušiť prihlášku? Tým sa natrvalo vymaže záznam prihlášky."
+
+msgid "Your application has been withdrawn."
+msgstr "Vaša prihláška bola zrušená."
+
+msgid "Could not withdraw the application. Please try again."
+msgstr "Prihlášku sa nepodarilo zrušiť. Skúste znova."
+
+msgid "Awaiting team assignment"
+msgstr "Čaká na zaradenie do tímu"
+
+msgid "Registered"
+msgstr "Prihlásený"
+
+msgid "Assigned to team"
+msgstr "Zaradený do tímu"
+
+msgid "Your application:"
+msgstr "Vaša prihláška:"
+
+msgid "You are not registered yet — the club president must assign you to a sub-team."
+msgstr "Ešte nie ste oficiálne prihlásený — prezident klubu vás musí zaradiť do podtímu."
+
+msgid "Lunch for attendant"
+msgstr "Obed pre sprievod"
+
+msgid "Special lunch"
+msgstr "Špeciálny obed"
+
+msgid "Comment"
+msgstr "Poznámka"
+
+msgid "Back to list"
+msgstr "Späť na zoznam"
+
+msgid "Edit application"
+msgstr "Upraviť prihlášku"
+
+msgid "Edit application details"
+msgstr "Upraviť údaje prihlášky"
+
+msgid "Go to Competitions"
+msgstr "Prejsť na súťaže"
+
+msgid "Go to Sub-teams"
+msgstr "Prejsť na podtímy"
+
+msgid "Go to Competition applicants"
+msgstr "Prejsť na prihlásených"
+
+msgid "Go to Archive"
+msgstr "Prejsť do archívu"
+
+msgid "All competitions"
+msgstr "Všetky súťaže"
+
+msgid "All applicants"
+msgstr "Všetci prihlásení"
+
+msgid "Assign applicants"
+msgstr "Zaradiť prihlásených"
+
+msgid "— Unassigned —"
+msgstr "— Nezaradený —"
+
+msgid "Current sub-team"
+msgstr "Aktuálny podtím"
+
+msgid "Assign to"
+msgstr "Zaradiť do"
+
+msgid "Member assigned to the sub-team."
+msgstr "Člen zaradený do podtímu."
+
+msgid "Member unassigned from the sub-team."
+msgstr "Člen odstránený z podtímu."
+
+msgid "Application deleted."
+msgstr "Prihláška vymazaná."
+
+msgid "The application deadline has passed. You can only view this competition."
+msgstr "Termín prihlášok uplynul. Túto súťaž môžete iba prezerať."
+
+msgid "The application deadline has passed. Your details are read-only — ask your club president if something must change."
+msgstr "Termín prihlášok uplynul. Vaše údaje sú len na čítanie — ak treba zmenu, kontaktujte prezidenta klubu."
+
+msgid "The application deadline has passed. Only your club president can change these details now."
+msgstr "Termín prihlášok uplynul. Tieto údaje môže teraz zmeniť iba prezident klubu."
+
+msgid "The application deadline has passed. Contact your club president to withdraw."
+msgstr "Termín prihlášok uplynul. Na zrušenie kontaktujte prezidenta klubu."
+
+msgid "The application deadline has passed. Only the club president may change these details (and should inform the presidency if needed)."
+msgstr "Termín prihlášok uplynul. Tieto údaje môže zmeniť iba prezident klubu (a podľa potreby informovať predsedníctvo)."
+
+msgid "Create at least one sub-team for this competition before assigning members."
+msgstr "Pred zaradením členov vytvorte aspoň jeden podtím pre túto súťaž."
+
+msgid "No club members have applied to a competition yet."
+msgstr "Zatiaľ sa žiadny člen klubu neprihlásil na súťaž."
+
+msgid "No club members have applied to a competition yet. Members apply from the Member panel → Competitions."
+msgstr "Zatiaľ sa nikto neprihlásil. Členovia sa hlásia v paneli Člen → Súťaže."
+
+msgid "Members apply first. Assign a sub-team to register them; delete if they should not compete."
+msgstr "Najprv sa člen prihlási. Zaradením do podtímu je oficiálny; vymažte, ak nemá súťažiť."
+
+msgid "Assign club members who applied to a competition into a sub-team (alcsapat)."
+msgstr "Zaradiť prihlásených členov klubu do podtímu."
+
+msgid "Browse open competitions in your country, apply, and withdraw until your club president assigns a sub-team."
+msgstr "Prezrite otvorené súťaže vo vašej krajine, prihláste sa alebo zrušte, kým prezident klubu nezaradí podtím."
+
+msgid "Create and manage club sub-teams (alcsapatok) for open competitions."
+msgstr "Vytvárať a spravovať podtímy pre otvorené súťaže."
+
+msgid "Announce and manage competitions for your country: dates, minimum team size, and visibility."
+msgstr "Vyhlasovať a spravovať súťaže pre vašu krajinu: dátumy, minimálna veľkosť tímu a viditeľnosť."
+
+msgid "Past competitions you took part in, with results when available."
+msgstr "Minulé súťaže, ktorých ste sa zúčastnili, s výsledkami ak sú k dispozícii."
+
+msgid "Your profile has no country set, so competitions cannot be listed."
+msgstr "V profile nie je nastavená krajina, preto nie je možné vypísať súťaže."
+
+msgid "Archive"
+msgstr "Archív"
+
+msgid "Min. team size"
+msgstr "Min. veľkosť tímu"
+
+msgid "Application from"
+msgstr "Prihlasovanie od"
+
+msgid "Application deadline"
+msgstr "Termín prihlášok"
+
+msgid "Competition datetime"
+msgstr "Dátum a čas súťaže"
+
+msgid "This competition has ended."
+msgstr "Táto súťaž sa skončila."
+
+msgid "You have already applied to this competition."
+msgstr "Na túto súťaž ste sa už prihlásili."
+
+msgid "Applications for this competition are closed."
+msgstr "Prihlasovanie na túto súťaž je uzavreté."
+
+msgid "Complete your club membership before applying."
+msgstr "Pred prihlásením doplňte členstvo v klube."
+
+msgid "Applicant not found."
+msgstr "Prihlásený sa nenašiel."
+
+msgid "Application not found."
+msgstr "Prihláška sa nenašla."
+
+msgid "Invalid sub-team for this competition."
+msgstr "Neplatný podtím pre túto súťaž."
+
+msgid "This member does not belong to your club."
+msgstr "Tento člen nepatrí do vášho klubu."
+
+msgid "Delete this application — the member will not compete."
+msgstr "Vymazať prihlášku — člen nebude súťažiť."
+
+msgid "Delete this application? The member will no longer be listed for this competition."
+msgstr "Vymazať prihlášku? Člen už nebude uvedený pre túto súťaž."
+
+msgid "Could not delete the application. Please try again."
+msgstr "Prihlášku sa nepodarilo vymazať. Skúste znova."
+
+msgid "The team has been saved."
+msgstr "Podtím bol uložený."
+
+msgid "Ready to compete"
+msgstr "Pripravený súťažiť"
+
+msgid "Below minimum — move members if needed"
+msgstr "Pod minimom — podľa potreby presuňte členov"
+
+msgid "Team members"
+msgstr "Členovia tímu"
+
+msgid "No members assigned to this team yet."
+msgstr "Do tohto podtímu ešte nie sú zaradení členovia."
+
+msgid "Remove from team"
+msgstr "Odstrániť z tímu"
+
+msgid "Status"
+msgstr "Stav"
+
+msgid "Competing sub-teams"
+msgstr "Súťažiace podtímy"
+
+msgid "(minimum roster reached)"
+msgstr "(dosiahnutý minimálny počet)"
+
+msgid "Competing applicants"
+msgstr "Súťažiaci prihlasení"
+
+msgid "(on qualifying sub-teams)"
+msgstr "(v kvalifikovaných podtímoch)"
+
+msgid "Team"
+msgstr "Tím"
+
+msgid "Applied"
+msgstr "Prihlásenie"
+
+msgid "Go to Counties"
+msgstr "K okresom"
+
+msgid "Go to Cities"
+msgstr "K mestám"
+
+msgid "Manage counties (regions) linked to countries."
+msgstr "Správa okresov (regiónov) viazaných na krajiny."
+
+msgid "Manage cities linked to counties and countries."
+msgstr "Správa miest viazaných na okresy a krajiny."
+
+msgid "You"
+msgstr "Ty"
+
+msgid "Member profile updated (to member)"
+msgstr "Profil člena aktualizovaný (členovi)"
+
+msgid "Your membership profile has been updated"
+msgstr "Váš členský profil bol aktualizovaný"
+
+msgid "Your membership profile details have been changed by an officer."
+msgstr "Údaje vášho členského profilu zmenil funkcionár."
+
+msgid "Club: {0}"
+msgstr "Klub: {0}"
+
+msgid "If you did not expect this change, please contact your club or national leadership."
+msgstr "Ak ste túto zmenu neočakávali, kontaktujte svoj klub alebo národné vedenie."
+
+msgid "This template slug already exists for the selected country and language."
+msgstr "Tento kľúč šablóny už existuje pre vybranú krajinu a jazyk."
+

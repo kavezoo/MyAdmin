@@ -1,28 +1,19 @@
 <?php
 /**
- * Club president panel — Dashboard.
+ * Club president panel — Dashboard (all menu destinations as cards).
  *
  * @var \App\View\AppView $this
  * @var int $clubId
  * @var int $pendingApplicantsCount
  */
+use App\Utility\PanelNav;
+
 $this->assign('title', __('Dashboard'));
 
 $clubId = (int)($clubId ?? 0);
 $pendingApplicantsCount = (int)($pendingApplicantsCount ?? 0);
 $membersUrl = ['prefix' => 'Clubpresident', 'controller' => 'Members', 'action' => 'index'];
-
-$cards = [];
-if ($clubId > 0) {
-	$cards[] = [
-		'title' => __('Members'),
-		'text' => __('Open your club members list: review pending applicants, approve or reject applications, and record club membership fee payments.'),
-		'url' => $membersUrl,
-		'button' => __('Go to Members'),
-		'btnClass' => 'btn-primary',
-		'icon' => 'fa-users',
-	];
-}
+$cards = $clubId > 0 ? PanelNav::forPrefix('Clubpresident', $this->getRequest()) : [];
 ?>
 <div class="row">
 	<div class="col-12 p-2 pt-3">

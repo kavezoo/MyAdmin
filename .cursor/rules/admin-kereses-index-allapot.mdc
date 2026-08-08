@@ -86,9 +86,10 @@ $this->setLastVisitedForIndex('Things');
 ```
 
 Save / delete után: `return $this->redirectToIndexList('Things');`  
+(Add/edit save előtt: `rememberLastVisited('Things', $id)` — int **vagy** UUID.)  
 Template: `<?= $this->element('admin/table_search') ?>` + fejlécben `admin/index_pagination` + láblécben `admin/index_footer`.
 
-**URL:** sort / direction / **page** (1 is!) / q / limit a queryben — könyvjelzőzhető. `App\View\Helper\PaginatorHelper` nem hagyja el a `page=1`-et. Üres index → redirect a mentett URL-re. Oldalváltáskor → `clearLastVisited`.
+**URL:** sort / direction / **page** (1 is!) / q / limit a queryben — könyvjelzőzhető. `App\View\Helper\PaginatorHelper` nem hagyja el a `page=1`-et. Üres index → redirect a mentett URL-re. Oldalváltáskor → `clearLastVisited` (**kivéve** `_resolveLastVisitedPage` hop mentés/clear-search után).
 
 ## 5. Elvárt viselkedés (ne térj el)
 
@@ -100,7 +101,8 @@ Template: `<?= $this->element('admin/table_search') ?>` + fejlécben `admin/inde
 | Sort / page / `q` | URL-ben (+ session tükör); üres index → redirect kanonikus URL-re |
 | Clear search (`?clear_search=1`) | `q` törölve; last-visited oldal + redirect; scroll `.last-visited`. **Üres `q` → törlés gomb nincs** |
 | Keresés submit (csak `q`) | Mindig **page=1** (+ URL) |
-| Lapozás (page változik) | `clearLastVisited` — nincs last-visited kiemelés |
+| Lapozás (page változik) | `clearLastVisited` — nincs last-visited kiemelés (resolve hop kivétel) |
+| Mentés → lista | `rememberLastVisited` + `redirectToIndexList` → last-visited **page** + `.last-visited` + scroll (UUID PK is) |
 | Tooltipek | HTML: Start/Clear search + hol keres (EN msgid + hu `.po`) |
 | Keresés után | Fókusz a keresőmezőn, kurzor a szöveg végén (`MyAdmin.focusActiveSearchField`) |
 
@@ -108,6 +110,7 @@ Template: `<?= $this->element('admin/table_search') ?>` + fejlécben `admin/inde
 
 - Bare `redirect(['action' => 'index'])` save után
 - Clear után merev `page=1` (last-visited helyett)
+- `(int)$uuid` last-visited id-nél (UUID → string)
 - Törlés gomb disabled-ként üres keresésnél (rejtse el)
 - `admin_search.php` kihagyása új Table-nél
 - Globális keresés lapozás nélkül / saját pagination markup

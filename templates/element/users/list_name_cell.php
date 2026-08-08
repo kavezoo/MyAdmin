@@ -7,11 +7,13 @@
  * @var string $displayName
  * @var int $size Avatar size (px)
  * @var bool $showRole
+ * @var bool $isCurrentUser Highlight logged-in user (“You”)
  */
 use App\Auth\AppRoles;
 
 $size = (int)($size ?? 40);
 $showRole = (bool)($showRole ?? true);
+$isCurrentUser = (bool)($isCurrentUser ?? false);
 $displayName = (string)($displayName ?? '');
 $roleKey = '';
 if (is_object($user) && method_exists($user, 'get')) {
@@ -30,7 +32,12 @@ $roleLabel = ($showRole && $roleKey !== '') ? AppRoles::label($roleKey) : '';
 		'size' => $size,
 	]) ?>
 	<div class="users-list-name-cell__text">
-		<span class="users-list-name-cell__label"><?= h($displayName) ?></span>
+		<span class="users-list-name-cell__label">
+			<?= h($displayName) ?>
+			<?php if ($isCurrentUser): ?>
+				<span class="badge text-bg-primary ms-1"><?= __('You') ?></span>
+			<?php endif; ?>
+		</span>
 		<?php if ($roleLabel !== ''): ?>
 			<span class="users-list-name-cell__role"><?= h($roleLabel) ?></span>
 		<?php endif; ?>

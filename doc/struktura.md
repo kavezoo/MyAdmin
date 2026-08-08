@@ -33,13 +33,14 @@ $this->viewBuilder()->setLayout('admin');
 | President | `/president` | `…/President/` — Members + **Clubs** CRUD (ország/település Select2, `cities`/`counties`) |
 
 Sidebar elementek: `templates/element/{admin,new,member,clubpresident,president}/sidebar.php`.  
-Dashboard navigáció: `templates/element/panel/dashboard_nav_cards.php` — card cím + leírás + gomb; a **Dashboard card-body**-ban (nem külön keret alatt).
+Dashboard navigáció: `App\Utility\PanelNav` + `templates/element/panel/dashboard_nav_cards.php` (card) + `sidebar_nav_items.php` (menü) — **ugyanazok** a célok minden prefixen.
 
 ## Element inventory (`templates/element/panel/`)
 
 | Element | Kötelező? | Szerep |
 |---------|-----------|--------|
-| `dashboard_nav_cards.php` | igen (panel dashboard) | Navigációs kártyák a dashboard card-body-ban |
+| `dashboard_nav_cards.php` | igen (panel dashboard) | Navigációs kártyák a dashboard card-body-ban (`PanelNav`) |
+| `sidebar_nav_items.php` | igen (panel sidebar) | Ugyanazok a célok menülinkként (`PanelNav`) |
 | `club_fee_unpaid_alert.php` | igen (ha tagság) | Befizetetlen **klub** tagdíj — **alert-warning** (New/Member/Clubpresident/President dashboard) |
 
 ## Element inventory (`templates/element/clubpresident/`)

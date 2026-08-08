@@ -46,6 +46,7 @@ final class EmailTemplateDefaults
             EmailTemplateSlugs::MEMBERSHIP_APPLICATION => static::membershipApplication($locale),
             EmailTemplateSlugs::MEMBERSHIP_APPROVED => static::membershipApproved($locale),
             EmailTemplateSlugs::CLUB_NATIONAL_FEE_RECORDED => static::clubNationalFee($locale),
+            EmailTemplateSlugs::MEMBER_PROFILE_UPDATED => static::memberProfileUpdated($locale),
             default => [
                 'name' => $slug,
                 'subject' => $slug,
@@ -125,6 +126,44 @@ final class EmailTemplateDefaults
             . $approved . "\n\n"
             . $full . "\n\n"
             . $signIn . ': {loginUrl}';
+
+        return [
+            'name' => $name,
+            'subject' => $subject,
+            'body_html' => $bodyHtml,
+            'body_text' => $bodyText,
+        ];
+    }
+
+    /**
+     * @return TemplateRow
+     */
+    protected static function memberProfileUpdated(string $locale): array
+    {
+        $t = static::t($locale);
+
+        $name = $t['Member profile updated (to member)'];
+        $subject = $t['Your membership profile has been updated'];
+        $hello = str_replace('{0}', '{memberName}', $t['Hello{0},']);
+        if (!str_contains($hello, ' {memberName}') && str_contains($hello, '{memberName}')) {
+            $hello = str_replace('{memberName}', ' {memberName}', $hello);
+        }
+        $intro = $t['Your membership profile details have been changed by an officer.'];
+        $clubLine = str_replace('{0}', '{clubName}', $t['Club: {0}']);
+        $signIn = $t['Sign in'];
+        $please = $t['If you did not expect this change, please contact your club or national leadership.'];
+
+        $bodyHtml = '<p>' . h($hello) . '</p>'
+            . '<p>' . h($intro) . '</p>'
+            . '<p>' . h($clubLine) . '</p>'
+            . '<p><a href="{loginUrl}">' . h($signIn) . '</a></p>'
+            . '<p>' . h($please) . '</p>';
+
+        $bodyText = $hello . "\n\n"
+            . $intro . "\n\n"
+            . $clubLine . "\n\n"
+            . $signIn . ': {loginUrl}' . "\n\n"
+            . $please;
 
         return [
             'name' => $name,
@@ -220,6 +259,11 @@ final class EmailTemplateDefaults
             'Membership application (to club president)' => 'Membership application (to club president)',
             'Membership approved (to member)' => 'Membership approved (to member)',
             'Club national fee recorded (to club president)' => 'Club national fee recorded (to club president)',
+            'Member profile updated (to member)' => 'Member profile updated (to member)',
+            'Your membership profile has been updated' => 'Your membership profile has been updated',
+            'Your membership profile details have been changed by an officer.' => 'Your membership profile details have been changed by an officer.',
+            'Club: {0}' => 'Club: {0}',
+            'If you did not expect this change, please contact your club or national leadership.' => 'If you did not expect this change, please contact your club or national leadership.',
         ];
 
         $hu = [
@@ -243,6 +287,11 @@ final class EmailTemplateDefaults
             'Membership application (to club president)' => 'Tagság jelentkezés (klubelnöknek)',
             'Membership approved (to member)' => 'Tagság jóváhagyva (tagnak)',
             'Club national fee recorded (to club president)' => 'Klub országos tagdíj rögzítve (klubelnöknek)',
+            'Member profile updated (to member)' => 'Tag adatlap módosítva (tagnak)',
+            'Your membership profile has been updated' => 'A tagsági adatlapodat frissítették',
+            'Your membership profile details have been changed by an officer.' => 'A tagsági adatlapod adatait egy tisztségviselő módosította.',
+            'Club: {0}' => 'Klub: {0}',
+            'If you did not expect this change, please contact your club or national leadership.' => 'Ha nem számítottál erre a változásra, lépj kapcsolatba a kluboddal vagy az országos vezetőséggel.',
         ];
 
         $de = [
@@ -266,6 +315,11 @@ final class EmailTemplateDefaults
             'Membership application (to club president)' => 'Mitgliedschaftsbewerbung (an Clubpräsident)',
             'Membership approved (to member)' => 'Mitgliedschaft genehmigt (an Mitglied)',
             'Club national fee recorded (to club president)' => 'Nationaler Clubbeitrag erfasst (an Clubpräsident)',
+            'Member profile updated (to member)' => 'Mitgliederprofil aktualisiert (an Mitglied)',
+            'Your membership profile has been updated' => 'Ihr Mitgliedschaftsprofil wurde aktualisiert',
+            'Your membership profile details have been changed by an officer.' => 'Ihre Mitgliedschaftsprofildaten wurden von einem Amtsträger geändert.',
+            'Club: {0}' => 'Club: {0}',
+            'If you did not expect this change, please contact your club or national leadership.' => 'Wenn Sie diese Änderung nicht erwartet haben, wenden Sie sich bitte an Ihren Club oder die nationale Leitung.',
         ];
 
         $fr = [
@@ -289,6 +343,11 @@ final class EmailTemplateDefaults
             'Membership application (to club president)' => 'Demande d’adhésion (au président de club)',
             'Membership approved (to member)' => 'Adhésion approuvée (au membre)',
             'Club national fee recorded (to club president)' => 'Cotisation nationale du club enregistrée (au président de club)',
+            'Member profile updated (to member)' => 'Profil membre mis à jour (au membre)',
+            'Your membership profile has been updated' => 'Votre profil d’adhésion a été mis à jour',
+            'Your membership profile details have been changed by an officer.' => 'Les détails de votre profil d’adhésion ont été modifiés par un responsable.',
+            'Club: {0}' => 'Club : {0}',
+            'If you did not expect this change, please contact your club or national leadership.' => 'Si vous ne vous attendiez pas à ce changement, veuillez contacter votre club ou la direction nationale.',
         ];
 
         $it = [
@@ -312,6 +371,11 @@ final class EmailTemplateDefaults
             'Membership application (to club president)' => 'Richiesta di iscrizione (al presidente del club)',
             'Membership approved (to member)' => 'Iscrizione approvata (al membro)',
             'Club national fee recorded (to club president)' => 'Quota nazionale del club registrata (al presidente del club)',
+            'Member profile updated (to member)' => 'Profilo membro aggiornato (al membro)',
+            'Your membership profile has been updated' => 'Il tuo profilo di iscrizione è stato aggiornato',
+            'Your membership profile details have been changed by an officer.' => 'I dettagli del tuo profilo di iscrizione sono stati modificati da un responsabile.',
+            'Club: {0}' => 'Club: {0}',
+            'If you did not expect this change, please contact your club or national leadership.' => 'Se non ti aspettavi questa modifica, contatta il tuo club o la dirigenza nazionale.',
         ];
 
         $sk = [
@@ -335,6 +399,11 @@ final class EmailTemplateDefaults
             'Membership application (to club president)' => 'Žiadosť o členstvo (prezidentovi klubu)',
             'Membership approved (to member)' => 'Členstvo schválené (členovi)',
             'Club national fee recorded (to club president)' => 'Národný poplatok klubu zaznamenaný (prezidentovi klubu)',
+            'Member profile updated (to member)' => 'Profil člena aktualizovaný (členovi)',
+            'Your membership profile has been updated' => 'Váš členský profil bol aktualizovaný',
+            'Your membership profile details have been changed by an officer.' => 'Údaje vášho členského profilu zmenil funkcionár.',
+            'Club: {0}' => 'Klub: {0}',
+            'If you did not expect this change, please contact your club or national leadership.' => 'Ak ste túto zmenu neočakávali, kontaktujte svoj klub alebo národné vedenie.',
         ];
 
         return [

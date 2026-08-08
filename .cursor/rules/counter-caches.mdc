@@ -1,0 +1,61 @@
+---
+description: CounterCache / *_count — minden prefix ORM save/delete frissíti (örök)
+alwaysApply: true
+---
+
+# CounterCache / `*_count` (örök)
+
+**Spec:** `doc/counter-caches.md` · UI: `doc/admin-konvenciok.md` (CounterCache) · greenfield: `doc/uj-projekt-sema-playbook.md`.
+
+## Kötelező (ne kérdezd — mindig így)
+
+1. Minden séma `*_count` / összegző számláló → **CakePHP `CounterCache` behavior a gyerek Table-en** (hasMany/belongsTo), vagy **through Table-en** (HABTM + `cascadeCallbacks => true`).
+2. Minden prefix (Admin / President / Clubpresident / Member / Users auth): gyerek **csak** ORM `save()` / `delete()` — a számláló automatikus.
+3. **Tilos** `updateAll` / `deleteAll` / nyers SQL a gyereken, ha van szülő `*_count` — kivéve `bin/cake rebuild_counter_caches`.
+4. **Tilos** élő `find()->count()` a törlésvédelemben / lista oszlopban, ha van CounterCache mező (kivétel: dokumentált — pl. verseny bármely applicant).
+5. Új `*_count` oszlop → séma `DEFAULT 0` + gyerek CounterCache + `CounterCaches::rebuildAll()` / command + `doc/counter-caches.md` térkép + ez a rule.
+6. Soft FK `0` / üres (`Users.club_id`, `Users.country_id`, `Clubs.city_id`, `Cities.county_id`): CounterCache **closure → `false`** (ne `id=0` update).
+7. CakePHP 5: **nincs** legacy `'sum'` kulcs — SUM / feltétel → **closure** (`SelectQuery` vagy `int` / `false`).
+
+## Hol van (térkép)
+
+| Gyerek Table | Szülő mező(k) |
+|--------------|---------------|
+| `Users` | `Countries.user_count`, `Clubs.user_count` (soft FK skip) |
+| `Clubs` | `Countries.club_count`, `Cities.club_count` (soft `city_id`) |
+| `Setups` | `Countries.setup_count` |
+| `Cities` | `Counties.city_count` (soft `county_id`) |
+| `Competitions` | `Clubs.competition_count` |
+| `CompetitionsUsers` | `Competitions.user_count` (assigned), `attendant_count` (active), `lunch_for_the_attendant`, `national_pipe_club_member_count`; `CompetitionsClubs.user_count` |
+
+## Törlésvédelem
+
+- Általános: `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()` = CounterCache oszlop.
+- Ország: `user_count` + `club_count` + `setup_count` (`Countries::canDelete`).
+- Klub: `user_count` + `competition_count`.
+- Verseny: bármely `competitions_users` sor (élő COUNT) — nem csak assigned `user_count`.
+
+## Rebuild
+
+```bash
+bin/cake rebuild_counter_caches
+```
+
+→ `App\Utility\CounterCaches::rebuildAll()`.
+
+## Soft FK minta
+
+```php
+'Clubs' => [
+    'user_count' => function ($event, $entity, $table, $original) {
+        $clubId = (int)($original
+            ? ($entity->getOriginal('club_id') ?? 0)
+            : ($entity->get('club_id') ?? 0));
+        if ($clubId < 1) {
+            return false;
+        }
+
+        return $table->find()->where(['Users.club_id' => $clubId])->count();
+    },
+],
+```

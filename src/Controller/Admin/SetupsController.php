@@ -57,15 +57,35 @@ class SetupsController extends AppController
             $queryCountryId = $this->request->getQuery('country_id');
             if ($queryCountryId !== null && $queryCountryId !== '') {
                 $newId = (int)$queryCountryId;
-                $redirect = $this->redirect(['action' => 'index', '?' => []]);
-                if ($redirect instanceof Response) {
-                    return AdminCountry::set($newId, $this->request, $redirect);
+                $allowed = \App\Utility\AdminCountryScope::countryIdsWithRecords($this->Setups);
+                // Allow switch only to countries that already have setups (or any valid if empty DB).
+                if (
+                    AdminCountry::isValidCountryId($newId)
+                    && ($allowed === [] || in_array($newId, $allowed, true))
+                ) {
+                    $redirect = $this->redirect(['action' => 'index', '?' => []]);
+                    if ($redirect instanceof Response) {
+                        return AdminCountry::set($newId, $this->request, $redirect);
+                    }
                 }
             }
         }
 
         $workingCountryId = AdminCountry::id($this->request);
-        $countryOptions = $canChangeCountry ? AdminCountry::options() : [];
+        if ($canChangeCountry) {
+            $countryOptions = \App\Utility\AdminCountryScope::optionsWithRecords($this->Setups);
+            // If working country has no setups yet, fall back to first country with rows.
+            if ($workingCountryId > 0 && $countryOptions !== [] && !isset($countryOptions[$workingCountryId])) {
+                $workingCountryId = (int)array_key_first($countryOptions);
+                $this->request->getSession()->write(AdminCountry::SESSION_KEY, $workingCountryId);
+            }
+        } else {
+            $countryOptions = [];
+            $own = \App\Utility\AdminCountryScope::ownCountryId($this->request);
+            if ($own > 0) {
+                $workingCountryId = $own;
+            }
+        }
         $workingCountryLabel = AdminCountry::label($workingCountryId);
 
         $title = $workingCountryLabel !== ''

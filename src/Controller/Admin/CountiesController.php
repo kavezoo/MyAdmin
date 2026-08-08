@@ -94,17 +94,11 @@ class CountiesController extends AppController
         $this->viewBuilder()->setVar('breadcrumb', __('Counties'));
         $this->setAccessFlags();
 
-        [$filterCountryId, $filterCountryLabel, $countryOptions] = $this->resolveCountryFilter();
-
-        if (!array_key_exists('country_id', $this->request->getQueryParams())) {
-            $params = $this->request->getQueryParams();
-            $params['country_id'] = (string)$filterCountryId;
-            if (!isset($params['page'])) {
-                $params['page'] = '1';
-            }
-
-            return $this->redirect(['action' => 'index', '?' => $params]);
+        $scoped = $this->beginAdminCountryScopedIndex($this->Counties);
+        if ($scoped instanceof Response) {
+            return $scoped;
         }
+        $filterCountryId = $scoped['countryId'];
 
         $redirect = $this->applyIndexListState('Counties');
         if ($redirect !== null) {
@@ -132,10 +126,11 @@ class CountiesController extends AppController
             'Countries' => $this->Counties->Countries->getTarget(),
         ]);
 
-        $query = $this->Counties->find()->contain(['Countries']);
-        if ($filterCountryId > 0) {
-            $query->where(['Counties.country_id' => $filterCountryId]);
-        }
+        $query = $this->applyAdminCountryWhere(
+            $this->Counties->find()->contain(['Countries']),
+            $this->Counties,
+            $filterCountryId
+        );
         $query = $this->applyIndexSearch($query, $this->Counties);
 
         $redirect = $this->resolveIndexPageForLastVisited('Counties', $query, $paginateOptions);
@@ -158,13 +153,7 @@ class CountiesController extends AppController
             CurrentUser::countryId($this->request),
         ])));
 
-        $this->set(compact(
-            'counties',
-            'deletableCountyIds',
-            'filterCountryId',
-            'filterCountryLabel',
-            'countryOptions'
-        ));
+        $this->set(compact('counties', 'deletableCountyIds'));
         $this->set('countryFlags', AdminCountry::iso2Map($flagIds));
         $this->set('canDeleteCounty', true);
     }
@@ -329,7 +318,12 @@ class CountiesController extends AppController
      */
     public function view(?string $id = null)
     {
-        $county = $this->Counties->get($id, contain: ['Countries']);
+        $county = $this->Counties->get($id, contain: [
+            'Countries',
+            'Cities' => function ($q) {
+                return $q->orderBy(['Cities.name' => 'ASC']);
+            },
+        ]);
         $this->rememberLastVisited('Counties', $county->id);
         $this->set(compact('county'));
         $this->setAccessFlags($county);

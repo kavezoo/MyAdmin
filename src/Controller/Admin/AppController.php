@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 
 use App\Auth\PanelAccess;
 use App\Controller\AppController as BaseController;
+use App\Controller\Concerns\AdminCountryScopeTrait;
 use App\Controller\Concerns\IndexListCrudTrait;
 use App\Utility\AdminCountry;
 use App\Utility\BrowserLocale;
@@ -24,6 +25,7 @@ use Cake\ORM\Table;
  */
 class AppController extends BaseController
 {
+    use AdminCountryScopeTrait;
     use IndexListCrudTrait;
 
     /**

@@ -1,0 +1,56 @@
+-- Competitions (after DropCompetitionSummaryColumns).
+
+CREATE TABLE IF NOT EXISTS `competitions` (
+  `id` varchar(36) NOT NULL,
+  `country_id` int(10) unsigned NOT NULL,
+  `club_id` int(10) unsigned NOT NULL,
+  `user_id` varchar(36) NOT NULL,
+  `national_competition` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `name` varchar(250) NOT NULL,
+  `title` varchar(250) NOT NULL,
+  `subtitle` varchar(250) NOT NULL DEFAULT '',
+  `subtitle2` varchar(250) NOT NULL DEFAULT '',
+  `first_date_of_application` date NOT NULL,
+  `application_deadline` date NOT NULL,
+  `competition_datetime` datetime NOT NULL,
+  `start_datetime` datetime DEFAULT NULL,
+  `end_datetime` datetime DEFAULT NULL,
+  `description` text NOT NULL,
+  `minimum_team_size` int(10) unsigned NOT NULL DEFAULT 3,
+  `lunch_for_the_attendant` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Sum from applications',
+  `racing_pipe_1_title` varchar(250) NOT NULL DEFAULT '',
+  `racing_pipe_2_title` varchar(250) NOT NULL DEFAULT '',
+  `racing_pipe_3_title` varchar(250) NOT NULL DEFAULT '',
+  `user_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: assigned applicants',
+  `national_pipe_club_member_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: SUM pipe qty (active apps)',
+  `attendant_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: active applications (pending+assigned)',
+  `visible` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `pos` int(11) NOT NULL DEFAULT 1000,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `country_id` (`country_id`),
+  KEY `club_id` (`club_id`),
+  KEY `user_id` (`user_id`),
+  KEY `first_date_of_application` (`first_date_of_application`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Club entry on a competition (display name = subclubs.name via subclub_id).
+CREATE TABLE IF NOT EXISTS `competitions_clubs` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `club_id` int(10) unsigned NOT NULL,
+  `subclub_id` int(10) unsigned NOT NULL COMMENT 'FK → subclubs.id (team display name)',
+  `competition_id` varchar(36) NOT NULL,
+  `application_datetime` datetime DEFAULT NULL,
+  `date_of_application_acceptance` datetime DEFAULT NULL,
+  `visible` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `pos` int(11) NOT NULL DEFAULT 1000,
+  `user_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: team members',
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `competitions_clubs_comp_club_subclub` (`competition_id`,`club_id`,`subclub_id`),
+  KEY `club_id` (`club_id`),
+  KEY `competition_id` (`competition_id`),
+  KEY `subclub_id` (`subclub_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Club jelentkezése versenyre';

@@ -42,18 +42,6 @@
 			});
 		}
 
-		var $language = $('#language-id');
-		if ($language.length && $.fn.select2) {
-			$language.select2({
-				theme: 'bootstrap-5',
-				width: '100%',
-				minimumResultsForSearch: 8,
-				dropdownParent: $(document.body),
-				placeholder: $language.data('placeholder') || '',
-				allowClear: true
-			});
-		}
-
 		$('.js-title-case-name').each(function () {
 			var $el = $(this);
 			var next = titleCaseName($el.val());

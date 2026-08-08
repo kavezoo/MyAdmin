@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Auth\MembershipProfile;
-use App\Utility\PhoneNumber;
 use App\Model\Entity\User;
+use App\Utility\PhoneNumber;
+use ArrayObject;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\Query\SelectQuery;
@@ -20,6 +21,7 @@ use CakeDC\Users\Model\Table\UsersTable as CakeDCUsersTable;
  *
  * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
  * @property \App\Model\Table\ClubsTable&\Cake\ORM\Association\BelongsTo $Clubs
+ * @property \App\Model\Table\CompetitionsUsersTable&\Cake\ORM\Association\HasMany $CompetitionsUsers
  * @mixin \Cake\ORM\Behavior\CounterCacheBehavior
  */
 class UsersTable extends CakeDCUsersTable
@@ -44,10 +46,37 @@ class UsersTable extends CakeDCUsersTable
             'className' => 'Languages',
             'joinType' => 'LEFT',
         ]);
-        // Child-side CounterCache for parent count columns
+        $this->hasMany('CompetitionsUsers', [
+            'foreignKey' => 'user_id',
+            'className' => 'CompetitionsUsers',
+        ]);
+        // Child-side CounterCache for parent count columns.
+        // Soft FK 0 (no club yet): skip Clubs.user_count update (Cake would target id=0).
         $this->addBehavior('CounterCache', [
-            'Countries' => ['user_count'],
-            'Clubs' => ['user_count'],
+            'Countries' => [
+                'user_count' => function ($event, $entity, $table, $original) {
+                    $countryId = (int)($original
+                        ? ($entity->getOriginal('country_id') ?? 0)
+                        : ($entity->get('country_id') ?? 0));
+                    if ($countryId < 1) {
+                        return false;
+                    }
+
+                    return $table->find()->where(['Users.country_id' => $countryId])->count();
+                },
+            ],
+            'Clubs' => [
+                'user_count' => function ($event, $entity, $table, $original) {
+                    $clubId = (int)($original
+                        ? ($entity->getOriginal('club_id') ?? 0)
+                        : ($entity->get('club_id') ?? 0));
+                    if ($clubId < 1) {
+                        return false;
+                    }
+
+                    return $table->find()->where(['Users.club_id' => $clubId])->count();
+                },
+            ],
         ]);
         // Explicit EventLog (also auto-attached in Application) — membership fee dates, enabled, …
         if (!$this->hasBehavior('EventLog')) {
@@ -159,6 +188,38 @@ class UsersTable extends CakeDCUsersTable
             ->allowEmptyString('language_id');
 
         return $validator;
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param \ArrayObject<string, mixed> $options
+     */
+    public function beforeDelete(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
+    {
+        if (!$this->canDelete($entity)) {
+            $entity->setError('_delete', [
+                __('Cannot delete this record because it has related child records.'),
+            ]);
+            $event->stopPropagation();
+            $event->setResult(false);
+        }
+    }
+
+    /**
+     * Block delete while competition applications or club-president assignment exist.
+     */
+    public function canDelete(EntityInterface $entity): bool
+    {
+        $userId = trim((string)$entity->get('id'));
+        if ($userId === '') {
+            return false;
+        }
+        if ($this->CompetitionsUsers->exists(['CompetitionsUsers.user_id' => $userId])) {
+            return false;
+        }
+
+        return !$this->Clubs->exists(['Clubs.club_president_id' => $userId]);
     }
 
     public function beforeSave(EventInterface $event, EntityInterface $entity, \ArrayObject $options): void
