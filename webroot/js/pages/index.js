@@ -8,6 +8,8 @@
  *   MyAdmin.config.recordGetUrl / editUrl / viewUrl  // index saját modul
  *   MyAdmin.config.categoryGetUrl / parentEditUrl / parentViewUrl / parentDeleteUrl
  *   MyAdmin.config.recordFieldLabels / categoryFieldLabels
+ *   MyAdmin.config.recordHtmlFields   // optional: ['body_html'] — also auto: *_html
+ *   MyAdmin.config.recordMultilineFields // optional: ['body_text'] — also auto: *_text
  *   MyAdmin.config.entityFieldLabels  // { country: {…}, club: {…} } — view
  *
  * View / linked link: a.record-modal-link (vagy a.category-link) data-* attribútumokkal.
@@ -30,6 +32,9 @@
 	var parentDeleteUrl = cfg.parentDeleteUrl || '';
 
 	$(function () {
+		// Page script block merges config before this file; re-read for safety.
+		cfg = App.config || cfg;
+
 		var hasTables = $('.index-data-table').length > 0;
 		var hasModalLinks = $('.record-modal-link, .category-link').length > 0;
 		var hasRecordModal = $('#modalRecordView').length > 0;
@@ -62,6 +67,21 @@
 			visible: 'Visible',
 			created: 'Created',
 			modified: 'Modified'
+		};
+		/** Trusted HTML (admin-authored), e.g. body_html — also auto: *_html */
+		var recordHtmlFields = Array.isArray(cfg.recordHtmlFields) ? cfg.recordHtmlFields : [];
+		/** Plain text with newlines, e.g. body_text — also auto: *_text */
+		var recordMultilineFields = Array.isArray(cfg.recordMultilineFields) ? cfg.recordMultilineFields : [];
+
+		var isHtmlField = function (key) {
+			return recordHtmlFields.indexOf(key) !== -1 || /_html$/.test(key);
+		};
+
+		var isMultilineTextField = function (key) {
+			if (isHtmlField(key)) {
+				return false;
+			}
+			return recordMultilineFields.indexOf(key) !== -1 || /_text$/.test(key);
 		};
 
 		var formatRecordValue = function (key, value) {
@@ -202,30 +222,39 @@
 		};
 
 		var renderFieldsInto = function ($target, record, fieldLabels) {
-			var html = '';
+			$target.empty();
 			Object.keys(fieldLabels).forEach(function (key) {
 				if (!Object.prototype.hasOwnProperty.call(record, key)) {
 					return;
 				}
 				var raw = record[key];
-				var cell;
-				var ddClass = '';
+				var $row = $('<div class="record-view-row">');
+				$row.append($('<dt>').text(fieldLabels[key]));
+				var $dd = $('<dd>');
+
 				if (isRelatedLinkList(raw)) {
-					cell = renderRelatedLinkList(key, raw);
-					ddClass = ' class="record-related-list"';
+					$dd.addClass('record-related-list').html(renderRelatedLinkList(key, raw));
 				} else if (key === 'translations' || isTranslationList(raw)) {
-					cell = renderTranslationList(raw) || '—';
+					$dd.html(renderTranslationList(raw) || '—');
 				} else if (Array.isArray(raw) && raw.length === 0) {
-					cell = '—';
+					$dd.text('—');
+				} else if (raw != null && raw !== '' && isHtmlField(key) && typeof raw !== 'object') {
+					$dd.append(
+						$('<div class="record-html-preview border rounded p-2 bg-light overflow-auto">')
+							.html(String(raw))
+					);
+				} else if (raw != null && raw !== '' && isMultilineTextField(key) && typeof raw !== 'object') {
+					$dd.append(
+						$('<div class="record-text-preview border rounded p-2 bg-light overflow-auto">')
+							.text(String(raw))
+					);
 				} else {
-					cell = formatRecordValue(key, raw);
+					$dd.html(formatRecordValue(key, raw));
 				}
-				html += '<div class="record-view-row">' +
-					'<dt>' + fieldLabels[key] + '</dt>' +
-					'<dd' + ddClass + '>' + cell + '</dd>' +
-					'</div>';
+
+				$row.append($dd);
+				$target.append($row);
 			});
-			$target.html(html);
 		};
 
 		var entityUrl = function (base, id) {

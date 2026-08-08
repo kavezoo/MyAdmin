@@ -1,6 +1,6 @@
 ---
-description: Admin form nyelvi TAB-ok — FormLanguages, tooltip országnév UI locale, Cake 5.3 Translate API, error bool tilos.
-globs: templates/element/admin/form_language_fields.php,src/Utility/FormLanguages.php,src/Controller/Admin/AppController.php,templates/Admin/**/form.php
+description: Form nyelvi TAB-ok — markup a CRUD form.php-jában (Cake konvenció), nem külön element
+globs: templates/**/form.php,src/Controller/**/*.php
 alwaysApply: false
 ---
 
@@ -12,7 +12,7 @@ Részlet: `doc/form-i18n-tabs.md`, `doc/i18n.md`, `doc/country-visibilities.md`.
 
 1. Controller add/edit: `$this->setFormLanguageTabs();` — TAB-ok = aktív ország `country_visibilities` (saját + Additional languages)
 2. Edit: `$entity = $this->getWithTranslations($this->Things, $id, $contain);` — root locale = `FormLanguages::defaultLocaleForForm()`
-3. Template: `admin/form_language_fields` + `i18nFields` lista
+3. Template: **`templates/{Prefix}/{Controller}/form.php`** — nyelvi TAB markup **ide** (másold: `doc/snippets/form_language_fields.php.example`). **Ne** hozz létre `element/admin/*_language_fields` elemet.
 
 ## Tooltip
 
@@ -23,7 +23,7 @@ Tab gomb: csak `data-bs-toggle="tab"`. Tooltip: belső `span.js-hover-only-toolt
 ## TAB → name fókusz
 
 Tab gomb `data-name-target` = az adott nyelv name input id-ja (`name`, `name-hu-hu`, …).  
-Inline JS a `form_language_fields`-ben: `getElementById(data-name-target).focus()`.  
+JS a `form.php`-ban: `getElementById(data-name-target).focus()`.  
 Nem-default: `required => false` (rejtett required ne lopja a fókuszt).
 
 ## Cake 5.3+

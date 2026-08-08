@@ -35,11 +35,17 @@ $slugLabel = (string)($slugLabel ?? (string)$emailTemplate->slug);
 					<div class="record-view-row"><dt><?= __('Subject') ?></dt><dd><?= h((string)$emailTemplate->subject) ?></dd></div>
 					<div class="record-view-row">
 						<dt><?= __('HTML body') ?></dt>
-						<dd><pre class="mb-0 small font-monospace text-wrap"><?= h((string)$emailTemplate->body_html) ?></pre></dd>
+						<dd>
+							<div class="record-html-preview border rounded p-3 bg-white overflow-auto" style="max-height: 28rem;">
+								<?= $emailTemplate->body_html ?>
+							</div>
+						</dd>
 					</div>
 					<div class="record-view-row">
 						<dt><?= __('Text body') ?></dt>
-						<dd><pre class="mb-0 small font-monospace text-wrap"><?= h((string)$emailTemplate->body_text) ?></pre></dd>
+						<dd>
+							<div class="record-text-preview border rounded p-3 bg-light overflow-auto"><?= h((string)$emailTemplate->body_text) ?></div>
+						</dd>
 					</div>
 					<div class="record-view-row">
 						<dt><?= __('Enabled') ?></dt>

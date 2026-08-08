@@ -44,9 +44,11 @@ $this->Html->script([...], ['block' => 'scriptBottom']);
 | **index** (lista) | `pages/index` | `pages/index` + `MyAdmin.config` (URL-ek, field label-ek) |
 | **form** (add/edit) | tempus-dominus, select2, select2-bootstrap5, `pages/form` | popper, tempus-dominus, inputmask, select2, `pages/form` |
 | **view** | `pages/index` (record-view + related tabs) | `pages/index` JS + `MyAdmin.config` (`rowDoubleClickAction`, `entityFieldLabels`) + `modal_linked_record_view` |
-| WYSIWYG / Prism | **csak** ha van `.editor` mező a formon | trumbowyg + pluginek |
+| WYSIWYG / Prism | **csak** ha van `.editor` mező a formon | trumbowyg + pluginek (**a CRUD `form.php` tetején** betöltve) |
 
-Trumbowyg / WYSIWYG **csak** akkor kerüljön a form templatebe, ha van `.editor` mező.
+Trumbowyg / WYSIWYG **csak** akkor a form templateben, ha van `.editor` mező.  
+Init: `pages/form.js` (JeffAdmin5-kompatibilis gombkészlet). HTML tartalom → `.editor`; plain text → sima textarea.  
+**Form markup:** mindig `templates/{Prefix}/{Controller}/form.php` — ne találj ki form-field elementeket.
 
 ## JavaScript API — `window.MyAdmin`
 
@@ -147,7 +149,7 @@ JS: `webroot/js/pages/form.js`, `webroot/js/app.js` → `confirmLeave`
 ### Form nyelvi TAB-ok (Translate)
 
 Ha van Translate behavior: [form-i18n-tabs.md](form-i18n-tabs.md); rule: `admin-form-i18n-tabs.mdc`.  
-`setFormLanguageTabs()` + `getWithTranslations()` + `form_language_fields`; tooltip = összes visible ország UI locale-ben (`js-hover-only-tooltip`); **TAB váltás → name fókusz** (`form.js`).
+`setFormLanguageTabs()` + `getWithTranslations()` + nyelvi TAB a **`form.php`-ban**; tooltip = összes visible ország UI locale-ben (`js-hover-only-tooltip`); **TAB váltás → name fókusz**.
 
 ### Index card header — szűrő + kereső elválasztó
 
@@ -175,6 +177,8 @@ Kötelező:
 - `rowDoubleClickAction` — `'modal'` | `'edit'` | `'none'` (sor dupla kattintás)
 - `recordGetUrl`, `editUrl`, `viewUrl` (`edit` / `modal` módhoz szükségesek)
 - `recordFieldLabels` (mezőkulcs → lefordított címke)
+- `recordHtmlFields` (opcionális: pl. `['body_html']` — modalban **HTML-ként**; `_html` végű kulcsok automatikusak)
+- `recordMultilineFields` (opcionális: pl. `['body_text']` — escaped + `white-space: pre-wrap`; `_text` végű kulcsok automatikusak)
 
 Opcionális (ha van kapcsolt „category” / szülő link a listában):
 
@@ -747,7 +751,7 @@ Delete után a controller **referer**-re irányít (`referer(['action' => 'index
 - Add és edit **ugyanaz** a `form.php`; controller `render('form')`
 - Card: cím, Created/Modified (edit), bezáró gomb
 - Bootstrap rács: label `col-md-2`, mező jobbra; címkék félkövérek (`style.css`)
-- **Kötelező mező csillag (automatikus):** külső label mindig `$this->Form->adminLabel('field', __('Label:'))` (vagy `requiredMark('field')` a szöveg **előtt**). Piros `*` közvetlenül a név előtt, szóköz nélkül — validatorból (`notEmpty*` / `requirePresence`). Opcionálisnál nincs. CSS: `#form-horizontal .required`. i18n TAB: `form_language_fields` a gyökér mezőnévre.
+- **Kötelező mező csillag (automatikus):** külső label mindig `$this->Form->adminLabel('field', __('Label:'))` (vagy `requiredMark('field')` a szöveg **előtt**). Piros `*` közvetlenül a név előtt, szóköz nélkül — validatorból (`notEmpty*` / `requirePresence`). Opcionálisnál nincs. CSS: `#form-horizontal .required`. i18n TAB: `requiredMark` a gyökér mezőnévre a `form.php`-ban.
 - Lábléc: Save + Cancel; Save a breadcrumbben is (`form="form-horizontal"`); gombok: `col-12 col-md-10 col-xxl-9 offset-md-2` (mezősorral egy vonalban)
 - **Lábléc gombok wrapping (örök, globális):** egy gomb ikon+szöveg **egyben** marad (`nowrap`); ha kevés a hely, a **következő gomb** kerül új sorba (`flex-wrap` + `gap`). CSS: `style.css` (`.btn:has(.btn-label)`, `.card-footer …`, `.form-footer-actions`). Rule: `admin-form-footer-buttons.mdc`. Ne írj mobilra full-width / széteső gomb layoutot.
 - **Mezőhiba:** a beviteli mező **alatt**, piros félkövér (`.error-message`); Admin Form: `errorClass=is-invalid`, `inputContainerError={{content}}{{error}}` — `AppView` + `style.css`

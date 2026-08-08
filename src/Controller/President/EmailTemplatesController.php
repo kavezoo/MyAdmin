@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\President;
 
 use App\Utility\AdminLanguage;
+use App\Utility\EmailTemplateService;
 use App\Utility\EmailTemplateSlugs;
 use Cake\Http\Response;
 
@@ -34,11 +35,12 @@ class EmailTemplatesController extends AppController
     }
 
     /**
-     * Default language for index filter / new form: current UI locale.
+     * Default index filter: UI locale mapped onto email-template languages
+     * (e.g. en_US → en_GB). Options are only those locales — not every visible language.
      */
     protected function localLanguageId(array $languageOptions): int
     {
-        $localId = AdminLanguage::idForLocale(\Cake\I18n\I18n::getLocale());
+        $localId = EmailTemplateService::templateLanguageIdForLocale();
         if ($localId > 0 && isset($languageOptions[$localId])) {
             return $localId;
         }
@@ -53,7 +55,7 @@ class EmailTemplatesController extends AppController
      */
     protected function resolveLanguageFilter(): array
     {
-        $languageOptions = AdminLanguage::idOptions();
+        $languageOptions = EmailTemplateService::templateLanguageOptions();
         $localId = $this->localLanguageId($languageOptions);
         $session = $this->request->getSession();
         $query = $this->request->getQueryParams();
@@ -82,6 +84,28 @@ class EmailTemplatesController extends AppController
         }
 
         return [$languageId, $languageOptions];
+    }
+
+    /**
+     * After save: show the language of the saved row (and highlight it).
+     */
+    protected function redirectToEmailTemplatesIndex(int $savedId): Response
+    {
+        $languageId = 0;
+        try {
+            $languageId = (int)$this->EmailTemplates->get($savedId)->language_id;
+        } catch (\Throwable $e) {
+            $languageId = 0;
+        }
+        if ($languageId > 0) {
+            $this->request->getSession()->write(self::FILTER_LANGUAGE_SESSION, $languageId);
+        }
+
+        $query = $this->getIndexState('EmailTemplates');
+        $query['page'] = '1';
+        $query['language_id'] = (string)$languageId;
+
+        return $this->redirect(['action' => 'index', '?' => $query]);
     }
 
     /**
@@ -180,7 +204,7 @@ class EmailTemplatesController extends AppController
                 $this->rememberLastVisited('EmailTemplates', $savedId);
                 $this->Flash->success(__('The email template has been saved.'));
 
-                return $this->redirectToIndexList('EmailTemplates');
+                return $this->redirectToEmailTemplatesIndex($savedId);
             }
             $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
@@ -208,7 +232,7 @@ class EmailTemplatesController extends AppController
                 $this->rememberLastVisited('EmailTemplates', $savedId);
                 $this->Flash->success(__('The email template has been saved.'));
 
-                return $this->redirectToIndexList('EmailTemplates');
+                return $this->redirectToEmailTemplatesIndex($savedId);
             }
             $this->Flash->error(__('The record could not be saved. Please try again.'));
         }
@@ -337,14 +361,16 @@ class EmailTemplatesController extends AppController
                 $subject = trim((string)($rowData['subject'] ?? ''));
                 $bodyHtml = trim((string)($rowData['body_html'] ?? ''));
                 $bodyText = trim((string)($rowData['body_text'] ?? ''));
+                // Trumbowyg empty editor often yields <p></p> / <p><br></p>
+                $bodyHtmlPlain = trim(html_entity_decode(strip_tags($bodyHtml), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 
                 // Skip completely empty language panes (except when editing that language's existing row).
                 $existingId = (int)($rowData['id'] ?? 0);
-                $isEmpty = $subject === '' && $bodyHtml === '' && $bodyText === '';
+                $isEmpty = $subject === '' && $bodyHtmlPlain === '' && $bodyText === '';
                 if ($isEmpty && $existingId < 1) {
                     continue;
                 }
-                if ($subject === '' || $bodyHtml === '' || $bodyText === '') {
+                if ($subject === '' || $bodyHtmlPlain === '' || $bodyText === '') {
                     $connection->rollback();
                     $anchor->setError('slug', __('Please fill subject and both bodies for each language you edit.'));
 
@@ -427,7 +453,7 @@ class EmailTemplatesController extends AppController
         if ($activeId > 0 && isset($savedIds[$activeId])) {
             return $savedIds[$activeId];
         }
-        $localId = AdminLanguage::idForLocale(\Cake\I18n\I18n::getLocale());
+        $localId = EmailTemplateService::templateLanguageIdForLocale();
         if ($localId > 0 && isset($savedIds[$localId])) {
             return $savedIds[$localId];
         }
@@ -479,7 +505,7 @@ class EmailTemplatesController extends AppController
 
         $activeLanguageId = (int)($emailTemplate->language_id ?? 0);
         if ($activeLanguageId < 1) {
-            $activeLanguageId = AdminLanguage::idForLocale(\Cake\I18n\I18n::getLocale());
+            $activeLanguageId = EmailTemplateService::templateLanguageIdForLocale();
         }
 
         $this->set('slugOptions', EmailTemplateSlugs::options());

@@ -36,6 +36,7 @@ Cursor rule: `.cursor/rules/uj-projekt-sema.mdc` (`alwaysApply`).
 | `BOOLEAN` / `TINYINT(1)` | form-switch; index boolean oszlop | admin-oldal |
 | `visible` | Switch; lista végén `visible` → `pos`; Countries: visible-only szűrő | admin-konvenciok, countries-admin |
 | `pos` | PHP-ból **békén hagyjuk** (DB **DEFAULT `1000`**); ne állítsuk / ne növeljük — **majd a user** a formon | `pos-db-default` |
+| `TEXT` / hosszú HTML (leírás, email body, …) | Form `form.php`: `textarea.editor` + **Trumbowyg** assetek ugyanott + `pages/form.js`; plain text → sima textarea | admin-konvenciok |
 | `*_count` | **CounterCache** (ne élő COUNT) | minta-tanulsagok, crud-utmutato |
 | `created` / `modified` | Timestamp behavior; form header editnél | — |
 | Oszlop DEFAULT (DB) | `UsesDatabaseColumnDefaultsTrait` + séma DEFAULT | minta-tanulsagok |
@@ -53,7 +54,7 @@ Cursor rule: `.cursor/rules/uj-projekt-sema.mdc` (`alwaysApply`).
 
 | Feltétel | Megoldás |
 |----------|----------|
-| Table-en Translate (`name`, …) | `setFormLanguageTabs()` + `getWithTranslations()` + `form_language_fields`; default locale root mezők |
+| Table-en Translate (`name`, …) | `setFormLanguageTabs()` + `getWithTranslations()` + TAB markup a **`form.php`-ban** (snippet: `doc/snippets/form_language_fields.php.example`) |
 | Nyelvi TAB tooltip | Összes **`visible`** ország az adott nyelven (`FormLanguages::tabs()` → `countries[]`), egymás alatt |
 | TAB váltás | Fókusz az **adott nyelv** name mezőjére (`data-name-target` → `#name` / `#name-hu-hu`) |
 | Index keresés/sort | `AdminSearch` + `translationField()`; ORDER BY: translation mező + kanonikus — **tilos `COALESCE` alias** |

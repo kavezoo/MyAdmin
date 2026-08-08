@@ -5,6 +5,61 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-08 — Email templates index: nyelvszűrő javítás
+
+### Mi változott / miért
+- A lista nyelvi szűrője eddig **minden** látható nyelvet mutatta; a sablonok csak 6 locale-hoz tartoznak → pl. `en_US` szűrőnél üres lista, mentés után „eltűnt” a sor.
+- Szűrő opciók = `EmailTemplateService::templateLanguageOptions()`; UI locale → sablon-nyelv (`templateLanguageIdForLocale`, pl. en_US→en_GB).
+- Mentés után redirect a mentett sor `language_id`-jére (+ last-visited).
+
+### Érintett
+- `src/Utility/EmailTemplateService.php`, `src/Controller/President/EmailTemplatesController.php`, `doc/membership.md`
+
+---
+
+## 2026-08-08 — Email template HTML body: renderelt előnézet
+
+### Mi változott / miért
+- View + index modal: `body_html` **HTML-ként** (DOM `.html()`, nem string-concat escape); `_html` / `recordHtmlFields`.
+- `body_text`: sortörések megmaradnak (`record-text-preview` + `_text` / `recordMultilineFields`).
+
+### Érintett
+- `templates/President/EmailTemplates/{view,index}.php`, `webroot/js/pages/index.js`, `webroot/css/pages/index.css`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-08 — Form markup = Cake konvenció (nem custom form element)
+
+### Mi változott / miért
+- Email templates nyelvi TAB + Trumbowyg assetek a `templates/President/EmailTemplates/form.php`-ban (nem `element/admin/…`).
+- Törölve: `email_template_language_fields`, `form_trumbowyg_assets`, nem használt `form_language_fields` element.
+- Translate TAB referencia: `doc/snippets/form_language_fields.php.example` — új CRUD `form.php`-jába másolandó.
+- Elementek: layout/chrome (flash, paginator, modal, …); domain form mezők a controller template könyvtárában.
+
+### Érintett
+- `templates/President/EmailTemplates/form.php`
+- törölve: `templates/element/admin/{email_template_language_fields,form_trumbowyg_assets,form_language_fields}.php`
+- `doc/snippets/form_language_fields.php.example`, `doc/form-i18n-tabs.md`, `.cursor/rules/admin-form-i18n-tabs.mdc`
+- `doc/{crud-utmutato,admin-konvenciok,uj-projekt-sema-playbook}.md`, `uj-projekt-sema.mdc`
+
+---
+
+## 2026-08-08 — Email templates CRUD = standard Admin minta
+
+### Mi változott / miért
+- Index: `index-data-table`, id oszlop `#`, típusos `th` (sort ikonok), `last-visited`, duplaklikk → `recordGet` modal (eddig `admin-index-table` miatt nem ment a JS).
+- Form: `body_html` → Trumbowyg (`.editor` + `admin/form_trumbowyg_assets`); üres editor (`<p></p>`) mentéskor üresnek számít.
+- Playbook / CRUD útmutató / `uj-projekt-sema`: új CRUD-nál kötelező a fenti minta + HTML TEXT → WYSIWYG.
+
+### Érintett
+- `templates/President/EmailTemplates/{index,form}.php`
+- `templates/element/admin/{email_template_language_fields,form_trumbowyg_assets}.php`
+- `src/Controller/President/EmailTemplatesController.php`
+- `doc/{crud-utmutato,admin-konvenciok,uj-projekt-sema-playbook,membership,form-i18n-tabs}.md`
+- `.cursor/rules/uj-projekt-sema.mdc`
+
+---
+
 ## 2026-08-08 — Login: AuthTemplates visszavonva (Permission denied)
 
 ### Mi változott / miért

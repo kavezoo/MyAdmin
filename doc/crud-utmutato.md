@@ -88,6 +88,18 @@ Részletek: [admin-konvenciok.md](admin-konvenciok.md) → „View (megnézés) 
 
 **Ne** legyen „egyszerűsített” index (modal / sort / típusoszlopok nélkül) — minden modul ugyanazt a keretrendszer-viselkedést kapja.
 
+Kötelező index checklist (új CRUD-nál **ne hagyd ki**):
+
+| Elem | Minta |
+|------|--------|
+| Tábla class | **`index-data-table`** (`pages/index.js` duplaklikk / last-visited) |
+| ID oszlop | `sort('id', '#')` + `th/td.number.id` |
+| Sort ikonok | minden sortolható `th`-n típusosztály (`string` / `number` / `boolean` / `datetime` …) |
+| Duplaklikk | `$rowDoubleClickAction = 'modal'` + `recordGet` + `modal_record_view` |
+| Sor | `id="record-{id}"` `data-id` + opcionális `last-visited` |
+
+Form HTML / hosszú szöveg: `textarea.editor` + Trumbowyg CSS/JS a **ugyanazon** `form.php`-ban (`pages/form.js` init).
+
 ### Index tooltip / `__()` figyelmeztetés
 
 ```php
@@ -115,7 +127,8 @@ Röviden:
 - Layoutba **ne** tegyél oldalspecifikus plugint
 - Form Select2 Parent lista: `visible = true`, order `pos` ASC + `name` ASC (edit: aktuális szülő akkor is a listában)
 - Index / view: `pages/index` (+ indexen config `scriptBlock`)
-- Form: csak a használt pluginek (Select2 / date / editor igény szerint) — **`pages/form` JS mindig** (name fókusz)
+- Form: csak a használt pluginek (Select2 / date / **editor** igény szerint) — **`pages/form` JS mindig** (name fókusz); `.editor` → Trumbowyg assetek a `form.php`-ban
+- Form fájl: **`templates/{Prefix}/{Controller}/form.php`** — mezők / nyelvi TAB **itt** (Cake konvenció). Element: layout/chrome (`flash`, `index_pagination`, `modal_*`, …), **ne** domain form partial.
 - Select2: single **és** multiple; „+” ahol egyszerű create van — [admin-konvenciok.md](admin-konvenciok.md) → Select2 / HABTM multiple
 - HABTM: mindkét oldal formján multiple Select2 (`Cities` ↔ `Samples`)
 - Hibák / megerősítések: **SweetAlert** (`MyAdmin.alertError` / `confirmDelete`) — ne `window.alert`

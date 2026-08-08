@@ -4,6 +4,8 @@ Admin add/edit formok fordítási fülei.
 Kapcsolódó: [i18n.md](i18n.md), [admin-konvenciok.md](admin-konvenciok.md) (mentetlen form), **[country-visibilities.md](country-visibilities.md)**.  
 Rule: `.cursor/rules/admin-form-i18n-tabs.mdc`
 
+**Cake konvenció:** a form mezők / nyelvi TAB markup a **`templates/{Prefix}/{Controller}/form.php`** fájlban legyen (ne külön custom element). Referencia másoláshoz: [snippets/form_language_fields.php.example](snippets/form_language_fields.php.example).
+
 ---
 
 ## 1. Mikor kell
@@ -14,12 +16,11 @@ Ha a Table-en van **Translate** behavior szöveges mezőkkel (`name`, `descripti
 |-------|-----|
 | `setFormLanguageTabs()` | Controller add/edit |
 | `getWithTranslations($table, $id, $contain)` | edit (összes locale EAV) |
-| Element | `templates/element/admin/form_language_fields.php` |
+| Markup | **ugyanazon** controller `form.php`-jában (nem `element/admin/…`) |
 
-Minták: Samples, Parents.  
 Countries: **nincs** nyelvi TAB (seedelt országnevek).  
 Cities / Setups: nincs Translate → nincs nyelvi TAB.  
-**Email templates** (President): nincs Cake Translate — külön TAB UI (`email_template_language_fields`), egy DB sor / (`language_id` + `slug`); TAB mezők: `subject`, `body_html`, `body_text` (kimenő email); `name` admin címke, nem a TAB-on.
+**Email templates** (President): nincs Cake Translate — nyelvi TAB a `templates/President/EmailTemplates/form.php`-ban; egy DB sor / (`language_id` + `slug`); mezők: `subject`, **`body_html` (`.editor` / Trumbowyg)**, `body_text` (plain); `name` admin címke.
 
 ---
 
@@ -47,18 +48,15 @@ Részlet: [country-visibilities.md](country-visibilities.md).
 
 ---
 
-## 3. Element használat
+## 3. Form.php — mezők
+
+Másold a [snippets/form_language_fields.php.example](snippets/form_language_fields.php.example) mintát a CRUD `form.php`-jába, és állítsd az `i18nFields` listát:
 
 ```php
-<?= $this->element('admin/form_language_fields', [
-    'entity' => $sample,
-    'formLanguageTabs' => $formLanguageTabs ?? [],
-    'defaultLocale' => $formDefaultLocale ?? \App\Utility\FormLanguages::defaultLocaleForForm(),
-    'i18nFields' => [
-        ['name' => 'name', 'label' => __('Name:'), 'type' => 'text'],
-        ['name' => 'description', 'label' => __('Description:'), 'type' => 'editor', 'rows' => 8],
-    ],
-]) ?>
+$i18nFields = [
+    ['name' => 'name', 'label' => __('Name:'), 'type' => 'text'],
+    ['name' => 'description', 'label' => __('Description:'), 'type' => 'editor', 'rows' => 8],
+];
 ```
 
 | Locale | Form mezőnév |
@@ -66,7 +64,9 @@ Részlet: [country-visibilities.md](country-visibilities.md).
 | default (`formDefaultLocale`) | `name`, `description` (entity root) |
 | egyéb | `_translations.{locale}.name` stb. |
 
-A label mellett a **gyökér mező** kötelezősége jelenik meg (`Form->requiredMark($fieldName)`), pl. `name` kötelező → minden TAB-on csillag; `description` opcionális → nincs.
+HTML mező (`type` = `editor`): `textarea` + class **`editor`** + Trumbowyg assetek a **ugyanazon** `form.php` tetején (`pages/form.js` initeli).
+
+A label mellett a **gyökér mező** kötelezősége jelenik meg (`Form->requiredMark($fieldName)`).
 
 ---
 
@@ -83,7 +83,7 @@ A label mellett a **gyökér mező** kötelezősége jelenik meg (`Form->require
 ## 4b. TAB váltás → name fókusz
 
 Minden tab gomb: `data-name-target="name"` / `name-hu-hu` / … (az **adott nyelv** name input id-ja).  
-Inline JS a `form_language_fields`-ben.
+A fókusz JS a CRUD `form.php`-jában (vagy a snippetben).
 
 ---
 
@@ -92,4 +92,5 @@ Inline JS a `form_language_fields`-ben.
 - [ ] Tabs = csak az országhoz felvett nyelvek (`country_visibilities`)
 - [ ] Saját nyelv első; extras utána
 - [ ] `setFormLanguageTabs` + `getWithTranslations` ugyanezt a default locale-t használja
+- [ ] Markup a `form.php`-ban — **nincs** külön form field element
 - [ ] Mentés után a TAB-ok a mentett extras szerint frissülnek (új session / új kérés)

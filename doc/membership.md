@@ -131,7 +131,7 @@ Permissions: `completeProfile` a `role => '*'` Users action listában.
 - **membershipApproved** → új tag, link: `/login`
 - **clubNationalFeeRecorded** → klubelnök, országos tagdíj rögzítés után
 - **Nyelv:** `users.language_id` → ország `locale` → App default. Tartalom: `email_templates` (slug + language), ha nincs enabled sor → view template + `__()`.
-- **CRUD:** President `/president/email-templates` (nyelvenként egy slug). Index nyelvi szűrő: alap = aktuális UI nyelv; „All languages” = 0; session + URL `language_id`. Form nyelvi TAB: csak kimenő mezők (`subject` / `body_html` / `body_text`); `name` admin címke. Seed: `EmailTemplateDefaults` + `SeedEmailTemplates` migráció.
+- **CRUD:** President `/president/email-templates` (nyelvenként egy slug). Index: standard Admin lista (`index-data-table`, `#` id, sort ikonok, duplaklikk → `recordGet` modal). Nyelvi szűrő: **csak** a sablon-nyelvek (`EmailTemplateDefaults::locales`, pl. en_GB/hu_HU/…); alap = UI locale → sablon-nyelv (`en_US` → `en_GB`). Mentés után a mentett sor nyelvére szűr. Form: `templates/President/EmailTemplates/form.php` (nyelvi TAB + Trumbowyg a `form.php`-ban). Seed: `EmailTemplateDefaults` + `SeedEmailTemplates`.
 
 Transport: `config/app.php` / `app_local.php` `Email` + `EmailTransport`.
 

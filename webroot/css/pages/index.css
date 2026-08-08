@@ -34,3 +34,20 @@
 	min-width: max-content;
 	flex-shrink: 0;
 }
+
+/* Modal / view: HTML body preview (trusted admin content) */
+.record-html-preview {
+	max-height: 28rem;
+	overflow: auto;
+	word-break: break-word;
+}
+
+/* Modal / view: plain text with preserved newlines (e.g. body_text) */
+.record-text-preview {
+	max-height: 28rem;
+	overflow: auto;
+	white-space: pre-wrap;
+	word-break: break-word;
+	font-family: var(--bs-font-monospace, ui-monospace, monospace);
+	font-size: 0.875rem;
+}

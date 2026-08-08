@@ -1,6 +1,6 @@
 <?php
 /**
- * Email templates index (President).
+ * Email templates index (President) — standard Admin CRUD list.
  *
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\EmailTemplate> $emailTemplates
@@ -8,6 +8,7 @@
  * @var string $filterLanguageLabel
  * @var array<int, string> $languageOptions
  * @var array<string, string> $slugOptions
+ * @var int|null $lastVisitedId
  */
 $filterLanguageId = (int)($filterLanguageId ?? 0);
 $filterLanguageLabel = (string)($filterLanguageLabel ?? '');
@@ -25,6 +26,7 @@ $filterQuery = $this->request->getQueryParams();
 unset($filterQuery['language_id']);
 $filterQuery['page'] = '1';
 
+/** Row double-click: 'modal' | 'edit' | 'none' */
 $rowDoubleClickAction = 'modal';
 
 $showIdColumn = true;
@@ -52,7 +54,12 @@ $tooltipDetails = '<b>' . __('View details') . '</b><br>' . __('View the selecte
 $tooltipEdit = '<b>' . __('Edit') . '</b><br>' . __('Edit the selected record.');
 $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the selected record.');
 
-$rowDoubleClickHint = __('Double-click a row to view the record details.');
+$rowDoubleClickHints = [
+	'modal' => __('Double-click a row to view the record details.'),
+	'edit' => __('Double-click a row to edit the record.'),
+	'none' => '',
+];
+$rowDoubleClickHint = $rowDoubleClickHints[$rowDoubleClickAction] ?? $rowDoubleClickHints['modal'];
 
 $config = [
 	'rowDoubleClickAction' => $rowDoubleClickAction,
@@ -60,6 +67,8 @@ $config = [
 	'editUrl' => $this->Url->build(['action' => 'edit']),
 	'viewUrl' => $this->Url->build(['action' => 'view']),
 	'deleteUrl' => $this->Url->build(['action' => 'delete']),
+	'recordHtmlFields' => ['body_html'],
+	'recordMultilineFields' => ['body_text'],
 	'recordFieldLabels' => [
 		'id' => __('ID'),
 		'language' => __('Language'),
@@ -105,11 +114,13 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 			<div class="card-header">
 				<div class="float-left">
 					<h3 class="fw-bold"><i class="fa fa-envelope"></i> <?= __('Email templates') ?></h3>
-					<?= h($rowDoubleClickHint) ?>
 					<?php if ($filterLanguageLabel !== ''): ?>
 						<div class="text-muted"><?= h(__('Showing templates for {0}', $filterLanguageLabel)) ?></div>
 					<?php elseif ($filterLanguageId < 1): ?>
 						<div class="text-muted"><?= h(__('Showing templates for all languages')) ?></div>
+					<?php endif; ?>
+					<?php if ($rowDoubleClickHint !== ''): ?>
+						<?= h($rowDoubleClickHint) ?>
 					<?php endif; ?>
 				</div>
 				<div class="float-right d-flex align-items-center gap-2 flex-wrap justify-content-end">
@@ -183,114 +194,130 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 				</div>
 				<div class="clearfix"></div>
 			</div>
-			<div class="card-body p-0">
-				<div class="table-responsive">
-					<table class="table table-striped table-hover mb-0 admin-index-table" id="email-templates-index-table">
-						<thead>
-							<tr>
-								<?php if ($showIdColumn): ?>
-									<th><?= $this->Paginator->sort('id', __('ID')) ?></th>
-								<?php endif; ?>
-								<th><?= $this->Paginator->sort('Languages.code', __('Language')) ?></th>
-								<th><?= $this->Paginator->sort('slug', __('Template')) ?></th>
-								<th><?= $this->Paginator->sort('name', __('Name')) ?></th>
-								<th><?= $this->Paginator->sort('subject', __('Subject')) ?></th>
-								<?php if ($showEnabledColumn): ?>
-									<th class="text-center"><?= $this->Paginator->sort('enabled', __('Enabled')) ?></th>
-								<?php endif; ?>
-								<?php if ($showVisibleColumn): ?>
-									<th class="text-center"><?= $this->Paginator->sort('visible', __('Visible')) ?></th>
-								<?php endif; ?>
-								<?php if ($showTimestampColumn): ?>
-									<th><?= $this->Paginator->sort('modified', __('Modified')) ?></th>
-								<?php endif; ?>
-								<th class="text-end"><?= __('Actions') ?></th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if ($emailTemplates->count() === 0): ?>
-								<tr>
-									<td colspan="<?= (int)$indexColspan ?>" class="text-center text-muted py-4"><?= __('No records found.') ?></td>
-								</tr>
-							<?php else: ?>
-								<?php foreach ($emailTemplates as $row): ?>
-									<?php
-									$langCode = $row->language->code ?? '';
-									$langLabel = $langCode !== ''
-										? \App\Utility\AdminLanguage::loginLabel((string)$langCode)
-										: \App\Utility\AdminLanguage::labelById((int)$row->language_id);
-									$slugLabel = $slugOptions[(string)$row->slug] ?? (string)$row->slug;
-									?>
-									<tr class="admin-index-row"
-										data-id="<?= (int)$row->id ?>"
-										data-can-delete="1">
-										<?php if ($showIdColumn): ?>
-											<td><?= h((string)$row->id) ?></td>
-										<?php endif; ?>
-										<td><?= h($langLabel) ?></td>
-										<td><?= h($slugLabel) ?></td>
-										<td><?= h((string)$row->name) ?></td>
-										<td><?= h((string)$row->subject) ?></td>
-										<?php if ($showEnabledColumn): ?>
-											<td class="text-center">
-												<?= !empty($row->enabled)
-													? '<i class="fa fa-check text-success"></i>'
-													: '<i class="fa fa-times text-danger"></i>' ?>
-											</td>
-										<?php endif; ?>
-										<?php if ($showVisibleColumn): ?>
-											<td class="text-center">
-												<?= !empty($row->visible)
-													? '<i class="fa fa-check text-success"></i>'
-													: '<i class="fa fa-times text-danger"></i>' ?>
-											</td>
-										<?php endif; ?>
-										<?php if ($showTimestampColumn): ?>
-											<td><?= $row->modified ? h(\App\Utility\LocaleDateParser::format($row->modified, 'datetime_short')) : '—' ?></td>
-										<?php endif; ?>
-										<td class="text-end text-nowrap">
-											<?= $this->Html->link(
-												'<i class="fa fa-eye"></i>',
-												['action' => 'view', $row->id],
-												[
-													'escape' => false,
-													'role' => 'button',
-													'class' => 'btn btn-outline-info',
-													'data-bs-toggle' => 'tooltip',
-													'data-bs-placement' => 'top',
-													'data-bs-html' => 'true',
-													'title' => $tooltipDetails,
-												]
-											) ?>
-											<?= $this->Html->link(
-												'<i class="fa fa-pencil"></i>',
-												['action' => 'edit', $row->id],
-												[
-													'escape' => false,
-													'role' => 'button',
-													'class' => 'btn btn-outline-primary',
-													'data-bs-toggle' => 'tooltip',
-													'data-bs-placement' => 'top',
-													'data-bs-html' => 'true',
-													'title' => $tooltipEdit,
-												]
-											) ?>
-											<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$row->id ?>">
-												<i class="fa fa-trash"></i>
-											</a>
-											<?= $this->Form->create(null, [
-												'url' => ['action' => 'delete', $row->id],
-												'id' => 'delete-form-' . $row->id,
-												'class' => 'd-none js-row-delete-form',
-											]) ?>
-											<?= $this->Form->end() ?>
-										</td>
-									</tr>
-								<?php endforeach; ?>
+			<div class="card-body p-2">
+				<table class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table" id="email-templates-index-table">
+					<thead>
+						<tr>
+							<?php if ($showIdColumn): ?>
+								<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
 							<?php endif; ?>
-						</tbody>
-					</table>
-				</div>
+							<th scope="col" class="string language"><?= $this->Paginator->sort('Languages.code', __('Language')) ?></th>
+							<th scope="col" class="string slug"><?= $this->Paginator->sort('slug', __('Template')) ?></th>
+							<th scope="col" class="string name"><?= $this->Paginator->sort('name', __('Name')) ?></th>
+							<th scope="col" class="string subject"><?= $this->Paginator->sort('subject', __('Subject')) ?></th>
+							<?php if ($showEnabledColumn): ?>
+								<th scope="col" class="boolean enabled"><?= $this->Paginator->sort('enabled', __('Enabled')) ?></th>
+							<?php endif; ?>
+							<?php if ($showVisibleColumn): ?>
+								<th scope="col" class="boolean visible"><?= $this->Paginator->sort('visible', __('Visible')) ?></th>
+							<?php endif; ?>
+							<?php if ($showTimestampColumn): ?>
+								<th scope="col" class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
+									<?php if ($showCreatedColumn): ?>
+										<?= $this->Paginator->sort('created', __('Created')) ?>
+									<?php endif; ?>
+									<?php if ($showModifiedColumn): ?>
+										<?= $this->Paginator->sort('modified', __('Modified')) ?>
+									<?php endif; ?>
+								</th>
+							<?php endif; ?>
+							<th scope="col" class="actions"><?= __('Actions') ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if ($emailTemplates->count() === 0): ?>
+							<tr>
+								<td colspan="<?= (int)$indexColspan ?>" class="text-center text-muted py-4"><?= __('No records found.') ?></td>
+							</tr>
+						<?php else: ?>
+							<?php foreach ($emailTemplates as $row): ?>
+								<?php
+								$langCode = $row->language->code ?? '';
+								$langLabel = $langCode !== ''
+									? \App\Utility\AdminLanguage::loginLabel((string)$langCode)
+									: \App\Utility\AdminLanguage::labelById((int)$row->language_id);
+								$slugLabel = $slugOptions[(string)$row->slug] ?? (string)$row->slug;
+								$isLastVisited = isset($lastVisitedId) && (int)$lastVisitedId === (int)$row->id;
+								?>
+								<tr id="record-<?= (int)$row->id ?>"
+									data-id="<?= (int)$row->id ?>"
+									data-can-delete="1"<?= $isLastVisited ? ' class="last-visited"' : '' ?>>
+									<?php if ($showIdColumn): ?>
+										<td class="number id"><?= h((string)$row->id) ?></td>
+									<?php endif; ?>
+									<td class="string language"><?= h($langLabel) ?></td>
+									<td class="string slug"><?= h($slugLabel) ?></td>
+									<td class="string name"><?= h((string)$row->name) ?></td>
+									<td class="string subject"><?= h((string)$row->subject) ?></td>
+									<?php if ($showEnabledColumn): ?>
+										<td class="boolean enabled">
+											<?= !empty($row->enabled)
+												? '<i class="fa fa-check text-success"></i>'
+												: '<i class="fa fa-times text-danger"></i>' ?>
+										</td>
+									<?php endif; ?>
+									<?php if ($showVisibleColumn): ?>
+										<td class="boolean visible">
+											<?= !empty($row->visible)
+												? '<i class="fa fa-check text-success"></i>'
+												: '<i class="fa fa-times text-danger"></i>' ?>
+										</td>
+									<?php endif; ?>
+									<?php if ($showTimestampColumn): ?>
+										<td class="datetime<?= $showCreatedColumn ? ' created' : '' ?><?= $showModifiedColumn ? ' modified' : '' ?>">
+											<?php if ($showCreatedColumn): ?>
+												<?= $row->created ? h(\App\Utility\LocaleDateParser::format($row->created, 'datetime_short')) : '' ?>
+											<?php endif; ?>
+											<?php if ($showCreatedColumn && $showModifiedColumn && $row->modified): ?>
+												<br>
+											<?php endif; ?>
+											<?php if ($showModifiedColumn): ?>
+												<?= $row->modified ? h(\App\Utility\LocaleDateParser::format($row->modified, 'datetime_short')) : '' ?>
+											<?php endif; ?>
+										</td>
+									<?php endif; ?>
+									<td class="actions">
+										<?= $this->Html->link(
+											'<i class="fa fa-eye"></i>',
+											['action' => 'view', $row->id],
+											[
+												'escape' => false,
+												'role' => 'button',
+												'class' => 'btn btn-outline-info',
+												'data-bs-toggle' => 'tooltip',
+												'data-bs-placement' => 'top',
+												'data-bs-html' => 'true',
+												'title' => $tooltipDetails,
+											]
+										) ?>
+										<?= $this->Html->link(
+											'<i class="fa fa-pencil"></i>',
+											['action' => 'edit', $row->id],
+											[
+												'escape' => false,
+												'role' => 'button',
+												'class' => 'btn btn-outline-primary',
+												'data-bs-toggle' => 'tooltip',
+												'data-bs-placement' => 'top',
+												'data-bs-html' => 'true',
+												'title' => $tooltipEdit,
+											]
+										) ?>
+										<a role="button" href="#" class="btn btn-outline-danger btn-row-delete" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<?= h($tooltipDelete) ?>" data-id="<?= (int)$row->id ?>">
+											<i class="fa fa-trash"></i>
+										</a>
+										<?= $this->Form->create(null, [
+											'url' => ['action' => 'delete', $row->id],
+											'id' => 'delete-form-' . $row->id,
+											'class' => 'd-none js-row-delete-form',
+										]) ?>
+										<?= $this->Form->end() ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</tbody>
+				</table>
 			</div>
 			<div class="card-footer">
 				<?= $this->element('admin/index_footer') ?>

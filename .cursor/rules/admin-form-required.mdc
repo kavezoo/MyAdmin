@@ -1,6 +1,6 @@
 ---
 description: Admin form kötelező mező csillag (validator → piros *)
-globs: templates/Admin/**/form.php,templates/element/admin/form_language_fields.php,src/View/Helper/FormHelper.php
+globs: templates/**/form.php,src/View/Helper/FormHelper.php
 alwaysApply: false
 ---
 

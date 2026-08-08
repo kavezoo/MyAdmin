@@ -76,6 +76,81 @@ class EmailTemplateService
         return $row !== null ? (int)$row->get('id') : 0;
     }
 
+    /**
+     * Exact `languages.code` → id (no prefix fallback).
+     */
+    public static function languageIdForCodeExact(string $code): int
+    {
+        $code = str_replace('-', '_', trim($code));
+        if ($code === '') {
+            return 0;
+        }
+        /** @var \App\Model\Table\LanguagesTable $languages */
+        $languages = (new self())->fetchTable('Languages');
+        $row = $languages->find()
+            ->select(['Languages.id'])
+            ->where(['Languages.code' => $code])
+            ->first();
+
+        return $row !== null ? (int)$row->get('id') : 0;
+    }
+
+    /**
+     * language_id => label for locales that have email templates (seed / form tabs).
+     *
+     * @return array<int, string>
+     */
+    public static function templateLanguageOptions(): array
+    {
+        $options = [];
+        foreach (EmailTemplateDefaults::locales() as $locale) {
+            $id = static::languageIdForCodeExact($locale);
+            if ($id < 1) {
+                continue;
+            }
+            $options[$id] = AdminLanguage::labelById($id);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Map UI locale to an email-template language_id (en_US → en_GB, not en_US).
+     */
+    public static function templateLanguageIdForLocale(?string $locale = null): int
+    {
+        $locale = str_replace(
+            '-',
+            '_',
+            trim($locale !== null && $locale !== ''
+                ? $locale
+                : (string)\Cake\I18n\I18n::getLocale())
+        );
+        $byCode = [];
+        foreach (EmailTemplateDefaults::locales() as $code) {
+            $id = static::languageIdForCodeExact($code);
+            if ($id > 0) {
+                $byCode[$code] = $id;
+            }
+        }
+        if ($byCode === []) {
+            return 0;
+        }
+        if ($locale !== '' && isset($byCode[$locale])) {
+            return $byCode[$locale];
+        }
+        $lang = $locale !== '' ? substr($locale, 0, 2) : '';
+        if ($lang !== '') {
+            foreach ($byCode as $code => $id) {
+                if (str_starts_with($code, $lang . '_')) {
+                    return $id;
+                }
+            }
+        }
+
+        return (int)reset($byCode);
+    }
+
     public static function languageCodeById(int $languageId): string
     {
         if ($languageId < 1) {
