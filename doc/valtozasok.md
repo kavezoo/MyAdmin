@@ -9,7 +9,8 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ### Mi változott / miért
 - Szerverre feltöltés után: `The view for UsersController::login() was not found` — App Users a `templates/Users/login.php`-t várja (nem a CakeDC plugin pathot).
-- `UsersController::beforeFilter`: `viewBuilder()->setPlugin(false)` — mindig App template path.
+- `UsersController::beforeFilter`: `setPlugin(null)` + `setTemplatePath('Users')` (CakePHP 5: `false` → TypeError).
+- `login()`: ha a fájl hiányzik, egyértelmű abszolút path hibaüzenet (deploy checklist).
 - `users-auth.md` gyakori hibák: szerver checklist (fájlok, `Users` case, `config/users.php`).
 
 ### Érintett
