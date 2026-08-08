@@ -5,6 +5,18 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-08 — Login MissingTemplate: App view path + deploy checklist
+
+### Mi változott / miért
+- Szerverre feltöltés után: `The view for UsersController::login() was not found` — App Users a `templates/Users/login.php`-t várja (nem a CakeDC plugin pathot).
+- `UsersController::beforeFilter`: `viewBuilder()->setPlugin(false)` — mindig App template path.
+- `users-auth.md` gyakori hibák: szerver checklist (fájlok, `Users` case, `config/users.php`).
+
+### Érintett
+- `src/Controller/UsersController.php`, `doc/users-auth.md`
+
+---
+
 ## 2026-08-07 — Email sablonok: kereső UI + nyelvi TAB + seed
 
 ### Mi változott / miért

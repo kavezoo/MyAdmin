@@ -70,6 +70,10 @@ class UsersController extends CakeDCUsersController
     {
         parent::beforeFilter($event);
 
+        // App controller → always App templates (`templates/Users/`), never CakeDC plugin path.
+        // MissingTemplate Users/login on deploy usually means this folder was not uploaded.
+        $this->viewBuilder()->setPlugin(false);
+
         $action = (string)$this->getRequest()->getParam('action');
         if (in_array($action, self::AUTH_LAYOUT_ACTIONS, true)) {
             $this->viewBuilder()->setLayout('login');
