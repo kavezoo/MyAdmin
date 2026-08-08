@@ -70,16 +70,15 @@ class UsersController extends CakeDCUsersController
     {
         parent::beforeFilter($event);
 
-        // App Users → App templates (`templates/Users/…`). CakePHP 5: null, not false.
-        // If templates/ still missing after AuthTemplates::ensureDeployed(), use CakeDC vendor views.
+        // Prefer App templates/Users; if missing/unreadable → CakeDC vendor templates (always in vendor/).
         $usersLogin = ROOT . DS . 'templates' . DS . 'Users' . DS . 'login.php';
-        $this->viewBuilder()->setPlugin(is_file($usersLogin) ? null : 'CakeDC/Users');
+        $this->viewBuilder()->setPlugin(@is_file($usersLogin) ? null : 'CakeDC/Users');
         $this->viewBuilder()->setTemplatePath('Users');
 
         $action = (string)$this->getRequest()->getParam('action');
         if (in_array($action, self::AUTH_LAYOUT_ACTIONS, true)) {
             $loginLayout = ROOT . DS . 'templates' . DS . 'layout' . DS . 'login.php';
-            $this->viewBuilder()->setLayout(is_file($loginLayout) ? 'login' : 'default');
+            $this->viewBuilder()->setLayout(@is_file($loginLayout) ? 'login' : 'default');
         } elseif (in_array($action, ['profile', 'edit', 'completeProfile', 'eventLog', 'eventLogView'], true)) {
             $this->viewBuilder()->setLayout('admin');
             $this->applyLoggedInUiLocale();

@@ -262,7 +262,7 @@ Részletek: [i18n.md](i18n.md).
 | URI Too Long `/login?redirect=…` | `plugin => false` / hiányzó bypassAuth | permissions + Sanitize |
 | Redirect loop / „nem érhető el” | role nincs a cél prefixen | RoleHome + permissions |
 | afterLogin deprecation + headers already sent | `return` az eventből | `$event->setResult(...)` |
-| MissingTemplate Users/login | `templates/Users/` hiányzik a szerveren (partial FTP) | `git pull` / töltsd fel a `templates/Users/` + `layout/login.php` mappát; **vagy** húzd a `resources/auth_templates/`-t — `AuthTemplates::ensureDeployed()` bemásolja bootstrapkor. `setPlugin(null)` (ne `false`). |
+| MissingTemplate / Permission denied auth | `templates/Users/` hiányzik **vagy** a web user nem olvassa a fájlokat | 1) `chmod -R a+rX src templates resources` 2) töltsd fel / `git checkout -- templates/Users templates/layout/login.php` 3) ha App template nincs: a controller a **CakeDC vendor** loginra esik vissza |
 | Üres login box | `.login-form` absolute | `local-login` + `.local-login-form` + flow CSS |
 | Register crash: rule already exists | dupla `nonNegativeInteger('country_id')` | csak defaultban legyen |
 | OneTimeLogin deprecation | Table proxy | `getBehavior()` wrapper |

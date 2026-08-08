@@ -5,6 +5,19 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-08 — Login: AuthTemplates visszavonva (Permission denied)
+
+### Mi változott / miért
+- Szerveren `AuthTemplates.php` → Permission denied (web user nem olvasta) → warnings + headers already sent.
+- `AuthTemplates` eltávolítva; login view: ha nincs olvasható `templates/Users/login.php` → **CakeDC vendor** template (`setPlugin('CakeDC/Users')`).
+- App ValiAdmin loginhez a szerveren kell: olvasható `templates/Users/` + `templates/layout/login.php` (`chmod a+rX`).
+
+### Érintett
+- `src/Application.php`, `src/Controller/UsersController.php`, törölve: `src/Utility/AuthTemplates.php`
+- `doc/users-auth.md`
+
+---
+
 ## 2026-08-08 — Login MissingTemplate: auth template auto-deploy
 
 ### Mi változott / miért
