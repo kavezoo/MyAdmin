@@ -70,13 +70,16 @@ class UsersController extends CakeDCUsersController
     {
         parent::beforeFilter($event);
 
-        // App Users → App templates only (`templates/Users/…`). CakePHP 5: null, not false.
-        $this->viewBuilder()->setPlugin(null);
+        // App Users → App templates (`templates/Users/…`). CakePHP 5: null, not false.
+        // If templates/ still missing after AuthTemplates::ensureDeployed(), use CakeDC vendor views.
+        $usersLogin = ROOT . DS . 'templates' . DS . 'Users' . DS . 'login.php';
+        $this->viewBuilder()->setPlugin(is_file($usersLogin) ? null : 'CakeDC/Users');
         $this->viewBuilder()->setTemplatePath('Users');
 
         $action = (string)$this->getRequest()->getParam('action');
         if (in_array($action, self::AUTH_LAYOUT_ACTIONS, true)) {
-            $this->viewBuilder()->setLayout('login');
+            $loginLayout = ROOT . DS . 'templates' . DS . 'layout' . DS . 'login.php';
+            $this->viewBuilder()->setLayout(is_file($loginLayout) ? 'login' : 'default');
         } elseif (in_array($action, ['profile', 'edit', 'completeProfile', 'eventLog', 'eventLogView'], true)) {
             $this->viewBuilder()->setLayout('admin');
             $this->applyLoggedInUiLocale();
@@ -184,14 +187,6 @@ class UsersController extends CakeDCUsersController
      */
     public function login()
     {
-        $loginTemplate = ROOT . DS . 'templates' . DS . 'Users' . DS . 'login.php';
-        if (!is_file($loginTemplate)) {
-            throw new NotFoundException(sprintf(
-                'Login template missing on this host: %s — deploy/upload the App templates/Users/ folder (exact case).',
-                $loginTemplate
-            ));
-        }
-
         $result = parent::login();
 
         if (!$result instanceof Response) {

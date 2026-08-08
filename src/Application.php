@@ -26,6 +26,7 @@ use App\Auth\CurrentUser;
 use App\Auth\MembershipProfile;
 use App\Auth\RoleHome;
 use App\Utility\EventLogger;
+use App\Utility\AuthTemplates;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Datasource\FactoryLocator;
@@ -62,6 +63,9 @@ class Application extends BaseApplication
     {
         // Call parent to load bootstrap from files.
         parent::bootstrap();
+
+        // Partial FTP deploys often omit templates/Users — restore from resources/auth_templates.
+        AuthTemplates::ensureDeployed();
 
         // By default, does not allow fallback classes.
         FactoryLocator::add(

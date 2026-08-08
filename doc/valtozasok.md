@@ -5,6 +5,19 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-08 — Login MissingTemplate: auth template auto-deploy
+
+### Mi változott / miért
+- Szerveren hiányzott `templates/Users/login.php` (partial FTP gyakran kihagyja a `templates/`-t).
+- `AuthTemplates::ensureDeployed()`: bootstrapban bemásolja a hiányzó auth templateket `resources/auth_templates/` → `templates/`.
+- `setPlugin(null)` + `setTemplatePath('Users')`; a NotFoundException diagnosztika kikerült.
+
+### Érintett
+- `src/Utility/AuthTemplates.php`, `src/Application.php`, `src/Controller/UsersController.php`
+- `resources/auth_templates/{Users,layout}/`, `doc/users-auth.md`
+
+---
+
 ## 2026-08-08 — Login MissingTemplate: App view path + deploy checklist
 
 ### Mi változott / miért
