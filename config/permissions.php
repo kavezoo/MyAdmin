@@ -165,5 +165,13 @@ return [
             'controller' => '*',
             'action' => '*',
         ],
+        [
+            'role' => '*',
+            'prefix' => 'Api',
+            'extension' => '*',
+            'plugin' => '*',
+            'controller' => '*',
+            'action' => '*',
+        ],
     ],
 ];
