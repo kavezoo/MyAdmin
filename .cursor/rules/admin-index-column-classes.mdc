@@ -1,0 +1,30 @@
+---
+description: Index th/td — tilos CSS-ütköző osztálynevek (pl. label = badge)
+globs: "**/templates/**/index.php"
+alwaysApply: true
+---
+
+# Index oszloposztály — ne ütközzön globális CSS-sel (örök)
+
+ValiAdmin / legacy Bootstrap: a globális **`.label`** = **badge** (fehér szöveg, padding, `nowrap`, kis betű).  
+Ha az index `th`/`td` osztálya mezőnévként **`label`**, a cella badge-ként jelenik meg — **helytelen**.
+
+## Kötelező
+
+| Mező / szándék | Index `th`/`td` osztály |
+|----------------|-------------------------|
+| `label` DB mező | **`string col-label`** (tilos: `label`, `string label`) |
+| egyéb szöveg | `string` + biztonságos mezőnév (`name`, `title`, …) |
+| típus | `number` / `boolean` / `date` / `datetime` / `currency` / `count` / `actions` |
+
+## Tilos oszloposztályként (ütközés / layout)
+
+`label`, `badge`, `btn`, `row`, `container`, `form-control`, `dropdown`, `active` (önmagában), `show`, `collapse`, `modal`, `card`, `alert`, `close`, `hidden`, `sr-only`
+
+Ha a DB mező ilyen nevű → prefixeld: `col-{mező}` (pl. `col-label`, `col-active` ha kell mezőjelölés).
+
+## Ellenőrzés új indexnél
+
+1. Minden `th`/`td` class lista — van-e fenti tiltott token?
+2. Böngészőben a szöveges cella **nem** fehér/badge kinézetű.
+3. Spec: `doc/admin-konvenciok.md` (Oszloptípus osztályok) + `doc/minta-tanulsagok.md`.

@@ -1,0 +1,262 @@
+/* Check-in desk — mobile-first applicant cards */
+.checkin-applicant-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.checkin-applicant-card {
+	border: 2px solid rgba(0, 0, 0, 0.12);
+	border-radius: 0.75rem;
+	box-shadow: 0 0.35rem 0.85rem rgba(0, 0, 0, 0.14);
+	background: #fff;
+}
+
+/* Paid: light green fill + strong green border + shadow */
+.checkin-applicant-card.is-paid {
+	border-width: 2px;
+	border-color: #198754;
+	background: #d8f5e3;
+	box-shadow: 0 0.35rem 0.9rem rgba(25, 135, 84, 0.28);
+}
+
+.checkin-applicant-card.is-paid .checkin-fee-lines {
+	background: rgba(255, 255, 255, 0.45);
+	border: 1px solid rgba(25, 135, 84, 0.18);
+}
+
+/* Unpaid: light red fill + strong red border + shadow */
+.checkin-applicant-card.is-unpaid {
+	border-width: 2px;
+	border-color: #dc3545;
+	background: #fde8e8;
+	box-shadow: 0 0.35rem 0.9rem rgba(220, 53, 69, 0.28);
+}
+
+.checkin-applicant-card.is-unpaid .checkin-fee-lines {
+	background: rgba(255, 255, 255, 0.45);
+	border: 1px solid rgba(220, 53, 69, 0.18);
+}
+
+.checkin-filter-switches {
+	padding: 0.85rem 1rem;
+	background: #f8f9fa;
+	border-radius: 0.5rem;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.checkin-all-paid-alert {
+	font-size: 1.1rem;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+/* Compact cash reconciliation table */
+.checkin-cash-box {
+	border: 3px solid #6c757d;
+	border-radius: 0.4rem;
+	background: #fff;
+	overflow: hidden;
+	box-shadow: 0 0.35rem 0.85rem rgba(0, 0, 0, 0.18);
+}
+
+.checkin-cash-box__title {
+	padding: 0.45rem 0.65rem;
+	font-size: 0.95rem;
+	font-weight: 700;
+	background: #e9ecef;
+	border-bottom: 2px solid #6c757d;
+}
+
+.checkin-cash-table {
+	width: 100%;
+	margin: 0;
+	border-collapse: collapse;
+	font-size: 0.95rem;
+	line-height: 1.25;
+}
+
+.checkin-cash-table th,
+.checkin-cash-table td {
+	padding: 0.2rem 0.45rem;
+	border-bottom: 1px solid #e9ecef;
+	vertical-align: middle;
+}
+
+.checkin-cash-table thead th {
+	font-weight: 600;
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	color: #6c757d;
+	background: #f8f9fa;
+}
+
+.checkin-cash-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.checkin-cash-table tfoot th {
+	padding: 0.35rem 0.45rem;
+	border-top: 2px solid #adb5bd;
+	border-bottom: 0;
+	background: #f1f3f5;
+	font-size: 1.05rem;
+}
+
+.checkin-cash-table tfoot tr.checkin-cash-should-have th {
+	background: #e8f5e9;
+	color: #1b5e20;
+	font-weight: 700;
+}
+
+.checkin-cash-grand-total {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 1rem;
+	padding: 0.75rem 0.85rem;
+	border: 3px solid #198754;
+	border-radius: 0.4rem;
+	background: #f0faf4;
+	font-size: 1.15rem;
+	font-weight: 600;
+	box-shadow: 0 0.35rem 0.85rem rgba(25, 135, 84, 0.22);
+}
+
+.checkin-cash-grand-total strong {
+	font-size: 1.35rem;
+	font-weight: 800;
+}
+
+.checkin-filter-switches .form-switch-lg .form-check-label {
+	font-weight: 600;
+	font-size: 1.05rem;
+}
+
+.checkin-applicant-card .checkin-applicant-name {
+	font-size: 1.35rem;
+	font-weight: 700;
+	margin: 0 0 0.15rem;
+	word-break: break-word;
+	line-height: 1.25;
+}
+
+.checkin-applicant-card .checkin-member-info {
+	margin-top: 0.5rem;
+}
+
+.checkin-member-info .badge {
+	font-weight: 600;
+	font-size: 0.85rem;
+}
+
+.checkin-member-fee-dates {
+	font-size: 0.95rem;
+	line-height: 1.4;
+}
+
+.checkin-member-fee-dates li + li {
+	margin-top: 0.25rem;
+}
+
+.checkin-applicant-card .checkin-companions-line {
+	font-size: 1rem;
+	line-height: 1.4;
+}
+
+.checkin-applicant-card .checkin-fee-lines {
+	margin-top: 0.85rem;
+	padding: 0.9rem 1rem;
+	background: #f8f9fa;
+	border-radius: 0.5rem;
+}
+
+.checkin-fee-line + .checkin-fee-line {
+	margin-top: 0.7rem;
+}
+
+.checkin-fee-line-title {
+	display: block;
+	font-size: 1.1rem;
+	font-weight: 700;
+	line-height: 1.3;
+}
+
+/* Only the breakdown (3 × 10 000,00 Ft) is normal weight */
+.checkin-fee-line-qty {
+	margin-top: 0.2rem;
+	font-size: 1.2rem;
+	font-weight: 400;
+	line-height: 1.35;
+	color: #212529;
+	letter-spacing: 0.01em;
+}
+
+/* Row total + grand total amounts: bold */
+.checkin-fee-line-amount {
+	font-size: 1.15rem;
+	font-weight: 700;
+	line-height: 1.3;
+}
+
+.checkin-fee-line-amount.is-total {
+	font-size: 1.45rem;
+}
+
+/* Mark-paid SweetAlert body */
+.swal2-html-container .checkin-swal-name {
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 1.3;
+	margin-bottom: 0.35rem;
+}
+
+.swal2-html-container .checkin-swal-amount {
+	font-size: 1.35rem;
+	font-weight: 700;
+	line-height: 1.35;
+	margin-bottom: 0.85rem;
+}
+
+.swal2-html-container .checkin-swal-ask {
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.4;
+	color: #495057;
+}
+
+.checkin-fee-line-total {
+	margin-top: 0.85rem !important;
+	padding-top: 0.75rem;
+	border-top: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+.checkin-applicant-card .checkin-applicant-actions {
+	margin-top: 1rem;
+}
+
+.checkin-applicant-card .btn-checkin-mark-paid {
+	width: 100%;
+	min-height: 3.25rem;
+	font-size: 1.15rem;
+	font-weight: 600;
+}
+
+.checkin-search-wrap .form-control-lg {
+	min-height: 3.25rem;
+	font-size: 1.1rem;
+}
+
+@media (min-width: 768px) {
+	.checkin-applicant-card .btn-checkin-mark-paid {
+		width: auto;
+		min-width: 12rem;
+	}
+
+	.checkin-fee-line-qty {
+		font-size: 1.15rem;
+	}
+}
