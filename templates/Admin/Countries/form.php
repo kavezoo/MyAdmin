@@ -83,6 +83,7 @@ $selectedVisibleIds = array_values(array_filter(
 				<?= $this->Form->create($country, [
 					'id' => 'form-horizontal',
 					'autocomplete' => 'off',
+					'type' => 'file',
 				]) ?>
 					<?php if ($canEditFully): ?>
 						<div class="form-group row mb-3">
@@ -167,6 +168,35 @@ $selectedVisibleIds = array_values(array_filter(
 								]) ?>
 								<div class="form-text">
 									<?= __('International calling code for user phone inputs (E.164, e.g. +36).') ?>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group row mb-3">
+							<?= $this->Form->adminLabel('logo_file', __('National association logo:'), ['for' => 'logo-file', 'required' => false]) ?>
+							<div class="col-12 col-md-10 col-xl-6">
+								<?php
+								$countryLogoUrl = $isEdit
+									? \App\Utility\CountryLogo::publicUrlFor(
+										(int)$country->id,
+										is_string($country->get('logo')) ? (string)$country->get('logo') : null
+									)
+									: '';
+								?>
+								<?php if ($countryLogoUrl !== ''): ?>
+									<div class="mb-2">
+										<img src="<?= h($countryLogoUrl) ?>" alt="" class="img-fluid" style="max-width:120px;max-height:120px;object-fit:contain;background:transparent;">
+									</div>
+								<?php endif; ?>
+								<?= $this->Form->control('logo_file', [
+									'label' => false,
+									'type' => 'file',
+									'class' => 'form-control',
+									'id' => 'logo-file',
+									'accept' => 'image/png,image/jpeg,image/webp',
+								]) ?>
+								<div class="form-text">
+									<?= __('PNG recommended (transparency kept). Used as {{national_association_logo}} in competition announcements.') ?>
 								</div>
 							</div>
 						</div>

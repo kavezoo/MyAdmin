@@ -63,6 +63,159 @@
 	var trumbowygUploadPath = cfg.trumbowygUploadPath || '/plugins/trumbowyg/texteditor-upload.php';
 
 	/**
+	 * Preserve <style> blocks across Trumbowyg contenteditable (browser strips them).
+	 */
+	var extractHtmlStyleBlocks = function (html) {
+		var styles = [];
+		var body = String(html == null ? '' : html).replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, function (block) {
+			styles.push(block);
+			return '';
+		});
+		return { styles: styles, body: body };
+	};
+
+	var mergeHtmlStyleBlocks = function (body, styles) {
+		styles = Array.isArray(styles) ? styles.filter(Boolean) : [];
+		body = String(body == null ? '' : body);
+		if (!styles.length) {
+			return body;
+		}
+		return styles.join('\n') + body;
+	};
+
+	var prepareEditorStyleBlocks = function ($editors) {
+		$editors.each(function () {
+			var $ta = $(this);
+			var parts = extractHtmlStyleBlocks($ta.val());
+			$ta.data('htmlStyleBlocks', parts.styles);
+			if (parts.styles.length) {
+				$ta.val(parts.body);
+			}
+		});
+	};
+
+	var enableTrumbowygStylePreservation = function ($editors) {
+		$editors.each(function () {
+			var $ta = $(this);
+			if ($ta.data('tbwStylePreserveBound')) {
+				return;
+			}
+			$ta.data('tbwStylePreserveBound', true);
+
+			var readBodyHtml = function () {
+				if ($ta.data('trumbowyg')) {
+					return String($ta.trumbowyg('html') || '');
+				}
+				return String($ta.val() || '');
+			};
+
+			var rememberStylesFrom = function (html) {
+				var extracted = extractHtmlStyleBlocks(html);
+				if (extracted.styles.length) {
+					$ta.data('htmlStyleBlocks', extracted.styles);
+				}
+				return extracted;
+			};
+
+			var writeMergedToTextarea = function () {
+				var extracted = rememberStylesFrom(readBodyHtml());
+				var styles = extracted.styles.length
+					? extracted.styles
+					: ($ta.data('htmlStyleBlocks') || []);
+				$ta.val(mergeHtmlStyleBlocks(extracted.body, styles));
+			};
+
+			$ta.on('tbwchange.tbwStyles tbwblur.tbwStyles', function () {
+				writeMergedToTextarea();
+			});
+
+			var api = $ta.data('trumbowyg');
+			if (api && api.$box) {
+				api.$box.on('click.tbwStyles', '.trumbowyg-viewHTML-button', function () {
+					window.setTimeout(function () {
+						if (api.$box.hasClass('trumbowyg-editor-hidden')) {
+							writeMergedToTextarea();
+						} else {
+							var extracted = rememberStylesFrom($ta.val());
+							$ta.val(extracted.body);
+							$ta.trumbowyg('html', extracted.body);
+							writeMergedToTextarea();
+						}
+					}, 0);
+				});
+			}
+		});
+	};
+
+	/**
+	 * Drag the bottom edge of a Trumbowyg box to change height (ns-resize handle).
+	 */
+	var enableTrumbowygVerticalResize = function ($editors) {
+		var minHeight = 200;
+		$editors.each(function () {
+			var $ta = $(this);
+			var api = $ta.data('trumbowyg');
+			if (!api || !api.$box) {
+				return;
+			}
+			var $box = api.$box;
+			if ($box.data('tbwResizeBound')) {
+				return;
+			}
+			$box.data('tbwResizeBound', true);
+
+			var $handle = $('<div/>', {
+				'class': 'trumbowyg-resize-handle',
+				title: msg.editorResize || 'Resize editor',
+				role: 'separator',
+				'aria-orientation': 'horizontal'
+			});
+			$box.append($handle);
+
+			var startY = 0;
+			var startHeight = 0;
+
+			var eventClientY = function (e) {
+				var oe = e.originalEvent || e;
+				if (oe.touches && oe.touches.length) {
+					return oe.touches[0].clientY;
+				}
+				if (oe.changedTouches && oe.changedTouches.length) {
+					return oe.changedTouches[0].clientY;
+				}
+				return e.clientY;
+			};
+
+			var onMove = function (e) {
+				var next = Math.max(minHeight, startHeight + (eventClientY(e) - startY));
+				$box.addClass('trumbowyg-resized');
+				$box.css('height', next + 'px');
+				e.preventDefault();
+			};
+
+			var onUp = function () {
+				$(document).off('.tbwResize');
+				$box.removeClass('trumbowyg-resizing');
+				$('body').css('cursor', '');
+			};
+
+			$handle.on('mousedown.tbwResize touchstart.tbwResize', function (e) {
+				if ($box.hasClass('trumbowyg-fullscreen')) {
+					return;
+				}
+				startY = eventClientY(e);
+				startHeight = $box.outerHeight();
+				$box.addClass('trumbowyg-resizing');
+				$('body').css('cursor', 'ns-resize');
+				$(document)
+					.on('mousemove.tbwResize touchmove.tbwResize', onMove)
+					.on('mouseup.tbwResize touchend.tbwResize touchcancel.tbwResize', onUp);
+				e.preventDefault();
+			});
+		});
+	};
+
+	/**
 	 * Tempus: 0=Sunday … 6=Saturday.
 	 * Prefer Intl.Locale.weekInfo (1=Monday … 7=Sunday); fallback PHP dateFormat.startOfTheWeek.
 	 */
@@ -164,8 +317,8 @@
 					}
 					return;
 				}
-				if ($el.hasClass('editor') && $el.data('trumbowyg')) {
-					data[name] = String($el.trumbowyg('html') || '');
+				if ($el.hasClass('editor') && $el.next('.note-editor').length && typeof $el.summernote === 'function') {
+					data[name] = String($el.summernote('code') || '');
 					return;
 				}
 				var val = $el.val();
@@ -852,51 +1005,84 @@
 			App.confirmLeave({ onConfirm: navigate });
 		});
 
-		if ($.fn.trumbowyg && $('.editor').length) {
-			var trumbowygOptions = {
-				svgPath: trumbowygSvgPath,
-				btns: [
-					['viewHTML'],
-					['historyUndo', 'historyRedo'],
-					['formatting'],
-					['strong', 'em', 'del'],
-					['superscript', 'subscript'],
-					['foreColor', 'backColor'],
-					['fontfamily'],
-					['fontsize'],
-					['lineheight'],
-					['link'],
-					['insertImage', 'upload', 'base64', 'noembed'],
-					['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
-					['unorderedList', 'orderedList'],
-					['preformatted'],
-					['highlight'],
-					['table'],
-					['specialChars'],
-					['horizontalRule'],
-					['removeformat'],
-					['fullscreen']
-				],
-				plugins: {
-					upload: {
-						serverPath: trumbowygUploadPath,
-						fileFieldName: 'fileToUpload'
-					}
+		if ($.fn.summernote && $('.editor').length) {
+			// JeffAdmin5: jeffAdminInitSummerNote(field, height, placeholder, lang, tabsize)
+			// https://packagist.org/packages/zsfoto/jeffadmin5
+			var summernoteLang = 'hu-HU';
+			var docLang = String(document.documentElement.getAttribute('lang') || '');
+			if (docLang) {
+				var normalized = docLang.replace('_', '-');
+				if (normalized.toLowerCase().indexOf('en') === 0) {
+					summernoteLang = 'en-US';
+				} else if (/^[a-z]{2}-[A-Z]{2}$/.test(normalized)) {
+					summernoteLang = normalized;
 				}
-			};
+			}
 
-			$('.editor').trumbowyg(trumbowygOptions);
+			$('.editor').each(function () {
+				var $ta = $(this);
+				if ($ta.next('.note-editor').length) {
+					return;
+				}
+				var height = parseInt($ta.attr('data-editor-height'), 10);
+				if (!height || height < 120) {
+					height = $ta.hasClass('editor-tall') ? 520 : 400;
+				}
+				$ta.summernote({
+					placeholder: $ta.attr('placeholder') || '',
+					tabsize: 2,
+					height: height,
+					lang: summernoteLang,
+					// Keep pasted / source HTML (incl. <style>) — do not strip in code view
+					codeviewFilter: false,
+					codeviewIframeFilter: false,
+					callbacks: {
+						onChange: function (contents) {
+							$ta.val(contents);
+						},
+						onBlur: function () {
+							$ta.val($ta.summernote('code'));
+						}
+					}
+				});
+			});
+
+			$form.on('submit.summernoteSync', function () {
+				$('.editor').each(function () {
+					var $ta = $(this);
+					if ($ta.next('.note-editor').length && typeof $ta.summernote === 'function') {
+						$ta.val($ta.summernote('code'));
+					}
+				});
+			});
+
+			// After showing a Bootstrap tab (description pane), refresh editors
+			$(document).on('shown.bs.tab', 'a[data-bs-toggle="tab"], button[data-bs-toggle="tab"]', function (e) {
+				var target = $(e.target).attr('data-bs-target');
+				if (!target) {
+					return;
+				}
+				$(target).find('.editor').each(function () {
+					var $ta = $(this);
+					if ($ta.next('.note-editor').length) {
+						$ta.summernote('code', $ta.summernote('code'));
+					}
+				});
+			});
 		}
 
 		/**
 		 * Language tabs: hover-only tooltip on inner span (not on tab toggle — avoids stuck tooltip on focus).
 		 */
-		var $langTabs = $('#formLanguageTabs');
+		var $langTabs = $('.form-language-tabs');
 		if ($langTabs.length && App.initHoverOnlyTooltips) {
-			App.initHoverOnlyTooltips($langTabs.find('.js-hover-only-tooltip'));
-			var langTabRoot = $langTabs[0];
-			$langTabs.on('shown.bs.tab mousedown', '[data-bs-toggle="tab"]', function () {
-				App.hideHoverOnlyTooltipsIn(langTabRoot);
+			$langTabs.each(function () {
+				var $root = $(this);
+				App.initHoverOnlyTooltips($root.find('.js-hover-only-tooltip'));
+				var langTabRoot = $root[0];
+				$root.on('shown.bs.tab mousedown', '[data-bs-toggle="tab"]', function () {
+					App.hideHoverOnlyTooltipsIn(langTabRoot);
+				});
 			});
 		}
 

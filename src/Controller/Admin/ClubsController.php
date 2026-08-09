@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 
 use App\Utility\AdminCountry;
 use App\Utility\AdminCountryScope;
+use App\Utility\AdminTranslate;
 use App\Utility\LocaleDateParser;
 use App\Utility\LocaleNumberParser;
 use Cake\Http\Response;
@@ -84,6 +85,7 @@ class ClubsController extends AppController
                 'fields' => $this->formFields(),
             ]);
             if ($this->Clubs->save($club)) {
+                $this->storeClubLogo($club);
                 $this->rememberLastVisited('Clubs', $club->id);
                 $this->Flash->success(__('The club has been saved.'));
 
@@ -116,6 +118,7 @@ class ClubsController extends AppController
                 'fields' => $this->formFields(),
             ]);
             if ($this->Clubs->save($club)) {
+                $this->storeClubLogo($club);
                 $this->rememberLastVisited('Clubs', $club->id);
                 $this->Flash->success(__('The club has been saved.'));
 
@@ -137,6 +140,7 @@ class ClubsController extends AppController
      */
     public function view(?string $id = null)
     {
+        AdminTranslate::applyLocale($this->Clubs->Competitions->getTarget());
         $club = $this->Clubs->get($id, contain: [
             'Countries',
             'Cities',
@@ -261,5 +265,25 @@ class ClubsController extends AppController
         $this->set('countryOptions', $formCountryOptions);
         $this->set('cityOptions', $cityOptions);
         $this->set('canChangeCountry', AdminCountryScope::canChangeCountry($this->request));
+    }
+
+    protected function storeClubLogo(\App\Model\Entity\Club $club): void
+    {
+        $file = $this->request->getUploadedFile('logo_file');
+        if ($file === null || $file->getError() === UPLOAD_ERR_NO_FILE) {
+            return;
+        }
+
+        try {
+            $path = \App\Utility\ClubLogo::store((int)$club->id, $file);
+            $club->set('logo', $path);
+            $this->Clubs->save($club, [
+                'fields' => ['logo'],
+                'accessibleFields' => ['logo' => true],
+                'validate' => false,
+            ]);
+        } catch (\Cake\Http\Exception\BadRequestException $e) {
+            $this->Flash->warning($e->getMessage());
+        }
     }
 }

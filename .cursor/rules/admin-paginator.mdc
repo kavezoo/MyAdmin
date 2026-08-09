@@ -15,12 +15,16 @@ Index és `/admin/search` lapozója **mindig** az shared elementeken keresztül 
 | `admin/index_counter` | csak footer bal | bake `Paginator::counter` + `__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')` |
 | `admin/index_footer` | card lábléc | bal: counter, jobb: pagination |
 
+## Láthatóság
+
+- **Csak ha van mit lapozni:** `Paginator->total()` (CakePHP 5 = **oldalszám**) **> 1**. Egy oldal / üres lista → az element **nem renderel** semmit.
+- Fejléc elválasztó: `$this->element('admin/index_pagination', ['leadingSep' => true])` — a `|` csak a lapozóval együtt jelenik meg (ne külön `index-header-sep` a hívás előtt).
+
 ## Gombállapotok (CakePHP 5)
 
 - Ikonok a link törzsében; `title` / `aria-label` = `__('First')` / `Previous` / `Next` / `Last`.
 - `prev()` / `next()` — `prevActive` / `prevDisabled` / `nextActive` / `nextDisabled`.
 - `first()` / `last()` — manuális disabled LI, ha `!$this->Paginator->hasPrev()` / `!$this->Paginator->hasNext()`.
-- Egy oldalon: mind a négy irány gomb disabled; középen aktív „1”.
 - Számsor: `numbers(['modulus' => 3])`.
 
 ## Lapozás + last-visited + URL

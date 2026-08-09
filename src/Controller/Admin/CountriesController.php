@@ -206,6 +206,7 @@ class CountriesController extends AppController
                 if ($this->Countries->save($country)) {
                     $newId = (int)$country->id;
                     $this->Countries->replaceVisibleCountryIds($newId, $postedExtras);
+                    $this->storeCountryLogo($country);
                     $this->rememberLastVisited('Countries', $country->id);
                     $this->Flash->success(__('The country has been saved.'));
 
@@ -277,6 +278,7 @@ class CountriesController extends AppController
                 if ($this->Countries->save($country)) {
                     if (CountryAccess::canEditFully()) {
                         $this->Countries->replaceVisibleCountryIds((int)$country->id, $selectedVisibleIds);
+                        $this->storeCountryLogo($country);
                     }
                     $this->rememberLastVisited('Countries', $country->id);
                     $this->Flash->success(__('The country has been saved.'));
@@ -495,5 +497,28 @@ class CountriesController extends AppController
             array_map('intval', $ids),
             static fn(int $id): bool => $id > 0
         )));
+    }
+
+    /**
+     * Store uploaded national association logo (PNG with transparency).
+     */
+    protected function storeCountryLogo(\App\Model\Entity\Country $country): void
+    {
+        $file = $this->request->getUploadedFile('logo_file');
+        if ($file === null || $file->getError() === UPLOAD_ERR_NO_FILE) {
+            return;
+        }
+
+        try {
+            $path = \App\Utility\CountryLogo::store((int)$country->id, $file);
+            $country->set('logo', $path);
+            $this->Countries->save($country, [
+                'fields' => ['logo'],
+                'accessibleFields' => ['logo' => true],
+                'validate' => false,
+            ]);
+        } catch (\Cake\Http\Exception\BadRequestException $e) {
+            $this->Flash->warning($e->getMessage());
+        }
     }
 }

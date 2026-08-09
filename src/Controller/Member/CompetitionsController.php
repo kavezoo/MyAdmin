@@ -7,12 +7,18 @@ use App\Controller\Concerns\IndexListCrudTrait;
 use App\Model\Table\CompetitionsTable;
 use App\Model\Table\CompetitionsUsersTable;
 use App\Model\Table\UsersTable;
+use App\Utility\AdminCountry;
+use App\Utility\AdminTranslate;
 use App\Utility\CompetitionApplication;
+use App\Utility\CompetitionBrowse;
 use App\Utility\MembershipFee;
+use ArrayIterator;
+use Cake\Datasource\Paging\PaginatedResultSet;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\I18n\DateTime;
+use Cake\ORM\Query\SelectQuery;
 
 /**
  * Member competitions — list / apply / withdraw / archive.
@@ -24,6 +30,14 @@ use Cake\I18n\DateTime;
 class CompetitionsController extends AppController
 {
     use IndexListCrudTrait;
+
+    protected const LAST_VISITED_SESSION_KEY = 'Member.lastVisited';
+
+    protected const INDEX_STATE_SESSION_KEY = 'Member.indexState';
+
+    protected int $indexLimit = 50;
+
+    protected int $indexMaxLimit = 200;
 
     protected CompetitionsTable $Competitions;
 
@@ -39,24 +53,107 @@ class CompetitionsController extends AppController
         $this->Users = $this->fetchTable('Users');
     }
 
+    protected function indexStateSessionKey(): string
+    {
+        return self::INDEX_STATE_SESSION_KEY;
+    }
+
+    protected function lastVisitedSessionKey(): string
+    {
+        return self::LAST_VISITED_SESSION_KEY;
+    }
+
+    protected function emptyPaginated(int $limit = 50): PaginatedResultSet
+    {
+        return new PaginatedResultSet(new ArrayIterator([]), [
+            'count' => 0,
+            'totalCount' => 0,
+            'perPage' => $limit,
+            'currentPage' => 1,
+            'pageCount' => 1,
+            'start' => 0,
+            'end' => 0,
+            'hasPrevPage' => false,
+            'hasNextPage' => false,
+            'requestedPage' => 1,
+        ]);
+    }
+
     /**
-     * Upcoming competitions (not ended) for the member's country.
+     * Upcoming / ongoing competitions for the selected browse country.
      *
      * @return \Cake\Http\Response|null|void
      */
     public function index()
     {
         $user = $this->currentUserRow();
-        $countryId = (int)($user['country_id'] ?? 0);
+        $homeCountryId = (int)($user['country_id'] ?? 0);
         $userId = (string)($user['id'] ?? '');
         $clubFeePaid = CompetitionApplication::memberMayApply($user);
 
-        $competitions = $this->findOpenCompetitionsForCountry($countryId);
-        $myApplications = $this->applicationsByCompetitionId($userId);
+        $browseCountryId = CompetitionBrowse::resolveCountryId(
+            $this->request,
+            $homeCountryId,
+            CompetitionBrowse::SESSION_MEMBER
+        );
+        $browseCountryOptions = CompetitionBrowse::countryOptions();
 
-        $this->set(compact('competitions', 'myApplications', 'countryId', 'clubFeePaid'));
         $this->set('title', __('Competitions'));
         $this->viewBuilder()->setVar('breadcrumb', __('Competitions'));
+
+        if ($browseCountryId < 1) {
+            $this->set('competitions', $this->emptyPaginated($this->indexLimit));
+            $this->set(compact(
+                'clubFeePaid',
+                'browseCountryId',
+                'browseCountryOptions',
+                'homeCountryId'
+            ));
+            $this->set('myApplications', []);
+            $this->set('countryId', $browseCountryId);
+
+            return;
+        }
+
+        $redirect = $this->applyIndexListState('Competitions');
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $paginateOptions = $this->indexPaginateOptionsFor($this->Competitions, [
+            'sortableFields' => [
+                'name',
+                'title',
+                'first_date_of_application',
+                'application_deadline',
+                'competition_datetime',
+            ],
+            'order' => [
+                'Competitions.first_date_of_application' => 'ASC',
+                'Competitions.application_deadline' => 'ASC',
+                'Competitions.name' => 'ASC',
+            ],
+        ]);
+
+        $query = $this->openCompetitionsQueryForCountry($browseCountryId);
+        $redirect = $this->resolveIndexPageForLastVisited('Competitions', $query, $paginateOptions);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $competitions = $this->paginate($query, $paginateOptions);
+        $this->setLastVisitedForIndex('Competitions');
+        $myApplications = $this->applicationsByCompetitionId($userId);
+
+        $this->set(compact(
+            'competitions',
+            'myApplications',
+            'clubFeePaid',
+            'browseCountryId',
+            'browseCountryOptions',
+            'homeCountryId'
+        ));
+        $this->set('countryId', $browseCountryId);
     }
 
     /**
@@ -70,21 +167,52 @@ class CompetitionsController extends AppController
         $userId = (string)($user['id'] ?? '');
         $now = DateTime::now()->format('Y-m-d H:i:s');
 
-        $rows = $userId !== ''
-            ? $this->CompetitionsUsers->find()
-                ->contain(['Competitions' => ['Clubs'], 'CompetitionsClubs' => ['Subclubs']])
-                ->where([
-                    'CompetitionsUsers.user_id' => $userId,
-                    'Competitions.end_datetime IS NOT' => null,
-                    'Competitions.end_datetime <' => $now,
-                ])
-                ->orderBy(['Competitions.end_datetime' => 'DESC'])
-                ->all()
-            : $this->CompetitionsUsers->find()->where(['1 = 0'])->all();
-
-        $this->set(compact('rows'));
         $this->set('title', __('Competition archive'));
         $this->viewBuilder()->setVar('breadcrumb', __('Archive'));
+
+        $redirect = $this->applyIndexListState('CompetitionArchive');
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        AdminTranslate::applyLocale($this->Competitions);
+        $paginateOptions = $this->indexPaginateOptionsFor($this->CompetitionsUsers, [
+            'sortableFields' => [
+                'CompetitionsUsers.id',
+                'CompetitionsUsers.status',
+                'CompetitionsUsers.result_rank',
+                'Competitions.name',
+                'Competitions.end_datetime',
+            ],
+            'order' => [
+                'Competitions.end_datetime' => 'DESC',
+            ],
+        ], [
+            'Competitions' => $this->CompetitionsUsers->Competitions->getTarget(),
+        ]);
+
+        if ($userId === '') {
+            $this->set('rows', $this->emptyPaginated((int)($paginateOptions['limit'] ?? $this->indexLimit)));
+
+            return;
+        }
+
+        $query = $this->CompetitionsUsers->find()
+            ->contain(['Competitions' => ['Clubs'], 'CompetitionsClubs' => ['Subclubs']])
+            ->where([
+                'CompetitionsUsers.user_id' => $userId,
+                'Competitions.end_datetime IS NOT' => null,
+                'Competitions.end_datetime <' => $now,
+            ]);
+
+        $redirect = $this->resolveIndexPageForLastVisited('CompetitionArchive', $query, $paginateOptions);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $rows = $this->paginate($query, $paginateOptions);
+        $this->setLastVisitedForIndex('CompetitionArchive');
+        $this->set(compact('rows'));
     }
 
     /**
@@ -94,13 +222,10 @@ class CompetitionsController extends AppController
     public function view(?string $id = null)
     {
         $user = $this->currentUserRow();
-        $countryId = (int)($user['country_id'] ?? 0);
         $userId = (string)($user['id'] ?? '');
 
-        $competition = $this->Competitions->get($id, contain: ['Clubs']);
-        if ($countryId < 1 || (int)$competition->country_id !== $countryId || !(bool)$competition->visible) {
-            throw new NotFoundException(__('Record not found.'));
-        }
+        AdminTranslate::applyLocale($this->Competitions);
+        $competition = $this->Competitions->get($id, contain: ['Clubs', 'Cities', 'Countries']);
 
         $application = null;
         if ($userId !== '') {
@@ -114,13 +239,24 @@ class CompetitionsController extends AppController
                 ->first();
         }
 
+        $hasApplication = CompetitionApplication::hasApplication($application);
+        $active = CompetitionApplication::isUpcomingOrOngoing($competition->end_datetime);
+        if (!(bool)$competition->visible || (!$active && !$hasApplication)) {
+            throw new NotFoundException(__('Record not found.'));
+        }
+
+        // Remember browse country when opening a competition from another country.
+        $compCountryId = (int)$competition->country_id;
+        if ($compCountryId > 0 && AdminCountry::isValidCountryId($compCountryId)) {
+            $this->request->getSession()->write(CompetitionBrowse::SESSION_MEMBER, $compCountryId);
+        }
+
         $canApply = CompetitionApplication::isApplicationOpen(
             $competition->first_date_of_application,
             $competition->application_deadline
-        ) && CompetitionApplication::memberMayApply($user);
+        ) && CompetitionApplication::memberMayApply($user) && $active;
         $pastDeadline = CompetitionApplication::isPastDeadline($competition->application_deadline);
-        $ended = !CompetitionApplication::isUpcomingOrOngoing($competition->end_datetime);
-        $hasApplication = CompetitionApplication::hasApplication($application);
+        $ended = !$active;
         $canEditApplication = $hasApplication && !$pastDeadline;
         $canWithdraw = $hasApplication && !$pastDeadline;
         $clubFeePaid = CompetitionApplication::memberMayApply($user);
@@ -135,6 +271,11 @@ class CompetitionsController extends AppController
             'canWithdraw',
             'clubFeePaid'
         ));
+        $this->set(
+            'competitionStaffGroups',
+            \App\Utility\CompetitionStaff::groupedDisplayPeople((string)$competition->id)
+        );
+        $this->set('feeUser', $user);
         $this->set('title', __('Competition'));
         $this->viewBuilder()->setVar('breadcrumb', __('Competitions'));
     }
@@ -150,10 +291,10 @@ class CompetitionsController extends AppController
         $this->request->allowMethod(['post']);
         $user = $this->currentUserRow();
         $userId = (string)($user['id'] ?? '');
-        $countryId = (int)($user['country_id'] ?? 0);
+        $homeCountryId = (int)($user['country_id'] ?? 0);
         $clubId = (int)($user['club_id'] ?? 0);
 
-        if ($userId === '' || $countryId < 1 || $clubId < 1) {
+        if ($userId === '' || $homeCountryId < 1 || $clubId < 1) {
             $this->Flash->error(__('Complete your club membership before applying.'));
 
             return $this->redirect(['action' => 'index']);
@@ -166,8 +307,12 @@ class CompetitionsController extends AppController
             return $this->redirect(['action' => 'view', (string)$id]);
         }
 
+        AdminTranslate::applyLocale($this->Competitions);
         $competition = $this->Competitions->get($id);
-        if ((int)$competition->country_id !== $countryId || !(bool)$competition->visible) {
+        if (
+            !(bool)$competition->visible
+            || !CompetitionApplication::isUpcomingOrOngoing($competition->end_datetime)
+        ) {
             throw new NotFoundException(__('Record not found.'));
         }
         if (!CompetitionApplication::isApplicationOpen(
@@ -177,6 +322,11 @@ class CompetitionsController extends AppController
             $this->Flash->error(__('Applications for this competition are closed.'));
 
             return $this->redirect(['action' => 'view', $competition->id]);
+        }
+
+        $compCountryId = (int)$competition->country_id;
+        if ($compCountryId > 0 && AdminCountry::isValidCountryId($compCountryId)) {
+            $this->request->getSession()->write(CompetitionBrowse::SESSION_MEMBER, $compCountryId);
         }
 
         $existing = $this->CompetitionsUsers->find()
@@ -237,7 +387,6 @@ class CompetitionsController extends AppController
         $this->request->allowMethod(['post', 'put', 'patch']);
         $user = $this->currentUserRow();
         $userId = (string)($user['id'] ?? '');
-        $countryId = (int)($user['country_id'] ?? 0);
 
         if ($userId === '') {
             $this->Flash->error(__('You must be logged in.'));
@@ -245,8 +394,9 @@ class CompetitionsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
+        AdminTranslate::applyLocale($this->Competitions);
         $competition = $this->Competitions->get($id);
-        if ((int)$competition->country_id !== $countryId || !(bool)$competition->visible) {
+        if (!(bool)$competition->visible) {
             throw new NotFoundException(__('Record not found.'));
         }
         if (CompetitionApplication::isPastDeadline($competition->application_deadline)) {
@@ -303,6 +453,7 @@ class CompetitionsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
+        AdminTranslate::applyLocale($this->Competitions);
         $application = $this->CompetitionsUsers->find()
             ->contain(['Competitions'])
             ->where([
@@ -335,34 +486,39 @@ class CompetitionsController extends AppController
     }
 
     /**
+     * Open / upcoming competitions query for a country.
+     *
+     * @return \Cake\ORM\Query\SelectQuery<\App\Model\Entity\Competition>
+     */
+    protected function openCompetitionsQueryForCountry(int $countryId): SelectQuery
+    {
+        AdminTranslate::applyLocale($this->Competitions);
+
+        $query = $this->Competitions->find()
+            ->contain(['Clubs'])
+            ->orderBy([
+                'Competitions.first_date_of_application' => 'ASC',
+                'Competitions.application_deadline' => 'ASC',
+                'Competitions.name' => 'ASC',
+            ]);
+
+        if ($countryId < 1) {
+            return $query->where(['1 = 0']);
+        }
+
+        return $query
+            ->where(['Competitions.country_id' => $countryId])
+            ->where(CompetitionBrowse::activeConditions());
+    }
+
+    /**
      * Open / upcoming competitions for a country (empty result set if country unknown).
      *
      * @return \Cake\Datasource\ResultSetInterface<\App\Model\Entity\Competition>
      */
     protected function findOpenCompetitionsForCountry(int $countryId): ResultSetInterface
     {
-        if ($countryId < 1) {
-            return $this->Competitions->find()->where(['1 = 0'])->all();
-        }
-
-        $now = DateTime::now()->format('Y-m-d H:i:s');
-
-        return $this->Competitions->find()
-            ->contain(['Clubs'])
-            ->where([
-                'Competitions.country_id' => $countryId,
-                'Competitions.visible' => true,
-                'OR' => [
-                    'Competitions.end_datetime IS' => null,
-                    'Competitions.end_datetime >=' => $now,
-                ],
-            ])
-            ->orderBy([
-                'Competitions.first_date_of_application' => 'ASC',
-                'Competitions.application_deadline' => 'ASC',
-                'Competitions.name' => 'ASC',
-            ])
-            ->all();
+        return $this->openCompetitionsQueryForCountry($countryId)->all();
     }
 
     /**

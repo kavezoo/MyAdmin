@@ -54,8 +54,7 @@ $enabledFilterQuery['page'] = '1';
 							<label class="form-check-label text-nowrap" for="applicants-enabled-only"><?= __('Only enabled applicants') ?></label>
 						</div>
 					</form>
-					<span class="index-header-sep" aria-hidden="true">|</span>
-					<?= $this->element('admin/index_pagination') ?>
+					<?= $this->element('admin/index_pagination', ['leadingSep' => true]) ?>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -146,6 +145,9 @@ $enabledFilterQuery['page'] = '1';
 						</tbody>
 					</table>
 				</div>
+			</div>
+			<div class="card-footer">
+				<?= $this->element('admin/index_footer') ?>
 			</div>
 		</div>
 	</div>

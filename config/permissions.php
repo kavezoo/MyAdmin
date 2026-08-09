@@ -87,11 +87,51 @@ return [
             'controller' => '*',
             'action' => '*',
         ],
+        // Guests assigned as competition staff
+        [
+            'role' => 'new',
+            'prefix' => 'Checkin',
+            'controller' => '*',
+            'action' => '*',
+        ],
+        [
+            'role' => 'new',
+            'prefix' => 'Judge',
+            'controller' => '*',
+            'action' => '*',
+        ],
         [
             'role' => ['member', 'editor'],
             'prefix' => 'Member',
             'controller' => '*',
             'action' => '*',
+        ],
+        // Members+ may open staff panels when assigned (AppController enforces assignment)
+        [
+            'role' => ['member', 'editor', 'clubpresident', 'president', 'vicepresident'],
+            'prefix' => 'Checkin',
+            'controller' => '*',
+            'action' => '*',
+        ],
+        [
+            'role' => ['member', 'editor', 'clubpresident', 'president', 'vicepresident'],
+            'prefix' => 'Judge',
+            'controller' => '*',
+            'action' => '*',
+        ],
+        // Flutter judge API — controller checks identity + competition_staff + staff day; JSON 401/403.
+        [
+            'prefix' => 'Api',
+            'controller' => 'CompetitionResults',
+            'action' => 'submit',
+            'bypassAuth' => true,
+        ],
+        // Public close: obfuscated competition+competitor token + POST email/time (no session).
+        [
+            'prefix' => 'Judge',
+            'controller' => 'Close',
+            'action' => 'index',
+            'bypassAuth' => true,
         ],
         [
             'role' => ['clubpresident', 'president', 'vicepresident'],

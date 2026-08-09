@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
+use App\Utility\CompetitionStaff;
+
 /**
  * Role → panel prefix home (URL / Cake route array).
  *
- * Registration.defaultRole `new` → only `/new`.
+ * Registration.defaultRole `new` → only `/new` (unless competition staff).
  */
 class RoleHome
 {
@@ -43,10 +45,33 @@ class RoleHome
     /**
      * Cake redirect URL array for Dashboard of the role's panel.
      *
+     * Guests with staff assignment land on their staff panel (first by rank).
+     *
      * @return array<string, mixed>
      */
-    public static function url(string $role): array
+    public static function url(string $role, ?string $userId = null): array
     {
+        $role = strtolower(trim($role));
+        if ($role === AppRoles::NEW && $userId !== null && $userId !== '') {
+            $staff = CompetitionStaff::assignedPrefixes($userId);
+            if ($staff !== []) {
+                $prefix = $staff[0];
+                if (strcasecmp($prefix, 'Checkin') === 0) {
+                    return [
+                        'prefix' => 'Checkin',
+                        'controller' => 'Applicants',
+                        'action' => 'index',
+                    ];
+                }
+
+                return [
+                    'prefix' => $prefix,
+                    'controller' => 'Dashboard',
+                    'action' => 'index',
+                ];
+            }
+        }
+
         $prefix = static::prefix($role);
         if ($prefix === null) {
             return ['plugin' => null, 'controller' => 'Users', 'action' => 'login'];
@@ -72,6 +97,8 @@ class RoleHome
             'clubpresident' => AppRoles::label(AppRoles::CLUBPRESIDENT),
             'president' => AppRoles::label(AppRoles::PRESIDENT),
             'admin' => __('Admin'),
+            'checkin' => __('Check-in'),
+            'judge' => __('Judge'),
             default => __('Admin'),
         };
     }
@@ -88,6 +115,8 @@ class RoleHome
             'member' => 'member/sidebar',
             'clubpresident' => 'clubpresident/sidebar',
             'president' => 'president/sidebar',
+            'checkin' => 'checkin/sidebar',
+            'judge' => 'judge/sidebar',
             default => 'admin/sidebar',
         };
     }

@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS `countries` (
   `locale` varchar(10) NOT NULL COMMENT 'Primary locale e.g. hu_HU',
   `timezone` varchar(64) NOT NULL DEFAULT 'UTC' COMMENT 'IANA timezone e.g. Europe/Budapest',
   `phone_prefix` varchar(16) NOT NULL DEFAULT '' COMMENT 'E.164 calling prefix e.g. +36',
+  `logo` varchar(255) DEFAULT NULL COMMENT 'National pipe association logo (uploads/countries/{id}.png)',
+  `currency` char(3) NOT NULL DEFAULT 'HUF' COMMENT 'ISO 4217 official currency',
   `continent_id` int(10) unsigned NOT NULL COMMENT 'FK continents.id',
   `visible` tinyint(1) NOT NULL DEFAULT 1,
   `pos` int(11) NOT NULL DEFAULT 1000,

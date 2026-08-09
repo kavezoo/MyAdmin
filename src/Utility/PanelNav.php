@@ -46,10 +46,12 @@ final class PanelNav
     {
         return match (strtolower(trim($prefix))) {
             'admin' => self::admin($request),
-            'president' => self::president(),
+            'president' => self::president($request),
             'clubpresident' => self::clubpresident(),
             'member' => self::member(),
             'new' => self::newPanel($request),
+            'checkin' => self::checkin(),
+            'judge' => self::judge(),
             default => [],
         };
     }
@@ -154,6 +156,16 @@ final class PanelNav
                 'navGroup' => self::NAV_GROUP_MAIN,
             ];
             $items[] = [
+                'title' => __('Competition text templates'),
+                'text' => __('Manage reusable, translated announcement text templates for competitions.'),
+                'url' => ['prefix' => 'Admin', 'controller' => 'CompetitionTextTemplates', 'action' => 'index'],
+                'button' => __('Go to Competition text templates'),
+                'btnClass' => 'btn-outline-primary',
+                'icon' => 'fa-file-text-o',
+                'matchControllers' => ['CompetitionTextTemplates'],
+                'navGroup' => self::NAV_GROUP_MAIN,
+            ];
+            $items[] = [
                 'title' => __('Email templates'),
                 'text' => __('Edit system email templates by language (content used when the application sends mail).'),
                 'url' => ['prefix' => 'Admin', 'controller' => 'EmailTemplates', 'action' => 'index'],
@@ -241,8 +253,21 @@ final class PanelNav
     /**
      * @return list<NavItem>
      */
-    private static function president(): array
+    private static function president(?ServerRequest $request = null): array
     {
+        $cashUrl = ['prefix' => 'President', 'controller' => 'CompetitionCash', 'action' => 'index'];
+        if ($request !== null) {
+            $selectedCashId = trim((string)$request->getSession()->read('President.CompetitionCash.competitionId'));
+            if ($selectedCashId !== '') {
+                $cashUrl = [
+                    'prefix' => 'President',
+                    'controller' => 'CompetitionCash',
+                    'action' => 'view',
+                    $selectedCashId,
+                ];
+            }
+        }
+
         return [
             [
                 'title' => __('Members'),
@@ -270,6 +295,34 @@ final class PanelNav
                 'btnClass' => 'btn-primary',
                 'icon' => 'fa-trophy',
                 'matchControllers' => ['Competitions'],
+            ],
+            [
+                'title' => __('Competition staff'),
+                'text' => __('Assign check-in desk and table judges for competitions in your country. Only assigned people may operate those desks on competition day.'),
+                'url' => ['prefix' => 'President', 'controller' => 'CompetitionStaff', 'action' => 'index'],
+                'button' => __('Go to Competition staff'),
+                'btnClass' => 'btn-primary',
+                'icon' => 'fa-id-badge',
+                'matchControllers' => ['CompetitionStaff'],
+            ],
+            [
+                'title' => __('Cash desk'),
+                'text' => __('See how much each check-in collector should have in the till for a selected competition.'),
+                'url' => $cashUrl,
+                'button' => __('Go to Cash desk'),
+                'btnClass' => 'btn-primary',
+                'icon' => 'fa-cash-register',
+                'matchControllers' => ['CompetitionCash'],
+            ],
+            [
+                'title' => __('Competition text templates'),
+                'text' => __('Manage reusable, translated announcement text templates for competitions in your country.'),
+                'url' => ['prefix' => 'President', 'controller' => 'CompetitionTextTemplates', 'action' => 'index'],
+                'button' => __('Go to Competition text templates'),
+                'btnClass' => 'btn-primary',
+                'icon' => 'fa-file-text-o',
+                'matchControllers' => ['CompetitionTextTemplates'],
+                'navGroup' => self::NAV_GROUP_MAIN,
             ],
             [
                 'title' => __('Email templates'),
@@ -315,6 +368,15 @@ final class PanelNav
                 'btnClass' => 'btn-primary',
                 'icon' => 'fa-users',
                 'matchControllers' => ['CompetitionTeams'],
+            ],
+            [
+                'title' => __('Competition staff'),
+                'text' => __('Assign check-in desk and table judges for competitions hosted by your club.'),
+                'url' => ['prefix' => 'Clubpresident', 'controller' => 'CompetitionStaff', 'action' => 'index'],
+                'button' => __('Go to Competition staff'),
+                'btnClass' => 'btn-primary',
+                'icon' => 'fa-id-badge',
+                'matchControllers' => ['CompetitionStaff'],
             ],
             [
                 'title' => __('Competition applicants'),
@@ -413,6 +475,60 @@ final class PanelNav
                 'icon' => 'fa-user',
                 'matchControllers' => ['Users'],
                 'matchActions' => ['profile', 'edit'],
+            ],
+        ];
+    }
+
+    /**
+     * @return list<NavItem>
+     */
+    private static function checkin(): array
+    {
+        return [
+            [
+                'title' => __('Applicants'),
+                'text' => __('Collect entry fees and hand out racing pipes for today’s competitions (Competition datetime day).'),
+                'url' => ['prefix' => 'Checkin', 'controller' => 'Applicants', 'action' => 'index'],
+                'button' => __('Go to Applicants'),
+                'btnClass' => 'btn-primary',
+                'icon' => 'fa-list',
+                'matchControllers' => ['Applicants', 'Dashboard'],
+            ],
+            [
+                'title' => __('Cash desk'),
+                'text' => __('Who paid and how much — compare with the till.'),
+                'url' => ['prefix' => 'Checkin', 'controller' => 'Cash', 'action' => 'index'],
+                'button' => __('Go to Cash desk'),
+                'btnClass' => 'btn-outline-primary',
+                'icon' => 'fa-cash-register',
+                'matchControllers' => ['Cash'],
+            ],
+        ];
+    }
+
+    /**
+     * @return list<NavItem>
+     */
+    private static function judge(): array
+    {
+        return [
+            [
+                'title' => __('My competitions'),
+                'text' => __('Open competitions where you are the table judge (competition day only).'),
+                'url' => ['prefix' => 'Judge', 'controller' => 'Dashboard', 'action' => 'index'],
+                'button' => __('Go to Competitions'),
+                'btnClass' => 'btn-primary',
+                'icon' => 'fa-trophy',
+                'matchControllers' => ['Dashboard', 'Competitions'],
+            ],
+            [
+                'title' => __('Results'),
+                'text' => __('Record competitor result times for today’s assigned competitions.'),
+                'url' => ['prefix' => 'Judge', 'controller' => 'Applicants', 'action' => 'index'],
+                'button' => __('Go to Results'),
+                'btnClass' => 'btn-outline-primary',
+                'icon' => 'fa-stopwatch',
+                'matchControllers' => ['Applicants'],
             ],
         ];
     }

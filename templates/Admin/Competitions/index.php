@@ -24,7 +24,6 @@ $showIdColumn = false; // UUID PK — too wide for the list
 $showVisibleColumn = true;
 $showCreatedColumn = true;
 $showModifiedColumn = true;
-$showTimestampColumn = $showCreatedColumn || $showModifiedColumn;
 $indexColspan = 8;
 if ($showIdColumn) {
 	$indexColspan++;
@@ -32,7 +31,10 @@ if ($showIdColumn) {
 if ($showVisibleColumn) {
 	$indexColspan++;
 }
-if ($showTimestampColumn) {
+if ($showCreatedColumn) {
+	$indexColspan++;
+}
+if ($showModifiedColumn) {
 	$indexColspan++;
 }
 
@@ -60,6 +62,10 @@ $config = [
 		'competition_datetime' => __('Competition date'),
 		'end_datetime' => __('End'),
 		'minimum_team_size' => __('Min. team size'),
+		'pipe_type' => __('Pipe type'),
+		'pipe_parameters' => __('Pipe parameters'),
+		'tobacco_type' => __('Tobacco type'),
+		'tobacco_weight' => __('Tobacco weight'),
 		'user_count' => __('Applicants'),
 		'visible' => __('Visible'),
 		'pos' => __('Position'),
@@ -126,8 +132,7 @@ $hasSearch = $indexSearch !== '';
 							</a>
 						<?php endif; ?>
 					</form>
-					<span class="index-header-sep" aria-hidden="true">|</span>
-					<?= $this->element('admin/index_pagination') ?>
+					<?= $this->element('admin/index_pagination', ['leadingSep' => true]) ?>
 					<?= $this->Html->link(
 						'<span class="btn-label"><i class="fa fa-plus"></i></span>' . __('New'),
 						['action' => 'add'],
@@ -143,8 +148,8 @@ $hasSearch = $indexSearch !== '';
 							<?php if ($showIdColumn): ?>
 								<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
 							<?php endif; ?>
+							<th scope="col" class="datetime competition_datetime"><?= $this->Paginator->sort('competition_datetime', __('Competition date')) ?></th>
 							<th scope="col" class="string name"><?= $this->Paginator->sort('name', __('Name')) ?></th>
-							<th scope="col" class="string title"><?= $this->Paginator->sort('title', __('Title')) ?></th>
 							<th scope="col" class="string country"><?= $this->Paginator->sort('Countries.name', __('Country')) ?></th>
 							<th scope="col" class="string club"><?= $this->Paginator->sort('Clubs.name', __('Club')) ?></th>
 							<th scope="col" class="date first_date_of_application"><?= $this->Paginator->sort('first_date_of_application', __('Application from')) ?></th>
@@ -153,10 +158,11 @@ $hasSearch = $indexSearch !== '';
 							<?php if ($showVisibleColumn): ?>
 								<th scope="col" class="boolean visible"><?= $this->Paginator->sort('visible', __('Visible')) ?></th>
 							<?php endif; ?>
-							<?php if ($showTimestampColumn): ?>
-								<th scope="col" class="datetime">
-									<?= $this->Paginator->sort('created', __('Created')) ?>
-								</th>
+							<?php if ($showCreatedColumn): ?>
+								<th scope="col" class="datetime created"><?= $this->Paginator->sort('created', __('Created')) ?></th>
+							<?php endif; ?>
+							<?php if ($showModifiedColumn): ?>
+								<th scope="col" class="datetime modified"><?= $this->Paginator->sort('modified', __('Modified')) ?></th>
 							<?php endif; ?>
 							<th scope="col" class="actions"><?= __('Actions') ?></th>
 						</tr>
@@ -178,8 +184,19 @@ $hasSearch = $indexSearch !== '';
 									<?php if ($showIdColumn): ?>
 										<td class="number id"><span class="text-muted small"><?= h(substr((string)$row->id, 0, 8)) ?></span></td>
 									<?php endif; ?>
-									<td class="string name"><?= h((string)$row->name) ?></td>
-									<td class="string title"><?= h((string)$row->title) ?></td>
+									<td class="datetime competition_datetime"><?= $row->competition_datetime ? h(\App\Utility\LocaleDateParser::format($row->competition_datetime, 'datetime_short')) : '' ?></td>
+									<td class="string name">
+										<div class="fw-bold"><?= h((string)$row->name) ?></div>
+										<?php
+										$underName = trim((string)$row->title);
+										if ($underName === '') {
+											$underName = trim((string)$row->subtitle);
+										}
+										?>
+										<?php if ($underName !== ''): ?>
+											<div class="text-muted small"><?= h($underName) ?></div>
+										<?php endif; ?>
+									</td>
 									<td class="string country"><?= h(\App\Utility\AdminCountry::label((int)$row->country_id)) ?></td>
 									<td class="string club"><?= h((string)($row->club->name ?? '')) ?></td>
 									<td class="date"><?= $row->first_date_of_application ? h(\App\Utility\LocaleDateParser::format($row->first_date_of_application, 'date')) : '' ?></td>
@@ -192,9 +209,33 @@ $hasSearch = $indexSearch !== '';
 												: '<i class="fa fa-times text-danger"></i>' ?>
 										</td>
 									<?php endif; ?>
-									<?php if ($showTimestampColumn): ?>
-										<td class="datetime">
+									<?php if ($showCreatedColumn): ?>
+										<td class="datetime created">
 											<?= $row->created ? h(\App\Utility\LocaleDateParser::format($row->created, 'datetime_short')) : '' ?>
+											<?php
+											$creatorName = $row->user
+												? \App\Auth\MembershipProfile::displayName($row->user)
+												: '';
+											?>
+											<?php if ($creatorName !== ''): ?>
+												<div class="text-muted small"><?= h($creatorName) ?></div>
+											<?php endif; ?>
+										</td>
+									<?php endif; ?>
+									<?php if ($showModifiedColumn): ?>
+										<td class="datetime modified">
+											<?= $row->modified ? h(\App\Utility\LocaleDateParser::format($row->modified, 'datetime_short')) : '' ?>
+											<?php
+											$modifierName = '';
+											if (!empty($row->modifier)) {
+												$modifierName = \App\Auth\MembershipProfile::displayName($row->modifier);
+											} elseif (!empty($row->user)) {
+												$modifierName = \App\Auth\MembershipProfile::displayName($row->user);
+											}
+											?>
+											<?php if ($modifierName !== ''): ?>
+												<div class="text-muted small"><?= h($modifierName) ?></div>
+											<?php endif; ?>
 										</td>
 									<?php endif; ?>
 									<td class="actions">

@@ -21,6 +21,7 @@ $navItems = PanelNav::forPrefix('New', $this->getRequest());
 					</a>
 				</li>
 				<?= $this->element('panel/sidebar_nav_items', ['items' => $navItems]) ?>
+				<?= $this->element('panel/switcher') ?>
 			</ul>
 			<div class="clearfix"></div>
 		</div>

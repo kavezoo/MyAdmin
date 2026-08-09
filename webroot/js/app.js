@@ -177,10 +177,9 @@
 		options = options || {};
 		var paused = App.pauseBootstrapModalFocusTraps();
 
-		return Swal.fire({
+		var fireOpts = {
 			icon: options.icon || 'question',
 			title: options.title || t('deleteTitle', 'Delete'),
-			text: options.text || t('deleteConfirm', 'Do you really want to delete the selected record?'),
 			showCancelButton: true,
 			focusCancel: true,
 			confirmButtonText: options.confirmButtonText || t('deleteButton', 'Delete'),
@@ -195,7 +194,14 @@
 					container.style.zIndex = '20000';
 				}
 			}
-		}).then(function (result) {
+		};
+		if (options.html) {
+			fireOpts.html = options.html;
+		} else {
+			fireOpts.text = options.text || t('deleteConfirm', 'Do you really want to delete the selected record?');
+		}
+
+		return Swal.fire(fireOpts).then(function (result) {
 			App.resumeBootstrapModalFocusTraps(paused);
 			if (result.isConfirmed && typeof options.onConfirm === 'function') {
 				options.onConfirm();
@@ -371,6 +377,103 @@
 		);
 	};
 
+	/**
+	 * POST delete via temporary form (when no hidden #delete-form-{id} on the page).
+	 */
+	App.submitPostDelete = function (deleteUrl, recordId) {
+		var base = String(deleteUrl || '').replace(/\/$/, '');
+		var url = base ? (base + '/' + encodeURIComponent(recordId)) : '';
+		if (!url) {
+			App.alertError(
+				(t('deleteFormNotFound', 'Delete form not found. ID: {0}')).replace('{0}', recordId)
+			);
+			return;
+		}
+		var token = $('meta[name="csrfToken"]').attr('content') || '';
+		var $form = $('<form>', { method: 'POST', action: url, 'class': 'd-none' });
+		$form.append($('<input>', { type: 'hidden', name: '_method', value: 'POST' }));
+		$form.append($('<input>', { type: 'hidden', name: '_csrfToken', value: token }));
+		$('body').append($form);
+		$form.trigger('submit');
+	};
+
+	/**
+	 * Submit the hidden delete form for a record (or POST to deleteUrl).
+	 *
+	 * @param {string|number} recordId
+	 * @param {{deleteFormPrefix?: string, deleteUrl?: string, deleteFormSelector?: string}} options
+	 */
+	App.triggerDeleteForm = function (recordId, options) {
+		options = options || {};
+		var prefix = options.deleteFormPrefix || '';
+		var deleteUrl = options.deleteUrl || '';
+
+		var submitFormEl = function (el) {
+			if (!el || String(el.tagName || '').toLowerCase() !== 'form') {
+				return false;
+			}
+			// Native submit — always posts (jQuery .trigger('submit') can no-op).
+			if (typeof el.submit === 'function') {
+				el.submit();
+				return true;
+			}
+			return false;
+		};
+
+		if (options.deleteFormSelector) {
+			var sel = String(options.deleteFormSelector);
+			var explicit = sel.charAt(0) === '#'
+				? document.getElementById(sel.slice(1))
+				: document.querySelector(sel);
+			if (submitFormEl(explicit)) {
+				return;
+			}
+		}
+
+		if (prefix) {
+			var prefixed = document.getElementById('delete-form-' + prefix + '-' + recordId);
+			if (submitFormEl(prefixed)) {
+				return;
+			}
+			if (deleteUrl) {
+				App.submitPostDelete(deleteUrl, recordId);
+				return;
+			}
+			App.alertError(
+				(t('deleteFormNotFound', 'Delete form not found. ID: {0}')).replace('{0}', recordId)
+			);
+			return;
+		}
+
+		var formEl = document.getElementById('delete-form-' + recordId);
+		if (submitFormEl(formEl)) {
+			return;
+		}
+		if (deleteUrl) {
+			App.submitPostDelete(deleteUrl, recordId);
+			return;
+		}
+
+		App.alertError(
+			(t('deleteFormNotFound', 'Delete form not found. ID: {0}')).replace('{0}', recordId)
+		);
+	};
+
+	/**
+	 * Resolve record id from a .btn-row-delete control.
+	 */
+	App.rowDeleteRecordId = function ($btn) {
+		var $row = $btn.closest('tr');
+		var recordId = $btn.attr('data-id') || ($row.length ? $row.attr('data-id') : '') || '';
+		if (!recordId) {
+			var $form = $btn.closest('form[id^="delete-form-"]');
+			if ($form.length) {
+				recordId = String($form.attr('id') || '').replace(/^delete-form-/, '');
+			}
+		}
+		return recordId;
+	};
+
 	$(function () {
 		App.initTooltips();
 
@@ -381,6 +484,75 @@
 
 		App.initScrollTop();
 		App.initFixedSidebarScroll();
+
+		// Global row / footer delete → always SweetAlert (never native confirm).
+		$(document).on('click', '.btn-row-delete', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var $btn = $(this);
+			if ($btn.prop('disabled') || $btn.hasClass('disabled') || $btn.attr('aria-disabled') === 'true') {
+				return;
+			}
+			if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+				var tip = bootstrap.Tooltip.getInstance($btn[0]);
+				if (tip) {
+					tip.hide();
+				}
+			}
+
+			var $row = $btn.closest('tr');
+			if ($row.length && $row.attr('data-can-delete') === '0') {
+				return;
+			}
+
+			var recordId = App.rowDeleteRecordId($btn);
+			var $closestForm = $btn.closest('form[id^="delete-form-"]');
+			if (!$closestForm.length) {
+				var formSel = $btn.attr('data-delete-form') || '';
+				if (formSel) {
+					$closestForm = $(formSel);
+				}
+			}
+			if (!recordId && $closestForm.length) {
+				recordId = String($closestForm.attr('id') || '').replace(/^delete-form-/, '');
+			}
+			if (!recordId && !$closestForm.length) {
+				return;
+			}
+
+			var $table = $btn.closest('table.related-records-table');
+			var deleteOpts = {};
+			if ($closestForm.length) {
+				deleteOpts.deleteFormSelector = '#' + $closestForm.attr('id');
+			}
+			if ($table.length) {
+				deleteOpts.deleteFormPrefix = $table.attr('data-delete-form-prefix') || '';
+				deleteOpts.deleteUrl = $table.attr('data-delete-url') || '';
+			} else if (App.config && App.config.deleteUrl) {
+				deleteOpts.deleteUrl = App.config.deleteUrl || '';
+			}
+
+			var swalOpts = {
+				onConfirm: function () {
+					App.triggerDeleteForm(recordId, deleteOpts);
+				}
+			};
+			var customTitle = $btn.attr('data-swal-title');
+			var customText = $btn.attr('data-swal-text');
+			var customConfirm = $btn.attr('data-swal-confirm');
+			if (customTitle) {
+				swalOpts.title = customTitle;
+			}
+			if (customText) {
+				swalOpts.text = customText;
+			}
+			if (customConfirm) {
+				swalOpts.confirmButtonText = customConfirm;
+			}
+
+			App.confirmDelete(swalOpts);
+		});
 
 		$(document).on('click', '#btn-delete', function (e) {
 			e.preventDefault();

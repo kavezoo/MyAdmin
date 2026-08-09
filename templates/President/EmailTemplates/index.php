@@ -186,8 +186,7 @@ $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 							</a>
 						<?php endif; ?>
 					</form>
-					<span class="index-header-sep" aria-hidden="true">|</span>
-					<?= $this->element('admin/index_pagination') ?>
+					<?= $this->element('admin/index_pagination', ['leadingSep' => true]) ?>
 					<?= $this->Html->link(
 						'<span class="btn-label"><i class="fa fa-plus"></i></span>' . __('New'),
 						['action' => 'add'],

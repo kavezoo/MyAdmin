@@ -111,8 +111,8 @@
 				var msg = (res && res.message) || (window.ClubpresidentMembers || {}).toggleError || 'Error';
 				if (App.alertError) {
 					App.alertError(msg);
-				} else {
-					window.alert(msg);
+				} else if (App.alert) {
+					App.alert({ icon: 'error', text: msg });
 				}
 			}
 		}).fail(function () {
@@ -120,8 +120,8 @@
 			var msg = (window.ClubpresidentMembers || {}).toggleError || 'Error';
 			if (App.alertError) {
 				App.alertError(msg);
-			} else {
-				window.alert(msg);
+			} else if (App.alert) {
+				App.alert({ icon: 'error', text: msg });
 			}
 		});
 	}

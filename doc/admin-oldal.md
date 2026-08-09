@@ -110,6 +110,7 @@ Ezeket tedd a `MyAdmin.config`-ba is (`rowDoubleClickAction`, URL-ek, `recordFie
 | Osztály(ok) | Tartalom | Szélesség | Megjegyzés |
 |-------------|----------|-----------|------------|
 | `string` | név, cím, … | rugalmas | kitölti a maradékot |
+| `string col-label` | DB `label` mező | rugalmas | **tilos** class `label` (ValiAdmin badge) — rule `admin-index-column-classes.mdc` |
 | `string continent` | földrész (Countries) | `10.5rem` | [countries-admin.md](countries-admin.md) |
 | `string iso2` | ISO kód | `5rem` | Countries |
 | `string locale` | nyelvi kód | `8.5rem` | Countries |

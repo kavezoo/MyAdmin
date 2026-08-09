@@ -39,13 +39,13 @@ class AdminTranslate
     }
 
     /**
-     * Apply UI locale to all known Translate tables (Countries, Continents, Setups).
+     * Apply UI locale to all known Translate tables (Countries, Continents, Setups, Competitions).
      *
      * @param list<string>|null $aliases
      */
     public static function applyLocales(?array $aliases = null, ?string $locale = null): void
     {
-        $aliases ??= ['Countries', 'Continents', 'Setups'];
+        $aliases ??= ['Countries', 'Continents', 'Setups', 'Competitions'];
         $locator = TableRegistry::getTableLocator();
         foreach ($aliases as $alias) {
             if (!is_string($alias) || $alias === '') {

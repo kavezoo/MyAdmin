@@ -5,6 +5,8 @@ namespace App\Controller\Clubpresident;
 
 use App\Auth\AppRoles;
 use App\Auth\MembershipProfile;
+use App\Utility\CompetitionApplication;
+use App\Utility\CompetitionBrowse;
 
 /**
  * Club president panel dashboard.
@@ -15,6 +17,7 @@ class DashboardController extends AppController
     {
         $clubId = $this->presidentClubId();
         $pendingApplicantsCount = 0;
+        $pendingCompetitionApplicantsCount = 0;
 
         if ($clubId > 0) {
             /** @var \App\Model\Table\UsersTable $users */
@@ -27,10 +30,34 @@ class DashboardController extends AppController
                     'Users.enabled' => 1,
                 ])
             )->count();
+
+            $memberIds = $users->find()
+                ->select(['id'])
+                ->where(['Users.club_id' => $clubId])
+                ->all()
+                ->extract('id')
+                ->toList();
+
+            if ($memberIds !== []) {
+                /** @var \App\Model\Table\CompetitionsUsersTable $competitionsUsers */
+                $competitionsUsers = $this->fetchTable('CompetitionsUsers');
+                $pendingCompetitionApplicantsCount = $competitionsUsers->find()
+                    ->innerJoinWith('Competitions')
+                    ->where([
+                        'CompetitionsUsers.user_id IN' => $memberIds,
+                        'CompetitionsUsers.status' => CompetitionApplication::STATUS_PENDING,
+                    ])
+                    ->where(CompetitionBrowse::activeConditions())
+                    ->count();
+            }
         }
 
         $this->set('title', __('Dashboard'));
         $this->set('breadcrumb', __('Dashboard'));
-        $this->set(compact('clubId', 'pendingApplicantsCount'));
+        $this->set(compact(
+            'clubId',
+            'pendingApplicantsCount',
+            'pendingCompetitionApplicantsCount'
+        ));
     }
 }

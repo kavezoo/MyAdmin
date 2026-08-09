@@ -32,6 +32,7 @@ A panel CRUD **nem** váltja ki az Admin CRUD-ot. Admin user a `/admin` menübő
 | Users | `Admin\Users` (vagy Members) | `users` | Club (belongsTo link); applications ha van |
 | Clubs | `Admin\Clubs` | `clubs` | **Users** (Members); Competitions ha asszoc. |
 | Competitions | `Admin\Competitions` | `competitions` | Sub-teams, Applicants (min. létszám szabály: [competitions.md](competitions.md)) |
+| Competition text templates | `Admin\CompetitionTextTemplates` | `competition_text_templates` | — |
 | Email templates | `Admin\EmailTemplates` | `email_templates` | — |
 | Competition teams | nested vagy `Admin\CompetitionTeams` | `competitions_clubs` | Applicants |
 | Continents | opcionális | `continents` | Countries |

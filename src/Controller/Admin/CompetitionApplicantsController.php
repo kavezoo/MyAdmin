@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Model\Table\CompetitionsUsersTable;
+use App\Utility\AdminTranslate;
 use App\Utility\CompetitionApplication;
 use App\Utility\LocaleDateParser;
 use App\Utility\LocaleNumberParser;
@@ -157,6 +158,7 @@ class CompetitionApplicantsController extends AppController
             throw new NotFoundException(__('Record not found.'));
         }
 
+        AdminTranslate::applyLocale($this->CompetitionsUsers->Competitions->getTarget());
         $app = $this->CompetitionsUsers->find()
             ->contain([
                 'Users',

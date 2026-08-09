@@ -24,7 +24,7 @@ Ez a fájl a **részletes viselkedési specifikáció**: layout, asset, index/fo
 
 **Sidebar (örök):** `.main-sidebar.left` = **`position: fixed`** (header alatt, viewport magasság); a tartalom görgetése **nem** mozdítja el. A menü saját scrollbarja: `.sidebar-inner` (`overflow-y: auto` + `overscroll-behavior: contain`) — csak ha a kurzor a sidebar fölött van / a menü magasabb a viewportnál. JS: `MyAdmin.initFixedSidebarScroll()` (wheel a sidebar fölött nem görgeti a tartalmat). Összecsukott (enlarged) módban overflow visible a flyout almenük miatt. CSS: `webroot/css/style.css`.
 
-**Nem** kerül a layoutba: Select2, Trumbowyg, Tempus Dominus, inputmask, page CSS/JS.
+**Nem** kerül a layoutba: Select2, Summernote, Tempus Dominus, inputmask, page CSS/JS.
 
 ### Template — oldalspecifikus
 
@@ -46,11 +46,15 @@ $this->Html->script([...], ['block' => 'scriptBottom']);
 | **index** (lista) | `pages/index` | `pages/index` + `MyAdmin.config` (URL-ek, field label-ek) |
 | **form** (add/edit) | tempus-dominus, select2, select2-bootstrap5, `pages/form` | popper, tempus-dominus, inputmask, select2, `pages/form` |
 | **view** | `pages/index` (record-view + related tabs) | `pages/index` JS + `MyAdmin.config` (`rowDoubleClickAction`, `entityFieldLabels`) + `modal_linked_record_view` |
-| WYSIWYG / Prism | **csak** ha van `.editor` mező a formon | trumbowyg + pluginek (**a CRUD `form.php` tetején** betöltve) |
+| WYSIWYG / Prism | **csak** ha van `.editor` mező a formon | Summernote (**JeffAdmin5**) — `element/admin/form_summernote_assets` + `pages/form.js` (**a CRUD `form.php` tetején** betöltve) |
 
-Trumbowyg / WYSIWYG **csak** akkor a form templateben, ha van `.editor` mező.  
-Init: `pages/form.js` (JeffAdmin5-kompatibilis gombkészlet). HTML tartalom → `.editor`; plain text → sima textarea.  
+Summernote / WYSIWYG **csak** akkor a form templateben, ha van `.editor` mező.
+Assetek: `$this->element('admin/form_summernote_assets');` — [zsfoto/jeffadmin5](https://packagist.org/packages/zsfoto/jeffadmin5) Summernote 0.8.18 lite + `hu-HU` lang.
+Init: `pages/form.js` — JeffAdmin5 minta (`jeffAdminInitSummerNote` ekvivalens): alap **height 400**, **`tabsize: 2`**, nyelv **`hu-HU`** (vagy `document.documentElement.lang` alapján). Opcionális magasság: `data-editor-height` attribútum vagy `.editor-tall` osztály (520 px). HTML tartalom → `.editor` textarea; plain text → sima textarea.
+**`<style>` megőrzés:** Summernote `codeviewFilter: false` — forrás HTML / `<style>` blokkok megmaradnak mentés után.
+**Megjelenítés:** soha ne echo-zd Bootstrap `bg-light` wrapperbe — `element/admin/html_content` (iframe `srcdoc`), hogy az embedded CSS / színek ne az Admin layouttól örököljenek. Index modal: `pages/index.js` `renderTrustedHtmlFrame`.
 **Form markup:** mindig `templates/{Prefix}/{Controller}/form.php` — ne találj ki form-field elementeket.
+**Verseny / sablon formok:** JeffAdmin5 card-header TAB — „Basic data” + „Description”; leírás külön fülön, magas editor (`editor-tall`, `data-editor-height="520"`).
 
 ## JavaScript API — `window.MyAdmin`
 
@@ -233,6 +237,10 @@ Lapozó részletek: lásd **Lapozó (paginator)** alább. Fejlécben / keresőn�
 ### Lapozó (paginator) — kötelező
 
 Agent rule: `.cursor/rules/admin-paginator.mdc`.
+
+**Láthatóság:** az `admin/index_pagination` **csak akkor** jelenik meg, ha `Paginator->total()` (CakePHP 5 = **oldalszám**) **> 1**. Egy oldal vagy üres lista → nincs lapozó UI (fejlécben és footerben sem).
+
+**Fejléc `|` elválasztó:** ha a lapozó előtt elválasztó kell, `['leadingSep' => true]` — ne külön `index-header-sep` a hívás előtt (különben 1 oldalnál „árva” `|` maradna).
 
 **Sorrend:** « → ‹ → oldalszámok → › → » (FA: `fa-angle-double-left` / `fa-angle-left` / `fa-angle-right` / `fa-angle-double-right`).
 
@@ -456,7 +464,7 @@ $query->orderBy(['Model.id' => 'ASC']);
 | `pos` | pozíció (max ~5 jegy + locale ezres) | `5.5rem` | MyAdmin; érték = **DB DEFAULT** (`UsesDatabaseColumnDefaultsTrait`) |
 | `number` (pl. `.szam`, nem id/pos/count) | általános szám | `6.5rem` | MyAdmin (minta: csak `nowrap`) |
 | `currency` / `netto` | pénz (összeg + pénznem) | `12rem` | MyAdmin; **`formatCurrency()`** (HUF, ICU pozíció) |
-| `count` | `*_count` | `min-width: 15rem` (`width: 1%`) | **MyPluginTemplate**; hosszú címke + sort; tábla cellában a fix `width`/`max-width` gyakran nem tart; **0 / null → üres** (`formatCount`) |
+| `count` | `*_count` | `min-width: 8rem`, `max-width: 14rem`, `width: 1%` | fejléc címke **törhet**; **`td` tartalom nowrap**; `0` / null → üres (`formatCount`) |
 | `boolean` / `logikai` / `visible` / `valid` | logikai | `7.5rem` | **MyPluginTemplate** (`.visible`/`.valid`) |
 | `date` | dátum | `8.5rem` | **MyPluginTemplate** |
 | `datetime` | dátum+idő | `10.5rem` | **MyPluginTemplate** |
@@ -466,7 +474,11 @@ $query->orderBy(['Model.id' => 'ASC']);
 
 Szabály: **szám / pénz / logikai / id / pos / count / dátum-idő** oszlopok kötött / min szélességűek; **szöveges** (`string`) oszlopok általában rugalmasak — kivétel pl. Countries `.iso2` / `.locale` / `.continent` ([countries-admin.md](countries-admin.md)).
 
-**`.count` tanulság:** tábla cellán a sima `width`+`max-width` rem **összezsugorodhat**. Használd: `width: 1%` + `min-width: 15rem` + `max-width: none`; erősítsd `pages/index.css` `.index-data-table th.count`-tal; hosszú címkénél (Felhasználók száma) inline `min-width` OK. A sort link: `width: max-content`, ne `width: 100%` zsugorítással.
+**Tilos mezőnév = CSS osztály, ha globális stílus ütközik:** a ValiAdmin **`.label`** = badge (fehér szöveg). A DB `label` mező indexen → **`string col-label`**, **soha** ne `class="… label"`. Ugyanígy kerülendő: `badge`, `btn`, `row`, `container`, … Rule: `admin-index-column-classes.mdc`. Tanulság: [minta-tanulsagok.md](minta-tanulsagok.md).
+
+**`.count` tanulság:** tábla cellán a sima `width`+`max-width` rem **összezsugorodhat**. Használd: `width: 1%` + `min-width` + erősítés `pages/index.css` `.index-data-table th.count`-tal. Fejléc sort link: **törhető** (`white-space: normal`), ne `max-content` / `nowrap` (különben kilóg). **`td` tartalom** fix szélességű oszlopokban mindig **`nowrap`** — csak a címke törhet.
+
+**Fejléc sort linkek:** alapból törhetők (`.table thead th > a`); nagyon rövid oszlopok (`id`, `pos`, `boolean`, `visible`, `iso2`, `actions`) sort linkje marad `nowrap`. Cellatartalom (`td`) a kötött szélességű oszlopokban **nem** törhet.
 
 CSS: `webroot/css/style.css` (+ index: `webroot/css/pages/index.css`). Minta forrás: `MyPluginTemplate/assets/css/style.css` (ahol van `width`).
 

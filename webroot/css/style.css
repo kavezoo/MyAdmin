@@ -41,6 +41,8 @@ a {
 label {
   font-weight: 500; }
 
+/* ValiAdmin / Bootstrap-legacy badge — NE használd index th/td osztályként (ütközik a mezőnévvel).
+ * Index oszlop a `label` mezőhöz: `string col-label` (nem `label`). */
 .label {
   display: inline-block;
   padding: 0.2em 0.6em;
@@ -54,6 +56,22 @@ label {
 
 .label:empty {
   display: none; }
+
+/* Ha mégis maradt .label a táblában: ne örökölje a badge kinézetet */
+.table th.label,
+.table td.label,
+.table th.col-label,
+.table td.col-label {
+  display: table-cell;
+  padding: 0.5rem 0.5rem;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-align: inherit;
+  white-space: inherit;
+  vertical-align: middle;
+  border-radius: 0;
+}
 
 img {
     vertical-align: middle; 
@@ -1982,6 +2000,108 @@ a.btn:focus {
   border: 1px solid #6c757d !important;
 }
 
+/* Trumbowyg: alsó fogantyús átméretezés — alapból nő a tartalommal, nincs belső „ketrec” */
+.trumbowyg-box:not(.trumbowyg-fullscreen) {
+  position: relative;
+  overflow: visible;
+  min-height: 280px;
+  height: auto;
+  padding-bottom: 8px;
+}
+
+.trumbowyg-box:not(.trumbowyg-fullscreen) .trumbowyg-editor {
+  min-height: 220px;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  resize: none;
+}
+
+/* Ha a user húzta a fogantyút (inline height), a tartalom a dobozon belül görgethető */
+.trumbowyg-box.trumbowyg-resized:not(.trumbowyg-fullscreen) {
+  overflow: hidden;
+}
+
+.trumbowyg-box.trumbowyg-resized:not(.trumbowyg-fullscreen) .trumbowyg-editor {
+  height: calc(100% - 45px);
+  min-height: 0;
+  overflow: auto;
+}
+
+/* HTML / forrás nézet: a textarea legyen látható és töltse ki a dobozt */
+.trumbowyg-box.trumbowyg-editor-hidden:not(.trumbowyg-fullscreen) .trumbowyg-textarea {
+  display: block !important;
+  width: 100% !important;
+  min-height: 220px !important;
+  height: auto !important;
+  opacity: 1 !important;
+  padding: 20px !important;
+  background: #fff;
+  overflow: auto;
+  resize: none;
+}
+
+.trumbowyg-box.trumbowyg-resized.trumbowyg-editor-hidden:not(.trumbowyg-fullscreen) .trumbowyg-textarea {
+  height: calc(100% - 45px) !important;
+  min-height: 0 !important;
+}
+
+.trumbowyg-resize-handle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8px;
+  z-index: 12;
+  cursor: ns-resize;
+  touch-action: none;
+  background: #ecf0f1;
+  border-top: 1px solid #d7e0e2;
+}
+
+.trumbowyg-resize-handle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 3px;
+  margin: -1.5px 0 0 -18px;
+  border-radius: 2px;
+  background: #adb5bd;
+}
+
+.trumbowyg-box.trumbowyg-resizing {
+  user-select: none;
+}
+
+.trumbowyg-box.trumbowyg-resizing .trumbowyg-resize-handle::after {
+  background: #6c757d;
+}
+
+.trumbowyg-box.trumbowyg-fullscreen {
+  padding-bottom: 0;
+}
+
+.trumbowyg-box.trumbowyg-fullscreen .trumbowyg-resize-handle {
+  display: none;
+}
+
+/* Trusted HTML (editor content) — iframe isolates embedded <style> from Admin CSS */
+.html-content-frame {
+  display: block;
+  width: 100%;
+  min-height: 5rem;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  background: #fff;
+}
+
+.html-content-frame--tall,
+.html-content-frame--modal {
+  max-height: 28rem;
+}
+
 .select2-with-add {
   display: flex;
   align-items: stretch;
@@ -2095,7 +2215,7 @@ a.btn:focus {
   border-bottom: 2px solid #adb5bd !important;
   vertical-align: bottom;
   text-align: left;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .table thead tr th.datetime.created.modified {
@@ -2171,8 +2291,11 @@ a.record-modal-link:hover,
   width: 4.75rem;
   min-width: 4.75rem;
   max-width: 4.75rem;
-  white-space: nowrap;
   box-sizing: border-box;
+}
+
+.table td.id {
+  white-space: nowrap;
 }
 
 /* Position — max ~5 digits + locale thousand (MyAdmin; minta: nincs külön .pos) */
@@ -2181,8 +2304,11 @@ a.record-modal-link:hover,
   width: 5.5rem;
   min-width: 5.5rem;
   max-width: 5.5rem;
-  white-space: nowrap;
   box-sizing: border-box;
+}
+
+.table td.pos {
+  white-space: nowrap;
 }
 
 /* Általános szám (pl. .szam) — fix; .id/.pos/.count külön */
@@ -2191,8 +2317,11 @@ a.record-modal-link:hover,
   width: 6.5rem;
   min-width: 6.5rem;
   max-width: 6.5rem;
-  white-space: nowrap;
   box-sizing: border-box;
+}
+
+.table td.number:not(.id):not(.pos):not(.count) {
+  white-space: nowrap;
 }
 
 /* Pénznem — fix; ~4–5 jegy plusz a korábbi 8.5rem-hez képest (összeg + HUF) */
@@ -2201,8 +2330,11 @@ a.record-modal-link:hover,
   width: 12rem;
   min-width: 12rem;
   max-width: 12rem;
-  white-space: nowrap;
   box-sizing: border-box;
+}
+
+.table td.currency {
+  white-space: nowrap;
 }
 
 .table th.id > a,
@@ -2221,6 +2353,9 @@ a.record-modal-link:hover,
   width: 8.5rem;
   min-width: 8.5rem;
   max-width: 8.5rem;
+}
+
+.table td.date {
   white-space: nowrap;
 }
 
@@ -2229,6 +2364,9 @@ a.record-modal-link:hover,
   width: 10.5rem;
   min-width: 10.5rem;
   max-width: 10.5rem;
+}
+
+.table td.datetime {
   white-space: nowrap;
 }
 
@@ -2237,6 +2375,9 @@ a.record-modal-link:hover,
   width: 5rem;
   min-width: 5rem;
   max-width: 5rem;
+}
+
+.table td.time:not(.times) {
   white-space: nowrap;
 }
 
@@ -2245,25 +2386,34 @@ a.record-modal-link:hover,
   width: 9rem;
   min-width: 9rem;
   max-width: 9rem;
+}
+
+.table td.times {
   white-space: nowrap;
 }
 
-/* MyPluginTemplate: .count — hosszú címke (pl. Felhasználók száma) + sort ikon
- * width:1% + min-width: tábla cellákban a sima width/max-width gyakran összezsugorodik. */
+/* .count — fejléc címke törhet; cellatartalom egy sorban marad */
 .table th.count,
 .table td.count {
   width: 1%;
-  min-width: 15rem;
-  max-width: none;
-  white-space: nowrap;
+  min-width: 8rem;
+  max-width: 14rem;
   box-sizing: border-box;
 }
 
+.table th.count {
+  white-space: normal;
+}
+
+.table td.count {
+  white-space: nowrap;
+}
+
 .table th.count > a {
-  width: max-content !important;
-  max-width: none !important;
-  min-width: max-content;
-  flex-shrink: 0;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0;
+  white-space: normal;
 }
 
 /* Countries: endonym (native script name) */
@@ -2272,14 +2422,21 @@ a.record-modal-link:hover,
   width: 12rem;
   min-width: 12rem;
   max-width: 14rem;
-  white-space: nowrap;
   box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.table td.endonim {
+  white-space: nowrap;
+}
+
+.table th.endonim {
+  white-space: normal;
+}
+
 .table th.endonim > a {
-  justify-content: flex-start;
+  white-space: normal;
 }
 
 /* Countries: ISO (2 betű) + címke + sort */
@@ -2288,9 +2445,12 @@ a.record-modal-link:hover,
   width: 5rem;
   min-width: 5rem;
   max-width: 5rem;
-  white-space: nowrap;
   box-sizing: border-box;
   text-align: center;
+}
+
+.table td.iso2 {
+  white-space: nowrap;
 }
 
 /* Countries: locale (pl. hu_HU) + címke (Nyelvi kód) + sort */
@@ -2299,13 +2459,16 @@ a.record-modal-link:hover,
   width: 8.5rem;
   min-width: 8.5rem;
   max-width: 8.5rem;
-  white-space: nowrap;
   box-sizing: border-box;
   text-align: center;
 }
 
+.table td.locale {
+  white-space: nowrap;
+}
+
 .table th.locale > a {
-  justify-content: center;
+  text-align: center;
 }
 
 /* Countries: földrész (Földrész / Észak-Amerika) + sort */
@@ -2314,8 +2477,11 @@ a.record-modal-link:hover,
   width: 10.5rem;
   min-width: 10.5rem;
   max-width: 10.5rem;
-  white-space: nowrap;
   box-sizing: border-box;
+}
+
+.table td.continent {
+  white-space: nowrap;
 }
 
 .table th.iso2 > a,
@@ -2344,8 +2510,13 @@ a.record-modal-link:hover,
   width: 7.5rem;
   min-width: 7.5rem;
   max-width: 7.5rem;
-  white-space: nowrap;
   box-sizing: border-box;
+}
+
+.table td.boolean,
+.table td.visible,
+.table td.valid {
+  white-space: nowrap;
 }
 
 .table td.created,
@@ -2356,11 +2527,11 @@ a.record-modal-link:hover,
 .table thead th > a {
   color: inherit;
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  gap: 0.35rem;
-  width: max-content;
+  display: block;
+  white-space: normal;
+  overflow-wrap: break-word;
+  line-height: 1.25;
+  width: 100%;
   max-width: 100%;
 }
 
@@ -2377,8 +2548,19 @@ a.record-modal-link:hover,
   line-height: 1;
   display: inline-block;
   float: none;
-  margin: 0;
-  flex: 0 0 auto;
+  margin: 0 0 0 0.35rem;
+  vertical-align: baseline;
+}
+
+/* Rövid / fix oszlopok: a fejléc címke maradjon egy sorban */
+.table th.id > a,
+.table th.pos > a,
+.table th.boolean > a,
+.table th.visible > a,
+.table th.iso2 > a,
+.table th.actions > a {
+  white-space: nowrap;
+  overflow-wrap: normal;
 }
 
 /* Szöveges oszlopok: A-Z / Z-A */

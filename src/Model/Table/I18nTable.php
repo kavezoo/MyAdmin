@@ -49,7 +49,8 @@ class I18nTable extends Table
             ->notEmptyString('model');
 
         $validator
-            ->integer('foreign_key')
+            ->scalar('foreign_key')
+            ->maxLength('foreign_key', 36)
             ->requirePresence('foreign_key', 'create')
             ->notEmptyString('foreign_key');
 

@@ -12,7 +12,7 @@ if ($panelSwitcherLinks === []) {
 ?>
 <li class="submenu panel-switcher">
 	<a href="#">
-		<i class="fa fa-fw fa-exchange"></i><span> <?= __('Roles') ?> </span><span class="menu-arrow"></span>
+		<i class="fa fa-fw fa-exchange"></i><span> <?= __('Role switch') ?> </span><span class="menu-arrow"></span>
 	</a>
 	<ul class="list-unstyled">
 		<?php

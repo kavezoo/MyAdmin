@@ -6,7 +6,9 @@ namespace App\Controller\Clubpresident;
 use App\Auth\MembershipProfile;
 use App\Model\Table\CompetitionsClubsTable;
 use App\Model\Table\CompetitionsUsersTable;
+use App\Utility\AdminTranslate;
 use App\Utility\CompetitionApplication;
+use App\Utility\CompetitionBrowse;
 use App\Utility\LocaleDateParser;
 use App\Utility\LocaleNumberParser;
 use Cake\Event\EventInterface;
@@ -21,6 +23,14 @@ use Cake\Http\Response;
  */
 class CompetitionApplicantsController extends AppController
 {
+    protected const LAST_VISITED_SESSION_KEY = 'Clubpresident.lastVisited';
+
+    protected const INDEX_STATE_SESSION_KEY = 'Clubpresident.indexState';
+
+    protected int $indexLimit = 50;
+
+    protected int $indexMaxLimit = 200;
+
     protected CompetitionsUsersTable $CompetitionsUsers;
 
     protected CompetitionsClubsTable $CompetitionsClubs;
@@ -30,6 +40,16 @@ class CompetitionApplicantsController extends AppController
         parent::initialize();
         $this->CompetitionsUsers = $this->fetchTable('CompetitionsUsers');
         $this->CompetitionsClubs = $this->fetchTable('CompetitionsClubs');
+    }
+
+    protected function indexStateSessionKey(): string
+    {
+        return self::INDEX_STATE_SESSION_KEY;
+    }
+
+    protected function lastVisitedSessionKey(): string
+    {
+        return self::LAST_VISITED_SESSION_KEY;
     }
 
     public function beforeRender(EventInterface $event): void
@@ -43,7 +63,7 @@ class CompetitionApplicantsController extends AppController
     }
 
     /**
-     * All applications from this club's members, assignable to sub-teams.
+     * Applications from this club's members for active competitions in the browse country.
      *
      * @return \Cake\Http\Response|null|void
      */
@@ -56,6 +76,15 @@ class CompetitionApplicantsController extends AppController
         $this->set('canEdit', true);
         $this->set('canDelete', true);
 
+        $club = $this->fetchTable('Clubs')->get($clubId);
+        $homeCountryId = (int)($club->country_id ?? 0);
+        $browseCountryId = CompetitionBrowse::resolveCountryId(
+            $this->request,
+            $homeCountryId,
+            CompetitionBrowse::SESSION_CLUBPRESIDENT_APPLICANTS
+        );
+        $browseCountryOptions = CompetitionBrowse::countryOptions();
+
         $memberIds = $this->fetchTable('Users')->find()
             ->select(['id'])
             ->where(['Users.club_id' => $clubId])
@@ -65,6 +94,9 @@ class CompetitionApplicantsController extends AppController
 
         $groups = [];
         $teamOptionsByCompetition = [];
+
+        AdminTranslate::applyLocale($this->CompetitionsClubs->Competitions->getTarget());
+        AdminTranslate::applyLocale($this->CompetitionsUsers->Competitions->getTarget());
 
         $teams = $this->CompetitionsClubs->find()
             ->contain(['Subclubs', 'Competitions'])
@@ -82,8 +114,33 @@ class CompetitionApplicantsController extends AppController
             $teamOptionsByCompetition[$cid][(string)$team->id] = $label;
         }
 
-        if ($memberIds !== []) {
-            $applicants = $this->CompetitionsUsers->find()
+        $redirect = $this->applyIndexListState('CompetitionApplicants');
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $paginateOptions = $this->indexPaginateOptionsFor($this->CompetitionsUsers, [
+            'sortableFields' => [
+                'CompetitionsUsers.id',
+                'CompetitionsUsers.created',
+                'CompetitionsUsers.status',
+                'Competitions.name',
+                'Competitions.application_deadline',
+                'Users.last_name',
+                'Users.first_name',
+            ],
+            'order' => [
+                'Competitions.application_deadline' => 'DESC',
+                'Competitions.name' => 'ASC',
+                'CompetitionsUsers.created' => 'ASC',
+            ],
+        ], [
+            'Competitions' => $this->CompetitionsUsers->Competitions->getTarget(),
+            'Users' => $this->CompetitionsUsers->Users->getTarget(),
+        ]);
+
+        if ($memberIds !== [] && $browseCountryId > 0) {
+            $query = $this->CompetitionsUsers->find()
                 ->contain([
                     'Users',
                     'Competitions',
@@ -91,13 +148,17 @@ class CompetitionApplicantsController extends AppController
                 ])
                 ->where([
                     'CompetitionsUsers.user_id IN' => $memberIds,
+                    'Competitions.country_id' => $browseCountryId,
                 ])
-                ->orderBy([
-                    'Competitions.application_deadline' => 'DESC',
-                    'Competitions.name' => 'ASC',
-                    'CompetitionsUsers.created' => 'ASC',
-                ])
-                ->all();
+                ->where(CompetitionBrowse::activeConditions());
+
+            $redirect = $this->resolveIndexPageForLastVisited('CompetitionApplicants', $query, $paginateOptions);
+            if ($redirect !== null) {
+                return $redirect;
+            }
+
+            $applicants = $this->paginate($query, $paginateOptions);
+            $this->setLastVisitedForIndex('CompetitionApplicants');
 
             foreach ($applicants as $app) {
                 $competitionId = (string)$app->competition_id;
@@ -109,9 +170,19 @@ class CompetitionApplicantsController extends AppController
                 }
                 $groups[$competitionId]['applicants'][] = $app;
             }
+        } else {
+            $applicants = $this->emptyPaginated($this->indexLimit);
         }
 
-        $this->set(compact('groups', 'teamOptionsByCompetition', 'clubId'));
+        $this->set(compact(
+            'groups',
+            'applicants',
+            'teamOptionsByCompetition',
+            'clubId',
+            'browseCountryId',
+            'browseCountryOptions',
+            'homeCountryId'
+        ));
     }
 
     /**
@@ -229,6 +300,7 @@ class CompetitionApplicantsController extends AppController
     public function edit(?string $id = null)
     {
         $clubId = $this->presidentClubId();
+        AdminTranslate::applyLocale($this->CompetitionsUsers->Competitions->getTarget());
         $app = $this->CompetitionsUsers->find()
             ->contain([
                 'Users',
@@ -284,6 +356,7 @@ class CompetitionApplicantsController extends AppController
         $this->request->allowMethod(['get']);
         $clubId = $this->presidentClubId();
 
+        AdminTranslate::applyLocale($this->CompetitionsUsers->Competitions->getTarget());
         $app = $this->CompetitionsUsers->find()
             ->contain([
                 'Users',

@@ -94,6 +94,7 @@ final class CompetitionApplication
     {
         return [
             'lunch_for_the_attendant' => (int)($data['lunch_for_the_attendant'] ?? 0),
+            'companion_count' => (int)($data['companion_count'] ?? 0),
             'special_lunch' => trim((string)($data['special_lunch'] ?? '')),
             'racing_pipe_1_qty' => (int)($data['racing_pipe_1_qty'] ?? 0),
             'racing_pipe_2_qty' => (int)($data['racing_pipe_2_qty'] ?? 0),
@@ -169,6 +170,17 @@ final class CompetitionApplication
         }
 
         return $todayStr > $deadlineStr;
+    }
+
+    /**
+     * Competition announcement / CRUD content is read-only after application_deadline
+     * (the day after the deadline; deadline day itself stays editable).
+     */
+    public static function isContentLocked(
+        Date|DateTime|string|null $deadline,
+        Date|DateTime|string|null $today = null,
+    ): bool {
+        return static::isPastDeadline($deadline, $today);
     }
 
     public static function toDateString(Date|DateTime|string|null $value): string

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use App\Auth\AppRoles;
+use App\Utility\CompetitionStaff;
 use Cake\Http\Response;
 use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
@@ -12,10 +13,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Role `new` may only use the `/new` panel and own profile / auth actions.
- *
- * Used after club switch (session role reset to `new`) until president approves
- * membership and the user logs in again with role `member`.
+ * Role `new` may only use `/new`, own profile / auth, and assigned staff prefixes.
  */
 class RestrictNewRoleMiddleware implements MiddlewareInterface
 {
@@ -32,8 +30,6 @@ class RestrictNewRoleMiddleware implements MiddlewareInterface
     ];
 
     /**
-     * Users controller actions reachable without the New prefix.
-     *
      * @var list<string>
      */
     protected const ALLOWED_USER_ACTIONS = [
@@ -89,6 +85,19 @@ class RestrictNewRoleMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
+        if (PanelAccess::isStaffPrefix($prefix)) {
+            $staffRole = CompetitionStaff::staffRoleForPrefix($prefix);
+            $userId = '';
+            if (method_exists($identity, 'getIdentifier')) {
+                $userId = (string)$identity->getIdentifier();
+            } elseif (method_exists($identity, 'get')) {
+                $userId = (string)($identity->get('id') ?? '');
+            }
+            if ($staffRole !== null && $userId !== '' && CompetitionStaff::userHasStaffRole($staffRole, $userId)) {
+                return $handler->handle($request);
+            }
+        }
+
         $plugin = (string)($request->getParam('plugin') ?? '');
         $controller = strtolower((string)$request->getParam('controller'));
         $action = strtolower((string)$request->getParam('action'));
@@ -97,11 +106,24 @@ class RestrictNewRoleMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        $location = Router::url([
-            'prefix' => 'New',
-            'controller' => 'Dashboard',
-            'action' => 'index',
-        ]);
+        $userId = '';
+        if (method_exists($identity, 'getIdentifier')) {
+            $userId = (string)$identity->getIdentifier();
+        } elseif (method_exists($identity, 'get')) {
+            $userId = (string)($identity->get('id') ?? '');
+        }
+        $staff = $userId !== '' ? CompetitionStaff::assignedPrefixes($userId) : [];
+        $location = Router::url($staff !== []
+            ? [
+                'prefix' => $staff[0],
+                'controller' => 'Dashboard',
+                'action' => 'index',
+            ]
+            : [
+                'prefix' => 'New',
+                'controller' => 'Dashboard',
+                'action' => 'index',
+            ]);
 
         return (new Response())
             ->withHeader('Location', $location)

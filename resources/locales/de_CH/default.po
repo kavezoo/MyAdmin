@@ -3633,3 +3633,120 @@ msgstr "Wenn Sie diese Änderung nicht erwartet haben, wenden Sie sich bitte an 
 msgid "This template slug already exists for the selected country and language."
 msgstr "Dieser Vorlagenschlüssel existiert bereits für das ausgewählte Land und die Sprache."
 
+msgid "Role switch"
+msgstr "Role switch"
+
+msgid "Check-in"
+msgstr "Check-in"
+
+msgid "Judge"
+msgstr "Judge"
+
+msgid "Competition staff"
+msgstr "Competition staff"
+
+msgid "You are not assigned to check-in for any competition."
+msgstr "You are not assigned to check-in for any competition."
+
+msgid "You are not assigned as a judge for any competition."
+msgstr "You are not assigned as a judge for any competition."
+
+msgid "Mark paid"
+msgstr "Mark paid"
+
+msgid "Paid at"
+msgstr "Paid at"
+
+msgid "Entry fee"
+msgstr "Entry fee"
+
+msgid "Assign"
+msgstr "Assign"
+
+msgid "Staff member has been assigned."
+msgstr "Staff member has been assigned."
+
+msgid "Staff assignment removed."
+msgstr "Staff assignment removed."
+
+msgid "Assign check-in desk and table judges. Guests (role new) may only use their assigned staff panel."
+msgstr "Assign check-in desk and table judges. Guests (role new) may only use their assigned staff panel."
+
+msgid "Hand out requested racing pipes and mark entry fee payment time."
+msgstr "Hand out requested racing pipes and mark entry fee payment time."
+
+msgid "Competitions where you collect entry fees and hand out racing pipes."
+msgstr "Competitions where you collect entry fees and hand out racing pipes."
+
+msgid "Competitions where you are assigned as table judge."
+msgstr "Competitions where you are assigned as table judge."
+
+msgid "Table judge workspace for this competition."
+msgstr "Table judge workspace for this competition."
+
+msgid "Scoring and table tools will appear here."
+msgstr "Scoring and table tools will appear here."
+
+msgid "pc"
+msgstr "pc"
+
+msgid "Manage staff"
+msgstr "Manage staff"
+
+msgid "No staff assigned yet."
+msgstr "No staff assigned yet."
+
+msgid "Staff role"
+msgstr "Staff role"
+
+msgid "Check-in applicants"
+msgstr "Check-in applicants"
+
+msgid "No assigned competitions."
+msgstr "No assigned competitions."
+
+msgid "Mark entry fee as paid now ({0})?"
+msgstr "Mark entry fee as paid now ({0})?"
+
+msgid "Entry fee marked as paid at {0}."
+msgstr "Entry fee marked as paid at {0}."
+
+msgid "This application is not active."
+msgstr "This application is not active."
+
+msgid "Please select a user and a staff role."
+msgstr "Please select a user and a staff role."
+
+msgid "This user is already assigned to this role for the competition."
+msgstr "This user is already assigned to this role for the competition."
+
+msgid "You can only manage staff for competitions hosted by your club."
+msgstr "You can only manage staff for competitions hosted by your club."
+
+msgid "Remove this staff assignment?"
+msgstr "Remove this staff assignment?"
+
+msgid "Go to Competition staff"
+msgstr "Go to Competition staff"
+
+msgid "Assign check-in desk and table judges for competitions hosted by your club."
+msgstr "Assign check-in desk and table judges for competitions hosted by your club."
+
+msgid "My competitions"
+msgstr "My competitions"
+
+msgid "Open competitions where you are the table judge."
+msgstr "Open competitions where you are the table judge."
+
+msgid "Collect entry fees and hand out racing pipes for your assigned competitions."
+msgstr "Collect entry fees and hand out racing pipes for your assigned competitions."
+
+msgid "Go to Applicants"
+msgstr "Go to Applicants"
+
+msgid "Select user…"
+msgstr "Select user…"
+
+msgid "Select…"
+msgstr "Select…"
+

@@ -3,7 +3,192 @@
  *
  * Add / Edit form template styles.
  * Form-specific rules currently live in assets/css/style.css
- * (search for: #form-horizontal, .form-language-, .select2-with-add, .btn-select2-add, .trumbowyg-editor,
- * form footer button wrap: .btn:has(.btn-label), .card-footer …, .form-footer-actions).
+ * (search for: #form-horizontal, .form-language-, .select2-with-add, .btn-select2-add, .note-editor,
+ * .note-editable, form footer button wrap: .btn:has(.btn-label), .card-footer …, .form-footer-actions).
  * Move those blocks here when splitting CakePHP vendor vs plugin CSS.
  */
+
+/* JeffAdmin5 card-header tabs (Basic data / Description) */
+.card-header.jeff-form-card-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 0.75rem 1rem;
+	padding-bottom: 0;
+	border-bottom: 1px solid #dee2e6;
+	background-color: #f8f9fa;
+}
+
+.jeff-form-card-header__title {
+	flex: 1 1 12rem;
+	min-width: 0;
+	padding-bottom: 0.85rem;
+}
+
+.jeff-form-card-header__title h3 {
+	margin-bottom: 0.15rem;
+}
+
+.jeff-form-card-header__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: flex-end;
+	gap: 0.5rem 0.75rem;
+	margin-left: auto;
+}
+
+.jeff-form-card-header__close {
+	margin-bottom: 0.55rem;
+	align-self: flex-end;
+}
+
+.card-header.jeff-form-card-header .form-tab {
+	margin: 0;
+	padding: 0;
+}
+
+.card-header.jeff-form-card-header .form-tab .nav-tabs,
+.card-header .form-tab .nav-tabs {
+	border-bottom: 0;
+	gap: 0.15rem;
+}
+
+.card-header.jeff-form-card-header .form-tab .nav-link,
+.card-header .form-tab .nav-link {
+	font-weight: 600;
+	color: #495057;
+	border: 1px solid transparent;
+	border-top-left-radius: 0.35rem;
+	border-top-right-radius: 0.35rem;
+	margin-bottom: -1px;
+	padding: 0.55rem 1rem;
+	background: transparent;
+}
+
+.card-header.jeff-form-card-header .form-tab .nav-link:hover,
+.card-header .form-tab .nav-link:hover {
+	border-color: #e9ecef #e9ecef #dee2e6;
+	isolation: isolate;
+}
+
+.card-header.jeff-form-card-header .form-tab .nav-link.active,
+.card-header .form-tab .nav-link.active {
+	color: #212529;
+	background-color: #fff;
+	border-color: #dee2e6 #dee2e6 #fff;
+}
+
+/* JeffAdmin5 text/Description pane: full-width editor + same tab-sheet border as Basic */
+.form-i18n-tabs--full .form-i18n-tabs__toolbar {
+	margin-bottom: 0;
+}
+.form-i18n-tabs--full .form-language-tabs {
+	margin-bottom: 0;
+	border-bottom: 0;
+	flex: 1 1 auto;
+}
+.form-i18n-tabs--full .form-language-tabs .nav-link {
+	margin-bottom: -1px;
+	border: 1px solid transparent;
+	border-top-left-radius: 0.35rem;
+	border-top-right-radius: 0.35rem;
+}
+.form-i18n-tabs--full .form-language-tabs .nav-link.active {
+	background: #fff;
+	border-color: #dee2e6 #dee2e6 #fff;
+}
+.form-i18n-tabs--full .form-language-tab-content,
+.form-i18n-tabs--full .form-language-tab-content--full {
+	width: 100%;
+	border: 1px solid #dee2e6;
+	border-top: 0;
+	padding: 1rem;
+	background: #fff;
+}
+#tabPanelCompetitionDescription .form-i18n-tabs--full,
+.form-i18n-tabs--full {
+	width: 100%;
+}
+.form-i18n-tabs--full .note-editor.note-frame,
+#tabPanelCompetitionDescription .note-editor.note-frame {
+	width: 100%;
+	max-width: 100%;
+}
+#tabPanelCompetitionDescription .note-editable,
+.editor-tall + .note-editor .note-editable {
+	min-height: 480px;
+}
+
+/* Competition text template — clickable {{placeholder}} chips beside editor */
+.competition-placeholders {
+	position: sticky;
+	top: 0.75rem;
+	padding: 0.85rem 0.9rem;
+	border: 1px solid #dee2e6;
+	border-radius: 0.4rem;
+	background: #f8f9fa;
+	max-height: min(70vh, 36rem);
+	overflow: auto;
+}
+
+.competition-placeholders__title {
+	font-weight: 700;
+	margin-bottom: 0.25rem;
+}
+
+.competition-placeholders__hint {
+	font-size: 0.8rem;
+	line-height: 1.35;
+	margin-bottom: 0.75rem;
+}
+
+.competition-placeholders__list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+}
+
+.competition-placeholder-chip {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.1rem;
+	width: 100%;
+	text-align: left;
+	padding: 0.45rem 0.55rem;
+	border: 1px solid #ced4da;
+	border-radius: 0.35rem;
+	background: #fff;
+	cursor: pointer;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.competition-placeholder-chip:hover,
+.competition-placeholder-chip:focus-visible {
+	border-color: #0d6efd;
+	box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
+	background: #f8fbff;
+	outline: none;
+}
+
+.competition-placeholder-chip__token {
+	font-size: 0.78rem;
+	color: #0d6efd;
+	background: transparent;
+	padding: 0;
+}
+
+.competition-placeholder-chip__label {
+	font-size: 0.86rem;
+	font-weight: 600;
+	color: #212529;
+	line-height: 1.25;
+}
+
+.competition-placeholder-chip__help {
+	font-size: 0.75rem;
+	color: #6c757d;
+	line-height: 1.3;
+}

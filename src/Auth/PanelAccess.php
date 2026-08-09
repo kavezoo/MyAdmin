@@ -3,20 +3,32 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
+use App\Utility\CompetitionStaff;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 
 /**
  * Which role panels a user may open (member is shared; officers can step up/down).
+ * Competition staff prefixes (Checkin / Judge) come from competition_staff assignments.
  */
 class PanelAccess
 {
-    /** @var list<string> Admin panel switcher targets (no `/new` — onboarding only). */
+    /**
+     * Membership hierarchy targets for admin switcher (staff prefixes added dynamically).
+     *
+     * @var list<string>
+     */
     public const ALL_ROLE_PREFIXES = [
         'Member',
         'Clubpresident',
         'President',
         'Admin',
+    ];
+
+    /** @var list<string> */
+    public const STAFF_PREFIXES = [
+        'Checkin',
+        'Judge',
     ];
 
     /**
@@ -28,6 +40,8 @@ class PanelAccess
 
         return match ($prefix) {
             'new' => 0,
+            'checkin' => 8,
+            'judge' => 9,
             'member' => 10,
             'clubpresident' => 20,
             'president' => 30,
@@ -39,15 +53,28 @@ class PanelAccess
     /**
      * PascalCase prefixes the user may open (unique, sorted by rank ascending).
      *
+     * Guest (`new`): only assigned staff prefixes (no Member / New in switcher list for panels).
+     * Member+: normal hierarchy + assigned staff prefixes.
+     * Admin: all membership prefixes + staff prefixes **only when assigned for today**.
+     *
      * @return list<string>
      */
     public static function accessiblePrefixes(?ServerRequest $request = null): array
     {
         $request ??= Router::getRequest();
         $role = CurrentUser::role($request);
+        $staffPrefixes = CompetitionStaff::assignedPrefixes(CurrentUser::id($request), $request);
 
         if (static::canUseAdminPanel($request)) {
-            return self::ALL_ROLE_PREFIXES;
+            // Check-in / Judge: same rule as everyone — competition_staff + competition day only.
+            $prefixes = array_merge(self::ALL_ROLE_PREFIXES, $staffPrefixes);
+
+            return static::uniqueSorted($prefixes);
+        }
+
+        // Guests: only staff panels they were assigned to (not /new as a switch target).
+        if ($role === AppRoles::NEW) {
+            return static::uniqueSorted($staffPrefixes);
         }
 
         $prefixes = [];
@@ -65,39 +92,46 @@ class PanelAccess
             $prefixes[] = 'Clubpresident';
         }
 
-        $unique = [];
-        foreach ($prefixes as $prefix) {
-            if (!in_array($prefix, $unique, true)) {
-                $unique[] = $prefix;
-            }
+        foreach ($staffPrefixes as $staffPrefix) {
+            $prefixes[] = $staffPrefix;
         }
 
-        usort($unique, static function (string $a, string $b): int {
-            return static::prefixRank($a) <=> static::prefixRank($b);
-        });
-
-        return $unique;
+        return static::uniqueSorted($prefixes);
     }
 
     public static function canAccessPrefix(string $prefix, ?ServerRequest $request = null): bool
     {
-        if (static::isAdminPrefix($prefix) && !static::canUseAdminPanel($request)) {
+        $request ??= Router::getRequest();
+        $prefixNorm = ucfirst(strtolower(trim($prefix)));
+
+        if (static::isStaffPrefix($prefixNorm)) {
+            $staffRole = CompetitionStaff::staffRoleForPrefix($prefixNorm);
+            if ($staffRole === null) {
+                return false;
+            }
+
+            // No admin/officer bypass — desk only with assignment on competition day.
+            return CompetitionStaff::userHasStaffRole($staffRole, CurrentUser::id($request), $request);
+        }
+
+        if (static::isAdminPrefix($prefixNorm) && !static::canUseAdminPanel($request)) {
             return false;
         }
 
-        $prefix = ucfirst(strtolower(trim($prefix)));
         foreach (static::accessiblePrefixes($request) as $allowed) {
-            if (strcasecmp($allowed, $prefix) === 0) {
+            if (strcasecmp($allowed, $prefixNorm) === 0) {
                 return true;
             }
+        }
+
+        // Guests keep /new for onboarding even when staff-assigned.
+        if ($prefixNorm === 'New' && CurrentUser::role($request) === AppRoles::NEW) {
+            return true;
         }
 
         return false;
     }
 
-    /**
-     * Admin panel: `admin` / `superuser` role or CakeDC superuser flag.
-     */
     public static function canUseAdminPanel(?ServerRequest $request = null): bool
     {
         $request ??= Router::getRequest();
@@ -107,9 +141,6 @@ class PanelAccess
             || CurrentUser::isSuperuser($request);
     }
 
-    /**
-     * Member panel: every active role except `new` (locked to /new).
-     */
     public static function canUseMemberPanel(string $role): bool
     {
         $role = strtolower(trim($role));
@@ -117,10 +148,6 @@ class PanelAccess
         return $role !== AppRoles::NEW;
     }
 
-    /**
-     * Club president panel: clubpresident / president / vicepresident with assigned club.
-     * Admin / superuser: always (impersonation / support).
-     */
     public static function canUseClubPresidentPanel(?ServerRequest $request = null): bool
     {
         $request ??= Router::getRequest();
@@ -172,6 +199,10 @@ class PanelAccess
                 continue;
             }
 
+            if (static::isStaffPrefix($prefix) && !static::canAccessPrefix($prefix, $request)) {
+                continue;
+            }
+
             $rank = static::prefixRank($prefix);
             $direction = $rank > $currentRank ? 'up' : 'down';
 
@@ -200,8 +231,33 @@ class PanelAccess
         return $links;
     }
 
+    public static function isStaffPrefix(string $prefix): bool
+    {
+        return in_array(ucfirst(strtolower(trim($prefix))), self::STAFF_PREFIXES, true);
+    }
+
     protected static function isAdminPrefix(string $prefix): bool
     {
         return strcasecmp(trim($prefix), 'Admin') === 0;
+    }
+
+    /**
+     * @param list<string> $prefixes
+     * @return list<string>
+     */
+    protected static function uniqueSorted(array $prefixes): array
+    {
+        $unique = [];
+        foreach ($prefixes as $prefix) {
+            $prefix = ucfirst(strtolower(trim($prefix)));
+            if ($prefix !== '' && !in_array($prefix, $unique, true)) {
+                $unique[] = $prefix;
+            }
+        }
+        usort($unique, static function (string $a, string $b): int {
+            return static::prefixRank($a) <=> static::prefixRank($b);
+        });
+
+        return $unique;
     }
 }

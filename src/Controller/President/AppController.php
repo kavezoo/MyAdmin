@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\President;
 
 use App\Auth\CurrentUser;
+use App\Controller\Concerns\FormLanguageTabsTrait;
 use App\Controller\Concerns\IndexListCrudTrait;
 use App\Controller\PanelAppController;
 use ArrayIterator;
@@ -15,6 +16,7 @@ use Cake\Event\EventInterface;
  */
 abstract class AppController extends PanelAppController
 {
+    use FormLanguageTabsTrait;
     use IndexListCrudTrait;
 
     protected const LAST_VISITED_SESSION_KEY = 'President.lastVisited';

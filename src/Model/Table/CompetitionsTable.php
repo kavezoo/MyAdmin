@@ -7,6 +7,7 @@ use App\Model\Table\Concerns\PreventsDeleteWithChildrenTrait;
 use App\Model\Table\Concerns\UsesDatabaseColumnDefaultsTrait;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
+use Cake\ORM\Behavior\Translate\EavStrategy;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Text;
@@ -15,10 +16,14 @@ use Cake\Validation\Validator;
 /**
  * Competitions — president competition announcements.
  *
+ * Text fields use Cake Translate EAV (`i18n`) for country language tabs.
+ *
  * @property \App\Model\Table\CountriesTable&\Cake\ORM\Association\BelongsTo $Countries
  * @property \App\Model\Table\ClubsTable&\Cake\ORM\Association\BelongsTo $Clubs
  * @property \App\Model\Table\CompetitionsClubsTable&\Cake\ORM\Association\HasMany $CompetitionsClubs
  * @property \App\Model\Table\CompetitionsUsersTable&\Cake\ORM\Association\HasMany $CompetitionsUsers
+ *
+ * @mixin \Cake\ORM\Behavior\TranslateBehavior
  */
 class CompetitionsTable extends Table
 {
@@ -34,7 +39,35 @@ class CompetitionsTable extends Table
         'racing_pipe_1_title',
         'racing_pipe_2_title',
         'racing_pipe_3_title',
+        'pipe_type',
+        'pipe_parameters',
+        'tobacco_type',
         'description',
+        'venue_name',
+        'venue_address',
+        'google_maps_url',
+        'currency',
+        'lunch_description',
+    ];
+
+    /**
+     * Translate EAV fields (language tabs on Admin / President forms).
+     *
+     * @var list<string>
+     */
+    public const TRANSLATE_FIELDS = [
+        'name',
+        'title',
+        'subtitle',
+        'subtitle2',
+        'description',
+        'racing_pipe_1_title',
+        'racing_pipe_2_title',
+        'racing_pipe_3_title',
+        'pipe_type',
+        'pipe_parameters',
+        'tobacco_type',
+        'lunch_description',
     ];
 
     /**
@@ -55,6 +88,15 @@ class CompetitionsTable extends Table
             $this->addBehavior('EventLog');
         }
 
+        $this->addBehavior('Translate', [
+            'strategyClass' => EavStrategy::class,
+            'fields' => self::TRANSLATE_FIELDS,
+            'defaultLocale' => 'en_GB',
+            // Empty i18n rows must not overlay the main-table (en_GB) text — otherwise
+            // UI locale (e.g. hu_HU) shows blank name/title/description.
+            'allowEmptyTranslations' => false,
+        ]);
+
         $this->addBehavior('CounterCache', [
             'Clubs' => ['competition_count'],
         ]);
@@ -69,10 +111,27 @@ class CompetitionsTable extends Table
             'joinType' => 'INNER',
             'className' => 'Clubs',
         ]);
+        $this->belongsTo('Cities', [
+            'foreignKey' => 'city_id',
+            'joinType' => 'LEFT',
+            'className' => 'Cities',
+            'propertyName' => 'city',
+        ]);
+        $this->belongsTo('CompetitionTextTemplates', [
+            'foreignKey' => 'competition_text_template_id',
+            'joinType' => 'LEFT',
+            'className' => 'CompetitionTextTemplates',
+        ]);
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'LEFT',
             'className' => 'Users',
+        ]);
+        $this->belongsTo('Modifiers', [
+            'foreignKey' => 'modified_by',
+            'joinType' => 'LEFT',
+            'className' => 'Users',
+            'propertyName' => 'modifier',
         ]);
         $this->hasMany('CompetitionsClubs', [
             'foreignKey' => 'competition_id',
@@ -83,6 +142,12 @@ class CompetitionsTable extends Table
             'foreignKey' => 'competition_id',
             'className' => 'CompetitionsUsers',
             'dependent' => false,
+        ]);
+        $this->hasMany('CompetitionStaff', [
+            'foreignKey' => 'competition_id',
+            'className' => 'CompetitionStaff',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('Subclubs', [
             'foreignKey' => 'competition_id',
@@ -108,9 +173,36 @@ class CompetitionsTable extends Table
             ->notEmptyString('club_id');
 
         $validator
+            ->integer('city_id')
+            ->allowEmptyString('city_id');
+
+        $validator
+            ->scalar('venue_name')
+            ->maxLength('venue_name', 250)
+            ->allowEmptyString('venue_name');
+
+        $validator
+            ->scalar('venue_address')
+            ->maxLength('venue_address', 255)
+            ->allowEmptyString('venue_address');
+
+        $validator
+            ->scalar('google_maps_url')
+            ->maxLength('google_maps_url', 1000)
+            ->allowEmptyString('google_maps_url');
+
+        $validator
+            ->integer('competition_text_template_id')
+            ->allowEmptyString('competition_text_template_id');
+
+        $validator
             ->uuid('user_id')
             ->requirePresence('user_id', 'create')
             ->notEmptyString('user_id');
+
+        $validator
+            ->uuid('modified_by')
+            ->allowEmptyString('modified_by');
 
         $validator
             ->scalar('name')
@@ -165,6 +257,66 @@ class CompetitionsTable extends Table
             ->scalar('racing_pipe_3_title')
             ->maxLength('racing_pipe_3_title', 250)
             ->allowEmptyString('racing_pipe_3_title');
+
+        $validator
+            ->scalar('pipe_type')
+            ->maxLength('pipe_type', 250)
+            ->allowEmptyString('pipe_type');
+
+        $validator
+            ->scalar('pipe_parameters')
+            ->maxLength('pipe_parameters', 500)
+            ->allowEmptyString('pipe_parameters');
+
+        $validator
+            ->scalar('tobacco_type')
+            ->maxLength('tobacco_type', 250)
+            ->allowEmptyString('tobacco_type');
+
+        $validator
+            ->decimal('tobacco_weight')
+            ->allowEmptyString('tobacco_weight');
+
+        $validator
+            ->scalar('currency')
+            ->lengthBetween('currency', [3, 3])
+            ->allowEmptyString('currency');
+
+        foreach (\App\Utility\CompetitionFees::moneyFields() as $moneyField) {
+            $validator
+                ->decimal($moneyField)
+                ->allowEmptyString($moneyField);
+        }
+
+        $validator->add('entry_fee_member', 'notHigherThanNonMember', [
+            'rule' => function ($value, $context) {
+                $member = (float)($value ?? 0);
+                $nonMember = (float)($context['data']['entry_fee_non_member'] ?? 0);
+                if ($member <= 0 || $nonMember <= 0) {
+                    return true;
+                }
+
+                return $member <= $nonMember;
+            },
+            'message' => __('National member entry fee should not be higher than the non-member fee.'),
+        ]);
+
+        for ($i = 1; $i <= 3; $i++) {
+            $memberField = 'racing_pipe_' . $i . '_price_member';
+            $nonMemberField = 'racing_pipe_' . $i . '_price_non_member';
+            $validator->add($memberField, 'notHigherThanNonMember', [
+                'rule' => function ($value, $context) use ($nonMemberField) {
+                    $member = (float)($value ?? 0);
+                    $nonMember = (float)($context['data'][$nonMemberField] ?? 0);
+                    if ($member <= 0 || $nonMember <= 0) {
+                        return true;
+                    }
+
+                    return $member <= $nonMember;
+                },
+                'message' => __('National member pipe price should not be higher than the non-member price.'),
+            ]);
+        }
 
         $validator
             ->nonNegativeInteger('minimum_team_size')

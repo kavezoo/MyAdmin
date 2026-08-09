@@ -360,7 +360,7 @@ Részlet: [middleware.md](middleware.md).
 - [ ] Table: associations + CounterCache (+ through ha HABTM)
 - [ ] `PreventsDeleteWithChildrenTrait` + `relatedChildrenCountField()` ha van gyerek
 - [ ] Controller: CRUD + `recordGet` (`can_delete`) + try/catch Flash + `setCanDeleteFlag` view/edit
-- [ ] Index: oszlopok, delete §3, modal config, last-visited + scroll, számformázás, **`admin/index_footer`** (counter + First…Last lapozó)
+- [ ] Index: oszlopok (**ne** `class="… label"` — badge ütközés → `col-label`), delete §3, modal config, last-visited + scroll, számformázás, **`admin/index_footer`** (counter + First…Last lapozó)
 - [ ] Keresés: `admin_search.php` mezők + `labelsKey`; `applyIndexListState` / `applyIndexSearch` / **`indexPaginateOptionsFor`** (Translate → UI locale); `resolveIndexPageForLastVisited`; `table_search` + header; clear → last-visited; `redirectToIndexList`
 - [ ] Form: Select2, Tempus §6, szám §6b, mezőhiba §6c, schema defaults, üres `_ids`, `visible`→`pos`+hr; **`#form-horizontal` + `pages/form.js`** (unsaved); ha Translate: **[form-i18n-tabs.md](form-i18n-tabs.md)** (`setFormLanguageTabs` + `getWithTranslations` + tooltip)
 - [ ] View: `dl` + related tabs + Edit `.record-view-footer-actions` + delete §3 + locale dátum/szám
@@ -396,6 +396,7 @@ Részlet: [middleware.md](middleware.md).
 | Index keresés/sort angol `name`-en hu UI mellett | `AdminSearch` + `indexPaginateOptionsFor` / `AdminTranslate` |
 | Nyelvi fülön nincs ország súgó | `FormLanguages` `country_name` + tooltip span — [form-i18n-tabs.md](form-i18n-tabs.md) |
 | `.count` oszlop fix `width`+`max-width` rem — mégsem szélesebb | `width:1%` + `min-width:15rem` + `pages/index.css`; sort link `max-content` |
+| Index `th`/`td` class **`label`** → fehér badge / elcsúszott szöveg | ValiAdmin `.label` = badge. Mező: **`string col-label`**. Rule: `admin-index-column-classes.mdc` |
 | Countries header: switch és kereső összenő | `.index-header-sep` (`\|`) nagy margóval |
 | Locale / Users angolul marad hu UI-n | `.po`: `Locale`→Nyelvi kód, `Number of users`→Felhasználók száma + cache clear |
 | Nem törölhető Delete = danger / kattintható blocked | `btn-secondary` + **disabled** + tooltip |

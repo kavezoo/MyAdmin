@@ -31,6 +31,17 @@ $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Permanently delete the 
 $tooltipDeleteBlocked = '<b>' . __('Delete') . '</b><br>' . __('Cannot delete this sub-team because it already has assigned members.');
 $rowDoubleClickHint = __('Double-click a row to view the record details.');
 
+$labelId = __('ID');
+$labelCompetition = __('Competition');
+$labelTeam = __('Team');
+$labelMembers = __('Members');
+$labelMinTeamSize = __('Min. team size');
+$labelVisible = __('Visible');
+$labelCreated = __('Created');
+$labelActions = __('Actions');
+$tooltipMinReached = __('Minimum reached');
+$tooltipBelowMin = __('Below minimum');
+
 $competitionGetUrl = $this->Url->build(['action' => 'competitionRecordGet']);
 
 $config = [
@@ -40,20 +51,20 @@ $config = [
 	'viewUrl' => $this->Url->build(['action' => 'view']),
 	'deleteUrl' => $this->Url->build(['action' => 'delete']),
 	'recordFieldLabels' => [
-		'id' => __('ID'),
-		'competition' => __('Competition'),
-		'name' => __('Team'),
-		'user_count' => __('Members'),
-		'minimum_team_size' => __('Min. team size'),
+		'id' => $labelId,
+		'competition' => $labelCompetition,
+		'name' => $labelTeam,
+		'user_count' => $labelMembers,
+		'minimum_team_size' => $labelMinTeamSize,
 		'application_datetime' => __('Applied'),
-		'visible' => __('Visible'),
+		'visible' => $labelVisible,
 		'pos' => __('Position'),
-		'created' => __('Created'),
+		'created' => $labelCreated,
 		'modified' => __('Modified'),
 	],
 	'entityFieldLabels' => [
 		'competition' => [
-			'id' => __('ID'),
+			'id' => $labelId,
 			'name' => __('Name'),
 			'title' => __('Title'),
 			'club' => __('Club'),
@@ -62,9 +73,9 @@ $config = [
 			'application_deadline' => __('Application deadline'),
 			'competition_datetime' => __('Competition datetime'),
 			'end_datetime' => __('End'),
-			'minimum_team_size' => __('Min. team size'),
-			'user_count' => __('Members'),
-			'visible' => __('Visible'),
+			'minimum_team_size' => $labelMinTeamSize,
+			'user_count' => $labelMembers,
+			'visible' => $labelVisible,
 		],
 	],
 ];
@@ -77,12 +88,21 @@ $this->Html->scriptBlock(
 $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 $this->append('css', <<<'CSS'
 <style>
+/* Versenykiírás neve: min. szélesség + sortörés (ne fix/nowrap csapda) */
 .index-data-table th.string.competition,
 .index-data-table td.string.competition {
-	width: 11rem;
-	max-width: 13rem;
+	min-width: 12rem;
+	width: auto;
+	max-width: none;
 	white-space: normal;
 	word-break: break-word;
+	overflow-wrap: anywhere;
+}
+.index-data-table td.string.competition .record-modal-link,
+.index-data-table td.string.competition .category-link {
+	white-space: normal;
+	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 .index-data-table th.string.name,
 .index-data-table td.string.name {
@@ -103,8 +123,7 @@ CSS
 				</div>
 				<div class="float-right d-flex align-items-center gap-2 flex-wrap justify-content-end">
 					<?= $this->element('admin/table_search') ?>
-					<span class="index-header-sep" aria-hidden="true">|</span>
-					<?= $this->element('admin/index_pagination') ?>
+					<?= $this->element('admin/index_pagination', ['leadingSep' => true]) ?>
 					<?= $this->Html->link(
 						'<span class="btn-label"><i class="fa fa-plus"></i></span>' . __('New'),
 						['action' => 'add'],
@@ -114,23 +133,72 @@ CSS
 				<div class="clearfix"></div>
 			</div>
 			<div class="card-body p-2">
+				<?= $this->element('panel/competition_browse_country', [
+					'browseCountryId' => $browseCountryId ?? 0,
+					'browseCountryOptions' => $browseCountryOptions ?? [],
+					'homeCountryId' => $homeCountryId ?? 0,
+				]) ?>
 				<table class="table table-responsive-xl table-bordered table-hover table-striped mb-0 index-data-table">
 					<thead>
 						<tr>
 							<?php if ($showIdColumn): ?>
-								<th scope="col" class="number id"><?= $this->Paginator->sort('id', '#') ?></th>
+								<th scope="col" class="number id">
+									<?= $this->Paginator->sort(
+										'id',
+										'<span data-bs-toggle="tooltip" data-bs-placement="top" title="' . h($labelId) . '">#</span>',
+										['escape' => false]
+									) ?>
+								</th>
 							<?php endif; ?>
-							<th scope="col" class="string competition"><?= $this->Paginator->sort('Competitions.name', __('Competition')) ?></th>
-							<th scope="col" class="string name"><?= $this->Paginator->sort('Subclubs.name', __('Team')) ?></th>
-							<th scope="col" class="number count"><?= $this->Paginator->sort('user_count', __('Members')) ?></th>
-							<th scope="col" class="number"><?= __('Min.') ?></th>
+							<th scope="col" class="string competition">
+								<?= $this->Paginator->sort(
+									'Competitions.name',
+									'<span data-bs-toggle="tooltip" data-bs-placement="top" title="' . h($labelCompetition) . '">' . h($labelCompetition) . '</span>',
+									['escape' => false]
+								) ?>
+							</th>
+							<th scope="col" class="string name">
+								<?= $this->Paginator->sort(
+									'Subclubs.name',
+									'<span data-bs-toggle="tooltip" data-bs-placement="top" title="' . h($labelTeam) . '">' . h($labelTeam) . '</span>',
+									['escape' => false]
+								) ?>
+							</th>
+							<th scope="col" class="number count">
+								<?= $this->Paginator->sort(
+									'user_count',
+									'<span data-bs-toggle="tooltip" data-bs-placement="top" title="' . h($labelMembers) . '">#</span>',
+									['escape' => false]
+								) ?>
+							</th>
+							<th scope="col" class="number">
+								<span data-bs-toggle="tooltip" data-bs-placement="top" title="<?= h($labelMinTeamSize) ?>">
+									<?= h(__('Min.')) ?>
+								</span>
+							</th>
 							<?php if ($showVisibleColumn): ?>
-								<th scope="col" class="boolean visible"><?= $this->Paginator->sort('visible', __('Visible')) ?></th>
+								<th scope="col" class="boolean visible">
+									<?= $this->Paginator->sort(
+										'visible',
+										'<span data-bs-toggle="tooltip" data-bs-placement="top" title="' . h($labelVisible) . '">' . h($labelVisible) . '</span>',
+										['escape' => false]
+									) ?>
+								</th>
 							<?php endif; ?>
 							<?php if ($showTimestampColumn): ?>
-								<th scope="col" class="datetime"><?= $this->Paginator->sort('created', __('Created')) ?></th>
+								<th scope="col" class="datetime">
+									<?= $this->Paginator->sort(
+										'created',
+										'<span data-bs-toggle="tooltip" data-bs-placement="top" title="' . h($labelCreated) . '">' . h($labelCreated) . '</span>',
+										['escape' => false]
+									) ?>
+								</th>
 							<?php endif; ?>
-							<th scope="col" class="actions"><?= __('Actions') ?></th>
+							<th scope="col" class="actions">
+								<span data-bs-toggle="tooltip" data-bs-placement="top" title="<?= h($labelActions) ?>">
+									<?= h($labelActions) ?>
+								</span>
+							</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -173,9 +241,17 @@ CSS
 									<td class="number count">
 										<?= h(\App\Utility\LocaleNumberParser::format($row->user_count, decimals: 0)) ?>
 										<?php if ($ok): ?>
-											<i class="fa fa-check text-success ms-1" title="<?= h(__('Minimum reached')) ?>"></i>
+											<i class="fa fa-check text-success ms-1"
+												data-bs-toggle="tooltip"
+												data-bs-placement="top"
+												title="<?= h($tooltipMinReached) ?>"
+												aria-label="<?= h($tooltipMinReached) ?>"></i>
 										<?php else: ?>
-											<i class="fa fa-exclamation-triangle text-warning ms-1" title="<?= h(__('Below minimum')) ?>"></i>
+											<i class="fa fa-exclamation-triangle text-warning ms-1"
+												data-bs-toggle="tooltip"
+												data-bs-placement="top"
+												title="<?= h($tooltipBelowMin) ?>"
+												aria-label="<?= h($tooltipBelowMin) ?>"></i>
 										<?php endif; ?>
 									</td>
 									<td class="number"><?= h(\App\Utility\LocaleNumberParser::format($min, decimals: 0)) ?></td>

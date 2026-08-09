@@ -484,6 +484,19 @@ class CountriesTable extends Table
     }
 
     /**
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param \ArrayObject<string, mixed> $options
+     * @return void
+     */
+    public function afterDelete(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
+    {
+        $logo = $entity->get('logo');
+        $stored = is_string($logo) ? $logo : null;
+        \App\Utility\CountryLogo::deleteStored($stored, (int)$entity->get('id'));
+    }
+
+    /**
      * Visible countries with `name` in the UI / Admin page locale (Translate).
      * Use for Select2 and any listing that must follow the page language (not a language switch).
      *

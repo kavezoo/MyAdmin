@@ -67,7 +67,7 @@ class AdminCountry
 
     /**
      * Apply page locale to Countries (+ Continents) Translate behaviors.
-     * Also applies Setups via {@see AdminTranslate::applyLocales()}.
+     * Also applies Setups + Competitions via {@see AdminTranslate::applyLocales()}.
      */
     public static function applyTranslateLocale(?string $locale = null): void
     {
@@ -78,7 +78,8 @@ class AdminCountry
         if ($countries->hasAssociation('Continents') && $countries->Continents->hasBehavior('Translate')) {
             $countries->Continents->getBehavior('Translate')->setLocale($locale);
         }
-        AdminTranslate::applyLocales(['Setups'], $locale);
+        // Competitions text fields (name/title/…) must follow login / UI locale on every panel.
+        AdminTranslate::applyLocales(['Setups', 'Competitions'], $locale);
     }
 
     /**

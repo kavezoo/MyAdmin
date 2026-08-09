@@ -38,7 +38,7 @@ $cards = PanelNav::forPrefix('Member', $this->getRequest());
 			<div class="card-header">
 				<div class="float-left">
 					<h3 class="fw-bold"><i class="fa fa-trophy"></i> <?= __('Competitions') ?></h3>
-					<?= __('Open and upcoming competitions in your country') ?>
+					<?= __('Active competitions for the selected country') ?>
 				</div>
 				<div class="float-right">
 					<?= $this->Html->link(__('All competitions'), ['prefix' => 'Member', 'controller' => 'Competitions', 'action' => 'index'], ['class' => 'btn btn-outline-primary']) ?>
@@ -46,6 +46,11 @@ $cards = PanelNav::forPrefix('Member', $this->getRequest());
 				<div class="clearfix"></div>
 			</div>
 			<div class="card-body p-2">
+				<?= $this->element('panel/competition_browse_country', [
+					'browseCountryId' => $browseCountryId ?? $countryId,
+					'browseCountryOptions' => $browseCountryOptions ?? [],
+					'homeCountryId' => $homeCountryId ?? 0,
+				]) ?>
 				<?php if ($countryId < 1): ?>
 					<p class="text-muted mb-0 p-3"><?= __('Your profile has no country set, so competitions cannot be listed.') ?></p>
 				<?php elseif (!is_object($competitions) || $competitions->count() === 0): ?>

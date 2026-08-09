@@ -221,6 +221,42 @@
 			}).join(', ');
 		};
 
+		var renderTrustedHtmlFrame = function (html) {
+			var doc = '<!DOCTYPE html><html><head><meta charset="utf-8">'
+				+ '<meta name="viewport" content="width=device-width, initial-scale=1">'
+				+ '<base target="_blank" rel="noopener">'
+				+ '<style>html,body{margin:0;padding:0;background:transparent;}</style>'
+				+ '</head><body>' + html + '</body></html>';
+			var $iframe = $('<iframe/>', {
+				'class': 'html-content-frame html-content-frame--modal',
+				title: msg.htmlContent || 'HTML content',
+				sandbox: 'allow-same-origin',
+				loading: 'lazy'
+			});
+			var fit = function () {
+				try {
+					var el = $iframe[0];
+					var d = el.contentDocument;
+					if (!d) {
+						return;
+					}
+					var h = Math.max(
+						d.body ? d.body.scrollHeight : 0,
+						d.documentElement ? d.documentElement.scrollHeight : 0
+					);
+					el.style.height = Math.max(80, h + 8) + 'px';
+				} catch (e) { /* ignore */ }
+			};
+			$iframe.on('load', fit);
+			// srcdoc after append so load fires reliably
+			window.setTimeout(function () {
+				$iframe.attr('srcdoc', doc);
+				window.setTimeout(fit, 50);
+				window.setTimeout(fit, 300);
+			}, 0);
+			return $iframe;
+		};
+
 		var renderFieldsInto = function ($target, record, fieldLabels) {
 			$target.empty();
 			Object.keys(fieldLabels).forEach(function (key) {
@@ -239,10 +275,7 @@
 				} else if (Array.isArray(raw) && raw.length === 0) {
 					$dd.text('—');
 				} else if (raw != null && raw !== '' && isHtmlField(key) && typeof raw !== 'object') {
-					$dd.append(
-						$('<div class="record-html-preview border rounded p-2 bg-light overflow-auto">')
-							.html(String(raw))
-					);
+					$dd.append(renderTrustedHtmlFrame(String(raw)));
 				} else if (raw != null && raw !== '' && isMultilineTextField(key) && typeof raw !== 'object') {
 					$dd.append(
 						$('<div class="record-text-preview border rounded p-2 bg-light overflow-auto">')
@@ -269,6 +302,10 @@
 		};
 
 		var submitPostDelete = function (deleteUrl, recordId) {
+			if (typeof App.submitPostDelete === 'function') {
+				App.submitPostDelete(deleteUrl, recordId);
+				return;
+			}
 			var url = entityUrl(deleteUrl, recordId);
 			if (!url || url === '#') {
 				App.alertError(msg.deleteFormNotFound
@@ -284,6 +321,10 @@
 		};
 
 		var triggerDeleteForm = function (recordId, options) {
+			if (typeof App.triggerDeleteForm === 'function') {
+				App.triggerDeleteForm(recordId, options);
+				return;
+			}
 			options = options || {};
 			var prefix = options.deleteFormPrefix || '';
 			var deleteUrl = options.deleteUrl || '';
@@ -296,7 +337,6 @@
 				}
 			}
 
-			// Kapcsolt entitás (prefix): soha ne a saját modul #delete-form-{id}-jét
 			if (prefix) {
 				var $prefixed = $('#delete-form-' + prefix + '-' + recordId);
 				if ($prefixed.length && $prefixed.is('form')) {
@@ -313,7 +353,6 @@
 				return;
 			}
 
-			// Saját modul: rejtett form, majd deleteUrl fallback
 			var $form = $('#delete-form-' + recordId);
 			if ($form.length && $form.is('form')) {
 				$form.trigger('submit');
@@ -484,52 +523,7 @@
 			});
 		});
 
-		$(document).on('click', '.index-data-table tbody .btn-row-delete, .record-view-footer-actions .btn-row-delete', function (e) {
-			e.preventDefault();
-			e.stopPropagation();
-
-			var $btn = $(this);
-			if ($btn.prop('disabled') || $btn.hasClass('disabled') || $btn.attr('aria-disabled') === 'true') {
-				return;
-			}
-			var tip = bootstrap.Tooltip.getInstance($btn[0]);
-			if (tip) {
-				tip.hide();
-			}
-
-			var $row = $btn.closest('tr');
-			var recordId = $btn.attr('data-id') || $row.attr('data-id');
-			if (!recordId) {
-				// View footer: form id="delete-form-{id}"
-				var $form = $btn.closest('form[id^="delete-form-"]');
-				if ($form.length) {
-					var formId = String($form.attr('id') || '');
-					recordId = formId.replace(/^delete-form-/, '');
-				}
-			}
-			if (!recordId) {
-				return;
-			}
-
-			if ($row.length && $row.attr('data-can-delete') === '0') {
-				return;
-			}
-
-			var $table = $btn.closest('table.related-records-table');
-			var deleteOpts = {};
-			if ($table.length) {
-				deleteOpts.deleteFormPrefix = $table.attr('data-delete-form-prefix') || '';
-				deleteOpts.deleteUrl = $table.attr('data-delete-url') || '';
-			} else {
-				deleteOpts.deleteUrl = cfg.deleteUrl || '';
-			}
-
-			App.confirmDelete({
-				onConfirm: function () {
-					triggerDeleteForm(recordId, deleteOpts);
-				}
-			});
-		});
+		// Row delete (.btn-row-delete) is handled globally in app.js (SweetAlert).
 
 		// —— Linked / related entity modal (belongsTo, HABTM name, related tab) ——
 		var $modalLinkedRecordView = $('#modalLinkedRecordView');

@@ -128,17 +128,23 @@ class FormLanguages
 
     /**
      * Locale that maps to entity root fields on the form.
-     * Prefer Translate/App default when that language is among the country’s tabs;
-     * otherwise the first tab (own country language).
+     *
+     * Must match the Table TranslateBehavior `defaultLocale` (EAV: main table columns).
+     * Prefer that locale when it is among the country’s tabs; otherwise the first tab
+     * (own country language).
+     *
+     * Using App.defaultLocale (e.g. hu_HU) here while Translate defaultLocale is en_GB
+     * breaks edit: empty `_translations.en_GB.*` inputs are hoisted onto root by
+     * TranslateBehavior::beforeMarshal and wipe required name/title.
      */
     public static function defaultLocaleForForm(?int $activeCountryId = null): string
     {
         $tabs = static::tabs($activeCountryId);
         if ($tabs === []) {
-            return static::translateDefaultLocale();
+            return static::eavDefaultLocale();
         }
 
-        $preferred = static::translateDefaultLocale();
+        $preferred = static::eavDefaultLocale();
         foreach ($tabs as $tab) {
             $locale = (string)($tab['locale'] ?? '');
             if ($locale === $preferred || (static::isEnglish($locale) && static::isEnglish($preferred))) {
@@ -172,14 +178,31 @@ class FormLanguages
         return $code === 'EN';
     }
 
-    public static function translateDefaultLocale(): string
+    /**
+     * Cake Translate EAV canonical locale — stored on the main table columns.
+     * Must stay in sync with Table `addBehavior('Translate', ['defaultLocale' => …])`.
+     */
+    public static function eavDefaultLocale(): string
     {
-        $configured = Configure::read('App.defaultLocale');
+        $configured = Configure::read('App.translateDefaultLocale');
         if (is_string($configured) && trim($configured) !== '') {
             return AdminCountry::normalizeTranslateLocale(trim($configured)) ?? 'en_GB';
         }
 
         return 'en_GB';
+    }
+
+    /**
+     * App UI / I18n default locale (may differ from EAV defaultLocale).
+     */
+    public static function translateDefaultLocale(): string
+    {
+        $configured = Configure::read('App.defaultLocale');
+        if (is_string($configured) && trim($configured) !== '') {
+            return AdminCountry::normalizeTranslateLocale(trim($configured)) ?? static::eavDefaultLocale();
+        }
+
+        return static::eavDefaultLocale();
     }
 
     protected static function resolveActiveCountryId(?int $activeCountryId): int

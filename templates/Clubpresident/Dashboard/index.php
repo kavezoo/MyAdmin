@@ -5,6 +5,7 @@
  * @var \App\View\AppView $this
  * @var int $clubId
  * @var int $pendingApplicantsCount
+ * @var int $pendingCompetitionApplicantsCount
  */
 use App\Utility\PanelNav;
 
@@ -12,7 +13,13 @@ $this->assign('title', __('Dashboard'));
 
 $clubId = (int)($clubId ?? 0);
 $pendingApplicantsCount = (int)($pendingApplicantsCount ?? 0);
+$pendingCompetitionApplicantsCount = (int)($pendingCompetitionApplicantsCount ?? 0);
 $membersUrl = ['prefix' => 'Clubpresident', 'controller' => 'Members', 'action' => 'index'];
+$competitionApplicantsUrl = [
+	'prefix' => 'Clubpresident',
+	'controller' => 'CompetitionApplicants',
+	'action' => 'index',
+];
 $cards = $clubId > 0 ? PanelNav::forPrefix('Clubpresident', $this->getRequest()) : [];
 ?>
 <div class="row">
@@ -34,6 +41,28 @@ $cards = $clubId > 0 ? PanelNav::forPrefix('Clubpresident', $this->getRequest())
 						'<span class="btn-label"><i class="fa fa-arrow-right"></i></span>' . h(__('Review applicants')),
 						$membersUrl,
 						['escape' => false, 'class' => 'btn btn-success']
+					) ?>
+				</p>
+			</div>
+		<?php endif; ?>
+
+		<?php if ($pendingCompetitionApplicantsCount > 0): ?>
+			<div class="alert alert-info" role="alert">
+				<h4 class="alert-heading">
+					<i class="fa fa-trophy me-1" aria-hidden="true"></i>
+					<?= __('New competition applications') ?>
+				</h4>
+				<p>
+					<?= $pendingCompetitionApplicantsCount === 1
+						? __('There is 1 new competition application waiting for a team assignment.')
+						: __('There are {0} new competition applications waiting for a team assignment.', $pendingCompetitionApplicantsCount) ?>
+				</p>
+				<hr>
+				<p class="mb-0">
+					<?= $this->Html->link(
+						'<span class="btn-label"><i class="fa fa-arrow-right"></i></span>' . h(__('Assign to teams')),
+						$competitionApplicantsUrl,
+						['escape' => false, 'class' => 'btn btn-info']
 					) ?>
 				</p>
 			</div>

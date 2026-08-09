@@ -14,8 +14,8 @@ Teljes spec: **`doc/users-auth.md`** (§0 baseline / képlékeny). Greenfield: *
 3. Templatek: **`templates/Users/`** (App), **nem** `templates/plugin/CakeDC/…`.
 4. Layout login: ValiAdmin; `login-box local-login` + `.local-login-form`; Flash = Simple Notify.
 5. Permissions: App Usersnél **ne** `'plugin' => false`.
-6. Panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president` — közös `admin` layout; `RoleHome` + `PanelAccess` (officer → member; clubpresident ha `club_id`); afterLogin **`$event->setResult()`**. Dashboard ↔ menü: **`PanelNav`** — rule `panel-nav-conventions.mdc`.
-7. Regisztráció default role → **csak** `/new`. Header search: csak president+ (és admin/superuser).
+6. Panelek: `/admin`, `/new`, `/member`, `/clubpresident`, `/president`, **`/checkin`**, **`/judge`** — közös `admin` layout; `RoleHome` + `PanelAccess` (officer → member; clubpresident ha `club_id`; staff = `competition_staff` **csak versenynapon**, **csak kijelölt**); afterLogin **`$event->setResult()`**. Switcher: **`Role switch`** / hu **Szerepkör váltás**. Dashboard ↔ menü: **`PanelNav`**. Staff kijelölés: president/VP + clubpresident **külön Competition staff lista**, AJAX névkeresés.
+7. Regisztráció default role → **csak** `/new` (kivéve staff megbízás → checkin/judge, versenynapon). Header search: csak president+ (és admin/superuser).
 8. Login: **nyelv** Select2 = endoním (saját nyelv neve) + látható országok locale-jai; Register: **ország** = `endonim_name` + csak `visible`; `users.country_id`. Belépés után UI = login nyelv (session/cookie) **és** `users.language_id` mentése (`UserUiLanguage`). Profil / complete-profile: **nincs** nyelvmező.
 9. Belépés: CakeDC **`active`** + app **`enabled`** (`findActive`); session: `RequireUserEnabledMiddleware`.
 10. App ACL „superuser” = **`Users.role === superuser` VAGY** CakeDC **`is_superuser`** (szigorú 1/true). Flag `0` → nincs teljes Countries jog. **Setups modul** (menü/URL): **csak** superuser (`SetupAccess::canAccessModule`).

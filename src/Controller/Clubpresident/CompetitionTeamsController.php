@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\Clubpresident;
 
 use App\Model\Table\CompetitionsClubsTable;
+use App\Utility\AdminTranslate;
 use App\Utility\CompetitionApplication;
+use App\Utility\CompetitionBrowse;
 use App\Utility\LocaleDateParser;
 use App\Utility\LocaleNumberParser;
 use Cake\Http\Exception\NotFoundException;
@@ -58,6 +60,15 @@ class CompetitionTeamsController extends AppController
         $this->set('canEdit', true);
         $this->set('canDelete', true);
 
+        $club = $this->fetchTable('Clubs')->get($clubId);
+        $homeCountryId = (int)($club->country_id ?? 0);
+        $browseCountryId = CompetitionBrowse::resolveCountryId(
+            $this->request,
+            $homeCountryId,
+            CompetitionBrowse::SESSION_CLUBPRESIDENT_TEAMS
+        );
+        $browseCountryOptions = CompetitionBrowse::countryOptions();
+
         $redirect = $this->applyIndexListState('CompetitionTeams');
         if ($redirect !== null) {
             return $redirect;
@@ -80,10 +91,18 @@ class CompetitionTeamsController extends AppController
             'Subclubs' => $this->CompetitionsClubs->Subclubs->getTarget(),
         ]);
 
+        AdminTranslate::applyLocale($this->CompetitionsClubs->Competitions->getTarget());
+
         $query = $this->CompetitionsClubs->find()
             ->contain(['Competitions', 'Subclubs'])
             ->innerJoinWith('Subclubs')
             ->where(['CompetitionsClubs.club_id' => $clubId]);
+        if ($browseCountryId > 0) {
+            $query->where(['Competitions.country_id' => $browseCountryId])
+                ->where(CompetitionBrowse::activeConditions());
+        } else {
+            $query->where(['1 = 0']);
+        }
         $query = $this->applyIndexSearch($query, $this->CompetitionsClubs);
 
         $redirect = $this->resolveIndexPageForLastVisited('CompetitionTeams', $query, $paginateOptions);
@@ -93,7 +112,13 @@ class CompetitionTeamsController extends AppController
 
         $teams = $this->paginate($query, $paginateOptions);
         $this->setLastVisitedForIndex('CompetitionTeams');
-        $this->set(compact('teams', 'clubId'));
+        $this->set(compact(
+            'teams',
+            'clubId',
+            'browseCountryId',
+            'browseCountryOptions',
+            'homeCountryId'
+        ));
     }
 
     /**
@@ -188,11 +213,11 @@ class CompetitionTeamsController extends AppController
         $clubId = $this->presidentClubId();
 
         try {
-            $club = $this->fetchTable('Clubs')->get($clubId);
-            $countryId = (int)$club->country_id;
+            $competitions = $this->fetchTable('Competitions');
+            AdminTranslate::applyLocale($competitions);
             /** @var \App\Model\Entity\Competition $competition */
-            $competition = $this->fetchTable('Competitions')->get($id, contain: ['Clubs']);
-            if ($countryId < 1 || (int)$competition->country_id !== $countryId) {
+            $competition = $competitions->get($id, contain: ['Clubs']);
+            if (!(bool)$competition->visible) {
                 throw new NotFoundException(__('Record not found.'));
             }
         } catch (\Throwable $e) {
@@ -675,7 +700,7 @@ class CompetitionTeamsController extends AppController
     }
 
     /**
-     * Competitions in the club's country with an open application window
+     * Competitions in the browse country with an open application window
      * (first_date_of_application ≤ today ≤ application_deadline) and not ended.
      *
      * @param string|null $keepCompetitionId Always include this id on edit (even if window closed).
@@ -684,7 +709,9 @@ class CompetitionTeamsController extends AppController
     {
         $options = $this->openCompetitionOptionsForClub($clubId);
         if ($keepCompetitionId !== null && $keepCompetitionId !== '' && !isset($options[$keepCompetitionId])) {
-            $row = $this->fetchTable('Competitions')->find()
+            $competitions = $this->fetchTable('Competitions');
+            AdminTranslate::applyLocale($competitions);
+            $row = $competitions->find()
                 ->select(['id', 'name'])
                 ->where(['Competitions.id' => $keepCompetitionId])
                 ->first();
@@ -701,21 +728,28 @@ class CompetitionTeamsController extends AppController
     protected function openCompetitionOptionsForClub(int $clubId): array
     {
         $club = $this->fetchTable('Clubs')->get($clubId);
-        $countryId = (int)$club->country_id;
+        $homeCountryId = (int)$club->country_id;
+        $countryId = CompetitionBrowse::resolveCountryId(
+            $this->request,
+            $homeCountryId,
+            CompetitionBrowse::SESSION_CLUBPRESIDENT_TEAMS
+        );
         $today = \Cake\I18n\Date::today()->format('Y-m-d');
-        $now = DateTime::now()->format('Y-m-d H:i:s');
 
-        return $this->fetchTable('Competitions')->find('list', keyField: 'id', valueField: 'name')
+        if ($countryId < 1) {
+            return [];
+        }
+
+        $competitions = $this->fetchTable('Competitions');
+        AdminTranslate::applyLocale($competitions);
+
+        return $competitions->find('list', keyField: 'id', valueField: 'name')
             ->where([
                 'Competitions.country_id' => $countryId,
-                'Competitions.visible' => true,
                 'Competitions.first_date_of_application <=' => $today,
                 'Competitions.application_deadline >=' => $today,
-                'OR' => [
-                    'Competitions.end_datetime IS' => null,
-                    'Competitions.end_datetime >=' => $now,
-                ],
             ])
+            ->where(CompetitionBrowse::activeConditions())
             ->orderBy(['Competitions.application_deadline' => 'ASC', 'Competitions.name' => 'ASC'])
             ->toArray();
     }
@@ -727,11 +761,9 @@ class CompetitionTeamsController extends AppController
 
     protected function competitionBelongsToClubCountry(string $competitionId, int $clubId): bool
     {
-        $club = $this->fetchTable('Clubs')->get($clubId);
-
+        // Sub-teams may be created for abroad competitions (browse country).
         return $this->fetchTable('Competitions')->exists([
             'Competitions.id' => $competitionId,
-            'Competitions.country_id' => (int)$club->country_id,
         ]);
     }
 
@@ -740,6 +772,10 @@ class CompetitionTeamsController extends AppController
      */
     protected function getScopedTeam(?string $id, int $clubId, array $contain = []): \App\Model\Entity\CompetitionsClub
     {
+        if (in_array('Competitions', $contain, true)) {
+            AdminTranslate::applyLocale($this->CompetitionsClubs->Competitions->getTarget());
+        }
+
         /** @var \App\Model\Entity\CompetitionsClub $team */
         $team = $this->CompetitionsClubs->get($id, contain: $contain);
         if ((int)$team->club_id !== $clubId) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Model\Table\CompetitionsClubsTable;
+use App\Utility\AdminTranslate;
 use App\Utility\LocaleDateParser;
 use App\Utility\LocaleNumberParser;
 use Cake\Http\Exception\NotFoundException;
@@ -155,6 +156,10 @@ class CompetitionTeamsController extends AppController
     {
         if ($id === null || $id === '') {
             throw new NotFoundException(__('Record not found.'));
+        }
+
+        if (in_array('Competitions', $contain, true)) {
+            AdminTranslate::applyLocale($this->CompetitionsClubs->Competitions->getTarget());
         }
 
         /** @var \App\Model\Entity\CompetitionsClub $team */

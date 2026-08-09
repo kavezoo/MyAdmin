@@ -12,7 +12,7 @@
 use App\Auth\MembershipProfile;
 use App\Utility\CompetitionApplication;
 
-$this->Html->css(['pages/index'], ['block' => true]);
+$this->Html->css(['pages/index', 'pages/competition_view'], ['block' => true]);
 $this->Html->script(['pages/index'], ['block' => 'scriptBottom']);
 
 $yes = '<i class="fa fa-check text-success"></i> ' . h(__('Yes'));
@@ -35,6 +35,10 @@ $clubsGetUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Clubs', 
 $clubsEditUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Clubs', 'action' => 'edit']);
 $clubsViewUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Clubs', 'action' => 'view']);
 $clubsDeleteUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Clubs', 'action' => 'delete']);
+$usersGetUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Users', 'action' => 'recordGet']);
+$usersEditUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Users', 'action' => 'edit']);
+$usersViewUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Users', 'action' => 'view']);
+$usersDeleteUrl = $this->Url->build(['prefix' => 'Admin', 'controller' => 'Users', 'action' => 'delete']);
 
 $teamLabels = [
 	'id' => __('ID'),
@@ -63,12 +67,21 @@ $clubLabels = [
 	'name' => __('Name'),
 	'short_name' => __('Short name'),
 ];
+$userLabels = [
+	'id' => __('ID'),
+	'first_name' => __('Name'),
+	'email' => __('Email'),
+	'phone' => __('Phone'),
+	'role' => __('Role'),
+	'club' => __('Club'),
+];
 $config = [
 	'rowDoubleClickAction' => 'modal',
 	'entityFieldLabels' => [
 		'team' => $teamLabels,
 		'applicant' => $applicantLabels,
 		'club' => $clubLabels,
+		'user' => $userLabels,
 	],
 ];
 $this->Html->scriptBlock(
@@ -250,11 +263,38 @@ $applicantsTable = (string)ob_get_clean();
 			<div class="card-body">
 				<dl class="row record-view-fields mb-0">
 					<div class="record-view-row"><dt><?= __('ID') ?></dt><dd><?= h((string)$competition->id) ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h((string)$competition->name) ?></dd></div>
-					<div class="record-view-row"><dt><?= __('Title') ?></dt><dd><?= h((string)$competition->title) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'name')) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Title') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'title')) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Subtitle') ?></dt><dd><?= h((string)$competition->subtitle) ?></dd></div>
+				</dl>
+					<?= $this->element('competitions/staff_under_title', [
+						'competitionStaffGroups' => $competitionStaffGroups ?? null,
+						'competitionId' => (string)$competition->id,
+						'staffModal' => [
+							'getUrl' => $usersGetUrl,
+							'editUrl' => $usersEditUrl,
+							'viewUrl' => $usersViewUrl,
+							'deleteUrl' => $usersDeleteUrl,
+							'labels' => 'user',
+							'title' => __('Member details'),
+						],
+					]) ?>
+				<dl class="row record-view-fields mb-0">
 					<div class="record-view-row"><dt><?= __('Country') ?></dt><dd><?= h($countryLabel ?? \App\Utility\AdminCountry::label((int)$competition->country_id)) ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Club') ?></dt><dd><?= h((string)($competition->club->name ?? '')) ?></dd></div>
+					<?php
+					$venueVars = \App\Utility\CompetitionTextRender::vars($competition);
+					$venueName = trim((string)($venueVars['venue_name'] ?? ''));
+					if ($venueName !== ''):
+					?>
+					<div class="record-view-row"><dt><?= __('Venue name') ?></dt><dd><?= h($venueName) ?></dd></div>
+					<?php endif; ?>
+					<?php if (($venueVars['venue'] ?? '') !== ''): ?>
+					<div class="record-view-row"><dt><?= __('Venue') ?></dt><dd><?= h($venueVars['venue']) ?></dd></div>
+					<?php endif; ?>
+					<?php if (trim((string)($competition->google_maps_url ?? '')) !== ''): ?>
+					<div class="record-view-row"><dt><?= __('Google Maps') ?></dt><dd><a href="<?= h((string)$competition->google_maps_url) ?>" target="_blank" rel="noopener"><?= h(__('Open map')) ?></a></dd></div>
+					<?php endif; ?>
 					<div class="record-view-row"><dt><?= __('National') ?></dt><dd><?= !empty($competition->national_competition) ? $yes : $no ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Application from') ?></dt><dd><?= $competition->first_date_of_application ? h(\App\Utility\LocaleDateParser::format($competition->first_date_of_application, 'date')) : '—' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Application deadline') ?></dt><dd><?= $competition->application_deadline ? h(\App\Utility\LocaleDateParser::format($competition->application_deadline, 'date')) : '—' ?></dd></div>
@@ -262,6 +302,13 @@ $applicantsTable = (string)ob_get_clean();
 					<div class="record-view-row"><dt><?= __('Start') ?></dt><dd><?= $competition->start_datetime ? h(\App\Utility\LocaleDateParser::format($competition->start_datetime, 'datetime_short')) : '—' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('End') ?></dt><dd><?= $competition->end_datetime ? h(\App\Utility\LocaleDateParser::format($competition->end_datetime, 'datetime_short')) : '—' ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Min. team size') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($minimum, decimals: 0)) ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Pipe type') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'pipe_type') ?: '—') ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Pipe parameters') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'pipe_parameters') ?: '—') ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Tobacco type') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'tobacco_type') ?: '—') ?></dd></div>
+					<div class="record-view-row"><dt><?= __('Tobacco weight') ?></dt><dd><?php
+						$tw = \App\Utility\CompetitionTextRender::vars($competition)['tobacco_weight'] ?? '';
+						echo h($tw !== '' ? $tw : '—');
+					?></dd></div>
 					<div class="record-view-row">
 						<dt><?= __('Competing sub-teams') ?></dt>
 						<dd>
@@ -276,13 +323,17 @@ $applicantsTable = (string)ob_get_clean();
 							<span class="text-muted small ms-1"><?= __('(on qualifying sub-teams)') ?></span>
 						</dd>
 					</div>
-					<div class="record-view-row">
-						<dt><?= __('Description') ?></dt>
-						<dd><div class="record-html-preview border rounded p-3 bg-white"><?= $competition->description ?></div></dd>
-					</div>
 					<div class="record-view-row"><dt><?= __('Visible') ?></dt><dd><?= !empty($competition->visible) ? $yes : $no ?></dd></div>
 					<div class="record-view-row"><dt><?= __('Position') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($competition->pos, decimals: 0)) ?></dd></div>
 				</dl>
+				<div class="mt-4">
+					<h5 class="mb-2"><?= __('Description') ?></h5>
+					<div class="competition-description">
+						<?= $this->element('competitions/description_rendered', [
+							'competition' => $competition,
+						]) ?>
+					</div>
+				</div>
 			</div>
 			<div class="card-footer">
 				<div class="record-view-footer-actions">

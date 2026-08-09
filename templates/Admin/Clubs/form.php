@@ -58,6 +58,7 @@ $this->Html->script([
 				<?= $this->Form->create($club, [
 					'id' => 'form-horizontal',
 					'autocomplete' => 'off',
+					'type' => 'file',
 				]) ?>
 					<div class="form-group row mb-3">
 						<?= $this->Form->adminLabel('name', __('Name:'), ['for' => 'name']) ?>
@@ -79,6 +80,35 @@ $this->Html->script([
 								'class' => 'form-control',
 								'id' => 'short-name',
 							]) ?>
+						</div>
+					</div>
+
+					<div class="form-group row mb-3">
+						<?= $this->Form->adminLabel('logo_file', __('Club logo:'), ['for' => 'club-logo-file', 'required' => false]) ?>
+						<div class="col-12 col-md-10 col-xl-6">
+							<?php
+							$clubLogoUrl = $isEdit
+								? \App\Utility\ClubLogo::publicUrlFor(
+									(int)$club->id,
+									is_string($club->get('logo')) ? (string)$club->get('logo') : null
+								)
+								: '';
+							?>
+							<?php if ($clubLogoUrl !== ''): ?>
+								<div class="mb-2">
+									<img src="<?= h($clubLogoUrl) ?>" alt="" class="img-fluid" style="max-width:120px;max-height:120px;object-fit:contain;background:transparent;">
+								</div>
+							<?php endif; ?>
+							<?= $this->Form->control('logo_file', [
+								'label' => false,
+								'type' => 'file',
+								'class' => 'form-control',
+								'id' => 'club-logo-file',
+								'accept' => 'image/png,image/jpeg,image/webp',
+							]) ?>
+							<div class="form-text">
+								<?= __('PNG recommended (transparency kept). Used as {{club_logo}} in competition announcements.') ?>
+							</div>
 						</div>
 					</div>
 

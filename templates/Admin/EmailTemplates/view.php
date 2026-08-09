@@ -39,9 +39,10 @@ $slugLabel = (string)($slugLabel ?? (string)$emailTemplate->slug);
 					<div class="record-view-row">
 						<dt><?= __('HTML body') ?></dt>
 						<dd>
-							<div class="record-html-preview border rounded p-3 bg-white overflow-auto" style="max-height: 28rem;">
-								<?= $emailTemplate->body_html ?>
-							</div>
+							<?= $this->element('admin/html_content', [
+								'html' => (string)($emailTemplate->body_html ?? ''),
+								'class' => 'html-content-frame--tall',
+							]) ?>
 						</dd>
 					</div>
 					<div class="record-view-row">

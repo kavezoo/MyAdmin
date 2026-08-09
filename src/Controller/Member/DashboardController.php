@@ -6,8 +6,9 @@ namespace App\Controller\Member;
 use App\Model\Table\CompetitionsTable;
 use App\Model\Table\CompetitionsUsersTable;
 use App\Model\Table\UsersTable;
+use App\Utility\AdminTranslate;
 use App\Utility\CompetitionApplication;
-use Cake\I18n\DateTime;
+use App\Utility\CompetitionBrowse;
 
 /**
  * Member panel dashboard — profile + open competitions.
@@ -26,7 +27,7 @@ class DashboardController extends AppController
         /** @var \App\Model\Table\CompetitionsUsersTable $competitionsUsers */
         $competitionsUsers = $this->fetchTable('CompetitionsUsers');
 
-        $countryId = 0;
+        $homeCountryId = 0;
         $userId = '';
         $row = null;
         $identity = $this->getRequest()->getAttribute('identity');
@@ -40,7 +41,7 @@ class DashboardController extends AppController
                 ->disableHydration()
                 ->first();
             if (is_array($row)) {
-                $countryId = (int)($row['country_id'] ?? 0);
+                $homeCountryId = (int)($row['country_id'] ?? 0);
             }
         }
 
@@ -48,18 +49,19 @@ class DashboardController extends AppController
             ? CompetitionApplication::memberMayApply($row)
             : false;
 
-        $now = DateTime::now()->format('Y-m-d H:i:s');
-        $competitions = $countryId > 0
+        $browseCountryId = CompetitionBrowse::resolveCountryId(
+            $this->request,
+            $homeCountryId,
+            CompetitionBrowse::SESSION_MEMBER
+        );
+        $browseCountryOptions = CompetitionBrowse::countryOptions();
+
+        AdminTranslate::applyLocale($competitionsTable);
+        $competitions = $browseCountryId > 0
             ? $competitionsTable->find()
                 ->contain(['Clubs'])
-                ->where([
-                    'Competitions.country_id' => $countryId,
-                    'Competitions.visible' => true,
-                    'OR' => [
-                        'Competitions.end_datetime IS' => null,
-                        'Competitions.end_datetime >=' => $now,
-                    ],
-                ])
+                ->where(['Competitions.country_id' => $browseCountryId])
+                ->where(CompetitionBrowse::activeConditions())
                 ->orderBy([
                     'Competitions.first_date_of_application' => 'ASC',
                     'Competitions.application_deadline' => 'ASC',
@@ -84,6 +86,14 @@ class DashboardController extends AppController
             }
         }
 
-        $this->set(compact('competitions', 'myApplications', 'countryId', 'clubFeePaid'));
+        $this->set(compact(
+            'competitions',
+            'myApplications',
+            'clubFeePaid',
+            'browseCountryId',
+            'browseCountryOptions',
+            'homeCountryId'
+        ));
+        $this->set('countryId', $browseCountryId);
     }
 }

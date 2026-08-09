@@ -215,10 +215,34 @@ $applicantsTable = (string)ob_get_clean();
 					<div class="c-meta">
 						<dl class="row record-view-fields mb-0">
 							<div class="record-view-row"><dt><?= __('ID') ?></dt><dd><?= h((string)$competition->id) ?></dd></div>
-							<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h((string)$competition->name) ?></dd></div>
-							<div class="record-view-row"><dt><?= __('Title') ?></dt><dd><?= h((string)$competition->title) ?></dd></div>
+							<div class="record-view-row"><dt><?= __('Name') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'name')) ?></dd></div>
+							<div class="record-view-row"><dt><?= __('Title') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'title')) ?></dd></div>
 							<div class="record-view-row"><dt><?= __('Subtitle') ?></dt><dd><?= h((string)$competition->subtitle) ?></dd></div>
+						</dl>
+							<?= $this->element('competitions/staff_under_title', [
+								'competitionStaffGroups' => $competitionStaffGroups ?? null,
+								'competitionId' => (string)$competition->id,
+								'staffModal' => [
+									'getUrl' => $membersGetUrl,
+									'editUrl' => $membersEditUrl,
+									'viewUrl' => $membersViewUrl,
+									'deleteUrl' => $membersDeleteUrl,
+									'labels' => 'user',
+									'title' => __('Member details'),
+								],
+							]) ?>
+						<dl class="row record-view-fields mb-0">
 							<div class="record-view-row"><dt><?= __('Club') ?></dt><dd><?= h((string)($competition->club->name ?? '')) ?></dd></div>
+							<?php
+							$venueVars = \App\Utility\CompetitionTextRender::vars($competition);
+							$venueName = trim((string)($venueVars['venue_name'] ?? ''));
+							if ($venueName !== ''):
+							?>
+							<div class="record-view-row"><dt><?= __('Venue name') ?></dt><dd><?= h($venueName) ?></dd></div>
+							<?php endif; ?>
+							<?php if (($venueVars['venue'] ?? '') !== ''): ?>
+							<div class="record-view-row"><dt><?= __('Venue') ?></dt><dd><?= h($venueVars['venue']) ?></dd></div>
+							<?php endif; ?>
 							<div class="record-view-row"><dt><?= __('National') ?></dt><dd><?= !empty($competition->national_competition) ? $yes : $no ?></dd></div>
 							<div class="record-view-row"><dt><?= __('Application from') ?></dt><dd><?= $competition->first_date_of_application ? h(\App\Utility\LocaleDateParser::format($competition->first_date_of_application, 'date')) : '—' ?></dd></div>
 							<div class="record-view-row"><dt><?= __('Application deadline') ?></dt><dd><?= $competition->application_deadline ? h(\App\Utility\LocaleDateParser::format($competition->application_deadline, 'date')) : '—' ?></dd></div>
@@ -226,6 +250,13 @@ $applicantsTable = (string)ob_get_clean();
 							<div class="record-view-row"><dt><?= __('Start') ?></dt><dd><?= $competition->start_datetime ? h(\App\Utility\LocaleDateParser::format($competition->start_datetime, 'datetime_short')) : '—' ?></dd></div>
 							<div class="record-view-row"><dt><?= __('End') ?></dt><dd><?= $competition->end_datetime ? h(\App\Utility\LocaleDateParser::format($competition->end_datetime, 'datetime_short')) : '—' ?></dd></div>
 							<div class="record-view-row"><dt><?= __('Min. team size') ?></dt><dd><?= h(\App\Utility\LocaleNumberParser::format($minimum, decimals: 0)) ?></dd></div>
+							<div class="record-view-row"><dt><?= __('Pipe type') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'pipe_type') ?: '—') ?></dd></div>
+							<div class="record-view-row"><dt><?= __('Pipe parameters') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'pipe_parameters') ?: '—') ?></dd></div>
+							<div class="record-view-row"><dt><?= __('Tobacco type') ?></dt><dd><?= h(\App\Utility\CompetitionTextRender::field($competition, 'tobacco_type') ?: '—') ?></dd></div>
+							<div class="record-view-row"><dt><?= __('Tobacco weight') ?></dt><dd><?php
+								$tw = \App\Utility\CompetitionTextRender::vars($competition)['tobacco_weight'] ?? '';
+								echo h($tw !== '' ? $tw : '—');
+							?></dd></div>
 							<div class="record-view-row">
 								<dt><?= __('Competing sub-teams') ?></dt>
 								<dd>
@@ -248,11 +279,10 @@ $applicantsTable = (string)ob_get_clean();
 					<?php /* Right (desktop) / after meta (mobile): description */ ?>
 					<div class="c-desc">
 						<h5 class="mb-2"><?= __('Description') ?></h5>
-						<div class="competition-description record-html-preview border rounded p-3 bg-light">
-							<?php
-							$desc = trim((string)($competition->description ?? ''));
-							echo $desc !== '' ? $competition->description : '—';
-							?>
+						<div class="competition-description">
+							<?= $this->element('competitions/description_rendered', [
+								'competition' => $competition,
+							]) ?>
 						</div>
 					</div>
 				</div>
@@ -263,6 +293,11 @@ $applicantsTable = (string)ob_get_clean();
 						'<span class="btn-label"><i class="fa fa-pencil"></i></span>' . __('Edit'),
 						['action' => 'edit', $competition->id],
 						['escape' => false, 'class' => 'btn btn-primary']
+					) ?>
+					<?= $this->Html->link(
+						'<span class="btn-label"><i class="fa fa-cash-register"></i></span>' . __('Cash desk'),
+						['controller' => 'CompetitionCash', 'action' => 'view', $competition->id],
+						['escape' => false, 'class' => 'btn btn-outline-success']
 					) ?>
 				</div>
 			</div>

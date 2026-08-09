@@ -19,7 +19,10 @@ Ha a Table-en van **Translate** behavior szöveges mezőkkel (`name`, `descripti
 | Markup | **ugyanazon** controller `form.php`-jában (nem `element/admin/…`) |
 
 Countries: **nincs** nyelvi TAB (seedelt országnevek).  
-Cities / Setups: nincs Translate → nincs nyelvi TAB.  
+Cities / Setups form: nincs nyelvi TAB a formon (Setups `name` Translate seedelt).  
+**Competitions** (Admin + President): Translate EAV + nyelvi TAB — `name`, `title`, `subtitle`, `subtitle2`, `description`, `racing_pipe_*_title`. Shared markup: `element/competitions/form_i18n_tabs` (két prefix). Helper: `FormLanguageTabsTrait`.  
+**Description card-header TAB:** `fullWidth => true` — JeffAdmin5 text pane (`col-sm-12`, nincs oldalsó label oszlop); a Basic data nyelvi TAB-ok maradnak a klasszikus `col-md-10` layouton.  
+**Competition text templates** ugyanígy (Description fül).  
 **Email templates** (Admin / President): nincs Cake Translate — nyelvi TAB a `templates/{Prefix}/EmailTemplates/form.php`-ban; egy DB sor / (`country_id` + `language_id` + `slug`); mezők: `subject`, **`body_html` (`.editor` / Trumbowyg)**, `body_text` (plain); `name` admin címke.
 
 ---
@@ -42,7 +45,8 @@ $this->setFormLanguageTabs();
 **Forrás (kötelező):** az aktív `Users.country_id` **`country_visibilities`** sorai — saját ország nyelve + a Countries formon felvett **Additional languages**.  
 Csak ezek jelennek meg TAB-ként. Dedup: egy rövid nyelvkód = egy fül. Saját nyelv mindig első.
 
-`defaultLocaleForForm()`: ha az en_GB (Translate default) benne van a listában → az a root mező; különben az első TAB (saját nyelv).
+`defaultLocaleForForm()`: ha az **EAV Translate `defaultLocale` (`en_GB`)** benne van a listában → az a root mező (fő tábla oszlopok); különben az első TAB (saját nyelv).  
+**Ne** az `App.defaultLocale` (pl. `hu_HU`) legyen a form root, ha az eltér a Table Translate `defaultLocale`-jától — a Cake `beforeMarshal` az `_translations.en_GB.*` üres mezőit a gyökérre emeli és felülírja a kötelező szövegeket.
 
 Részlet: [country-visibilities.md](country-visibilities.md).
 
@@ -64,7 +68,9 @@ $i18nFields = [
 | default (`formDefaultLocale`) | `name`, `description` (entity root) |
 | egyéb | `_translations.{locale}.name` stb. |
 
-HTML mező (`type` = `editor`): `textarea` + class **`editor`** + Trumbowyg assetek a **ugyanazon** `form.php` tetején (`pages/form.js` initeli).
+HTML mező (`type` = `editor`): `textarea` + class **`editor`** + Summernote / Trumbowyg assetek a **ugyanazon** `form.php` tetején (`pages/form.js` initeli).
+
+**JeffAdmin5 text TAB (Description):** ha az editor saját card-header fülön van, add át `'fullWidth' => true` az `form_i18n_tabs` hívásnak — teljes szélességű szerkesztő (`col-12`), Translations: + nyelvi fülek egy sorban, mezőcímke elrejtve az editor fölött. CSS: `.form-i18n-tabs--full` (`pages/form.css`).
 
 A label mellett a **gyökér mező** kötelezősége jelenik meg (`Form->requiredMark($fieldName)`).
 

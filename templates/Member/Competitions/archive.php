@@ -3,7 +3,7 @@
  * Member — competition results archive.
  *
  * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\CompetitionsUser> $rows
+ * @var \Cake\Datasource\Paging\PaginatedResultSet<\App\Model\Entity\CompetitionsUser> $rows
  */
 use App\Utility\CompetitionApplication;
 
@@ -17,8 +17,9 @@ $this->Html->css(['pages/index'], ['block' => true]);
 					<h3 class="fw-bold"><i class="fa fa-archive"></i> <?= __('Competition archive') ?></h3>
 					<?= __('Past competitions you took part in') ?>
 				</div>
-				<div class="float-right">
+				<div class="float-right d-flex align-items-center gap-2 flex-wrap justify-content-end">
 					<?= $this->Html->link(__('Back'), ['action' => 'index'], ['class' => 'btn btn-outline-secondary']) ?>
+					<?= $this->element('admin/index_pagination', ['leadingSep' => true]) ?>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -53,6 +54,9 @@ $this->Html->css(['pages/index'], ['block' => true]);
 						<?php endif; ?>
 					</tbody>
 				</table>
+			</div>
+			<div class="card-footer">
+				<?= $this->element('admin/index_footer') ?>
 			</div>
 		</div>
 	</div>

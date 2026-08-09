@@ -69,14 +69,20 @@ JS
 			<div class="card-header">
 				<div class="float-left">
 					<h3 class="fw-bold"><i class="fa fa-trophy"></i> <?= __('Competitions') ?></h3>
-					<?= __('Open and upcoming competitions in your country') ?>
+					<?= __('Active competitions for the selected country') ?>
 				</div>
-				<div class="float-right">
+				<div class="float-right d-flex align-items-center gap-2 flex-wrap justify-content-end">
 					<?= $this->Html->link(__('Archive'), ['action' => 'archive'], ['class' => 'btn btn-outline-secondary']) ?>
+					<?= $this->element('admin/index_pagination', ['leadingSep' => true]) ?>
 				</div>
 				<div class="clearfix"></div>
 			</div>
 			<div class="card-body p-2">
+				<?= $this->element('panel/competition_browse_country', [
+					'browseCountryId' => $browseCountryId ?? $countryId,
+					'browseCountryOptions' => $browseCountryOptions ?? [],
+					'homeCountryId' => $homeCountryId ?? 0,
+				]) ?>
 				<?php if (!$clubFeePaid): ?>
 					<div class="alert alert-warning m-3 mb-2">
 						<?= h(__('You can only apply to competitions after your club membership fee is paid for this year.')) ?>
@@ -164,6 +170,9 @@ JS
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
+			</div>
+			<div class="card-footer">
+				<?= $this->element('admin/index_footer') ?>
 			</div>
 		</div>
 	</div>

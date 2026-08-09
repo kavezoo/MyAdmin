@@ -108,8 +108,8 @@
 						confirmButtonText: confirmText,
 						onConfirm: onConfirm
 					});
-				} else if (window.confirm(text)) {
-					onConfirm();
+				} else if (App.alertError) {
+					App.alertError(text);
 				}
 			});
 		}

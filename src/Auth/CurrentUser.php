@@ -21,6 +21,29 @@ use Cake\Routing\Router;
  */
 class CurrentUser
 {
+    /**
+     * Logged-in user id (UUID string), or empty string.
+     */
+    public static function id(?ServerRequest $request = null): string
+    {
+        $request ??= Router::getRequest();
+        if ($request === null) {
+            return '';
+        }
+        $identity = $request->getAttribute('identity');
+        if ($identity === null) {
+            return '';
+        }
+        if (is_object($identity) && method_exists($identity, 'getIdentifier')) {
+            $id = (string)$identity->getIdentifier();
+            if ($id !== '') {
+                return $id;
+            }
+        }
+
+        return (string)(static::identityValue($identity, 'id') ?? '');
+    }
+
     public static function role(?ServerRequest $request = null): string
     {
         $request ??= Router::getRequest();

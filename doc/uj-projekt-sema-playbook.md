@@ -116,7 +116,7 @@ Minden új táblánál:
 [ ] belongsTo Select2 (+ „+” ha egyszerű)
 [ ] HABTM? → mindkét oldal multiple Select2
 [ ] Form: adminLabel, #form-horizontal, visible/pos, unsaved, **save hiba → flashEntityErrors**
-[ ] Index: admin_search mezők, oszloptípusok, footer
+[ ] Index: admin_search mezők, oszloptípusok (`label` mező → `col-label`, ne `label`), footer
 [ ] View: dl + related tabs
 [ ] .po msgid-ek + cache clear
 [ ] Doc: valtozasok.md (+ specek ha új minta)

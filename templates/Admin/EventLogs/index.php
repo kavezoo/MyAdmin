@@ -199,8 +199,7 @@ $redirectTarget = $this->request->getRequestTarget();
 				</table>
 			</div>
 			<div class="card-footer">
-				<?= $this->element('admin/index_counter') ?>
-				<?= $this->element('admin/index_pagination') ?>
+				<?= $this->element('admin/index_footer') ?>
 			</div>
 		</div>
 	</div>

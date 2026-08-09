@@ -20,13 +20,37 @@ return function (RouteBuilder $routes): void {
      * Role panels — same chrome as Admin (layout admin + sidebar per prefix).
      * No language segment in the URL (locale = session / user country).
      */
-    $panelPrefixes = ['Admin', 'New', 'Member', 'Clubpresident', 'President'];
+    $panelPrefixes = ['Admin', 'New', 'Member', 'Clubpresident', 'President', 'Checkin', 'Judge'];
     foreach ($panelPrefixes as $prefix) {
-        $routes->prefix($prefix, function (RouteBuilder $builder): void {
+        $routes->prefix($prefix, function (RouteBuilder $builder) use ($prefix): void {
             $builder->connect('/', ['controller' => 'Dashboard', 'action' => 'index']);
+            // Table-judge close API: POST /judge/close/{128-char pair token} (no session)
+            if ($prefix === 'Judge') {
+                $builder->connect(
+                    '/close/{token}',
+                    ['controller' => 'Close', 'action' => 'index'],
+                )
+                    ->setPass(['token'])
+                    ->setPatterns(['token' => '[A-Za-z0-9]{128}'])
+                    ->setMethods(['POST']);
+            }
             $builder->fallbacks(DashedRoute::class);
         });
     }
+
+    /*
+     * Mobile / Flutter JSON API (CSRF skipped in Application middleware).
+     * POST /api/competitions/results/{competitionToken}/{userToken}
+     */
+    $routes->prefix('Api', function (RouteBuilder $builder): void {
+        $builder->connect(
+            '/competitions/results/{competitionToken}/{userToken}',
+            ['controller' => 'CompetitionResults', 'action' => 'submit'],
+        )
+            ->setPass(['competitionToken', 'userToken'])
+            ->setMethods(['POST']);
+        $builder->fallbacks(DashedRoute::class);
+    });
 
     $routes->scope('/', function (RouteBuilder $builder): void {
         // / → login (locale from BrowserLocale / user after auth)

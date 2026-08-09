@@ -13,7 +13,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $locale
  * @property string $model Table alias (Countries, Continents, …)
- * @property int $foreign_key Parent record id
+ * @property string $foreign_key Parent record id (int as string or UUID)
  * @property string $field Translated field name
  * @property string|null $content
  * @property bool $visible Per-locale visibility flag

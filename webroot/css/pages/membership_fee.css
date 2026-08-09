@@ -106,7 +106,7 @@
 
 /*
  * Tagdíj oszlopok: hosszú címke (pl. „National association membership fee (2026)”)
- * — a globális .table th.date nowrap + 8.5rem túl szűk → átfolyás / szétesés.
+ * — fejléc törhet; a cellatartalom (dátum) egy sorban marad.
  */
 .table th.date.club-fee,
 .table th.date.national-fee,
@@ -115,9 +115,18 @@
 	width: auto !important;
 	min-width: 10rem !important;
 	max-width: 16rem !important;
-	white-space: normal !important;
 	vertical-align: middle;
 	box-sizing: border-box;
+}
+
+.table th.date.club-fee,
+.table th.date.national-fee {
+	white-space: normal !important;
+}
+
+.table td.date.club-fee,
+.table td.date.national-fee {
+	white-space: nowrap !important;
 }
 
 .table thead tr th.date.club-fee,

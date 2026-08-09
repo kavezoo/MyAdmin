@@ -153,6 +153,13 @@ JS
 				<div class="float-left">
 					<h3><i class="fa fa-trophy"></i> <?= h((string)$competition->name) ?></h3>
 					<?= h((string)$competition->title) ?>
+					<?php if (trim((string)($competition->subtitle ?? '')) !== ''): ?>
+						<div class="text-muted small"><?= h((string)$competition->subtitle) ?></div>
+					<?php endif; ?>
+					<?= $this->element('competitions/staff_under_title', [
+						'competitionStaffGroups' => $competitionStaffGroups ?? null,
+						'competitionId' => (string)$competition->id,
+					]) ?>
 				</div>
 				<div class="float-right">
 					<a href="<?= $this->Url->build(['action' => 'index']) ?>" class="btn btn-outline-secondary"><i class="fa fa-times"></i></a>
@@ -213,11 +220,10 @@ JS
 					<?php /* Right (desktop) / middle (mobile): description — may be taller than left */ ?>
 					<div class="c-desc">
 						<h5 class="mb-2"><?= __('Description') ?></h5>
-						<div class="competition-description record-html-preview border rounded p-3 bg-light">
-							<?php
-							$desc = trim((string)($competition->description ?? ''));
-							echo $desc !== '' ? $competition->description : '—';
-							?>
+						<div class="competition-description">
+							<?= $this->element('competitions/description_rendered', [
+								'competition' => $competition,
+							]) ?>
 						</div>
 					</div>
 
@@ -235,6 +241,7 @@ JS
 										'competition' => $competition,
 										'application' => $application,
 										'readonly' => false,
+										'feeUser' => $feeUser ?? null,
 									]) ?>
 									<div class="form-footer-actions d-flex flex-wrap gap-2 align-items-center">
 										<button type="submit" class="btn btn-success">
@@ -279,6 +286,7 @@ JS
 									'competition' => $competition,
 									'application' => null,
 									'readonly' => false,
+									'feeUser' => $feeUser ?? null,
 								]) ?>
 								<button type="submit" class="btn btn-success"><span class="btn-label"><i class="fa fa-check"></i></span><?= __('Submit application') ?></button>
 							<?= $this->Form->end() ?>

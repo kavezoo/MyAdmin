@@ -70,9 +70,23 @@ Nincs URL nyelv-prefix. Panelek (Admin chrome):
 | `president`, `vicepresident` | `President` | `/president` | saját panel + **Member**; **Clubpresident** ha `club_id` > 0; **Clubs** CRUD (`/president/clubs`) |
 | `admin`, `superuser` | `Admin` | `/admin` | **csak** ezek; panel váltó → minden role prefix |
 
-**Panel váltás:** `PanelAccess` + `element/panel/switcher` — **„Roles” / hu: Szerepkörök** almenü (összecsukható); felfelé / lefelé linkek nyíl ikonnal. Admin → Member / Clubpresident / President / Admin (**nincs** New). Minden role sidebar ugyanazt az elemet hívja.
+**Panel váltás:** `PanelAccess` + `element/panel/switcher` — **„Role switch” / hu: Szerepkör váltás** almenü (összecsukható); felfelé / lefelé linkek nyíl ikonnal. Admin → Member / Clubpresident / President / Admin; **Check-in / Judge csak** `competition_staff` megbízás **és** versenynap (**nincs** admin auto desk). Staff panelek: `competition_staff` megbízás.
 
-**Panel Dashboard ↔ sidebar:** `App\Utility\PanelNav` — minden prefixen a vezérlőpult kártyái és a menüpontok **ugyanazok** (Dashboard home kivételével). Clubpresident: pending jelentkezők alert + Members card. **Rule:** `panel-nav-conventions.mdc` (alwaysApply).
+### Verseny személyzet (Check-in / Judge)
+
+| | |
+|--|--|
+| Tábla | `competition_staff` (`checkin` \| `judge`) — **nem** írja felül a `Users.role`-t |
+| Érvényesség | **Csak a verseny naptári napján** — a `competition_datetime` **dátum** része (ország `timezone`); `CompetitionStaff::competitionCalendarDate` |
+| `/checkin` | Azonnal jelentkezők; tételes díjlista (nevezési + pipák + ebéd) + `fee_total` mentve; `fee_paid_at` |
+| Desk hozzáférés | **Csak** `competition_staff` megbízás az adott szerepre + versenynap (`deskCompetitionIds` / `assignedPrefixes`; **admin/officer sem** auto) |
+| Fizetés (`markPaid`) | **Csak versenynapon**; utána Flash + tiltás |
+| `/judge` + API | Időeredmény → `result_time`; UI `/judge/applicants`; session Api **és** `POST /judge/close/{128}` — [competition-results-api.md](competition-results-api.md) |
+| Vendég (`new`) | **Csak** a saját staff prefix (+ profile/logout); RestrictNewRoleMiddleware |
+| Tag+ | Saját panelek + Role switch a megbízott staff panelekre (**csak ha ma van megbízás**) |
+| Kijelölés | President/VP → `/president/competition-staff` (AJAX névkeresés); Clubpresident → `/clubpresident/competition-staff` |
+
+**Panel Dashboard ↔ sidebar:** `App\Utility\PanelNav` — minden prefixen a vezérlőpult kártyái és a menüpontok **ugyanazok** (Dashboard home kivételével). Clubpresident: pending **tagság**-jelentkezők alert + pending **verseny**-jelentkezők alert (vezérlőpult fölött) + Members / Competition applicants card. **Rule:** `panel-nav-conventions.mdc` (alwaysApply).
 
 **Taglista önmaga:** President / Clubpresident Members — `membershipRosterOrSelfCondition()`; UI **You** badge.
 

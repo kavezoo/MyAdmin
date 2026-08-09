@@ -21,7 +21,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | **Eseménynapló** | **[event-logs.md](event-logs.md)** |
 | **Login nyelv** | **[login-language.md](login-language.md)** |
 | **Tagság jelentkezés** | **[membership.md](membership.md)** — greenfield: **[membership-greenfield.md](membership-greenfield.md)** |
-| **Versenyek (competitions)** | **[competitions.md](competitions.md)** — panelek, min. létszám, jelentkezés |
+| **Versenyek (competitions)** | **[competitions.md](competitions.md)** — panelek, min. létszám, jelentkezés; időeredmény API: [competition-results-api.md](competition-results-api.md) |
 | **`*_count` / CounterCache** | **[counter-caches.md](counter-caches.md)** — minden prefix; rebuild |
 | **Verseny kivetítő / óra (terv)** | **[race-display.md](race-display.md)** — döntések; kód még nincs |
 | Fordítás | [i18n.md](i18n.md) |
@@ -71,7 +71,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 | `admin-form-unsaved.mdc` | Mentetlen add/edit form → leave Swal |
 | `admin-form-i18n-tabs.mdc` | Form nyelvi TAB + tooltip + Cake 5.3 Translate API |
 | `admin-translate-search-sort.mdc` | Index keresés/sort UI locale (`AdminTranslate`, tilos COALESCE) |
-| `admin-countries-index.mdc` | Countries lista: visible-only, oszlopok, count szélesség |
+| `admin-index-column-classes.mdc` | Index th/td: tilos CSS-ütköző osztály (`label`→badge → `col-label`) |
 | `admin-form-required.mdc` | Kötelező mező piros `*` (adminLabel) |
 | `uj-projekt-sema.mdc` | **alwaysApply** — új/éles projekt: séma + kapcsolatok szerint minden megoldás |
 | `pos-db-default.mdc` | `pos` mindig DB DEFAULT |
@@ -95,6 +95,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - **Admin teljes CRUD + view gyerek TAB:** minden domain tábla Admin CRUD; minden view hasMany/HABTM → `view_related_tabs` + modal CRUD — [admin-full-crud.md](admin-full-crud.md); rule: `admin-view-related-tabs.mdc`
 - **Versenyek (ha kell):** [competitions.md](competitions.md); President view = min. létszám tabok; pending contain Subclubs LEFT — rule: `competitions.mdc`
 - **Verseny kivetítő (tervezett):** két ablak, ~1 s polling, display token, offline = helyi LAN (+ azonos gépes BroadcastChannel); részletek — [race-display.md](race-display.md) (**kód még nincs**)
+- **PDF:** Composer **`mpdf/mpdf`** — HTML→PDF (UTF-8); konkrét kiírás/lista/számla sablonok később
 - **CakeDC auth baseline:** ValiAdmin login; email login; ország + `country_id`; Flash toast; RoleHome afterLogin (`setResult`); header Belépve + Profile…; search role-gated — **projektenként változhat** (role/form/SSO) — [users-auth.md](users-auth.md); rule: `users-auth.mdc`
 - Országnevek: DB `countries` + Translate `i18n`; földrész: `continents` + `countries.continent_id` + Continents i18n (CLDR); Admin lista UI: **[countries-admin.md](countries-admin.md)**; ACL: superuser teljes / admin `visible`+`pos` — seed: `php tmp/seed_continents.php` ([i18n.md](i18n.md))
 - Layout = csak közös CSS/JS; index/form/view oldalspecifikus asseteket a template tölti
@@ -111,7 +112,7 @@ Ez a `doc/` mappa **hordozható specifikáció**: másold át egy új CakePHP 5 
 - Form dátum/idő: **Tempus Dominus 6** — formátum + naptárnyelv + hétkezdet a `dateFormat` / `App.adminLocale` szerint; mentés: dátum middleware
 - Form számok: `numberFormat` + inputmask; mentés: szám middleware (`1 234,56` → `1234.56`); mezőhiba a control **alatt** (piros félkövér; összetett widget: `admin/field_error`)
 - Törlés UI: törölhető = danger + Swal **question**; **nem törölhető** = `btn-secondary` + **disabled** + tooltip
-- **Index oszlopok:** `string` rugalmas (kivéve pl. Countries `.continent`/`.iso2`/`.locale`); kötött: `id` 4.75 / `pos` 5.5 / `number` 6.5 / `currency` 12 / **`count` min-width 15rem (`width:1%`)** / `boolean|visible` 7.5 / `date` 8.5 / `datetime` 10.5 / `time` 5 rem ([admin-oldal.md](admin-oldal.md) §4.3)
+- **Index oszlopok:** `string` rugalmas (kivéve pl. Countries `.continent`/`.iso2`/`.locale`); kötött: `id` 4.75 / `pos` 5.5 / `number` 6.5 / `currency` 12 / **`count` min-width 15rem (`width:1%`)** / `boolean|visible` 7.5 / `date` 8.5 / `datetime` 10.5 / `time` 5 rem ([admin-oldal.md](admin-oldal.md) §4.3). **Tilos** `th`/`td` osztály: `label` (ValiAdmin badge) → `col-label`; rule: `admin-index-column-classes.mdc`
 - Index config: `$rowDoubleClickAction`, `$numberDecimals`, `$show*Column`; **`$indexLimit = 100` / `$indexMaxLimit = 1000`**; session **`Admin.indexState`** (sort/page/`q`); utolsó rekord: **`Admin.lastVisited`** + **`.last-visited`** + scroll
 - **Keresés (minden projekt):** `config/admin_search.php` (`fields` + `labelsKey`; globális limitok); index + header; `/admin/search`; header search **csak** superuser/admin/president/vicepresident; clear → last-visited — [uj-projekt.md](uj-projekt.md) §2.8; rule: `admin-kereses-index-allapot.mdc`
 - **Setups (ha kell):** EAV `setups` + `SetupValue`; slug csak `a-z0-9_`; olvasás: `Setup::get('slug', $default)` — [setups.md](setups.md); rule: `setups-eav.mdc`

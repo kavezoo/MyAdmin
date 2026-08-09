@@ -16,10 +16,11 @@ President kiír → Member jelentkezik (`competitions_users`, pending) → Clubp
 
 | Prefix | Mit |
 |--------|-----|
-| President | CRUD + **view related tabs** (csak min. létszámot elérő alcsapatok + azok assigned tagjai) |
-| Clubpresident | `competition-teams` CRUD; `competition-applicants` besorolás/törlés/edit |
-| Member | lista / view / apply / withdraw / archive; view layout: `pages/competition_view.css` |
+| President | CRUD + **index: alapból idei év** + **Show all**; view related tabs; **Competition staff** külön lista (`/president/competition-staff`, AJAX névkeresés) |
+| Clubpresident | `competition-teams` CRUD; `competition-applicants`; `competition-staff` (saját klub); Dashboard alert pending verseny-jelentkezőkről |
+| Member | lista / view / apply / withdraw / archive; jelentkezés: **kísérők** + **plusz ebéd** + pipa qty; view layout: `pages/competition_view.css` |
 | President view | ugyanez a layout: meta balra, leírás jobbra; mobil: meta → leírás |
+| Browse ország | Member + Clubpresident: Select2 → más ország aktív versenyei; jelentkezés külföldre OK |
 
 ## Kötelező szabályok
 
@@ -32,6 +33,16 @@ President kiír → Member jelentkezik (`competitions_users`, pending) → Clubp
 7. Jelentkezés adatok: tag határidőig szerkeszt; klubelnök határidő után is.
 8. **Klub tagdíj (jelentkezés):** Apply csak ha az idei klub tagdíj rendezett (`CompetitionApplication::memberMayApply`).
 9. **Rendező klub (kiírás):** Admin / President form Select2 + mentés: csak **nemzeti tagság az idei évre rendezett** klubok (`Clubs::optionsForCompetitionOrganizer` / `isAllowedCompetitionOrganizer`). Szerkesztéskor a meglévő rendező marad a listán, ha a tagdíja lejárt.
-10. **Alcsapat törlés (Clubpresident):** csak ha `competitions_clubs.user_count = 0` (nincs besorolt tag); Delete gomb = `a.btn-row-delete` (ne bare `<button>` — `pages/index.js`).
+10. **Új kiírás:** `competition_datetime` default = mai nap **14:00:00**.
+11. **`start_datetime` / `end_datetime`:** nincs a CRUD formon — máshonnan íródik; ne tedd vissza a `FORM_FIELDS`-be.
+12. **Nyelvi TAB:** szöveges mezők mindig Translate + TAB (`CompetitionsTable::TRANSLATE_FIELDS`); nem szöveges mezők a TAB-okon kívül. Admin **és** President.
+13. **Megjelenítés (minden prefix):** verseny szöveges mezők = **login / UI locale** (`AdminCountry::applyTranslateLocale` → Competitions + `AdminTranslate::applyLocale` contain előtt). Form mentés: EAV `defaultLocale` (`en_GB`) — ne keverd.
+14. **Alcsapat törlés (Clubpresident):** csak ha `competitions_clubs.user_count = 0` (nincs besorolt tag); Delete gomb = `a.btn-row-delete` (ne bare `<button>` — `pages/index.js`).
+15. **Szövegsablon + `{{placeholders}}`:** sablon = egy lap (cím + leírás, nincs card-header TAB); verseny = Basic/Description TAB + placeholder chip-ek. Apply → csak description. Megjelenítés locale formátummal. Kiírás mezők (Translate): `pipe_type`, `pipe_parameters`, `tobacco_type`, **`lunch_description`**; `tobacco_weight` (g), **`lunch_price`**, **`racing_pipe_N_image`** (upload) → tokenek `{{lunch_*}}`, `{{racing_pipe_N_image}}` stb. — ne keverd a `racing_pipe_N_title` jelentkezési címkékkel.
+16. **Helyszín:** `city_id` (AJAX Cities), **`venue_name`**, `venue_address`, `google_maps_url`; view map keret + nagyítás / Esc. Kiírás HTML: `{{national_association_logo}}` + `{{club_logo}}` (PNG + átlátszóság); egyesület logó = Countries, klub = Clubs.
+17. **Aktív verseny + browse ország:** Member lista/dashboard és Clubpresident applicants/teams: csak `CompetitionBrowse::activeConditions()`; ország Select2 (`competition_browse_country`). Tag **jelentkezhet külföldre**; klubelnök szűrhet más országra. Ne zárd vissza home-country lockra az `apply`/`view`-t.
+18. **Staff (check-in / judge):** `competition_staff`; kijelölés **külön listán** (President + Clubpresident); panel/API csak **kijelölt** user + **versenynapon** (ország TZ) — officer/admin **nem** auto (`PanelAccess` staff prefix = `assignedPrefixes` only). Check-in `markPaid` is csak versenynapon. View (Member/President/Admin): név/alcím alatt felsorolás (check-in → asztalbírók). Időeredmény: `result_time` + [doc/competition-results-api.md](../doc/competition-results-api.md). **Close API:** `POST /judge/close/{128-char pair}` — nincs session; email+idő; minden assigned ideje → `end_datetime`.
+19. **Díjak:** nevezés + pipa × qty + **`lunch_for_the_attendant` × `lunch_price`** → `lunch_fee` a `fee_total`-ban; check-in mutatja kísérők + plusz ebéd; **`fee_paid_by`** = ki szedte be; kassza gyűjtő szerinti csoport + „Should have in till”.
+20. **Kiírás zárolás:** `application_deadline` után (Admin + President) a verseny tartalma **nem** szerkeszthető — form mezők disabled, mentés elutasítva (`CompetitionApplication::isContentLocked`).
 
 Kanban (húzós besorolás) — **nincs** még; ne ígérd / ne építsd, amíg a user nem kéri.

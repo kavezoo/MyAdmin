@@ -122,9 +122,25 @@ class Application extends BaseApplication
 
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/5/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
-            ->add(new CsrfProtectionMiddleware([
-                'httponly' => true,
-            ]));
+            // Flutter /api/* uses session (or later token) auth — skip CSRF for Api prefix.
+            ->add((static function (): CsrfProtectionMiddleware {
+                $csrf = new CsrfProtectionMiddleware([
+                    'httponly' => true,
+                ]);
+                $csrf->skipCheckCallback(static function ($request): bool {
+                    $prefix = (string)$request->getParam('prefix');
+                    $path = $request->getPath();
+
+                    // Flutter /api/* and public judge close (token in URL)
+                    return strcasecmp($prefix, 'Api') === 0
+                        || str_starts_with($path, '/api/')
+                        || (strcasecmp($prefix, 'Judge') === 0
+                            && strcasecmp((string)$request->getParam('controller'), 'Close') === 0)
+                        || str_starts_with($path, '/judge/close/');
+                });
+
+                return $csrf;
+            })());
 
         return $middlewareQueue;
     }
@@ -227,6 +243,16 @@ class Application extends BaseApplication
                     'description' => __('User logged in'),
                 ], $request);
 
+                // Guests with competition staff assignment → Check-in / Judge (even without full membership).
+                if ($role === AppRoles::NEW) {
+                    $staffHome = RoleHome::url(AppRoles::NEW, $userId !== null ? (string)$userId : '');
+                    if (($staffHome['prefix'] ?? '') !== 'New') {
+                        $event->setResult($staffHome);
+
+                        return;
+                    }
+                }
+
                 // Fresh `new` users land on the New dashboard (incomplete → warning + CTA there).
                 if ($role === AppRoles::NEW && MembershipProfile::needsProfileCompletion($user)) {
                     $event->setResult(RoleHome::url(AppRoles::NEW));
@@ -234,7 +260,10 @@ class Application extends BaseApplication
                     return;
                 }
 
-                $event->setResult(RoleHome::url($role !== '' ? $role : CurrentUser::role()));
+                $event->setResult(RoleHome::url(
+                    $role !== '' ? $role : CurrentUser::role(),
+                    $userId !== null ? (string)$userId : null
+                ));
             },
         );
 

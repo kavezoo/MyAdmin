@@ -109,8 +109,8 @@
 				var msg = (res && res.message) || (window.PresidentMembers || {}).toggleError || 'Error';
 				if (App.alertError) {
 					App.alertError(msg);
-				} else {
-					window.alert(msg);
+				} else if (App.alert) {
+					App.alert({ icon: 'error', text: msg });
 				}
 			}
 		}).fail(function () {
@@ -118,8 +118,8 @@
 			var msg = (window.PresidentMembers || {}).toggleError || 'Error';
 			if (App.alertError) {
 				App.alertError(msg);
-			} else {
-				window.alert(msg);
+			} else if (App.alert) {
+				App.alert({ icon: 'error', text: msg });
 			}
 		});
 	}

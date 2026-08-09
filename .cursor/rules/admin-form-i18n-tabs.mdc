@@ -10,9 +10,14 @@ Részlet: `doc/form-i18n-tabs.md`, `doc/i18n.md`, `doc/country-visibilities.md`.
 
 ## Setup
 
-1. Controller add/edit: `$this->setFormLanguageTabs();` — TAB-ok = aktív ország `country_visibilities` (saját + Additional languages)
-2. Edit: `$entity = $this->getWithTranslations($this->Things, $id, $contain);` — root locale = `FormLanguages::defaultLocaleForForm()`
-3. Template: **`templates/{Prefix}/{Controller}/form.php`** — nyelvi TAB markup **ide** (másold: `doc/snippets/form_language_fields.php.example`). **Ne** hozz létre `element/admin/*_language_fields` elemet.
+1. Controller add/edit: `$this->setFormLanguageTabs($countryId);` — TAB-ok = adott ország `country_visibilities` (saját + Additional languages). Trait: `FormLanguageTabsTrait` (Admin + President `AppController`).
+2. Edit: `$entity = $this->getWithTranslations($this->Things, $id, $contain, $countryId);` — root locale = `FormLanguages::defaultLocaleForForm($countryId)` (= Table Translate `defaultLocale` / `en_GB`, ha van EN fül).
+3. Mentés előtt: `$this->setFormTranslateLocale($this->Things, $countryId);` — ugyanaz a locale a patch/save-hez.
+4. Template: **`templates/{Prefix}/{Controller}/form.php`** — nyelvi TAB markup **ide** (másold: `doc/snippets/form_language_fields.php.example`). **Ne** hozz létre `element/admin/*_language_fields` elemet.
+   - Kivétel (két prefix, azonos mezők): `element/competitions/form_i18n_tabs` — Admin + President competitions form.
+   - **Description / text card-header TAB** (JeffAdmin5): `'fullWidth' => true` → teljes szélességű editor (`col-12`); Basic data nyelvi TAB-ok maradnak a klasszikus label+col layouton.
+5. Mentés: `patchEntity(..., ['fields' => […, '_translations']])` + **`scrubEmptyTranslations($data)`** (ne ments üres i18n sort); entity: `TranslateTrait` + `'_translations' => true`. Translate: **`allowEmptyTranslations => false`**.
+6. Lista / view: `AdminTranslate::applyLocale($table)` (indexPaginateOptionsFor már megteszi).
 
 ## Tooltip
 

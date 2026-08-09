@@ -32,6 +32,7 @@ Ez a fájl megkülönbözteti, mi **maradjon meg** minden projektben, és mi **c
 | CounterCache rebuild | `src/Command/RebuildCounterCachesCommand.php` |
 | Page CSS | `webroot/css/pages/index.css`, `form.css` |
 | Dokumentáció | `doc/*` — különösen [minta-tanulsagok.md](minta-tanulsagok.md) éles építéshez |
+| PDF generálás | Composer **`mpdf/mpdf`** (^8.3) — HTML/CSS → PDF, UTF-8; tempDir: `tmp/mpdf` (még nincs domain wrapper — későbbi PDF feladatokhoz) |
 
 ## Ideiglenes / domain — cserélhető
 

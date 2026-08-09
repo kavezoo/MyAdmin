@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `clubs` (
   `clubpresident_id` varchar(36) NOT NULL COMMENT 'Mirror of club_president_id ("" if none)',
   `name` varchar(150) NOT NULL,
   `short_name` varchar(250) NOT NULL,
-  `logo` varchar(255) DEFAULT NULL COMMENT 'Club logo path (uploads/clubs/{id}.jpg)',
+  `logo` varchar(255) DEFAULT NULL COMMENT 'Club logo path (uploads/clubs/{id}.png)',
   `email` varchar(50) NOT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT 1 COMMENT '0 = not selectable on profile / complete-profile',
   `address` varchar(100) NOT NULL,

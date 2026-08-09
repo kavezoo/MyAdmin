@@ -204,8 +204,7 @@ $this->assign('title', __('Members'));
 							<label class="form-check-label text-nowrap" for="members-show-applicants"><?= __('Show pending applicants') ?></label>
 						</div>
 					</form>
-					<span class="index-header-sep" aria-hidden="true">|</span>
-					<?= $this->element('admin/index_pagination') ?>
+					<?= $this->element('admin/index_pagination', ['leadingSep' => true]) ?>
 				</div>
 				<div class="clearfix"></div>
 			</div>

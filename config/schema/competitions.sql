@@ -1,10 +1,17 @@
 -- Competitions (after DropCompetitionSummaryColumns).
+-- Text fields: Cake Translate EAV in `i18n` (name, title, subtitle, subtitle2, description, racing_pipe_*_title, pipe_type, pipe_parameters, tobacco_type).
 
 CREATE TABLE IF NOT EXISTS `competitions` (
   `id` varchar(36) NOT NULL,
   `country_id` int(10) unsigned NOT NULL,
   `club_id` int(10) unsigned NOT NULL,
+  `city_id` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '0 = none; soft FK → cities.id',
+  `venue_name` varchar(250) NOT NULL DEFAULT '' COMMENT 'Venue / building name (e.g. culture house)',
+  `venue_address` varchar(255) NOT NULL DEFAULT '' COMMENT 'Street address (manual)',
+  `google_maps_url` varchar(1000) NOT NULL DEFAULT '' COMMENT 'Google Maps share / embed URL',
+  `competition_text_template_id` int(10) unsigned DEFAULT NULL COMMENT 'Last applied competition_text_templates.id',
   `user_id` varchar(36) NOT NULL,
+  `modified_by` varchar(36) DEFAULT NULL COMMENT 'Last editor Users.id (create = user_id)',
   `national_competition` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `name` varchar(250) NOT NULL,
   `title` varchar(250) NOT NULL,
@@ -21,6 +28,24 @@ CREATE TABLE IF NOT EXISTS `competitions` (
   `racing_pipe_1_title` varchar(250) NOT NULL DEFAULT '',
   `racing_pipe_2_title` varchar(250) NOT NULL DEFAULT '',
   `racing_pipe_3_title` varchar(250) NOT NULL DEFAULT '',
+  `pipe_type` varchar(250) NOT NULL DEFAULT '' COMMENT 'Competition pipe type (announcement)',
+  `pipe_parameters` varchar(500) NOT NULL DEFAULT '' COMMENT 'Pipe parameters (announcement)',
+  `tobacco_type` varchar(250) NOT NULL DEFAULT '' COMMENT 'Competition tobacco type (announcement)',
+  `tobacco_weight` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Tobacco weight in grams',
+  `currency` char(3) NOT NULL DEFAULT 'HUF' COMMENT 'ISO 4217; default = country official currency',
+  `entry_fee_member` decimal(12,2) NOT NULL DEFAULT 0.00 COMMENT 'Entry fee if national association fee paid this year',
+  `entry_fee_non_member` decimal(12,2) NOT NULL DEFAULT 0.00 COMMENT 'Entry fee if national association fee not paid',
+  `lunch_description` varchar(500) NOT NULL DEFAULT '' COMMENT 'What lunch is served (Translate EAV also)',
+  `lunch_price` decimal(12,2) NOT NULL DEFAULT 0.00 COMMENT 'Price per lunch (companions / extra lunches)',
+  `racing_pipe_1_price_member` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `racing_pipe_1_price_non_member` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `racing_pipe_2_price_member` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `racing_pipe_2_price_non_member` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `racing_pipe_3_price_member` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `racing_pipe_3_price_non_member` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `racing_pipe_1_image` varchar(255) NOT NULL DEFAULT '' COMMENT 'Uploaded photo path for racing pipe 1',
+  `racing_pipe_2_image` varchar(255) NOT NULL DEFAULT '' COMMENT 'Uploaded photo path for racing pipe 2',
+  `racing_pipe_3_image` varchar(255) NOT NULL DEFAULT '' COMMENT 'Uploaded photo path for racing pipe 3',
   `user_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: assigned applicants',
   `national_pipe_club_member_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: SUM pipe qty (active apps)',
   `attendant_count` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'CounterCache: active applications (pending+assigned)',
@@ -31,7 +56,10 @@ CREATE TABLE IF NOT EXISTS `competitions` (
   PRIMARY KEY (`id`),
   KEY `country_id` (`country_id`),
   KEY `club_id` (`club_id`),
+  KEY `city_id` (`city_id`),
+  KEY `competition_text_template_id` (`competition_text_template_id`),
   KEY `user_id` (`user_id`),
+  KEY `modified_by` (`modified_by`),
   KEY `first_date_of_application` (`first_date_of_application`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

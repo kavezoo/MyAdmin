@@ -22,18 +22,24 @@ $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Delete this application
 					<h3 class="fw-bold"><i class="fa fa-user-plus"></i> <?= __('Competition applicants') ?></h3>
 					<?= __('Members apply first. Assign a sub-team to register them; delete if they should not compete.') ?>
 				</div>
-				<div class="float-right">
+				<div class="float-right d-flex align-items-center gap-2 flex-wrap justify-content-end">
 					<?= $this->Html->link(
 						'<span class="btn-label"><i class="fa fa-users"></i></span>' . __('Sub-teams'),
 						['prefix' => 'Clubpresident', 'controller' => 'CompetitionTeams', 'action' => 'index'],
 						['escape' => false, 'class' => 'btn btn-outline-secondary']
 					) ?>
+					<?= $this->element('admin/index_pagination', ['leadingSep' => true]) ?>
 				</div>
 				<div class="clearfix"></div>
 			</div>
 			<div class="card-body">
+				<?= $this->element('panel/competition_browse_country', [
+					'browseCountryId' => $browseCountryId ?? 0,
+					'browseCountryOptions' => $browseCountryOptions ?? [],
+					'homeCountryId' => $homeCountryId ?? 0,
+				]) ?>
 				<?php if ($groups === []): ?>
-					<p class="text-muted mb-0"><?= __('No club members have applied to a competition yet. Members apply from the Member panel → Competitions.') ?></p>
+					<p class="text-muted mb-0"><?= __('No club members have applied to an active competition in this country yet. Members apply from the Member panel → Competitions.') ?></p>
 				<?php else: ?>
 					<?php foreach ($groups as $competitionId => $group): ?>
 						<?php
@@ -116,18 +122,22 @@ $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Delete this application
 														'title' => h(__('Edit application details')),
 													]
 												) ?>
-												<?= $this->Form->postLink(
-													'<i class="fa fa-trash"></i>',
-													['action' => 'delete', $app->id],
-													[
-														'escape' => false,
-														'class' => 'btn btn-sm btn-outline-danger',
-														'confirm' => __('Delete this application? The member will no longer be listed for this competition.'),
-														'data-bs-toggle' => 'tooltip',
-														'data-bs-html' => 'true',
-														'title' => $tooltipDelete,
-													]
-												) ?>
+												<?= $this->Form->create(null, [
+													'url' => ['action' => 'delete', $app->id],
+													'id' => 'delete-form-' . $app->id,
+													'class' => 'd-inline',
+												]) ?>
+												<button type="button"
+													class="btn btn-sm btn-outline-danger btn-row-delete"
+													data-id="<?= (int)$app->id ?>"
+													data-bs-toggle="tooltip"
+													data-bs-html="true"
+													title="<?= h($tooltipDelete) ?>"
+													data-swal-title="<?= h(__('Delete')) ?>"
+													data-swal-text="<?= h(__('Delete this application? The member will no longer be listed for this competition.')) ?>">
+													<i class="fa fa-trash"></i>
+												</button>
+												<?= $this->Form->end() ?>
 											</td>
 										</tr>
 									<?php endforeach; ?>
@@ -136,6 +146,9 @@ $tooltipDelete = '<b>' . __('Delete') . '</b><br>' . __('Delete this application
 						</div>
 					<?php endforeach; ?>
 				<?php endif; ?>
+			</div>
+			<div class="card-footer">
+				<?= $this->element('admin/index_footer') ?>
 			</div>
 		</div>
 	</div>

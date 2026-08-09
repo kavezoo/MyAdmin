@@ -19,20 +19,27 @@
 	margin-bottom: 0;
 }
 
-/* Count oszlop: címke + sort — ne zsugorodjon (table cell quirks) */
+/* Count oszlop: fejléc címke törhet; cellatartalom egy sorban */
 .index-data-table th.count,
 .index-data-table td.count {
 	width: 1% !important;
-	min-width: 15rem !important;
-	max-width: none !important;
+	min-width: 8rem !important;
+	max-width: 14rem !important;
+}
+
+.index-data-table th.count {
+	white-space: normal !important;
+}
+
+.index-data-table td.count {
 	white-space: nowrap !important;
 }
 
 .index-data-table th.count > a {
-	width: max-content !important;
-	max-width: none !important;
-	min-width: max-content;
-	flex-shrink: 0;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0;
+	white-space: normal !important;
 }
 
 /* Modal / view: HTML body preview (trusted admin content) */
@@ -40,6 +47,21 @@
 	max-height: 28rem;
 	overflow: auto;
 	word-break: break-word;
+}
+
+/* Trusted editor HTML — isolated iframe (keeps embedded <style> / colors) */
+.html-content-frame {
+	display: block;
+	width: 100%;
+	min-height: 5rem;
+	border: 1px solid rgba(0, 0, 0, 0.125);
+	border-radius: 0.25rem;
+	background: #fff;
+}
+
+.html-content-frame--tall,
+.html-content-frame--modal {
+	max-height: 28rem;
 }
 
 /* Modal / view: plain text with preserved newlines (e.g. body_text) */

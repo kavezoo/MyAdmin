@@ -5,6 +5,803 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-09 — Judge close API: `/judge/close/{pairToken}`
+
+### Mi
+Nyilvános POST (nincs session): 128 char összetett token = verseny UUID + versenyző `users.id` (mindkettőnél `-` → 8 random). Body: `email` + idő → `result_time` + `result_recorded_by_email`. Ha minden **assigned** versenyzőnek van ideje → `competitions.end_datetime = now()`.
+
+### Érintett
+`Judge/CloseController`, `UuidObfuscator::encodePair/decodePair`, `CompetitionResults`, migráció `result_recorded_by_email`, routes/CSRF/permissions, `doc/competition-results-api.md`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Check-in: fizetés rögzítője (`fee_paid_by`) + kassza csoportosítás
+
+### Mi
+`competitions_users.fee_paid_by` = ki jelölte fizetettnek. Kassza: csoport / „Should have in till” / Grand total. Jelentkező kártyán: Recorded by.
+
+### Érintett
+migráció `20260809200000_*`, CompetitionsUsers entity/table, Checkin Applicants/Cash, `checkin.css`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Google Maps embed: helyes koordináta a bemásolt linkből
+
+### Mi
+`mapEmbedUrl` / `googleMapsToEmbedUrl`: place/share linkből `!3d!4d` vagy `@lat,lng` (vagy place név / iframe src / short link). A teljes URL `q=`-ba tétele rossz helyet mutatott.
+
+### Érintett
+`src/Utility/CompetitionTextRender.php`, `venue_fields.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — PDF: mPDF telepítve
+
+### Mi
+Composer: **`mpdf/mpdf` ^8.3** — HTML→PDF, erős UTF-8 (hu/többnyelvű). Temp: `tmp/mpdf`. Konkrét PDF sablonok később (user kérésre). Licenc: GPL-2.0 (szerver oldali használat).
+
+### Érintett
+`composer.json` / `composer.lock`, `doc/keretrendszer.md`, `doc/README.md`
+
+---
+
+## 2026-08-09 — Check-in: csak versenynapon (admin bypass nélkül)
+
+### Mi
+`PanelAccess`: Check-in/Judge **nem** jár automatikusan adminnak — csak `competition_staff` + versenynap (`assignedPrefixes`). `markPaid`: nap után explicit Flash tiltás.
+
+### Érintett
+`src/Auth/PanelAccess.php`, `Checkin/ApplicantsController`, `doc/users-auth.md`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Verseny kiírás: határidő után tartalom zárolva
+
+### Mi
+`application_deadline` után (következő naptól) Admin/President edit: mezők disabled, nincs Save, POST elutasítva. `CompetitionApplication::isContentLocked()`.
+
+### Érintett
+`CompetitionApplication`, Admin/President CompetitionsController + form, `competition_form.js`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Verseny leírás: {{}} / {} helyőrző behelyettesítés
+
+### Mi
+`CompetitionTextRender::interpolate`: `{{token}}` és `{token}` (CSS `{…}` nem); üres értéknél a helyőrző **marad**. `src`/`href` attribútumban logó/kép token → URL (`*_url` / img `src` kiemelés), így pl. `<img src="{{club_logo}}">` működik. President/Member view contain: `Countries` (országos logó).
+
+### Érintett
+`src/Utility/CompetitionTextRender.php`, `CompetitionFees.php`, President/Member CompetitionsController, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Verseny leírás HTML: tervezett formázás (iframe)
+
+### Mi
+`admin/html_content`: `<style>` a iframe **head**-be; `srcdoc` attribútum (nem JS-assign) — középre zárás / betűtípus megmarad, Admin Bootstrap nem írja felül. Admin view: leírás teljes szélességben (nem `dd` cellában). Staff a `dl`-en kívül.
+
+### Érintett
+`templates/element/admin/html_content.php`, President/Admin Competitions view, `competition_view.css`
+
+---
+
+## 2026-08-09 — Verseny view: staff név → linked modal
+
+### Mi
+President / Admin verseny adatlap: check-in és asztalbíró **nevek** `record-modal-link` (Members / Users `recordGet` + Edit/View). Member panelen továbbra is sima szöveg. `CompetitionStaff::groupedDisplayPeople()`.
+
+### Érintett
+`CompetitionStaff`, `element/competitions/staff_under_title`, President/Admin Competitions view, controller `groupedDisplayPeople`
+
+---
+
+## 2026-08-09 — Versenydíj megjelenítés: nincs tizedes (fillér)
+
+### Mi
+`CompetitionFees::format()` — **0 tizedes** (nincs fillér): check-in, kassza, nevezés, placeholder összegek.
+
+### Érintett
+`src/Utility/CompetitionFees.php`, `templates/element/competitions/fee_fields.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Check-in: kassza külön menüpont
+
+### Mi
+A befizetés összesítő tábla lekerült a jelentkező listáról → **`/checkin/cash`** (`CashController`) + PanelNav **Cash desk**. Applicants lista zavarmentes.
+
+### Érintett
+`Checkin/CashController`, `templates/Checkin/Cash/index.php`, `PanelNav::checkin()`, Applicants index (tábla eltávolítva), `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Check-in: kassza összesítő tábla
+
+### Mi
+Egyszerű, kis margójú táblázat a check-in tetején: ki fizetett + összeg, alul **Total** — kassza egyeztetéshez. Csak `fee_paid_at` sorok.
+
+### Érintett
+`Checkin/ApplicantsController`, `templates/Checkin/Applicants/index.php`, `pages/checkin.css`
+
+---
+
+## 2026-08-09 — Check-in: mindenki fizetett üzenet
+
+### Mi
+Ha a verseny minden aktív jelentkezőjénél van `fee_paid_at`, a lista tetején zöld alert: **Mindenki rendezte a nevezési díját.**
+
+### Érintett
+`Checkin/ApplicantsController`, `templates/Checkin/Applicants/index.php`, `pages/checkin.css`
+
+---
+
+## 2026-08-09 — Check-in Mark paid SWAL: név + összeg + kérdés
+
+### Mi
+Fizetés megerősítő SWAL: **név**, alatta **összeg**, majd „Fizetettnek jelöli ezt a versenyzőt?”. `App.confirmDelete` támogatja az `html` opciót.
+
+### Érintett
+`templates/Checkin/Applicants/index.php`, `webroot/js/app.js`, `pages/checkin.css`
+
+---
+
+## 2026-08-09 — Check-in: nagyobb, mobilbarát díjsorok
+
+### Mi
+Check-in kártya: `3 × 10 000,00 Ft` jellegű qty×ár sor **nagyobb, félkövér**; címke/összeg/total és név is nagyobb — telefonon könnyebben olvasható.
+
+### Érintett
+`templates/element/competitions/applicant_fee_lines.php`, `webroot/css/pages/checkin.css`, `templates/Checkin/Applicants/index.php`
+
+---
+
+## 2026-08-09 — Check-in kártya: border-2 + árnyék
+
+### Mi
+Fizetett / nem fizetett kártya: **2px határozott** border (zöld `#198754` / piros `#dc3545`), világos háttér változatlan, erősebb box-shadow.
+
+### Érintett
+`webroot/css/pages/checkin.css`
+
+---
+
+## 2026-08-09 — Competition staff Remove: SWAL után form submit javítás
+
+### Mi
+A Remove gomb SWAL confirm után **nem küldte el** a törlés formot (jQuery `$form.trigger('submit')` no-op lehet). Most: rejtett `#delete-form-{id}` (Users index minta) + **natív** `HTMLFormElement.submit()`, `getElementById`.
+
+### Érintett
+`webroot/js/app.js`, `templates/element/competitions/staff_assign.php`
+
+---
+
+## 2026-08-09 — Check-in: fizetett / nem fizetett kártyaszín
+
+### Mi
+Check-in jelentkező kártya: **fizetett** = világoszöld (`is-paid`), **nem fizetett** = világospiros (`is-unpaid`) — a teljes kártya háttér.
+
+### Érintett
+`webroot/css/pages/checkin.css`, `templates/Checkin/Applicants/index.php`
+
+---
+
+## 2026-08-09 — Check-in: szűrő switch-ek (jóváhagyatlan / nem fizetett)
+
+### Mi
+Check-in listán két Bootstrap switch: **Only unapproved** (`status=pending`) és **Only unpaid** (`fee_paid_at` üres). Kombinálhatók (AND). Query: `unapproved_only=1`, `unpaid_only=1`. Kártyán státusz + Paid/Unpaid badge.
+
+### Érintett
+`Checkin/ApplicantsController`, `templates/Checkin/Applicants/index.php`, `pages/checkin.css`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Versenydíj: tag vs nem tag árak (országos tagság)
+
+### Mi
+A nevezés és a versenypipa **olcsóbb**, ha a jelentkező **rendezte az országos pipaklub (nemzeti egyesület) díját** az adott évre (`users.national_membership_fee_date` → `CompetitionFees::isNationalMember`). Egy versenyen a member/non-member mezők **fel voltak cserélve** (tag drágább volt) — DB árak megcserélve + díjak újraszámolva. Form címkék egyértelműbbek; validáció: tag ár ne legyen magasabb a nem-tag árnál.
+
+### Érintett
+`CompetitionFees` (már így számolt), `fee_fields.php`, `CompetitionsTable` validáció, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Check-in: hiányzó ebéd díj a fizetett snapshotban
+
+### Mi
+Ha a jelentkezés már `fee_paid_at` előtt kapott ebéd snapshotot 0-val (vagy az ebédár később került be), a check-in most **begyógyítja** a `lunch_fee` + `fee_total` mezőket, és a díjsorok élő ebédárral jelennek meg.
+
+### Érintett
+`CompetitionFees::healPaidMissingLunchFee`, `syncDueAmounts`, `lineItems` (paid ág)
+
+---
+
+## 2026-08-09 — Törlés / confirm: mindenütt SWAL
+
+### Mi
+Natív `confirm` / `alert` helyett SweetAlert. Globális `.btn-row-delete` kezelő az `app.js`-ben. Competition staff Remove, Competition applicants delete, Admin Users view delete → rejtett form + SWAL. JS fallbackok (competition_form, profile, members) is SWAL.
+
+### Érintett
+`webroot/js/app.js`, `pages/index.js`, `staff_assign`, `CompetitionApplicants/index`, `Admin/Users/view`, egyéb JS fallbackok
+
+---
+
+## 2026-08-09 — Index listák: egységes `admin/index_footer`
+
+### Mi
+Minden hiányzó index lista kapott `card-footer` + `admin/index_footer` mintát (balra számláló, jobbra lapozó). A lapozó (`admin/index_pagination`) továbbra is **csak több oldalnál** jelenik meg. Ahol eddig nem volt `$this->paginate()`, ott limit 50-nel bevezetve (Checkin/Judge Applicants, Clubpresident CompetitionApplicants, Member Competitions + archive). Club böngésző (Clubpresident/Member) a közös `panel/clubs_index` elementen keresztül már tartalmazza a footert.
+
+### Érintett
+`templates/Admin/EventLogs/index.php`, `Checkin/Judge Applicants` (controller+template), `Clubpresident/Applicants/index.php`, `Clubpresident/CompetitionApplicants` (controller+template), `Member/Competitions` index+archive (controller+template), `element/panel/clubs_index.php` (már kész)
+
+---
+
+## 2026-08-09 — Competition staff lista: card-footer + paginator
+
+### Mi
+President / Clubpresident Competition staff index: szokásos `admin/index_footer` (balra rekordszámláló), fejléc/lábléc lapozó **csak ha több oldal van** (`index_pagination` pageCount > 1).
+
+### Érintett
+`President/Clubpresident CompetitionStaffController` + index templatek
+
+---
+
+## 2026-08-09 — Verseny view: személyzet a név/alcím alatt
+
+### Mi
+Verseny adatlap (Member / President / Admin): a név és alcím alatt felsorolva a kijelölt személyzet — előbb check-in, majd asztalbírók.
+
+### Érintett
+`CompetitionStaff::groupedDisplayNames`, `element/competitions/staff_under_title`, view templatek + `competition_view.css`
+
+---
+
+## 2026-08-09 — Ebéd díj + pipa fotók + staff lista / check-in ACL
+
+### Mi
+- Verseny: `lunch_description` (Translate) + `lunch_price`; jelentkezés: `companion_count` + plusz ebéd → `lunch_fee` a `fee_total`-ban; check-in kártyán kísérők/ebéd.
+- Versenypipa fotó feltöltés (1–3); template `{{lunch_*}}`, `{{racing_pipe_N_image}}`.
+- Competition staff: President külön lista (`/president/competition-staff`); AJAX névkeresés; check-in/judge **csak** kijelölt személy (nincs officer auto).
+
+### Érintett
+Migráció `20260809190000`, `CompetitionFees`, `CompetitionPipeImage`, `CompetitionTextRender`, Admin/President Competitions form+save, `CompetitionStaff` ACL, President/Clubpresident `CompetitionStaffController`, `PanelNav`, `doc/competitions.md`, `doc/users-auth.md`, rules.
+
+---
+
+## 2026-08-09 — Check-in: tagság / tagdíj info
+
+### Mi
+Check-in kártyán információs jelzés: országos tag vs csak klubtag; klub- és országos tagdíj státusz az adott évre + fizetés dátuma (ha van).
+
+### Érintett
+`templates/element/competitions/checkin_member_info.php`, Checkin Applicants, `pages/checkin.css`
+
+---
+
+## 2026-08-09 — Check-in: mobilos kártyák + qty×ár összegzés
+
+### Mi
+Táblázat helyett mobilos kártyalista. Díjsorok: pipa címke + `db × egységár` + sorösszeg, alul **Összesen** (élő számítás fizetés előtt). Figyelmeztetés, ha a versenyen minden ár 0.
+
+### Érintett
+`CompetitionFees::lineItems` / `pipeUnitPrice`, `applicant_fee_lines`, Checkin Applicants + `pages/checkin.css`
+
+---
+
+## 2026-08-09 — Check-in Mark paid → SweetAlert
+
+### Mi
+A check-in „Mark paid” megerősítés natív `confirm` helyett SWAL (`MyAdmin.confirmDelete` / question, zöld gomb) — időpont + `fee_total` a szövegben.
+
+### Érintett
+`templates/Checkin/Applicants/index.php`
+
+---
+
+## 2026-08-09 — Check-in: díj snapshot + tételes lista
+
+### Mi
+`competitions_users`: `entry_fee_amount`, `racing_pipe_1..3_fee`, `fee_total` (nevezési + kért pipák × egységár). Mentés: `CompetitionsUsersTable::beforeSave` (amíg nincs `fee_paid_at`) + check-in sync. UI: név mellett lista (Entry fee, pipa címkék pl. sötét/világos versenypipa × qty, Total) + `fee_total` oszlop; Mark paid a teljes összeget rögzíti.
+
+### Érintett
+migráció `20260809180000_…`, `CompetitionFees`, `CompetitionsUser(s)`, Checkin Applicants + `applicant_fee_lines` element, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Check-in üres lista: collation + officer desk
+
+### Mi
+`competition_staff` UUID oszlopok `utf8mb4_hungarian_ci` voltak → JOIN a `competitions`/`users` `general_ci` id-kkel elhasalt (csendes üres lista). Collation igazítva. Admin / president / VP a **mai** `competition_datetime` versenyeket staff sor nélkül is látja a check-in/judge desk-en (`deskCompetitionIds` / `canOperateOnCompetition`). Kijelölt check-in személy továbbra is `competition_staff`. Az asztalbíró API továbbra is a `competitions_users.result_time`-ot írja.
+
+### Érintett
+migráció `20260809170000_…`, `CompetitionStaff`, Checkin/Judge App+Applicants, `doc/users-auth.md`
+
+---
+
+## 2026-08-09 — Check-in: jelentkezők lista + nap + kereső
+
+### Mi
+Staff napablak: `competition_datetime` **dátuma** (ország TZ); contain mező-select bug javítva (Translate-safe teljes Competitions contain). `/checkin` → azonnal Applicants. Több mai verseny → nagy select a tetején. Táblázat felett nagy kliens oldali kereső (nem Admin index `q`).
+
+### Érintett
+`CompetitionStaff`, Checkin Applicants/Dashboard/sidebar, `RoleHome`, `PanelNav`, `doc/users-auth.md`
+
+---
+
+## 2026-08-09 — Check-in dashboard: InternalIterator::getIterator hiba
+
+### Mi
+`templates/Checkin/Dashboard/index.php` üreslista check: `$competitions->getIterator()` CakePHP 5 ResultSetnél `InternalIterator`-t ad, amin nincs `getIterator()` → fatal. Javítva: `iterator_to_array` + üres tömb check.
+
+### Érintett
+`templates/Checkin/Dashboard/index.php`
+
+---
+
+## 2026-08-09 — Judge időeredmény + Flutter API alap + staff napablak
+
+### Mi
+Check-in / Judge panel csak a **verseny naptári napján** (ország TZ, teljes nap). President **és** VP továbbra is `/president`-en jelöl ki. `competitions_users.result_time` (másodperc). Judge UI: `/judge/applicants`. API: `POST /api/competitions/results/{competitionToken}/{userToken}` — UUID `-` → 8 random char (`UuidObfuscator`); CSRF skip Api; JSON visszajelzés. Élő kiíró képernyő: később.
+
+### Érintett
+migráció `20260809160000_…`, `CompetitionStaff`, `UuidObfuscator`, `CompetitionResultTime`/`CompetitionResults`, Api `CompetitionResultsController`, Judge Applicants, `routes`/`permissions`/`Application` CSRF, `PanelNav`, `doc/competition-results-api.md`, `competitions.md`, `users-auth.md`
+
+---
+
+## 2026-08-09 — Check-in + Judge panelek (verseny személyzet)
+
+### Mi
+Új prefixek: `/checkin`, `/judge`. Megbízás: `competition_staff` (checkin|judge) — **nem** írja felül a `Users.role`-t. Vendég (`new`): csak a saját staff panel. Tag+: Role switch menüben a megbízott staff panelek. Check-in: jelentkezők, pipa mennyiség, nevezési díj fizetés időbélyeg (`fee_paid_at`). Kijelölés: President verseny view + Clubpresident Competition staff.
+
+### Érintett
+migráció `20260809150000_…`, `CompetitionStaff*`, `PanelAccess`/`RoleHome`/`RestrictNewRoleMiddleware`, `permissions.php`, `routes.php`, Checkin/Judge controllerek+templatek, `panel/switcher` → `__('Role switch')`, `doc/users-auth.md`
+
+---
+
+## 2026-08-09 — Helyszínnév + logók (PNG) a kiírásban
+
+### Mi
+`venue_name` (épület/helyszín) a versenyen + `{{venue_name}}`. Placeholderek: `{{national_association_logo}}` (országos egyesület, `countries.logo`) és `{{club_logo}}` — PNG átlátszóság megőrzése. Logó feltöltés: Countries + Admin Clubs.
+
+### Érintett
+migráció `20260809130000_…`, `CountryLogo`, `ClubLogo` (PNG), `CompetitionTextRender`, venue_fields, Countries/Clubs form, séma, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Verseny: pipa + dohány mezők
+
+### Mi
+Új kiírás mezők: `pipe_type`, `pipe_parameters`, `tobacco_type` (Translate) + `tobacco_weight` (g, decimal). Form Basic data + placeholderek a sablon/Description fülön. `{{tobacco_weight}}` locale szám + `g`.
+
+### Érintett
+migráció `20260809120000_…`, `competitions.sql`, Entity/Table/Controller, Admin+President form/view, `CompetitionTextRender`, `admin_search.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Sablon egy lap + TAB keret + locale placeholder
+
+### Mi
+Szövegsablon form: **nincs** Basic/Description card-header TAB — cím (`label`) + szöveges tartalom egy lapon. Nyelvi TAB sheet keret (szegély) a fullWidth editoren is. Verseny Description: placeholder chip-ek. Placeholderek megjelenítéskor UI locale formátum (dátum/idő/szám) + `{{competition_date}}` / `{{competition_time}}`.
+
+### Érintett
+`templates/{Admin,President}/CompetitionTextTemplates/form.php`, `Competitions/form.php`, `form_i18n_tabs`, `form.css`, `CompetitionTextRender`, `competition_template_form.js`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Szövegsablon: csak description
+
+### Mi
+`competition_text_templates` csak HTML **description** (+ label/meta). Eltávolítva: name/title/subtitle/racing_pipe_* (DB oszlop + i18n + form/index/view). Verseny apply csak description. Placeholder beszúrás: `<strong>{{token}}</strong>`.
+
+### Érintett
+migráció `20260809110000_…`, séma, Entity/Table, Admin+President CRUD, `competition_form.js`, `competition_template_form.js`, `admin_search.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Szövegsablon: placeholder chip + JeffAdmin TAB
+
+### Mi
+Description fül mellett strukturált `{{placeholder}}` lista (token + címke + magyarázat); kattintás → beszúrás a Summernote kurzorhoz. Basic data-ról levéve. Card-header TAB: JeffAdmin5 flex layout (aktív fül fehér, card-body-ba simul).
+
+### Érintett
+`CompetitionTextRender::placeholderHelp()`, `element/competitions/placeholder_chips`, `pages/competition_template_form.js`, `pages/form.css`, `templates/{Admin,President}/CompetitionTextTemplates|Competitions/form.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Clubpresident: versenyoszlop sortörhető
+
+### Mi
+Alcsapatok listán a versenykiírás neve fix `11–13rem` + `nowrap` volt → levágódott / nem tört. Most: `min-width` + `white-space: normal` (tartalom sortörhet).
+
+### Érintett
+`templates/Clubpresident/CompetitionTeams/index.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Verseny sablon: Description fül + Swal felülírás
+
+### Mi
+`competition_text_template_id` a **Description** tabon. Első választás (üres szöveg) azonnal betölti a sablont; másik sablon / meglévő szöveg felülírása előtt SweetAlert (módosítások elvesznek). Summernote `setFieldValue` bug (`str` → `value`) javítva.
+
+### Érintett
+`templates/{Admin,President}/Competitions/form.php`, `webroot/js/pages/competition_form.js`, `templates/layout/admin.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — President CompetitionTextTemplates: compact() undefined
+
+### Mi
+`setFormVariables()` paramétere `$template`, de `compact('competitionTextTemplate')` → Warning + `isNew()` on null a formon. Javítás: `$this->set('competitionTextTemplate', $template)` (Admin mintája).
+
+### Érintett
+`src/Controller/President/CompetitionTextTemplatesController.php`
+
+---
+
+## 2026-08-09 — Verseny Description TAB: teljes szélesség (JeffAdmin5)
+
+### Mi
+A verseny / szövegsablon szerkesztő **Description** card-header fülén a Summernote szerkesztő JeffAdmin5 mintára **teljes szélességű** (`fullWidth` + `col-12`, nincs oldalsó label / `col-md-10` csapda). Outer form card: `col-12` (nem `col-xxl-11`).
+
+### Érintett
+`templates/element/competitions/form_i18n_tabs.php`, `templates/{Admin,President}/Competitions/form.php`, `templates/{Admin,President}/CompetitionTextTemplates/form.php`, `webroot/css/pages/form.css`, `doc/form-i18n-tabs.md`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — CakePHP 5: `find('list')` named args
+
+### Mi
+`CompetitionTextTemplatesTable::optionsForCountry()` még `find('list', ['keyField'=>…])` tömböt használt → CakePHP 5 deprecation (+ header warnings). Először named args, majd **`find()->…->combine('id','label')`** (nincs `findList` finder).
+
+### Érintett
+`src/Model/Table/CompetitionTextTemplatesTable.php`
+
+---
+
+## 2026-08-09 — Index: `label` oszloposztály = badge ütközés (örök)
+
+### Mi
+Competition text templates listán a `label` mező `th`/`td` osztálya **`label`** volt → ValiAdmin globális **`.label` badge** (fehér szöveg, padding) ráragadt. Javítás: **`string col-label`**. Rule + tanulság, hogy ne ismétlődjön.
+
+### Érintett
+`templates/Admin|President/CompetitionTextTemplates/index.php`, `webroot/css/style.css` (megjegyzés + tábla override), `.cursor/rules/admin-index-column-classes.mdc`, `doc/admin-konvenciok.md`, `doc/minta-tanulsagok.md`, `doc/README.md`
+
+---
+
+## 2026-08-09 — Clubpresident alcsapatok: oszlopcímke tooltipek
+
+### Mi
+`/clubpresident/competition-teams`: rövid fejléc (létszám = `#`, Min.) + Bootstrap tooltip a teljes címkével; min. létszám státusz ikonok is Bootstrap tooltippel.
+
+### Érintett
+`templates/Clubpresident/CompetitionTeams/index.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Index tábla: csak a fejléc címke törhet
+
+### Mi
+Fix szélességű oszlopoknál (`count`, `date`, `number`, …) a **`td` tartalom** `nowrap`; csak a **`th` / sort címke** törhet. Korábban a `.count` (és néhány page CSS) a cellatartalmat is törte.
+
+### Érintett
+`webroot/css/style.css`, `pages/index.css`, `pages/membership_fee.css`, CompetitionTeams index inline CSS, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-09 — Clubpresident Dashboard: verseny-jelentkező alert
+
+### Mi
+A tagság-jelentkező alert mintájára: ha a klub tagjai **pending** állapotban jelentkeztek **aktív** versenyre, a vezérlőpult **fölött** info alert + **Assign to teams** gomb → `/clubpresident/competition-applicants`.
+
+### Érintett
+`Clubpresident/DashboardController`, `templates/Clubpresident/Dashboard/index.php`, `doc/competitions.md`, `doc/users-auth.md`, `competitions.mdc`
+
+---
+
+## 2026-08-09 — Versenyek: aktív lista + ország browse (Member / Clubpresident)
+
+### Mi
+Member és Clubpresident versenylisták: csak **aktív** versenyek (`visible` + nem lejárt). Alapból saját ország; **országválasztó** (`CompetitionBrowse` + `competition_browse_country`) → más ország versenyei is. Tag **jelentkezhet külföldre**; klubelnök jelentkezők / alcsapatok szűrése ugyanezzel.
+
+### Érintett
+`CompetitionBrowse`, `element/panel/competition_browse_country`, Member `Competitions` / `Dashboard`, Clubpresident `CompetitionApplicants` / `CompetitionTeams`, `doc/competitions.md`, `competitions.mdc`
+
+---
+
+## 2026-08-09 — WYSIWYG: Summernote (JeffAdmin5) + Description lapfül
+
+### Mi
+Trumbowyg helyett **Summernote** ([jeffadmin5](https://packagist.org/packages/zsfoto/jeffadmin5) `jeffAdminInitSummerNote`: height 400, lang `hu-HU`, `codeviewFilter: false`). Verseny / szövegsablon form: JeffAdmin5-szerű **Basic data** / **Description** TAB; leírás szerkesztő **520px** magas. Asset: `webroot/plugins/summernote` + `admin/form_summernote_assets`.
+
+### Érintett
+`webroot/js/pages/form.js`, `templates/element/admin/form_summernote_assets.php`, Competitions / CompetitionTextTemplates / EmailTemplates formok, `pages/form.css`, `doc/admin-konvenciok.md`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — WYSIWYG: Trumbowyg → Summernote (JeffAdmin5)
+
+### Mi
+Admin/President verseny, versenykiírás-sablon és e-mail sablon formok Trumbowyg helyett Summernote-ot használnak (`element/admin/form_summernote_assets`, [zsfoto/jeffadmin5](https://packagist.org/packages/zsfoto/jeffadmin5)). Verseny és sablon form: JeffAdmin5 card-header TAB (Basic data / Description); leírás külön fülön magas editorral. Init: `pages/form.js` — height 400, tabsize 2, lang hu-HU.
+
+### Érintett
+`templates/President/Competitions/form.php`, `templates/Admin|President/CompetitionTextTemplates/form.php`, `templates/Admin|President/EmailTemplates/form.php`, `webroot/css/pages/form.css`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-09 — Versenykiírás: sablon, {{placeholders}}, helyszín, térkép
+
+### Mi
+`competition_text_templates` + Competitions helyszín mezők (`city_id`, `venue_address`, `google_maps_url`). Sablon választás kitölti a szöveges mezőket; megjelenítéskor `CompetitionTextRender` élő értékeket illeszt (`{{club_logo}}`, `{{map}}`, …). Térkép kis keret + nagyítás / Esc. Admin+President sablon CRUD (korábbi bejegyzés) + kiírás form/view bekötés.
+
+### Érintett
+Migráció `20260809100000`, `CompetitionTextRender`, Competitions form/view (Admin/President/Member), `competition_form.js` / `competition_map.js`, `doc/competitions.md`, `competitions.mdc`
+
+---
+
+## 2026-08-09 — Versenykiírás-sablon Admin + President CRUD
+
+### Mi
+Elkészült a `competition_text_templates` teljes Admin és ország-scope President CRUD-ja: kereshető/lapozható index, többnyelvű Trumbowyg form, adatlap, modal JSON és locale-onkénti `applyData` JSON. Az Admin ország-scope-ot és superuser országválasztót használ; a President minden műveletet a tisztségviselő országára kényszerít. A modul mindkét panel PanelNav menüjébe és az Admin globális keresésbe bekerült.
+
+### Érintett
+`src/Controller/Admin|President/CompetitionTextTemplatesController.php`, `templates/Admin|President/CompetitionTextTemplates/*`, `config/admin_search.php`, `src/Utility/PanelNav.php`, `doc/competitions.md`, `doc/admin-full-crud.md`
+
+---
+
+## 2026-08-09 — Index th sort címkék törhetők
+
+### Mi
+Fejléc sort linkek eddig `nowrap` + `max-content` → hosszú címkék egy sorban kilógtak. Most `white-space: normal` (rövid oszlopok: id/pos/boolean/… marad nowrap). Count oszlop is törhető.
+
+### Érintett
+`webroot/css/style.css`, `webroot/css/pages/index.css`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-09 — HTML szerkesztő: `<style>` megőrzés + hű megjelenítés
+
+### Mi
+Beillesztett HTML **`<style>`** blokkjait a Trumbowyg contenteditable kidobta → mentés után elvesztek a színek. JS: style blokkok data-ban + submitkor visszamergelés. Megjelenítés: `admin/html_content` iframe (`srcdoc`), hogy az Admin Bootstrap ne írja felül. Index modal ugyanígy.
+
+### Megjegyzés
+Már elmentett, style nélküli leírásokhoz **újra be kell illeszteni** a forrás HTML-t (viewHTML), majd menteni.
+
+### Érintett
+`webroot/js/pages/form.js`, `webroot/js/pages/index.js`, `templates/element/admin/html_content.php`, Competitions/EmailTemplates view-k, `webroot/css/pages/index.css`, `style.css`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-09 — Trumbowyg: nincs belső keret + forrás HTML megmarad
+
+### Mi
+Szerkesztő alapból **tartalommal nő** (nincs fix 340px + overflow ketrec); fogantyú húzásakor `trumbowyg-resized`. `semantic: false` — forrásból beillesztett HTML mentés után is megmarad.
+
+### Érintett
+`webroot/css/style.css`, `webroot/js/pages/form.js`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-09 — Verseny szöveg: üres i18n felülírás javítva
+
+### Mi
+Üres `i18n` sorok (hu_HU / sk_SK / …) felülírták a főtábla szöveget → President listán/nézeten üres név. Üres Competitions i18n sorok törölve; `allowEmptyTranslations = false`; mentéskor `scrubEmptyTranslations()`.
+
+### Érintett
+`CompetitionsTable`, `FormLanguageTabsTrait`, Admin/President save, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — President versenylista: jelentkező klubok + alcsapatok
+
+### Mi
+Index: **Applying clubs** (distinct klubok száma) + **Sub-teams** (`subclubs.name` lista). Contain: `CompetitionsClubs` → Subclubs, Clubs.
+
+### Érintett
+`President/CompetitionsController`, `templates/President/Competitions/index.php`, `doc/competitions.md`
+
+---
+
+## 2026-08-09 — Verseny szöveg: login nyelv minden prefixen
+
+### Mi
+`AdminCountry::applyTranslateLocale()` most a **Competitions** Translate locale-t is a belépési / UI nyelvre állítja. Clubpresident alcsapatok / jelentkezők, Member, Admin Clubs/Applicants: explicit `AdminTranslate::applyLocale` a contain előtt.
+
+### Miért
+A versenykiírás neve/címe/leírása angolul (fő tábla) jött, ha a UI locale nem volt ráállítva a Competitions behaviorre.
+
+### Érintett
+`AdminCountry`, `AdminTranslate`, `Clubpresident/CompetitionTeams|Applicants`, `Member/Competitions`, `Admin/Clubs|CompetitionApplicants`, `doc/competitions.md`, `competitions.mdc`
+
+---
+
+## 2026-08-09 — Translate form: EN TAB mentés + kötelező mezők wipe
+
+### Mi
+`FormLanguages::defaultLocaleForForm()` újra az EAV Translate `defaultLocale` (`en_GB`) gyökeret használja (nem az `App.defaultLocale` / `hu_HU`-t). Mentés előtt `setFormTranslateLocale()`.
+
+### Miért
+Ha a form root = HU, az EN fül `_translations.en_GB.*` mezőit a Cake `beforeMarshal` a gyökérre emelte → felülírta / kiürítette a kötelező `name`/`title` mezőket, az angol tartalom nem a fő táblába került.
+
+### Érintett
+`src/Utility/FormLanguages.php`, `src/Controller/Concerns/FormLanguageTabsTrait.php`, `Admin|President/CompetitionsController`, `doc/form-i18n-tabs.md`, `.cursor/rules/admin-form-i18n-tabs.mdc`
+
+---
+
+## 2026-08-09 — Trumbowyg: alsó fogantyús átméretezés
+
+### Mi
+A szerkesztő keret alján húzható sáv — egérrel / érintéssel függőlegesen nagyítható.
+
+### Érintett
+`webroot/js/pages/form.js`, `webroot/css/style.css`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-09 — Trumbowyg: HTML/forrás nézet javítás
+
+### Mi
+Forrásnézet (`viewHTML`): a textarea újra látható és kitölti a szerkesztő dobozt (a resize CSS ne rejtse el).
+
+### Érintett
+`webroot/css/style.css`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-09 — Trumbowyg: függőleges resize + fullscreen
+
+### Mi
+- Szerkesztő doboz **függőlegesen átméretezhető** (jobb alsó sarok).
+- Eszköztár jobb szélén **Teljes képernyő** gomb (core `fullscreen`).
+- Verseny formok: teljes Trumbowyg plugin csomag (EmailTemplates mintára).
+
+### Miért
+Hosszú HTML leírásoknál kényelmesebb szerkesztés.
+
+### Érintett
+`webroot/css/style.css`, `webroot/js/pages/form.js`, `templates/Admin|President/Competitions/form.php`, `doc/admin-konvenciok.md`
+
+---
+
+## 2026-08-09 — Verseny: modified_by + Modified oszlop
+
+### Mi változott / miért
+- `competitions.modified_by` (UUID) — létrehozáskor = `user_id`, szerkesztéskor = aktuális user.
+- Lista: külön **Created** (létrehozó) és **Modified** (módosító; új rekordnál a létrehozó).
+
+### Érintett
+- `config/Migrations/20260809092000_AddCompetitionsModifiedBy.php`, `schema/competitions.sql`
+- `CompetitionsTable` (`Modifiers`), `Competition` entity
+- `Admin|President/CompetitionsController` save + index contain
+- `templates/Admin|President/Competitions/index.php`
+- `doc/competitions.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — Versenylista: létrehozó a Created alatt
+
+### Mi változott / miért
+- Admin / President index: Created alatt a létrehozó user neve (`Users` contain, `MembershipProfile::displayName`, `text-muted small`).
+
+### Érintett
+- `Admin|President/CompetitionsController::index`
+- `templates/Admin|President/Competitions/index.php`
+- `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — Versenylista: név + cím egy cellában
+
+### Mi változott / miért
+- Admin / President index: **Name** félkövér, alatta **title** (ha üres: subtitle); külön Title oszlop törölve.
+
+### Érintett
+- `templates/Admin|President/Competitions/index.php`
+- `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — i18n collation = utf8mb4_general_ci
+
+### Mi változott / miért
+- Edit verseny: `Illegal mix of collations` — `i18n.foreign_key` (unicode_ci) vs `competitions.id` (general_ci).
+- `i18n` tábla → `utf8mb4_general_ci` (mint a többi domain tábla).
+
+### Érintett
+- `config/Migrations/20260809091000_AlignI18nCollationGeneralCi.php`
+- `config/schema/i18n.sql`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — Versenylista: competition_datetime oszlop elsőnek
+
+### Mi változott / miért
+- Admin + President competitions index: **Competition date** (dátum+idő) oszlop a **Name előtt**.
+
+### Érintett
+- `templates/Admin|President/Competitions/index.php`
+- `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — i18n.foreign_key: VARCHAR (UUID Translate)
+
+### Mi változott / miért
+- Competitions UUID PK + Translate EAV: `i18n.foreign_key` int volt → mentés `InvalidArgumentException`.
+- Most: `varchar(36)` (int PK-k stringként továbbra is OK).
+
+### Érintett
+- `config/Migrations/20260809090000_AlterI18nForeignKeyForUuid.php`
+- `config/schema/i18n.sql`, `I18nTable`, `I18nTranslation`
+- `doc/i18n.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — Versenykiírás: nyelvi TAB-ok (Translate)
+
+### Mi változott / miért
+- Admin + President competition form: szöveges mezők nyelvi TAB-okkal (ország `country_visibilities`).
+- Cake Translate EAV: `name`, `title`, `subtitle`, `subtitle2`, `description`, `racing_pipe_*_title`.
+- Nem szöveges mezők (klub, dátumok, …) a TAB-okon kívül.
+- `FormLanguageTabsTrait` (Admin + President AppController).
+
+### Érintett
+- `CompetitionsTable`, `Competition` entity
+- `Admin|President/CompetitionsController`, formok
+- `element/competitions/form_i18n_tabs`
+- Member / Clubpresident megjelenítés: `AdminTranslate::applyLocale`
+- `doc/competitions.md`, `form-i18n-tabs.md`, `competitions.mdc`, `admin-form-i18n-tabs.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — Verseny form: nincs Start / End mező
+
+### Mi változott / miért
+- Admin / President competition form: `start_datetime` / `end_datetime` eltávolítva.
+- Érték máshonnan jön; mentés nem fogadja (`FORM_FIELDS`).
+
+### Érintett
+- `templates/Admin|President/Competitions/form.php`
+- `Admin|President/CompetitionsController` (`FORM_FIELDS`, `saveCompetition`)
+- `doc/competitions.md`, `.cursor/rules/competitions.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — Új verseny: competition_datetime alapból 14:00:00
+
+### Mi változott / miért
+- Admin / President add: `competition_datetime` = mai nap 14:00:00 (óra/perc/mp default).
+
+### Érintett
+- `Admin/CompetitionsController::add`, `President/CompetitionsController::add`
+- `doc/competitions.md`, `.cursor/rules/competitions.mdc`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — Lapozó: csak ha van mit lapozni
+
+### Mi változott / miért
+- `admin/index_pagination`: ha `pageCount <= 1`, nem jelenik meg (fejléc + footer).
+- Fejléc `|`: `leadingSep => true` a lapozóval együtt (ne árva elválasztó).
+
+### Érintett
+- `templates/element/admin/index_pagination.php`
+- index header hívások (`leadingSep`), ahol a `|` közvetlenül a lapozó előtt volt
+- `.cursor/rules/admin-paginator.mdc`, `doc/admin-konvenciok.md`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-09 — President versenylista: csak idei év + Show all
+
+### Mi változott / miért
+- `/president/competitions` alapból csak az idei naptári év (`competition_datetime`).
+- Switch: **Show all competitions** (`?show_all=1`, session `President.Competitions.show_all`).
+
+### Érintett
+- `President/CompetitionsController::index`, `resolveShowAllCompetitions`
+- `templates/President/Competitions/index.php`
+- `doc/competitions.md`, `.cursor/rules/competitions.mdc`, `doc/valtozasok.md`
+
+---
+
 ## 2026-08-08 — Clubpresident alcsapat lista: keskeny verseny + modal
 
 ### Mi változott / miért

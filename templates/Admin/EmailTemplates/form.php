@@ -17,13 +17,9 @@
 $this->Html->css([
 	'/plugins/select2-4.1.0/css/select2.min',
 	'/plugins/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min',
-	'/plugins/trumbowyg/ui/trumbowyg.min',
-	'/plugins/trumbowyg/plugins/colors/ui/trumbowyg.colors.min',
-	'/plugins/trumbowyg/plugins/table/ui/trumbowyg.table.min',
-	'/plugins/trumbowyg/plugins/specialchars/ui/trumbowyg.specialchars.min',
-	'/plugins/trumbowyg/plugins/highlight/ui/trumbowyg.highlight.min',
 	'pages/form',
 ], ['block' => true]);
+$this->element('admin/form_summernote_assets');
 
 $config = [
 	'indexUrl' => $this->Url->build(['action' => 'index']),
@@ -38,20 +34,6 @@ $this->Html->scriptBlock(
 $this->Html->script([
 	'/plugins/select2-4.1.0/js/select2.full.min',
 	'/plugins/inputmask/jquery.inputmask.min',
-	'/plugins/trumbowyg/trumbowyg.min',
-	'/plugins/trumbowyg/langs/hu',
-	'/plugins/trumbowyg/plugins/colors/trumbowyg.colors.min',
-	'/plugins/trumbowyg/plugins/fontfamily/trumbowyg.fontfamily.min',
-	'/plugins/trumbowyg/plugins/fontsize/trumbowyg.fontsize.min',
-	'/plugins/trumbowyg/plugins/lineheight/trumbowyg.lineheight.min',
-	'/plugins/trumbowyg/plugins/history/trumbowyg.history.min',
-	'/plugins/trumbowyg/plugins/table/trumbowyg.table.min',
-	'/plugins/trumbowyg/plugins/specialchars/trumbowyg.specialchars.min',
-	'/plugins/trumbowyg/plugins/preformatted/trumbowyg.preformatted.min',
-	'/plugins/trumbowyg/plugins/highlight/trumbowyg.highlight.min',
-	'/plugins/trumbowyg/plugins/base64/trumbowyg.base64.min',
-	'/plugins/trumbowyg/plugins/noembed/trumbowyg.noembed.min',
-	'/plugins/trumbowyg/plugins/upload/trumbowyg.upload.min',
 	'pages/form',
 ], ['block' => 'scriptBottom']);
 
@@ -67,7 +49,7 @@ $emailTemplateActiveLanguageId = (int)($emailTemplateActiveLanguageId ?? 0);
 
 $langFields = [
 	['name' => 'subject', 'label' => __('Subject:'), 'type' => 'text'],
-	['name' => 'body_html', 'label' => __('HTML body:'), 'type' => 'editor', 'rows' => 12],
+	['name' => 'body_html', 'label' => __('HTML body:'), 'type' => 'editor', 'rows' => 12, 'editorHeight' => 400],
 	['name' => 'body_text', 'label' => __('Text body:'), 'type' => 'textarea', 'rows' => 8, 'class' => 'font-monospace'],
 ];
 ?>
@@ -213,10 +195,14 @@ $langFields = [
 												'required' => false,
 												'error' => false,
 											];
-											if ($fieldType === 'editor') {
-												$controlOptions['type'] = 'textarea';
-												$controlOptions['rows'] = (int)($field['rows'] ?? 12);
-												$controlOptions['class'] = 'form-control editor';
+							if ($fieldType === 'editor') {
+								$controlOptions['type'] = 'textarea';
+								$controlOptions['rows'] = (int)($field['rows'] ?? 12);
+								$controlOptions['class'] = 'form-control editor';
+								$editorHeight = (int)($field['editorHeight'] ?? 0);
+								if ($editorHeight > 0) {
+									$controlOptions['data-editor-height'] = $editorHeight;
+								}
 											} elseif ($fieldType === 'textarea') {
 												$controlOptions['type'] = 'textarea';
 												$controlOptions['rows'] = (int)($field['rows'] ?? 8);
@@ -318,8 +304,8 @@ $this->Html->scriptBlock(
 		if (pane && window.jQuery) {
 			window.jQuery(pane).find('.editor').each(function () {
 				var $editor = window.jQuery(this);
-				if ($editor.data('trumbowyg')) {
-					$editor.trumbowyg('html', $editor.trumbowyg('html'));
+				if ($editor.next('.note-editor').length && typeof $editor.summernote === 'function') {
+					$editor.summernote('code', $editor.summernote('code'));
 				}
 			});
 		}

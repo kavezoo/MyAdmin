@@ -6,15 +6,14 @@ namespace App\Controller\Admin;
 use App\Auth\PanelAccess;
 use App\Controller\AppController as BaseController;
 use App\Controller\Concerns\AdminCountryScopeTrait;
+use App\Controller\Concerns\FormLanguageTabsTrait;
 use App\Controller\Concerns\IndexListCrudTrait;
 use App\Utility\AdminCountry;
 use App\Utility\BrowserLocale;
 use Cake\Core\Configure;
-use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Http\Response;
 use Cake\I18n\I18n;
-use Cake\ORM\Table;
 
 /**
  * Admin Application Controller
@@ -26,6 +25,7 @@ use Cake\ORM\Table;
 class AppController extends BaseController
 {
     use AdminCountryScopeTrait;
+    use FormLanguageTabsTrait;
     use IndexListCrudTrait;
 
     /**
@@ -139,48 +139,5 @@ class AppController extends BaseController
             return;
         }
         $this->Flash->set($message, $options);
-    }
-
-    /**
-     * Language tabs for translatable Admin forms.
-     * Source: active country’s `country_visibilities` (own + additional languages).
-     *
-     * @return void
-     */
-    protected function setFormLanguageTabs(): void
-    {
-        $tabs = \App\Utility\FormLanguages::tabs();
-        $this->set('formLanguageTabs', $tabs);
-        $this->set('formDefaultLocale', \App\Utility\FormLanguages::defaultLocaleForForm());
-    }
-
-    /**
-     * Load entity with all Translate EAV rows (edit form).
-     * Root fields use the form default locale (own language, or en_GB when that tab exists).
-     *
-     * @param \Cake\ORM\Table $table
-     * @param mixed $id
-     * @param array<string, mixed>|list<string> $contain
-     * @return \Cake\Datasource\EntityInterface
-     */
-    protected function getWithTranslations(Table $table, mixed $id, array $contain = []): EntityInterface
-    {
-        if (!$table->hasBehavior('Translate')) {
-            return $table->get($id, contain: $contain);
-        }
-
-        $defaultLocale = \App\Utility\FormLanguages::defaultLocaleForForm();
-        $table->getBehavior('Translate')->setLocale($defaultLocale);
-
-        $pk = $table->aliasField($table->getPrimaryKey());
-        $query = $table->find('translations')->where([$pk => $id]);
-        if ($contain !== []) {
-            $query->contain($contain);
-        }
-
-        /** @var \Cake\Datasource\EntityInterface $entity */
-        $entity = $query->firstOrFail();
-
-        return $entity;
     }
 }

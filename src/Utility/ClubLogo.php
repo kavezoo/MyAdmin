@@ -7,9 +7,10 @@ use Cake\Http\Exception\BadRequestException;
 use Psr\Http\Message\UploadedFileInterface;
 
 /**
- * Club logo storage (webroot/uploads/clubs/{club.id}.jpg).
+ * Club logo storage (webroot/uploads/clubs/{club.id}.png).
  *
- * Recommended source: square 1000×1000 px. Uploaded images are scaled to fit within 1000×1000.
+ * Recommended source: square 1000×1000 px PNG (transparency preserved).
+ * Legacy `{id}.jpg` files are still served if present.
  */
 class ClubLogo
 {
@@ -42,11 +43,11 @@ class ClubLogo
             throw new BadRequestException('Invalid club.');
         }
 
-        return $clubId . '.jpg';
+        return $clubId . '.png';
     }
 
     /**
-     * Store uploaded image; returns web-relative path (no leading slash).
+     * Store uploaded image as PNG (alpha preserved); returns web-relative path.
      */
     public static function store(int $clubId, UploadedFileInterface $file): string
     {
@@ -98,11 +99,13 @@ class ClubLogo
             throw new BadRequestException(__('The image could not be processed.'));
         }
 
-        // Preserve PNG/WebP transparency on white background for JPEG output.
-        $white = imagecolorallocate($canvas, 255, 255, 255);
-        if ($white !== false) {
-            imagefilledrectangle($canvas, 0, 0, $newW, $newH, $white);
+        imagealphablending($canvas, false);
+        imagesavealpha($canvas, true);
+        $transparent = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
+        if ($transparent !== false) {
+            imagefilledrectangle($canvas, 0, 0, $newW, $newH, $transparent);
         }
+        imagealphablending($canvas, true);
 
         imagecopyresampled($canvas, $image, 0, 0, 0, 0, $newW, $newH, $width, $height);
         imagedestroy($image);
@@ -115,17 +118,24 @@ class ClubLogo
 
         $filename = static::filenameFor($clubId);
         $fullPath = $dir . DIRECTORY_SEPARATOR . $filename;
-        if (!imagejpeg($canvas, $fullPath, 90)) {
+        imagealphablending($canvas, false);
+        imagesavealpha($canvas, true);
+        if (!imagepng($canvas, $fullPath, 6)) {
             imagedestroy($canvas);
             throw new BadRequestException(__('The image could not be saved.'));
         }
         imagedestroy($canvas);
 
+        $legacyJpg = $dir . DIRECTORY_SEPARATOR . $clubId . '.jpg';
+        if (is_file($legacyJpg)) {
+            @unlink($legacyJpg);
+        }
+
         return static::storedPathFor($clubId);
     }
 
     /**
-     * Remove stored file for club (legacy path + canonical `{id}.jpg`).
+     * Remove stored file for club (legacy path + canonical `{id}.png` / `{id}.jpg`).
      */
     public static function deleteStored(?string $storedPath, int $clubId = 0): void
     {
@@ -134,7 +144,9 @@ class ClubLogo
             $paths[] = WWW_ROOT . ltrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $storedPath), DIRECTORY_SEPARATOR);
         }
         if ($clubId > 0) {
-            $paths[] = WWW_ROOT . static::RELATIVE_DIR . DIRECTORY_SEPARATOR . static::filenameFor($clubId);
+            $dir = WWW_ROOT . static::RELATIVE_DIR . DIRECTORY_SEPARATOR;
+            $paths[] = $dir . static::filenameFor($clubId);
+            $paths[] = $dir . $clubId . '.jpg';
         }
         foreach ($paths as $path) {
             if (is_file($path)) {
@@ -144,13 +156,20 @@ class ClubLogo
     }
 
     /**
-     * Stored path for templates (canonical file, legacy DB path, or on-disk `{id}.jpg`).
+     * Stored path for templates (canonical PNG, legacy JPG / DB path).
      */
     public static function displayPath(int $clubId, ?string $storedPath): string
     {
         $canonical = $clubId > 0 ? static::storedPathFor($clubId) : '';
         if ($canonical !== '' && is_file(static::fullPath($canonical))) {
             return $canonical;
+        }
+
+        if ($clubId > 0) {
+            $legacy = static::RELATIVE_DIR . '/' . $clubId . '.jpg';
+            if (is_file(static::fullPath($legacy))) {
+                return $legacy;
+            }
         }
 
         $storedPath = trim((string)$storedPath);

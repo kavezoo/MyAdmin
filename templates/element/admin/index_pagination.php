@@ -1,9 +1,19 @@
 <?php
 /**
  * Shared Admin pagination: « ‹ numbers › » (FA icons; enabled/disabled).
+ * Hidden when there is nothing to paginate (0 or 1 page).
  *
  * @var \App\View\AppView $this
+ * @var bool $leadingSep Optional `|` before the nav (card headers). Default false (footer).
  */
+$leadingSep = !empty($leadingSep);
+
+// CakePHP 5: total() = page count (not record count).
+$pageCount = (int)($this->Paginator->total() ?? 0);
+if ($pageCount <= 1) {
+	return;
+}
+
 $labelFirst = __('First');
 $labelPrev = __('Previous');
 $labelNext = __('Next');
@@ -38,7 +48,10 @@ if ($numbers === '') {
 		. h((string)$current)
 		. '</a></li>';
 }
-?>
+
+if ($leadingSep): ?>
+<span class="index-header-sep" aria-hidden="true">|</span>
+<?php endif; ?>
 <nav aria-label="<?= h(__('Pagination')) ?>">
 	<ul class="pagination mb-0">
 		<?php if ($onFirst): ?>

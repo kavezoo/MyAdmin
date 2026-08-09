@@ -205,15 +205,19 @@ $applicationsTable = (string)ob_get_clean();
 						['escape' => false, 'class' => 'btn btn-primary']
 					) ?>
 					<?php if ($canDelete): ?>
-						<?= $this->Form->postLink(
-							'<span class="btn-label"><i class="fa fa-trash"></i></span>' . __('Delete'),
-							['action' => 'delete', $user->id],
-							[
-								'escape' => false,
-								'class' => 'btn btn-outline-danger ms-2',
-								'confirm' => __('Are you sure you want to delete this record?'),
-							]
-						) ?>
+						<?= $this->Form->create(null, [
+							'url' => ['action' => 'delete', $user->id],
+							'id' => 'delete-form-' . $user->id,
+							'class' => 'd-inline',
+						]) ?>
+						<button type="button"
+							class="btn btn-outline-danger ms-2 btn-row-delete"
+							data-id="<?= h((string)$user->id) ?>"
+							data-swal-title="<?= h(__('Delete')) ?>"
+							data-swal-text="<?= h(__('Are you sure you want to delete this record?')) ?>">
+							<span class="btn-label"><i class="fa fa-trash"></i></span><?= __('Delete') ?>
+						</button>
+						<?= $this->Form->end() ?>
 					<?php else: ?>
 						<span class="d-inline-block ms-2" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="<?= h($tooltipDeleteBlocked) ?>">
 							<button type="button" class="btn btn-secondary disabled" tabindex="-1" aria-disabled="true">

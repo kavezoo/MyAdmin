@@ -3766,6 +3766,36 @@ msgstr "Megjegyzés"
 msgid "The application deadline has passed. You can only view this competition."
 msgstr "A jelentkezési határidő lejárt. Ezt a versenyt csak megtekintheted."
 
+msgid "The application deadline has passed. Competition details can no longer be edited."
+msgstr "A jelentkezési határidő lejárt. A verseny tartalma már nem szerkeszthető."
+
+msgid "Check-in payments can only be recorded on the competition day."
+msgstr "A check-in fizetést csak a verseny napján lehet rögzíteni."
+
+msgid "Paste a Google Maps place/share link, short link (maps.app.goo.gl), or embed iframe. Coordinates are read from the link — do not paste a search page that points elsewhere. Use {{map}} in the description where the map should appear."
+msgstr "Illessz be Google Maps hely/megosztás linket, rövid linket (maps.app.goo.gl) vagy beágyazott iframe-et. A koordinátákat a linkből olvassuk ki — ne másolj olyan keresőoldalt, ami máshova mutat. A leírásban a {{map}} jelöli a térkép helyét."
+
+msgid "Payments grouped by check-in collector — how much each person should have in the till."
+msgstr "Fizetések check-in gyűjtő szerint csoportosítva — kinél mennyi pénznek kell lennie a kasszában."
+
+msgid "Collected by: {0}"
+msgstr "Beszedte: {0}"
+
+msgid "Competitor"
+msgstr "Versenyző"
+
+msgid "Should have in till"
+msgstr "Ennyinek kell lennie nála"
+
+msgid "Grand total"
+msgstr "Összesen"
+
+msgid "Not recorded"
+msgstr "Nincs rögzítve"
+
+msgid "Recorded by {0}"
+msgstr "Rögzítette: {0}"
+
 msgid "Archive"
 msgstr "Archívum"
 
@@ -3867,3 +3897,409 @@ msgstr "Csak olyan klubhoz csatlakozhatsz, amely az idei évre rendezte a tagdí
 
 msgid "Only clubs with national membership fee paid for this year can organize a competition."
 msgstr "Csak azok a klubok rendezhetnek versenyt, akiknek a nemzeti tagsága az idei évre rendezett."
+
+msgid "Replace text template?"
+msgstr "Szövegsablon cseréje?"
+
+msgid "Choosing another template replaces the current text fields (name, title, description, …). Any edits you made will be lost."
+msgstr "Másik sablon választása felülírja a jelenlegi szövegmezőket (név, cím, leírás, …). A kézzel végzett módosítások elvesznek."
+
+msgid "Replace"
+msgstr "Csere"
+
+msgid "Available fields"
+msgstr "Elérhető mezők"
+
+msgid "Click a field to insert it at the cursor in the text editor. Values are filled from the competition when displayed."
+msgstr "Kattints egy mezőre a szövegszerkesztő kurzorának helyére való beszúráshoz. Az értékek a verseny megjelenítésekor töltődnek be."
+
+msgid "Competition short name (lists, Select2, titles)."
+msgstr "Verseny rövid neve (listák, Select2, címek)."
+
+msgid "Main announcement title."
+msgstr "Fő kiírás cím."
+
+msgid "First subtitle line."
+msgstr "Első alcím sor."
+
+msgid "Second subtitle line."
+msgstr "Második alcím sor."
+
+msgid "Organizer club full name."
+msgstr "Rendező klub teljes neve."
+
+msgid "Organizer club short name."
+msgstr "Rendező klub rövid neve."
+
+msgid "Organizer club logo image (HTML)."
+msgstr "Rendező klub logó képe (HTML)."
+
+msgid "Venue city name."
+msgstr "Helyszín város neve."
+
+msgid "Venue city postal code."
+msgstr "Helyszín irányítószáma."
+
+msgid "Venue street address (venue_address)."
+msgstr "Helyszín utca/cím (venue_address)."
+
+msgid "Combined venue: ZIP, city and address."
+msgstr "Összevont helyszín: irányítószám, város és cím."
+
+msgid "Embedded Google Map widget at this position."
+msgstr "Beágyazott Google Térkép widget ezen a helyen."
+
+msgid "Raw Google Maps URL (link text)."
+msgstr "Nyers Google Maps URL (link szöveg)."
+
+msgid "When the competition takes place."
+msgstr "A verseny időpontja."
+
+msgid "Application window start date."
+msgstr "Jelentkezési időszak kezdete."
+
+msgid "Application window end date."
+msgstr "Jelentkezési időszak vége."
+
+msgid "Minimum members required per sub-team."
+msgstr "Alcsapatonkénti minimális létszám."
+
+msgid "Yes / No — whether it is a national competition."
+msgstr "Igen / Nem — nemzeti verseny-e."
+
+msgid "Label of racing pipe type 1."
+msgstr "1. pipafajta címkéje."
+
+msgid "Label of racing pipe type 2."
+msgstr "2. pipafajta címkéje."
+
+msgid "Label of racing pipe type 3."
+msgstr "3. pipafajta címkéje."
+
+msgid "Club name"
+msgstr "Klub neve"
+
+msgid "Club short name"
+msgstr "Klub rövid neve"
+
+msgid "Club logo"
+msgstr "Klub logó"
+
+msgid "Maps URL"
+msgstr "Térkép URL"
+
+msgid "Click a field to insert it as bold text at the cursor. Values are filled from the competition when displayed."
+msgstr "Kattints egy mezőre: félkövér szövegként kerül a kurzor helyére. Az értékek a verseny megjelenítésekor töltődnek be."
+
+msgid "Choosing a template fills the description text only (with {{placeholders}}). Name, title and other fields are set on Basic data."
+msgstr "A sablon csak a leírás szövegét tölti ki ({{placeholders}} tokenekkel). A név, cím és a többi mező az Alapadatok fülön adható meg."
+
+msgid "Replace description template?"
+msgstr "Leírás sablon cseréje?"
+
+msgid "Choosing another template replaces the description text. Any edits you made will be lost."
+msgstr "Másik sablon választása felülírja a leírás szövegét. A kézzel végzett módosítások elvesznek."
+
+msgid "Text content"
+msgstr "Szöveges tartalom"
+
+msgid "Admin label for selecting this template (not shown on the competition page)."
+msgstr "Admin címke a sablon kiválasztásához (a versenyoldalon nem jelenik meg)."
+
+msgid "Click a field to insert it as bold text at the cursor. On display, values use the visitor language (dates, times, numbers)."
+msgstr "Kattints egy mezőre: félkövér szövegként kerül a kurzor helyére. Megjelenítéskor a látogató nyelve szerint formázódik (dátum, idő, szám)."
+
+msgid "When the competition takes place (locale date + time)."
+msgstr "A verseny időpontja (locale dátum + idő)."
+
+msgid "Competition date"
+msgstr "Verseny dátuma"
+
+msgid "Competition date only (locale format)."
+msgstr "Csak a verseny dátuma (locale formátum)."
+
+msgid "Competition time"
+msgstr "Verseny időpontja"
+
+msgid "Competition time only (locale format)."
+msgstr "Csak a verseny ideje (locale formátum)."
+
+msgid "Application window start date (locale format)."
+msgstr "Jelentkezési időszak kezdete (locale formátum)."
+
+msgid "Application window end date (locale format)."
+msgstr "Jelentkezési időszak vége (locale formátum)."
+
+msgid "Minimum members required per sub-team (locale number)."
+msgstr "Alcsapatonkénti minimális létszám (locale szám)."
+
+msgid "Pipe type:"
+msgstr "Pipa fajtája:"
+
+msgid "Pipe parameters:"
+msgstr "Pipa paraméterei:"
+
+msgid "Tobacco type:"
+msgstr "Versenydohány fajtája:"
+
+msgid "Tobacco weight (g):"
+msgstr "Versenydohány súlya (g):"
+
+msgid "Pipe type"
+msgstr "Pipa fajtája"
+
+msgid "Pipe parameters"
+msgstr "Pipa paraméterei"
+
+msgid "Tobacco type"
+msgstr "Versenydohány fajtája"
+
+msgid "Tobacco weight"
+msgstr "Versenydohány súlya"
+
+msgid "Competition pipe type used in the announcement."
+msgstr "A kiírásban szereplő versenypipa fajtája."
+
+msgid "Pipe parameters (announcement text)."
+msgstr "Pipa paraméterei (kiírás szöveg)."
+
+msgid "Competition tobacco type."
+msgstr "Versenydohány fajtája."
+
+msgid "Tobacco weight in grams (locale number + g)."
+msgstr "Dohány súlya grammban (locale szám + g)."
+
+msgid "Optional pipe type labels shown on the member application form (leave empty if unused). Quantities are entered per applicant. Pipe type / tobacco fields are used in the announcement text ({{placeholders}})."
+msgstr "Opcionális pipafajta-címkék a tag jelentkezési űrlapján (üresen hagyható). A mennyiségeket a jelentkező adja meg. A pipa/dohány mezők a kiírás szövegében használhatók ({{placeholders}})."
+
+msgid "g"
+msgstr "g"
+
+msgid "Venue name:"
+msgstr "Helyszín neve:"
+
+msgid "Venue name"
+msgstr "Helyszín neve"
+
+msgid "e.g. Ibafa Culture House"
+msgstr "pl. Ibafai kultúrház"
+
+msgid "Building or place name used in the announcement ({{venue_name}})."
+msgstr "Épület vagy helyszín neve a kiírásban ({{venue_name}})."
+
+msgid "Building / place name (e.g. culture house)."
+msgstr "Épület / helyszín neve (pl. kultúrház)."
+
+msgid "National association logo"
+msgstr "Országos egyesület logója"
+
+msgid "National association logo:"
+msgstr "Országos egyesület logója:"
+
+msgid "National pipe association logo for the competition country (PNG with transparency)."
+msgstr "Az ország országos pipa egyesületének logója (PNG, átlátszóság megmarad)."
+
+msgid "Organizer club logo (PNG with transparency supported)."
+msgstr "Rendező klub logója (PNG, átlátszóság támogatott)."
+
+msgid "PNG recommended (transparency kept). Used as {{national_association_logo}} in competition announcements."
+msgstr "PNG ajánlott (átlátszóság megmarad). A kiírásban: {{national_association_logo}}."
+
+msgid "PNG recommended (transparency kept). Used as {{club_logo}} in competition announcements."
+msgstr "PNG ajánlott (átlátszóság megmarad). A kiírásban: {{club_logo}}."
+
+msgid "Club logo:"
+msgstr "Klub logó:"
+
+msgid "Logos in the announcement HTML: {{national_association_logo}} (country / national pipe association, PNG with transparency) and {{club_logo}} (organizer club). Upload the national logo on Countries; club logo on the club record."
+msgstr "Logók a kiírás HTML-ben: {{national_association_logo}} (ország / országos pipa egyesület, PNG átlátszóság) és {{club_logo}} (rendező klub). Az országos logót a Countries oldalon, a klublogót a klub adatlapján töltsd fel."
+
+msgid "Combined venue: place name, ZIP, city and address."
+msgstr "Összevont helyszín: helyszínnév, irányítószám, város és cím."
+
+msgid "Role switch"
+msgstr "Szerepkör váltás"
+
+msgid "Check-in"
+msgstr "Check-in"
+
+msgid "Judge"
+msgstr "Asztalbíró"
+
+msgid "Table judge"
+msgstr "Asztalbíró"
+
+msgid "Table judges"
+msgstr "Asztalbírók"
+
+msgid "Competition staff"
+msgstr "Verseny személyzet"
+
+msgid "You are not assigned to check-in for any competition."
+msgstr "Nincs check-in megbízásod egyetlen versenyhez sem."
+
+msgid "You are not assigned as a judge for any competition."
+msgstr "Nincs asztalbírói megbízásod egyetlen versenyhez sem."
+
+msgid "Mark paid"
+msgstr "Fizetve jelölés"
+
+msgid "Paid at"
+msgstr "Fizetés ideje"
+
+msgid "Entry fee"
+msgstr "Nevezési díj"
+
+msgid "Assign"
+msgstr "Hozzárendelés"
+
+msgid "Staff member has been assigned."
+msgstr "A személyzet hozzá lett rendelve."
+
+msgid "Staff assignment removed."
+msgstr "A személyzeti megbízás törölve."
+
+msgid "Assign check-in desk and table judges. Guests (role new) may only use their assigned staff panel."
+msgstr "Check-in pult és asztalbírók hozzárendelése. A vendégek (new szerep) csak a saját megbízott panelüket használhatják."
+
+msgid "Hand out requested racing pipes and mark entry fee payment time."
+msgstr "Add ki a kért versenypipákat, és jelöld a nevezési díj befizetésének idejét."
+
+msgid "Competitions where you collect entry fees and hand out racing pipes."
+msgstr "Versenyek, ahol a nevezési díjat gyűjtöd és a versenypipákat kiosztod."
+
+msgid "Competitions where you are assigned as table judge."
+msgstr "Versenyek, ahol asztalbírónak vagy beosztva."
+
+msgid "Table judge workspace for this competition."
+msgstr "Asztalbíró munkaterület ehhez a versenyhez."
+
+msgid "Scoring and table tools will appear here."
+msgstr "Itt jelennek majd meg a pontozási és asztalbírói eszközök."
+
+msgid "pc"
+msgstr "db"
+
+msgid "Manage staff"
+msgstr "Személyzet kezelése"
+
+msgid "No staff assigned yet."
+msgstr "Még nincs személyzet hozzárendelve."
+
+msgid "Staff role"
+msgstr "Személyzeti szerep"
+
+msgid "Check-in applicants"
+msgstr "Check-in jelentkezők"
+
+msgid "No assigned competitions."
+msgstr "Nincs hozzárendelt verseny."
+
+msgid "Mark entry fee as paid now ({0})?"
+msgstr "Nevezési díj fizetve most ({0})?"
+
+msgid "Entry fee marked as paid at {0}."
+msgstr "Nevezési díj fizetve: {0}."
+
+msgid "This application is not active."
+msgstr "Ez a jelentkezés nem aktív."
+
+msgid "Please select a user and a staff role."
+msgstr "Válassz felhasználót és személyzeti szerepet."
+
+msgid "This user is already assigned to this role for the competition."
+msgstr "Ez a felhasználó már hozzá van rendelve ehhez a szerephez ezen a versenyen."
+
+msgid "You can only manage staff for competitions hosted by your club."
+msgstr "Csak a saját klubod által rendezett versenyek személyzetét kezelheted."
+
+msgid "Remove this staff assignment?"
+msgstr "Törlöd ezt a személyzeti megbízást?"
+
+msgid "Go to Competition staff"
+msgstr "Ugrás a verseny személyzethez"
+
+msgid "Assign check-in desk and table judges for competitions hosted by your club."
+msgstr "Check-in pult és asztalbírók hozzárendelése a klubod által rendezett versenyekhez."
+
+msgid "My competitions"
+msgstr "Versenyeim"
+
+msgid "Open competitions where you are the table judge."
+msgstr "Versenyek megnyitása, ahol asztalbíró vagy."
+
+msgid "Collect entry fees and hand out racing pipes for your assigned competitions."
+msgstr "Nevezési díj begyűjtése és versenypipák kiosztása a hozzárendelt versenyeken."
+
+msgid "Go to Applicants"
+msgstr "Ugrás a jelentkezőkhöz"
+
+msgid "Select user…"
+msgstr "Felhasználó választása…"
+
+msgid "Select…"
+msgstr "Válassz…"
+
+
+msgid "Entry fee (national member):"
+msgstr "Nevezési díj (országos tag):"
+
+msgid "Entry fee (not national member):"
+msgstr "Nevezési díj (nem országos tag):"
+
+msgid "Applicant paid the national pipe association fee this year — usually the lower price."
+msgstr "Az idei országos pipaklub-díjat rendezte — általában az olcsóbb ár."
+
+msgid "National association fee not paid for this year — usually the higher price."
+msgstr "Az idei országos díj nincs rendezve — általában a drágább ár."
+
+msgid "Racing pipe {0} price (national member):"
+msgstr "Versenypipa {0} ára (országos tag):"
+
+msgid "Racing pipe {0} price (not national member):"
+msgstr "Versenypipa {0} ára (nem országos tag):"
+
+msgid "National member entry fee should not be higher than the non-member fee."
+msgstr "Az országos tag nevezési díja nem lehet magasabb a nem-tag díjnál."
+
+msgid "National member pipe price should not be higher than the non-member price."
+msgstr "Az országos tag pipaára nem lehet magasabb a nem-tag árnál."
+
+msgid "Only unapproved"
+msgstr "Csak jóváhagyatlanok"
+
+msgid "Only unpaid"
+msgstr "Csak nem fizetettek"
+
+msgid "Show only unpaid competitors"
+msgstr "Csak a nem fizetett versenyzők megjelenítése"
+
+msgid "Unapproved = awaiting team assignment. Switches can be combined."
+msgstr "Jóváhagyatlan = még nincs alcsapatba sorolva. A kapcsolók együtt is használhatók."
+
+msgid "Unpaid"
+msgstr "Nincs fizetve"
+
+msgid "No applicants match the selected filters."
+msgstr "Nincs a szűrőknek megfelelő jelentkező."
+
+msgid "Mark this competitor as paid?"
+msgstr "Fizetettnek jelöli ezt a versenyzőt?"
+
+msgid "Everyone has settled their entry fee."
+msgstr "Mindenki rendezte a nevezési díját."
+
+msgid "Cash desk — paid"
+msgstr "Kassza — befizetések"
+
+msgid "Cash desk"
+msgstr "Kassza"
+
+msgid "Who paid and how much — compare with the till."
+msgstr "Ki fizetett és mennyit — egyeztetés a kasszával."
+
+msgid "Go to Cash desk"
+msgstr "Ugrás a kasszához"
+
+msgid "No payments recorded yet."
+msgstr "Még nincs rögzített befizetés."
