@@ -1,0 +1,20 @@
+Copyright (c) 2026 Pipe Competitons
+
+All Rights Reserved.
+
+This software and associated documentation files (the "Software") are the confidential and proprietary information of the copyright holder. 
+
+Unauthorized copying, modification, distribution, public display, or sublicensing of this Software, via any medium, is strictly prohibited without the prior written permission of the copyright holder.
+
+
+
+------------ Magyarul ------------
+
+Copyright (c) 2026 Pipe Competitons
+
+Minden jog fenntartva.
+
+Ez a szoftver és a hozzá tartozó dokumentációs fájlok (a továbbiakban: „Szoftver”) a szerzői jog tulajdonosának bizalmas és védett információi.
+
+A Szoftver jogosulatlan másolása, módosítása, terjesztése, nyilvános megjelenítése vagy továbblicencelése bármilyen adathordozón keresztül szigorúan tilos a szerzői jog tulajdonosának előzetes írásbeli engedélye nélkül.
+
