@@ -29,6 +29,7 @@ class CloseController extends BaseAppController
     public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
+		
         $this->response = $this->response->withType('application/json');
     }
 
@@ -37,6 +38,15 @@ class CloseController extends BaseAppController
      */
     public function index(?string $token = null): Response
     {
+		//dd('competition_staff');
+/*		
+		competition_id, user_id, staff_role: judge
+		
+		competition_id-vel megkeresni a versenyt, és ha még tart, akkor
+		megkeresni az email alapján az usert és ha megvan, akkor megnézni, hogy a megtalált user->id megegyezik-e ezzel az id-vel, ha igen, akkor lezárhatja a rekordot param:user_id
+		ha a verseny nem tart már, akkor false értékkel tér vissza a json
+*/		
+		
         $this->request->allowMethod(['post']);
 
         $pair = UuidObfuscator::decodePair((string)$token);
@@ -79,6 +89,7 @@ class CloseController extends BaseAppController
             $seconds,
             $email
         );
+
         if (!$result['ok']) {
             return $this->json([
                 'success' => false,

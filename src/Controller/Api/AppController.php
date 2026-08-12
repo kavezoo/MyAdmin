@@ -22,6 +22,7 @@ class AppController extends BaseController
     {
         parent::beforeFilter($event);
         $this->response = $this->response->withType('application/json');
+
     }
 
     /**
