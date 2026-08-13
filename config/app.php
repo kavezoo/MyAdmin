@@ -20,6 +20,15 @@ return [
     'debug' => filter_var(env('DEBUG', false), FILTER_VALIDATE_BOOLEAN),
 
     /*
+     * Flutter / JSON API — OPEN during development (no login / Bearer token).
+     * Set openAccess => false when JWT/auth is ready for production.
+     */
+    'Api' => [
+        'openAccess' => true,
+        'devUserId' => env('API_DEV_USER_ID', null),
+    ],
+
+    /*
      * Configure basic information about the application.
      *
      * - namespace - The namespace to find app classes under.

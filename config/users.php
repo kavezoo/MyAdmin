@@ -67,9 +67,8 @@ return [
         ],
         'AuthorizationMiddleware' => [
             'unauthorizedHandler' => [
-                'className' => 'CakeDC/Users.DefaultRedirect',
-                // App UsersController — MUST set prefix/plugin false so Router does not
-                // inherit the current panel prefix (e.g. /president/users/login).
+                // /api → JSON 401; web → login redirect (no Flutter “need token” HTML trap)
+                'className' => \App\Http\Exception\ApiAwareUnauthorizedHandler::class,
                 'url' => [
                     'prefix' => false,
                     'plugin' => false,

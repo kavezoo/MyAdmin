@@ -119,11 +119,12 @@ return [
             'controller' => '*',
             'action' => '*',
         ],
-        // Flutter judge API — controller checks identity + competition_staff + staff day; JSON 401/403.
+        // Flutter / JSON API — no login required while developing (Api.openAccess / debug).
+        // Controllers still may enforce role checks when identity exists.
         [
             'prefix' => 'Api',
-            'controller' => 'CompetitionResults',
-            'action' => 'submit',
+            'controller' => '*',
+            'action' => '*',
             'bypassAuth' => true,
         ],
         // Public close: obfuscated competition+competitor token + POST email/time (no session).
@@ -165,11 +166,5 @@ return [
             'controller' => '*',
             'action' => '*',
         ],
-		[
-			'prefix' => 'Judge',
-			'controller' => 'Close',
-			'action' => 'index',
-			'bypassAuth' => true,
-		],		
     ],
 ];

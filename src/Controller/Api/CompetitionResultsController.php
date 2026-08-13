@@ -25,7 +25,7 @@ class CompetitionResultsController extends AppController
         $this->request->allowMethod(['post']);
 
         $judgeId = CurrentUser::id($this->getRequest());
-        if ($judgeId === null || $judgeId === '') {
+        if (($judgeId === null || $judgeId === '') && !$this->isApiOpenAccess()) {
             return $this->jsonResponse([
                 'success' => false,
                 'message' => 'Authentication required.',
@@ -41,13 +41,16 @@ class CompetitionResultsController extends AppController
             ], 400);
         }
 
-        if (!CompetitionStaff::userAssignedToCompetition(
-            $competitionId,
-            CompetitionStaff::ROLE_JUDGE,
-            $judgeId,
-            $this->getRequest(),
-            true
-        )) {
+        if (
+            !$this->isApiOpenAccess()
+            && !CompetitionStaff::userAssignedToCompetition(
+                $competitionId,
+                CompetitionStaff::ROLE_JUDGE,
+                (string)$judgeId,
+                $this->getRequest(),
+                true
+            )
+        ) {
             return $this->jsonResponse([
                 'success' => false,
                 'message' => 'Not allowed: judge assignment required on competition day.',

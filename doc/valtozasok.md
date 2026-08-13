@@ -5,6 +5,26 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-13 — Api: nyílt hozzáférés (nincs token / jelszó)
+
+### Mi
+`Api.openAccess = true` (nem függ a debugtól). Authentication `requireIdentity = false`. CORS OPTIONS `/api` auth előtt. Unauthorized handler API-n JSON, nem login redirect (Flutter „token kell” tévhit elkerülése). RBAC: `Api` `bypassAuth`.
+
+### Érintett
+`config/app.php`, `config/users.php`, `src/Application.php`, `src/Controller/Api/AppController.php`, `ApiAwareUnauthorizedHandler`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-13 — Api prefix: route crash + openAccess fejlesztéshez
+
+### Mi
+A `routes.php` `$builder->applyMiddleware('auth')` **nem regisztrált** middleware-re hivatkozott → InvalidArgumentException, az `/api/v1` route-ok nem töltődtek. Javítás: v1 route-ok az `Api` prefix alatt (`/api/v1/...`), auth middleware nélkül. RBAC: teljes `Api` `bypassAuth`. `Api.openAccess` (debug=true esetén) → nincs login; injected `devUserId` / első active user.
+
+### Érintett
+`config/routes.php`, `config/permissions.php`, `config/app.php` (`Api`), `src/Controller/Api/*`, `doc/valtozasok.md`
+
+---
+
 ## 2026-08-09 — Judge close API: `/judge/close/{pairToken}`
 
 ### Mi

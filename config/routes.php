@@ -40,15 +40,55 @@ return function (RouteBuilder $routes): void {
 
     /*
      * Mobile / Flutter JSON API (CSRF skipped in Application middleware).
-     * POST /api/competitions/results/{competitionToken}/{userToken}
+     * Controllers: App\Controller\Api\*
+     * Dev: no JWT middleware yet — do NOT applyMiddleware('auth') until registered.
      */
     $routes->prefix('Api', function (RouteBuilder $builder): void {
+        $builder->setExtensions(['json']);
+
+        // Judge result submit (obfuscated UUID tokens)
         $builder->connect(
             '/competitions/results/{competitionToken}/{userToken}',
             ['controller' => 'CompetitionResults', 'action' => 'submit'],
         )
             ->setPass(['competitionToken', 'userToken'])
             ->setMethods(['POST']);
+
+        // Flutter v1 → /api/v1/...
+        $builder->scope('/v1', function (RouteBuilder $v1): void {
+            $v1->connect('/profile', ['controller' => 'Profile', 'action' => 'index'])
+                ->setMethods(['GET']);
+            $v1->connect('/profile', ['controller' => 'Profile', 'action' => 'update'])
+                ->setMethods(['PUT']);
+
+            $v1->connect('/competitions', ['controller' => 'Competitions', 'action' => 'index'])
+                ->setMethods(['GET']);
+            $v1->connect('/competitions/{id}/apply', ['controller' => 'Competitions', 'action' => 'apply'])
+                ->setPass(['id'])
+                ->setMethods(['POST']);
+
+            $v1->connect('/results/my', ['controller' => 'Results', 'action' => 'myResults'])
+                ->setMethods(['GET']);
+            $v1->connect('/results/all', ['controller' => 'Results', 'action' => 'allResults'])
+                ->setMethods(['GET']);
+
+            $v1->scope('/president', function (RouteBuilder $p): void {
+                $p->connect('/pending-members', ['controller' => 'President', 'action' => 'pendingMembers'])
+                    ->setMethods(['GET']);
+                $p->connect('/approve-member/{id}', ['controller' => 'President', 'action' => 'approveMember'])
+                    ->setPass(['id'])
+                    ->setMethods(['POST']);
+                $p->connect('/competitions/{id}/applicants', ['controller' => 'President', 'action' => 'competitionApplicants'])
+                    ->setPass(['id'])
+                    ->setMethods(['GET']);
+                $p->connect('/competitions/{id}/subclubs', ['controller' => 'President', 'action' => 'createSubclub'])
+                    ->setPass(['id'])
+                    ->setMethods(['POST']);
+                $p->connect('/assign-member', ['controller' => 'President', 'action' => 'assignMemberToSubclub'])
+                    ->setMethods(['POST']);
+            });
+        });
+
         $builder->fallbacks(DashedRoute::class);
     });
 

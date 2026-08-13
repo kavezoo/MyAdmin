@@ -36,6 +36,7 @@ use Cake\Event\EventManagerInterface;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\CsrfProtectionMiddleware;
+use Cake\Http\Response;
 use Cake\Http\MiddlewareQueue;
 use Cake\ORM\Locator\TableLocator;
 use Cake\ORM\Table;
@@ -43,6 +44,9 @@ use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use CakeDC\Users\UsersPlugin;
 use CakeDC\Users\Utility\UsersUrl;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Application setup class.
@@ -87,6 +91,30 @@ class Application extends BaseApplication
             // Catch any exceptions in the lower layers,
             // and make an error page/response
             ->add(new ErrorHandlerMiddleware(Configure::read('Error'), $this))
+
+            // Flutter preflight + CORS for /api/* (before auth — OPTIONS must not hit login)
+            ->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
+                $path = $request->getUri()->getPath();
+                $isApi = str_starts_with($path, '/api/') || str_starts_with($path, '/api');
+                if ($isApi && strtoupper($request->getMethod()) === 'OPTIONS') {
+                    return (new Response())
+                        ->withStatus(204)
+                        ->withHeader('Access-Control-Allow-Origin', '*')
+                        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
+                        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept')
+                        ->withHeader('Access-Control-Max-Age', '86400');
+                }
+
+                $response = $handler->handle($request);
+                if ($isApi) {
+                    return $response
+                        ->withHeader('Access-Control-Allow-Origin', '*')
+                        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
+                        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+                }
+
+                return $response;
+            })
 
             // Validate Host header to prevent Host Header Injection attacks.
             // In production, ensures App.fullBaseUrl is configured and validates
