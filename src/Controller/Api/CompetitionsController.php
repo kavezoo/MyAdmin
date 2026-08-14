@@ -45,11 +45,12 @@ class CompetitionsController extends ApiController
         $today = DateTime::now()->format('Y-m-d');
         $competitionsTable = $this->fetchTable('Competitions');
 
+        // Qualify columns: Translate joins i18n aliases that also have `visible`.
         $competitions = $competitionsTable->find()
             ->where([
-                'visible' => 1,
-                'first_date_of_application <=' => $today,
-                'application_deadline >=' => $today,
+                'Competitions.visible' => 1,
+                'Competitions.first_date_of_application <=' => $today,
+                'Competitions.application_deadline >=' => $today,
             ])
             ->all();
 
@@ -73,7 +74,10 @@ class CompetitionsController extends ApiController
         $competitionsUsersTable = $this->fetchTable('CompetitionsUsers');
 
         $existing = $competitionsUsersTable->find()
-            ->where(['competition_id' => $id, 'user_id' => $userId])
+            ->where([
+                'CompetitionsUsers.competition_id' => $id,
+                'CompetitionsUsers.user_id' => $userId,
+            ])
             ->first();
 
         if ($existing) {

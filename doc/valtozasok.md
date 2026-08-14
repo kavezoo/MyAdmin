@@ -5,6 +5,47 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-14 — Telefon prefix: csak placeholder a mezőben
+
+### Mi / miért
+- Countries `phone_prefix`: a mezőben csak számjegyek (`36`), a `+36` a placeholder; mentéskor `+` automatikus.
+- Profil / complete-profile telefon: országhívószám nem előretöltött érték, csak placeholder; helyi számnál mentéskor elé kerül.
+
+### Érintett
+`templates/Admin/Countries/form.php`, `webroot/js/pages/users_phone.js`, `src/Utility/PhoneNumber.php`, `templates/Users/{edit,complete_profile}.php`, `resources/auth_templates/Users/*`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-14 — Api results/my: `user_id` ambiguous WHERE
+
+### Mi / miért
+`CompetitionsUsers` + `Competitions` contain: mindkettőnek van `user_id`. Javítás: `CompetitionsUsers.user_id` / `result_time`.
+
+### Érintett
+`src/Controller/Api/ResultsController.php`, `doc/valtozasok.md`
+
+---
+
+## 2026-08-14 — Countries phone_prefix: `+` megmarad
+
+### Mi / miért
+A `NormalizeLocalizedNumberMiddleware` a `+36`-ot számként kezelte → `36` → validáció (`^\+\d`) elbukott. Skip: `phone`, `phone_prefix`. Countries `beforeMarshal` is E.164-re normalizál.
+
+### Érintett
+`src/Middleware/NormalizeLocalizedNumberMiddleware.php`, `src/Model/Table/CountriesTable.php`, `doc/middleware.md`
+
+---
+
+## 2026-08-14 — Api competitions: `visible` ambiguous WHERE
+
+### Mi / miért
+Translate join (`i18n.*.visible`) miatt a `WHERE visible = …` kétértelmű volt. API index: `Competitions.visible` + dátum mezők aliasolva.
+
+### Érintett
+`src/Controller/Api/CompetitionsController.php`, `doc/valtozasok.md`
+
+---
+
 ## 2026-08-13 — Api: nyílt hozzáférés (nincs token / jelszó)
 
 ### Mi

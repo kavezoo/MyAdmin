@@ -2539,6 +2539,15 @@ msgstr "Töltsd ki a hiányzó adatokat, hogy elküldhessük a tagsági jelentke
 msgid "Optional. Starts with + and your country calling code (e.g. {0}). Enter your number after the prefix."
 msgstr "Opcionális. + jellel és az országod hívószámával kezdődik (pl. {0}). Az előhívó után add meg a számod."
 
+msgid "Optional. Country calling code is shown as placeholder (e.g. {0}); enter your number, with or without +."
+msgstr "Opcionális. Az ország hívószáma csak helyőrzőben jelenik meg (pl. {0}); írd be a számodat + jellel vagy anélkül."
+
+msgid "International calling code for user phone inputs (E.164, e.g. +36)."
+msgstr "Nemzetközi hívószám a felhasználói telefonmezőkhöz (E.164, pl. +36)."
+
+msgid "International calling code digits only; + is shown in the placeholder and stored automatically (e.g. {0})."
+msgstr "Csak a hívószám számjegyei; a + a helyőrzőben látszik, mentéskor automatikusan elé kerül (pl. {0})."
+
 #: ./templates/Users/complete_profile.php:86
 #: ./templates/Users/complete_profile.php:91
 #: ./templates/Users/edit.php:181

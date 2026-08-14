@@ -160,14 +160,24 @@ $selectedVisibleIds = array_values(array_filter(
 						<div class="form-group row mb-3">
 							<?= $this->Form->adminLabel('phone_prefix', __('Phone prefix:'), ['for' => 'phone-prefix']) ?>
 							<div class="col-12 col-md-10 col-xl-3">
+								<?php
+								$phonePrefixPlaceholder = (string)($countryExamples['phone_prefix'] ?? '+36');
+								if ($phonePrefixPlaceholder !== '' && !str_starts_with($phonePrefixPlaceholder, '+')) {
+									$phonePrefixPlaceholder = '+' . preg_replace('/\D/', '', $phonePrefixPlaceholder);
+								}
+								$phonePrefixDigits = preg_replace('/\D/', '', (string)($country->phone_prefix ?? '')) ?: '';
+								?>
 								<?= $this->Form->control('phone_prefix', [
 									'label' => false,
 									'class' => 'form-control js-phone-prefix',
 									'id' => 'phone-prefix',
-									'placeholder' => '+36',
+									'value' => $phonePrefixDigits,
+									'placeholder' => $phonePrefixPlaceholder !== '' ? $phonePrefixPlaceholder : '+36',
+									'inputmode' => 'numeric',
+									'autocomplete' => 'off',
 								]) ?>
 								<div class="form-text">
-									<?= __('International calling code for user phone inputs (E.164, e.g. +36).') ?>
+									<?= __('International calling code digits only; + is shown in the placeholder and stored automatically (e.g. {0}).', $phonePrefixPlaceholder !== '' ? $phonePrefixPlaceholder : '+36') ?>
 								</div>
 							</div>
 						</div>

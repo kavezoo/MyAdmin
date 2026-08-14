@@ -29,7 +29,7 @@ A megjelenítés locale szerinti lehet (`LocaleDateParser::format()` + Tempus `d
 
 - Csak `POST` / `PUT` / `PATCH` / `DELETE`
 - Rekurzívan a `getData()` tömbön
-- Kihagyott kulcsok: `_csrfToken`, `_Token`, `_method`, jelszó mezők, `_` prefix
+- Kihagyott kulcsok: `_csrfToken`, `_Token`, `_method`, jelszó mezők, `_` prefix, **`phone`**, **`phone_prefix`** (E.164: `+36` ne legyen „szám”)
 
 ## Dátum (`LocaleDateParser`)
 
@@ -93,7 +93,8 @@ Példák (`hu_HU`):
 | `1 234,56` / `1.234,56` | `1234.56` |
 | `12,5` | `12.5` |
 
-Dátum/idő stringeket **nem** nyúl (Date middleware után ISO; a parser a `.`/`/`/`-` dátumokat kihagyja — a tiszta szóközös ezres csoport **nem** dátum).
+Dátum/idő stringeket **nem** nyúl (Date middleware után ISO; a parser a `.`/`/`/`-` dátumokat kihagyja — a tiszta szóközös ezres csoport **nem** dátum).  
+Telefon / hívószám (`phone`, `phone_prefix`): **kihagyva** — pl. `+36` ne váljon `36`-tá (különben a Countries validáció elbukik).
 
 Kimenet: `1234.56`. Form: `numberFormat` + `.js-input-decimal` / `.js-input-integer` — **ne** `inputmode=decimal|numeric`; inputmask `autoUnmask` + middleware fallback.
 

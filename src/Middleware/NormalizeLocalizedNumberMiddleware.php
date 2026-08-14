@@ -32,6 +32,9 @@ class NormalizeLocalizedNumberMiddleware implements MiddlewareInterface
         'password',
         'password_confirm',
         'current_password',
+        // E.164 strings (+36, +3630…) must not be treated as locale numbers
+        'phone',
+        'phone_prefix',
     ];
 
     /**

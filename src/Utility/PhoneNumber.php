@@ -108,20 +108,27 @@ class PhoneNumber
     }
 
     /**
-     * Form input: stored number or default country prefix for new entry.
+     * Form input: stored full number, or empty when unset (prefix is placeholder only).
      */
-    public static function formatForInput(?string $phone, ?string $defaultPrefix): string
+    public static function formatForInput(?string $phone, ?string $defaultPrefix = null): string
     {
         $phone = trim((string)$phone);
-        if ($phone !== '') {
-            $digits = preg_replace('/\D/', '', $phone);
-
-            return $digits !== '' ? '+' . $digits : '';
+        if ($phone === '') {
+            return '';
         }
 
-        $prefix = static::normalizePrefix($defaultPrefix);
+        $digits = preg_replace('/\D/', '', $phone);
+        if ($digits === '') {
+            return '';
+        }
 
-        return $prefix !== '' ? $prefix : '+';
+        $normalized = '+' . $digits;
+        $prefix = static::normalizePrefix($defaultPrefix);
+        if ($prefix !== '' && $normalized === $prefix) {
+            return '';
+        }
+
+        return $normalized;
     }
 
     public static function isValidStored(?string $phone): bool

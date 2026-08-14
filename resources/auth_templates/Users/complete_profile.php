@@ -74,9 +74,9 @@ $phoneInputValue = PhoneNumber::formatForInput($user->get('phone'), $defaultPhon
 						'data-default-prefix' => $defaultPhonePrefix !== '' ? $defaultPhonePrefix : '+',
 						'autocomplete' => 'tel',
 						'inputmode' => 'tel',
-						'placeholder' => $defaultPhonePrefix !== '' ? $defaultPhonePrefix . '301234567' : '+36301234567',
+						'placeholder' => $defaultPhonePrefix !== '' ? $defaultPhonePrefix : '+36',
 					]) ?>
-					<div class="form-text"><?= __('Optional. Starts with + and your country calling code (e.g. {0}). Enter your number after the prefix.', $defaultPhonePrefix !== '' ? $defaultPhonePrefix : '+36') ?></div>
+					<div class="form-text"><?= __('Optional. Country calling code is shown as placeholder (e.g. {0}); enter your number, with or without +.', $defaultPhonePrefix !== '' ? $defaultPhonePrefix : '+36') ?></div>
 				</div>
 				<div class="mb-3">
 					<label class="form-label" for="country-id"><?= __('Country') ?></label>

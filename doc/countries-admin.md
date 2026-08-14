@@ -3,7 +3,7 @@
 Referencia-adat: `countries` + `continents` + Translate.  
 ACL: [users-auth.md](users-auth.md) / `CountryAccess` — **superuser** teljes CRUD; **admin** csak `visible` + `pos`.
 
-Mezők: `name` (angol kanonikus + Translate), **`endonim_name`** (endoním / saját írásrendszer — nem fordított), `locale`, `timezone`, **`phone_prefix`** (E.164 hívószám, pl. `+36` — user telefon input alapértelmezés), **`logo`** (országos pipa egyesület logója, PNG — `{{national_association_logo}}` a versenykiírásban), …
+Mezők: `name` (angol kanonikus + Translate), **`endonim_name`** (endoním / saját írásrendszer — nem fordított), `locale`, `timezone`, **`phone_prefix`** (E.164 hívószám, pl. `+36` — formon csak számjegyek, `+` a placeholder / mentéskor; user telefon input placeholder), **`logo`** (országos pipa egyesület logója, PNG — `{{national_association_logo}}` a versenykiírásban), …
 
 Kapcsolódó: [i18n.md](i18n.md) (országnevek DB — seedelt fordítások), **[country-visibilities.md](country-visibilities.md)** (plusz nyelvek / TAB), [admin-konvenciok.md](admin-konvenciok.md) (index / count / Swal), [admin-oldal.md](admin-oldal.md).  
 Rule: `.cursor/rules/admin-countries-index.mdc`

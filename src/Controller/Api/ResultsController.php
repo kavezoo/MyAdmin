@@ -18,8 +18,12 @@ class ResultsController extends ApiController
         $userId = is_object($user) ? $user->id : ($user['id'] ?? null);
         $competitionsUsersTable = $this->fetchTable('CompetitionsUsers');
 
+        // Qualify columns: Competitions also has user_id; Translate joins share field names.
         $results = $competitionsUsersTable->find()
-            ->where(['user_id' => $userId, 'result_time IS NOT' => null])
+            ->where([
+                'CompetitionsUsers.user_id' => $userId,
+                'CompetitionsUsers.result_time IS NOT' => null,
+            ])
             ->contain(['Competitions'])
             ->all();
 

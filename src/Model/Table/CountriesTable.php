@@ -377,6 +377,24 @@ class CountriesTable extends Table
         return $validator;
     }
 
+    /**
+     * Keep E.164 prefix (+36) before validation — number middleware must not strip `+`.
+     *
+     * @param \Cake\Event\EventInterface<\Cake\ORM\Table> $event
+     * @param \ArrayObject<string, mixed> $data
+     * @param \ArrayObject<string, mixed> $options
+     * @return void
+     */
+    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options): void
+    {
+        if (!$data->offsetExists('phone_prefix')) {
+            return;
+        }
+        $data['phone_prefix'] = PhoneNumber::normalizePrefix(
+            is_scalar($data['phone_prefix']) ? (string)$data['phone_prefix'] : null
+        );
+    }
+
     public function beforeSave(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
     {
         if ($entity->isDirty('phone_prefix')) {

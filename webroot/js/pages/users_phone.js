@@ -1,5 +1,5 @@
 /**
- * Optional international phone input: + prefix, digits only, country default prefix.
+ * Optional international phone input: digits with optional +, country prefix only as placeholder.
  */
 (function ($) {
 	'use strict';
@@ -9,26 +9,39 @@
 		return digits ? '+' + digits : '';
 	}
 
-	function normalizePhoneValue(raw) {
+	/**
+	 * @param {string} raw
+	 * @param {string} [defaultPrefix]
+	 * @returns {string}
+	 */
+	function normalizePhoneValue(raw, defaultPrefix) {
 		var value = String(raw || '').trim();
 		if (!value) {
 			return '';
 		}
-		var digits = value.replace(/[^\d+]/g, '');
-		if (!digits || digits === '+') {
+		var prefix = normalizePrefix(defaultPrefix);
+		var hasPlus = value.charAt(0) === '+';
+		var digits = value.replace(/\D/g, '');
+		if (!digits) {
 			return '';
 		}
-		if (digits.charAt(0) !== '+') {
-			digits = '+' + digits.replace(/\+/g, '');
-		} else {
-			digits = '+' + digits.slice(1).replace(/\D/g, '');
+		if (hasPlus) {
+			return '+' + digits;
 		}
-		return digits;
+		// Local number without +: prepend country calling code.
+		if (prefix) {
+			var prefixDigits = prefix.replace(/\D/g, '');
+			if (prefixDigits && digits.indexOf(prefixDigits) === 0) {
+				return '+' + digits;
+			}
+			return prefix + digits;
+		}
+		return '+' + digits;
 	}
 
 	function isOnlyPrefix(value, prefix) {
-		var normalized = normalizePhoneValue(value);
 		var p = normalizePrefix(prefix);
+		var normalized = normalizePhoneValue(value, p);
 		if (!normalized) {
 			return true;
 		}
@@ -42,54 +55,57 @@
 		if (!$.fn.inputmask) {
 			return;
 		}
+		if ($input.data('inputmask')) {
+			$input.inputmask('remove');
+		}
+		// Allow empty or +digits (prefix is placeholder, not forced into the value).
 		$input.inputmask({
-			regex: '^\\+[0-9]*$',
+			regex: '^(\\+[0-9]*)?$',
 			placeholder: '',
 			showMaskOnHover: false,
-			showMaskOnFocus: false
+			showMaskOnFocus: false,
+			clearIncomplete: false
 		});
+	}
+
+	function setPrefixHint($input, prefix) {
+		var p = normalizePrefix(prefix);
+		$input.attr('data-default-prefix', p || '+');
+		$input.attr('placeholder', p || '+');
 	}
 
 	function initPhoneField($input, defaultPrefix) {
 		var prefix = normalizePrefix(defaultPrefix) || '+';
+		setPrefixHint($input, prefix);
 
-		$input.attr('data-default-prefix', prefix);
-
-		if (!$input.val() || String($input.val()).trim() === '') {
-			$input.val(prefix);
+		var current = String($input.val() || '').trim();
+		if (!current || isOnlyPrefix(current, prefix)) {
+			$input.val('');
 		} else {
-			$input.val(normalizePhoneValue($input.val()));
+			$input.val(normalizePhoneValue(current, prefix));
 		}
 
 		applyInputMask($input);
 
-		$input.on('focus', function () {
-			var $el = $(this);
-			var current = normalizePhoneValue($el.val());
-			var def = normalizePrefix($el.attr('data-default-prefix')) || '+';
-			if (!current) {
-				$el.val(def);
-			}
-		});
-
-		$input.on('blur', function () {
+		$input.off('.usersPhone').on('blur.usersPhone', function () {
 			var $el = $(this);
 			var def = normalizePrefix($el.attr('data-default-prefix')) || '+';
 			if (isOnlyPrefix($el.val(), def)) {
 				$el.val('');
 			} else {
-				$el.val(normalizePhoneValue($el.val()));
+				$el.val(normalizePhoneValue($el.val(), def));
 			}
 		});
 
-		$input.on('input', function () {
+		$input.on('input.usersPhone', function () {
 			var $el = $(this);
 			var raw = String($el.val() || '');
 			if (raw === '') {
 				return;
 			}
-			if (raw.charAt(0) !== '+') {
-				$el.val(normalizePhoneValue(raw));
+			// Keep typing free; only soft-fix if user pasted junk without leading +
+			if (raw.indexOf('+') > 0) {
+				$el.val(normalizePhoneValue(raw, $el.attr('data-default-prefix')));
 			}
 		});
 	}
@@ -112,19 +128,19 @@
 			initPhoneField($input, fieldPrefix);
 		});
 
-		$country.on('change.usersPhone', function () {
+		$country.off('change.usersPhone').on('change.usersPhone', function () {
 			var id = $(this).val();
 			var newPrefix = normalizePrefix(prefixes[id]) || defaultPrefix;
 			var $phone = $('.js-phone-intl');
 			if (!$phone.length) {
 				return;
 			}
-			var current = normalizePhoneValue($phone.val());
+			var current = String($phone.val() || '').trim();
 			var oldPrefix = normalizePrefix($phone.attr('data-default-prefix'));
-			if (!current || current === oldPrefix || current === '+') {
-				$phone.val(newPrefix);
+			if (!current || isOnlyPrefix(current, oldPrefix)) {
+				$phone.val('');
 			}
-			$phone.attr('data-default-prefix', newPrefix);
+			setPrefixHint($phone, newPrefix);
 		});
 	}
 
@@ -138,7 +154,6 @@
 		}
 		initAll(cfg);
 
-		// form.js may register after this file — resolve API inside the timeout
 		window.setTimeout(function () {
 			if (window.MyAdmin && typeof window.MyAdmin.recaptureFormBaseline === 'function') {
 				window.MyAdmin.recaptureFormBaseline();
@@ -159,7 +174,7 @@
 			if (isOnlyPrefix($phone.val(), def)) {
 				$phone.val('');
 			} else {
-				$phone.val(normalizePhoneValue($phone.val()));
+				$phone.val(normalizePhoneValue($phone.val(), def));
 			}
 		});
 	});
