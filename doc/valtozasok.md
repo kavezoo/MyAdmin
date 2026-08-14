@@ -5,6 +5,16 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-14 — Competition add: nested transaction commit hiba
+
+### Mi / miért
+`EventLogger` `atomic => true` mentése a domain `save()` tranzakcióján belül (Translate / CounterCache / EventLogBehavior) nested rollback után „Cannot commit transaction…” hibát dobott. Javítás: `atomic => false`. Pipe image utómentés: `atomic => false` + `skipEventLog`.
+
+### Érintett
+`src/Utility/EventLogger.php`, `src/Controller/Concerns/StoresCompetitionPipeImagesTrait.php`, `doc/event-logs.md`
+
+---
+
 ## 2026-08-14 — Telefon prefix: csak placeholder a mezőben
 
 ### Mi / miért

@@ -63,7 +63,7 @@ ACL: `App\Auth\EventLogAccess`.
 | `ActivityLogSetup` | Setup slug-ok + gate |
 | `EventLogPresenter` | User-facing címkék / összefoglaló |
 | `EventLogValueResolver` | FK / bool / státusz → emberi érték a diffben |
-| `EventLogger` | írás (+ logging gate) |
+| `EventLogger` | írás (+ logging gate); **`atomic => false`** (ne nested tranzakció a domain `save()`-en belül) |
 | `EventLogBehavior` | Table afterSave/Delete |
 | `Admin\EventLogsController` | officer lista |
 | `UsersController::eventLog` | saját lista |

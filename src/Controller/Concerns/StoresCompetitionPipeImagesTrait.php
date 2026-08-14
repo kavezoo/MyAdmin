@@ -34,6 +34,8 @@ trait StoresCompetitionPipeImagesTrait
                     'fields' => [$field],
                     'accessibleFields' => [$field => true],
                     'checkRules' => false,
+                    'atomic' => false,
+                    'skipEventLog' => true,
                 ]);
             } catch (BadRequestException $e) {
                 $this->Flash->warning($e->getMessage());

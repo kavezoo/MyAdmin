@@ -93,7 +93,13 @@ class EventLogger
                     '*' => true,
                 ],
             ]);
-            $table->save($entity, ['checkRules' => false, 'atomic' => true]);
+            // Never nest an atomic transaction: EventLogBehavior runs inside domain
+            // Table::save() (Translate / CounterCache already open a transaction).
+            // Nested atomic + rollback → "Cannot commit transaction - rollback() has been already called".
+            $table->save($entity, [
+                'checkRules' => false,
+                'atomic' => false,
+            ]);
         } catch (\Throwable $e) {
             Log::warning('EventLogger failed: ' . $e->getMessage(), ['scope' => ['event_log']]);
         }
