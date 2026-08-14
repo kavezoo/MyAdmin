@@ -207,6 +207,8 @@ class Application extends BaseApplication
                 $table->getAlias() === 'EventLogs'
                 || $table->getAlias() === 'Languages'
                 || $table->getAlias() === 'I18n'
+                || str_ends_with($table->getAlias(), '_translation')
+                || $table instanceof \App\Model\Table\I18nTable
                 || $table->hasBehavior('EventLog')
             ) {
                 return;

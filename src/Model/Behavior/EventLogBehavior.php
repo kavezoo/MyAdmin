@@ -106,8 +106,8 @@ class EventLogBehavior extends Behavior
         $changeSummary = EventLogChanges::summary($changes, 350);
 
         $countryId = 0;
-        if (in_array($alias, ['Users', 'Clubs'], true)) {
-            $countryId = (int)($entity->get('country_id') ?? 0);
+        if ($entity->get('country_id') !== null && $entity->get('country_id') !== '') {
+            $countryId = (int)$entity->get('country_id');
         }
 
         $feeChanges = [];

@@ -5,6 +5,16 @@ Minden lényeges projektmódosítás után **ide írj bejegyzést** (dátum, mi 
 
 ---
 
+## 2026-08-14 — NestedTransactionRollbackException (EventLogger)
+
+### Mi / miért
+CakePHP savepoints nélkül a nested `rollback()` beállítja a `nestedTransactionRollbackException`-t; a külső `commit()` ezt dobja. Az `EventLogger` most **`afterCommit`**-ban ír (`atomic => false`), így nem a domain tranzakcióban fut. Competitions `country_id` átmegy az EventLogBehaviorbe; `*_translation` / `I18nTable` nem kap EventLog behavior-t.
+
+### Érintett
+`src/Utility/EventLogger.php`, `src/Model/Behavior/EventLogBehavior.php`, `src/Application.php`, `doc/event-logs.md`
+
+---
+
 ## 2026-08-14 — Competition add: nested transaction commit hiba
 
 ### Mi / miért
